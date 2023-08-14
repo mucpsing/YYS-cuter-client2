@@ -8,5 +8,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": ["src", "types", "src/types"]
+  "include": ["src","src/**/*.ts","src/types"]
 }
