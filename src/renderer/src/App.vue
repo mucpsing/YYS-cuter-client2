@@ -1,20 +1,46 @@
-<script setup lang="ts">
-const msg = ref("ccvb");
-</script>
-
 <template>
-  <div>
-    <div>msg: {{ msg }}</div>
-    <div class="bg-red-400 w-[100px] h-[100px] text-white">tailwindcss</div>
-    <div class="test">stylus</div>
-  </div>
+  <Layout />
+  <cps-dialog ref="cpsDialogRef"></cps-dialog>
 </template>
 
+<script lang="ts">
+import Layout from "@renderer/layout/index.vue";
+import cpsDialog from "@renderer/components/global/headLessDialog.vue";
+import { eventBus } from "@renderer/libs";
+import { CpsDialogElement } from "@renderer/global";
+
+export default defineComponent({
+  components: { Layout, cpsDialog },
+  setup() {
+    const cpsDialogRef = ref<CpsDialogElement>();
+    async function eventOpenCpsDialog(opts: any) {
+      if (cpsDialogRef && cpsDialogRef.value) {
+        cpsDialogRef.value.open(opts);
+      }
+    }
+
+    onMounted(() => {
+      eventBus.on("showDialog", eventOpenCpsDialog);
+    });
+
+    onUnmounted(() => {
+      eventBus.off("showDialog", eventOpenCpsDialog);
+    });
+
+    return { cpsDialogRef };
+  },
+});
+</script>
+
 <style lang="stylus">
-.test {
-  background #000
-  color #fff
-  width 100px
-  height 100px
-}
+body, html, div, span, p
+  margin 0
+  padding 0
+  box-sizing border-box
+
+body
+  overflow hidden
+
+#app
+  display flex
 </style>

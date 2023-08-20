@@ -16,11 +16,11 @@ contextBridge.exposeInMainWorld("electron", {
   },
 
   /* 发送一个异步事件请求到主进程 */
-  invoke: async <T>(channel: string, data: T) => {
+  invoke: async <T, R>(channel: string, data: T): Promise<R | undefined> => {
     try {
       return await ipcRenderer.invoke(channel, data);
     } catch {
-      return "";
+      return;
     }
   },
 

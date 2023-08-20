@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-08-12 01:43:45
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-08-12 01:52:45
+ * @LastEditTime: 2023-08-20 11:58:36
  * @FilePath: \YYS-cuter-client2\src\main\window.ts
  * @Description: 处理一些窗口相关的事件和生命周期
  */
@@ -18,11 +18,16 @@ import { ipcMainEventsInit } from "./event";
 let win: BrowserWindow | null = null;
 const preload = join(__dirname, "../preload/index.js");
 
+export interface WindowOptions {
+  width?: number;
+  height?: number;
+}
+
 export async function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800,
-    height: 670,
+    width: 1024,
+    height: 800,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
@@ -41,7 +46,11 @@ export async function createWindow() {
 
   /* 加载一些全局事件 */
   ipcMainEventsInit(win);
+
+  return win;
 }
+
+let clearTimeFlg;
 
 export function winEventInit(win: BrowserWindow) {
   if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
@@ -52,6 +61,12 @@ export function winEventInit(win: BrowserWindow) {
 
   win.on("ready-to-show", () => {
     win.show();
+    win.setAlwaysOnTop(true);
+
+    clearTimeFlg = setTimeout(() => {
+      win?.setAlwaysOnTop(false);
+      clearTimeout(clearTimeFlg);
+    }, 100);
   });
 
   win.webContents.setWindowOpenHandler((details) => {
