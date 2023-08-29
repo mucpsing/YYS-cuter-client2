@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 
-export const templateInfo = [
+export const templateInfo = ref([
   {
     template_id: 1,
     template_name: "采样点",
@@ -19,7 +19,7 @@ export const templateInfo = [
     mxd_name: "流向_template.mxd",
     preview: "./流向_template.png",
   },
-]
+])
 
 export const formDataList = ref([])
 

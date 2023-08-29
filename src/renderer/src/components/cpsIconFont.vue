@@ -18,7 +18,7 @@
 -->
 
 <template>
-  <svg :class="svgClass" aria-hidden="true">
+  <svg :class="svgClass" aria-hidden="true" :style="{ transform: `rotate(${rotate}deg)` }">
     <use :xlink:href="iconClassName" :fill="color" />
   </svg>
 </template>
@@ -31,11 +31,13 @@ const props = withDefaults(
     className?: string
     color?: string
     iconPrefix?: string
+    rotate?: number
   }>(),
   {
     className: "",
     color: "currentColor",
     iconPrefix: "icon-yys-",
+    rotate: 0,
   },
 )
 

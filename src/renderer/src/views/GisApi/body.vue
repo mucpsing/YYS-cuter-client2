@@ -26,9 +26,36 @@
             <p :class="['flex-grow-[999] bg-red-300 py-2']">
               模板说明模板说明模板说明模板说明模板说明模板说明
             </p>
-            <div class="w-full">
-              <t-button class="w-full">模版选择</t-button>
-              <t-button class="w-full mt-1">上传模板</t-button>
+
+            <div class="max-w-[160px]">
+              <t-dropdown
+                :options="options"
+                :max-column-width="200"
+                :max-height="200"
+                @click="clickHandler"
+              >
+                <t-button class="w-full"
+                  >模版选择
+                  <template #suffix>
+                    <c-icon-font
+                      iconName="icon-yys-xiayiye"
+                      :rotate="90"
+                      color="white"
+                      :class="['text-white']"
+                    ></c-icon-font
+                  ></template>
+                </t-button>
+              </t-dropdown>
+
+              <t-button class="w-full mt-1" theme="success"
+                >使用自定义模板
+                <template #suffix>
+                  <c-icon-font
+                    iconName="icon-yys-shangchuan1"
+                    :class="['text-white']"
+                  ></c-icon-font>
+                </template>
+              </t-button>
             </div>
           </div>
 
@@ -42,10 +69,33 @@
 </template>
 
 <script setup lang="ts">
-import { type TabValue } from "tdesign-vue-next"
+import type { TabValue } from "tdesign-vue-next"
 import { templateInfo } from "./data"
 
 const id = ref(0)
+
+const options = computed(() => {
+  const res = [{ content: `模板选择 (${templateInfo.value.length})`, value: 3, divider: true }]
+
+  templateInfo.value.forEach((item, idx) => {
+    res.push({
+      content: `${idx + 1}、 ${item.mxd_name}`,
+      value: item.template_id,
+      divider: false,
+    })
+  })
+  return res
+})
+
+// const options = [
+//   { content: `模板(${templateInfo.length})`, value: 3, divider: true },
+//   {
+//     content: "采样点_template",
+//     value: 1,
+//   },
+// ]
+
+const clickHandler = () => {}
 
 const pannelSize = computed(() => {
   if (panelData.value.length > 4) {
