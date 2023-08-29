@@ -9,40 +9,23 @@
 -->
 
 <template>
-  <section
-    class="flex flex-row w-full h-full gap-4 text-white ImageReader__informationCrop justify-evenly rounded-xl"
-  >
+  <section class="flex flex-row w-full h-full gap-4 text-white ImageReader__informationCrop justify-evenly rounded-xl">
     <div
       id="canvasContainer"
       ref="canvasContainer"
-      :class="[
-        'relative',
-        'w-56 h-full',
-        'rounded-xl border-dashed border-2 border-gray-600/70',
-      ]"
+      :class="['relative', 'w-56 h-full', 'rounded-xl border-dashed border-2 border-gray-600/70']"
     >
       <!-- 预览img元素 -->
       <img
-        :class="[
-          'object-contain w-full h-full',
-          'absolute top-1/2 translate-x-1/2 right-1/2 -translate-y-1/2',
-        ]"
+        :class="['object-contain w-full h-full', 'absolute top-1/2 translate-x-1/2 right-1/2 -translate-y-1/2']"
         :src="imgPreviewSrc"
       />
     </div>
 
     <!-- 文件具体信息 -->
-    <div
-      :class="[
-        'flex flex-col gap-2 justify-start items-start',
-        'w-60 text-md text-black',
-      ]"
-    >
+    <div :class="['flex flex-col gap-2 justify-start items-start', 'w-60 text-md text-black']">
       <!-- ---------------------------------------- 标题 输入框 ---------------------------------------- -->
-      <c-input
-        v-model:value="localStore.crop.title"
-        :auto-focus="localStore.autoFcous"
-      ></c-input>
+      <c-input v-model:value="localStore.crop.title" :auto-focus="localStore.autoFcous"></c-input>
 
       <!-- 坐标信息 -->
       <section class="text-sm">
@@ -149,39 +132,24 @@
 
         <!-- ---------------------------------------- 页码 ---------------------------------------- -->
         <div class="flex justify-between w-full px-1 mt-4">
-          <div
-            class="flex items-center content-center justify-between w-2/3 gap-6 text-sm"
-          >
+          <div class="flex items-center content-center justify-between w-2/3 gap-6 text-sm">
             <!-- 【左】切换按键 -->
-            <button
-              @click="localStore.switchCoords(localStore.currtCoordsIndex - 1)"
-            >
+            <button @click="localStore.switchCoords(localStore.currtCoordsIndex - 1)">
               <c-icon-font
-                :class="[
-                  'text-gray-700',
-                  'hover:text-blue-500 hover:scale-150',
-                  'rotate-180',
-                ]"
+                :class="['text-gray-700', 'hover:text-blue-500 hover:scale-150', 'rotate-180']"
                 iconName="xiayiye"
               ></c-icon-font>
             </button>
 
             <!-- 【中】页码显示 -->
             <p :class="['text-black text-sm']">
-              {{ localStore.currtCoordsIndex + 1 }}/{{
-                localStore.currtCoordsList.length
-              }}
+              {{ localStore.currtCoordsIndex + 1 }}/{{ localStore.currtCoordsList.length }}
             </p>
 
             <!-- 【右】切换按键 -->
-            <button
-              @click="localStore.switchCoords(localStore.currtCoordsIndex + 1)"
-            >
+            <button @click="localStore.switchCoords(localStore.currtCoordsIndex + 1)">
               <c-icon-font
-                :class="[
-                  'text-gray-700',
-                  'hover:text-blue-500 hover:scale-150',
-                ]"
+                :class="['text-gray-700', 'hover:text-blue-500 hover:scale-150']"
                 iconName="xiayiye"
               ></c-icon-font>
             </button>
@@ -190,10 +158,7 @@
           <!-- 【最右】添加按钮 -->
           <button @click="localStore.addCoords('add')">
             <c-icon-font
-              :class="[
-                'text-gray-700 text-xl',
-                'hover:text-blue-500 hover:scale-150',
-              ]"
+              :class="['text-gray-700 text-xl', 'hover:text-blue-500 hover:scale-150']"
               iconName="zhuijia"
             ></c-icon-font>
           </button>
@@ -202,39 +167,23 @@
     </div>
 
     <!-- 裁剪按钮上方组合菜单 -->
-    <div
-      :class="['flex flex-col justify-start items-start gap-3', 'text-red-500']"
-    >
+    <div :class="['flex flex-col justify-start items-start gap-3', 'text-red-500']">
       <p class="text-sm">
         图片尺寸：
         <span>{{ localStore.imgWidth }}x{{ localStore.imgHeight }}</span>
       </p>
 
-      <ul
-        :class="['w-full', 'flex flex-row justify-around items-center gap-2']"
-      >
-        <li
-          v-for="item in subBtnList"
-          :key="item.iconName"
-          @click="item.onClick"
-        >
+      <ul :class="['w-full', 'flex flex-row justify-around items-center gap-2']">
+        <li v-for="item in subBtnList" :key="item.iconName" @click="item.onClick">
           <c-icon-font
-            :class="[
-              'hover:text-blue-500 hover:scale-125',
-              'text-gray-400 rounded-sm cursor-pointer',
-            ]"
+            :class="['hover:text-blue-500 hover:scale-125', 'text-gray-400 rounded-sm cursor-pointer']"
             :iconName="item.iconName"
           ></c-icon-font>
         </li>
       </ul>
 
       <!-- 裁剪按钮 -->
-      <c-button
-        :class="[
-          'flex flex-row justify-center items-center gap-2',
-          'w-full h-full',
-        ]"
-        @on-click="onClick"
+      <c-button :class="['flex flex-row justify-center items-center gap-2', 'w-full h-full']" @on-click="onClick"
         ><c-icon-font class="text-2xl" iconName="crop"></c-icon-font>
         <span>裁 剪 {{ localStore.imgScale.toFixed(2) }}</span>
       </c-button>
@@ -243,24 +192,18 @@
 </template>
 
 <script setup lang="ts">
-import { eventBus } from "@renderer/libs";
-import config from "../../store/config";
-import localStore, {
-  ElementCache,
-  startX,
-  startY,
-  endX,
-  endY,
-} from "../../store";
+import { eventBus } from "@renderer/libs"
+import config from "../../store/config"
+import localStore, { ElementCache, startX, startY, endX, endY } from "../../store"
 
-import cButton from "@renderer/components/global/cpsButton.vue";
-import cInput from "./cropInput.vue";
+import cButton from "@renderer/components/global/cpsButton.vue"
+import cInput from "./cropInput.vue"
 
-let canvas: HTMLCanvasElement;
-let canvasCtx: CanvasRenderingContext2D | null | undefined;
+let canvas: HTMLCanvasElement
+let canvasCtx: CanvasRenderingContext2D | null | undefined
 
-const imgPreviewSrc = ref("");
-const canvasContainer = ref<HTMLElement>();
+const imgPreviewSrc = ref("")
+const canvasContainer = ref<HTMLElement>()
 
 const subBtnList = [
   {
@@ -279,7 +222,7 @@ const subBtnList = [
     iconName: "lajitong",
     onClick: () => localStore.removeCoords(),
   },
-];
+]
 
 /**
  * @description: 根据输入重新更新内部坐标
@@ -287,72 +230,69 @@ const subBtnList = [
  * @param {*} witchKey
  * @return {*}
  */
-const updateCoords = (
-  target: HTMLInputElement,
-  witchKey: keyof typeof localStore.crop
-) => {
+const updateCoords = (target: HTMLInputElement, witchKey: keyof typeof localStore.crop) => {
   if (target && target.value) {
-    console.log("需要更新1: ", witchKey);
-    console.log("需要更新2: ", target.value);
+    console.log("需要更新1: ", witchKey)
+    console.log("需要更新2: ", target.value)
 
     switch (witchKey) {
       case "startX":
-        break;
+        break
       case "startY":
-        break;
+        break
       case "endX":
-        break;
+        break
       case "endY":
-        break;
+        break
     }
   }
-};
+}
 
 /**
  *  @Description 组件挂载完成后，创建一个canvas作为主要渲染器
  */
 function initCanvas() {
-  canvas = document.createElement("canvas");
-  canvasCtx = canvas.getContext("2d");
+  canvas = document.createElement("canvas")
+  canvasCtx = canvas.getContext("2d")
 
-  if (!canvas) return console.log("canvas 初始化失败");
-  if (!canvasContainer || !canvasContainer.value)
-    return console.log("canvasContainer 初始化失败");
+  if (!canvas) return console.log("canvas 初始化失败")
+  if (!canvasContainer || !canvasContainer.value) return console.log("canvasContainer 初始化失败")
 }
 
 async function onClick() {
-  localStore.addCoords();
+  localStore.addCoords()
 
-  await draw();
+  // 防止重复绘制
+  if (!config.AUTO_DRAW) eventBus.emit("imc-tabCrop-draw")
 }
 
 async function draw() {
-  if (!canvasCtx) return;
-  const img = localStore.currtImgObj.image;
+  if (!canvasCtx) return
+  const img = localStore.currtImgObj.image
   // const dragElement = ElementCache.dragElement;
 
-  canvas.width = localStore.imgWidth;
-  canvas.height = localStore.imgHeight;
+  canvas.width = localStore.imgWidth
+  canvas.height = localStore.imgHeight
 
-  const startX = localStore.crop.startX;
-  const startY = localStore.crop.startY;
-  const endX = localStore.crop.endX;
-  const endY = localStore.crop.endY;
+  const startX = localStore.crop.startX
+  const startY = localStore.crop.startY
+  const endX = localStore.crop.endX
+  const endY = localStore.crop.endY
 
-  canvasCtx.drawImage(img, 0, 0);
-  const imgClipData = canvasCtx.getImageData(startX, startY, endX, endY);
+  canvasCtx.drawImage(img, 0, 0)
+  const imgClipData = canvasCtx.getImageData(startX, startY, endX, endY)
 
-  canvas.width = endX - startX;
-  canvas.height = endY - startY;
-  canvasCtx.putImageData(imgClipData, 0, 0);
+  canvas.width = endX - startX
+  canvas.height = endY - startY
+  canvasCtx.putImageData(imgClipData, 0, 0)
 
-  imgPreviewSrc.value = canvas.toDataURL();
+  imgPreviewSrc.value = canvas.toDataURL()
 }
 
 onMounted(() =>
   nextTick(() => {
-    initCanvas();
-    eventBus.on("imc-tabCrop-draw", draw);
+    initCanvas()
+    eventBus.on("imc-tabCrop-draw", draw)
 
     // //键盘监听回车
     // document.onkeydown = function (event_e:Event) {
@@ -366,12 +306,12 @@ onMounted(() =>
     //     if (localStore.crop.mod) console.log("点击回车了");
     //   }
     // };
-  })
-);
+  }),
+)
 onUnmounted(() => {
   // cleanWatchEvent();
-  eventBus.off("imc-tabCrop-draw", draw);
-});
+  eventBus.off("imc-tabCrop-draw", draw)
+})
 </script>
 
 <style lang="stylus">

@@ -10,10 +10,10 @@
  * @Description: 路由生成
  */
 
-import Home from "@renderer/views/Home/index.vue";
+import Home from "@renderer/views/Home/index.vue"
 
-import { createRouter, createWebHistory } from "vue-router";
-import type { RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router"
+import type { RouteRecordRaw } from "vue-router"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -26,11 +26,16 @@ const routes: Array<RouteRecordRaw> = [
     name: "ImageCuter",
     component: () => import("@renderer/views/ImageCuter/index.vue"),
   },
-];
+  {
+    path: "/GisApi",
+    name: "GisApi",
+    component: () => import("@renderer/views/GisApi/index.vue"),
+  },
+]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
+})
 
-export default router;
+export default router

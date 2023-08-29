@@ -82,7 +82,7 @@
     <!-- 工具栏 -->
     <toolsBar></toolsBar>
 
-    <ToolsMenus></ToolsMenus>
+    <ToolsMenus v-show="localStore.currtMode == 'crop'"></ToolsMenus>
   </section>
 </template>
 
@@ -90,8 +90,9 @@
 import history from "./pageHistory.vue"
 import coordsPreview from "./pageSelectron.vue"
 import dataEditor from "./pageDataEditor.vue"
+// import pageServices from "./pageServices.vue"
 
-type ComponentName = "history" | "coordsPreview" | "dataEditor"
+type ComponentName = "history" | "coordsPreview" | "dataEditor" | "pageServices"
 
 /** 核心页面，各个主要菜单功能页 */
 const page: {
@@ -100,6 +101,7 @@ const page: {
   "coords-preview": "coordsPreview",
   "picture-info": "history",
   "data-editor": "dataEditor",
+  // "server-panel": "pageServices",
 }
 
 export default { components: { history, coordsPreview, dataEditor } }
@@ -295,7 +297,7 @@ const onDragCoordsResize = debounce((_e: Event, _coords?: Coords) => {
  *  @Description 更新store里面imgElementRef相关的状态尺寸
  */
 const onResize = debounce(() => {
-  console.log("onResize")
+  // console.log("onResize")
 
   const img = ElementCache.imgElement.getBoundingClientRect()
   const container = ElementCache.imgContainer.getBoundingClientRect()

@@ -11,7 +11,7 @@
 module.exports = {
   singleQuote: false, // 是否使用单引号
   semi: false, // 是否添加分号
-  printWidth: 120, // 换行长度
+  printWidth: 100, // 换行长度
   useTabs: false, // 是否使用制表符进行缩进
   endOfLine: "lf", // 换行符的类型
   trailingComma: "all", // 尾随逗号的风格

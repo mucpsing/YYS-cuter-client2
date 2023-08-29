@@ -9,9 +9,7 @@
 -->
 
 <template>
-  <div
-    class="relative flex gap-2 p-1 ImageReader__footerTabNav rounded-xl bg-blue-900/20"
-  >
+  <div class="relative flex gap-2 p-1 ImageReader__footerTabNav rounded-xl bg-blue-900/20">
     <!-- 白色的按钮遮罩 -->
     <div
       :style="{ width: lineWidth, left: lineLeft, height: lineHeight }"
@@ -28,7 +26,7 @@
     </div>
 
     <!-- 【面板切换按钮】 根据toolBar的key来切换不同的控制面板 【面板切换按钮】 -->
-    <template v-for="(info, idx) in Object.values(mainMenus)" :key="idx">
+    <template v-for="(key, idx) in Object.keys(mainMenus)" :key="idx">
       <button
         ref="btns"
         :class="[
@@ -37,9 +35,9 @@
           'ring-white ring-opacity-60 ring-offset-blue-600 focus:outline-none focus:ring-2',
           'text-blue-100 hover:bg-white/[0.12] hover:text-white',
         ]"
-        @click="onTabClick($event, info.name, idx)"
+        @click="onTabClick($event, mainMenus[key].name, idx)"
       >
-        {{ info.title }}
+        {{ mainMenus[key].title }}
       </button>
     </template>
   </div>
@@ -48,7 +46,7 @@
   <div
     :class="[
       'ImageReader__footerTabList',
-      'h-full rounded-xl bg-white p-3',
+      'h-full rounded-xl bg-white p-2',
       'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400',
       'focus:outline-none focus:ring-2',
     ]"
@@ -63,13 +61,13 @@
 
 <!-- 导出要切换的 tab 面板 -->
 <script lang="ts">
-import TabCrop from "./tabCropPanel/index.vue";
-import TabPictureInfo from "./tabPictureInfo.vue";
-import TabSelection from "./tabSelection.vue";
-import TabServerPanel from "./tabServerPanel.vue";
-import TabDataEditor from "../body/pageDataEditor.vue";
+import TabCrop from "./tabCropPanel/index.vue"
+import TabPictureInfo from "./tabPictureInfo.vue"
+import TabSelection from "./tabSelection.vue"
+import TabServerPanel from "./tabServerPanel.vue"
+import TabDataEditor from "../body/pageDataEditor.vue"
 
-import type { StringObj } from "@renderer/global";
+import type { StringObj } from "@renderer/global"
 
 /**
  * @description: 这里分成了两个 <script>是为了能在component的is中直接使用vue组件
@@ -80,7 +78,7 @@ const tabMap: StringObj = {
   "picture-info": "TabPictureInfo",
   "coords-preview": "TabSelection",
   // "data-editor": "TabDataEditor",
-};
+}
 
 export default {
   components: {
@@ -90,22 +88,22 @@ export default {
     TabServerPanel,
     TabDataEditor,
   },
-};
+}
 </script>
 
 <!-- 其他逻辑 -->
 <script setup lang="ts">
-import { eventBus } from "@renderer/libs";
-import { useResizeObserver } from "@vueuse/core";
+// import { eventBus } from "@renderer/libs";
+import { useResizeObserver } from "@vueuse/core"
 
-import localStore from "../store";
-import { mainMenus, type ModesT } from "../store/menus";
+import localStore from "../store"
+import { mainMenus, type ModesT } from "../store/menus"
 
-const btns = ref<HTMLElement[] | null>([]);
-const btnIndex = ref(0); // 对应当前模式数据的索引
-const lineWidth = ref("0");
-const lineLeft = ref("4px");
-const lineHeight = ref("0");
+const btns = ref<HTMLElement[] | null>([])
+const btnIndex = ref(0) // 对应当前模式数据的索引
+const lineWidth = ref("0")
+const lineLeft = ref("4px")
+const lineHeight = ref("0")
 
 /**
  * @Description 监听`localStore.currtMode`数据的变化，表示当前插件的模式
@@ -129,12 +127,12 @@ const lineHeight = ref("0");
 function updateBtnMask(target: HTMLElement | null = null): void {
   if (btns && btns.value) {
     if (!target) {
-      target = btns.value[btnIndex.value];
+      target = btns.value[btnIndex.value]
     }
 
-    lineWidth.value = `${target.offsetWidth}px`;
-    lineLeft.value = `${target.offsetLeft}px`;
-    lineHeight.value = `${target.offsetHeight}px`;
+    lineWidth.value = `${target.offsetWidth}px`
+    lineLeft.value = `${target.offsetLeft}px`
+    lineHeight.value = `${target.offsetHeight}px`
   }
 }
 
@@ -146,7 +144,7 @@ function updateBtnMask(target: HTMLElement | null = null): void {
  *  @param {number}     idx=-1    按钮的索引，因为通过v-for生成的按钮，用来明确具体按钮位置
  */
 function onTabClick(e: MouseEvent, modeName: ModesT, idx = -1): void {
-  if (e && e.target) updateBtnMask(e.target as HTMLElement);
+  if (e && e.target) updateBtnMask(e.target as HTMLElement)
 
   /* 切换模式 */
   if (modeName !== localStore.currtMode) {
@@ -154,14 +152,14 @@ function onTabClick(e: MouseEvent, modeName: ModesT, idx = -1): void {
      * btnIndex 关联updateBtnMask()函数，用来给按钮的mask跟踪具体位置
      */
     if (idx == -1) {
-      idx = btnIndex.value;
+      idx = btnIndex.value
     } else {
-      btnIndex.value = idx;
+      btnIndex.value = idx
     }
 
-    localStore.setMode(modeName);
+    localStore.setMode(modeName)
   } else {
-    console.log(modeName);
+    console.log(modeName)
   }
 }
 
@@ -169,17 +167,17 @@ onMounted(() => {
   /* 执行下划线的动画 */
   if (btns && btns.value) {
     /* 监听元素 */
-    useResizeObserver(btns.value[0], () => updateBtnMask());
+    useResizeObserver(btns.value[0], () => updateBtnMask())
   }
 
-  nextTick(() => updateBtnMask());
-});
+  nextTick(() => updateBtnMask())
+})
 
 // onUnmounted(()=> )
 
 onDeactivated(() => {
   // stopModeWatch();
-});
+})
 </script>
 
 <style lang="stylus">

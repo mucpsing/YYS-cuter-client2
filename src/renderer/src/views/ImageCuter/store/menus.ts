@@ -2,16 +2,16 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-02-08 17:00:45
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-08-20 12:01:38
+ * @LastEditTime: 2023-08-24 22:18:52
  * @FilePath: \yys-cuter-client\src\components\ImageCuter\store\menus.ts
  * @Description: 左边工具条的数据对象，
  * 注意！icon中自动添加了cps-yys的前缀，icon名称需要手动去除该前缀再添加到数据中
  *
  */
-import { eventBus, eventBusMain } from "@renderer/libs";
-import { SettingPageValue } from "@renderer/stores";
-import { openConfigPannelList } from "./index";
-import data from "./data";
+import { eventBus, eventBusMain } from "@renderer/libs"
+import { SettingPageValue } from "@renderer/stores"
+import { openConfigPannelList } from "./index"
+import data from "./data"
 
 export const mainMenus = {
   crop: {
@@ -44,7 +44,7 @@ export const mainMenus = {
     name: "server-panel",
     id: 2,
   },
-};
+}
 
 export const subMenus = [
   {
@@ -53,19 +53,19 @@ export const subMenus = [
     title: "打开图片",
     id: 11,
     onclick: () => {
-      eventBus.emit("imageCuterBodyOpenFile", "");
+      eventBus.emit("imageCuterBodyOpenFile", "")
     },
   },
   {
     name: "save",
-    icon: "baocun",
-    title: "保存配置文件",
+    icon: "icon-yys-daochu2",
+    title: "导出数据",
     id: 22,
     onclick: () => {
       eventBusMain.emit("exportFile", {
         path: ".",
-        data: JSON.stringify(data),
-      });
+        data: JSON.stringify(data, null, 4),
+      })
     },
   },
   {
@@ -76,12 +76,12 @@ export const subMenus = [
     onclick: () => {
       // 默认展开 通用配置
       if (openConfigPannelList.value.length == 0) {
-        openConfigPannelList.value.push("通用配置");
+        openConfigPannelList.value.push("通用配置")
       }
 
-      eventBus.emit("showSettingsPage", SettingPageValue.IMAGE_CUTER);
+      eventBus.emit("showSettingsPage", SettingPageValue.IMAGE_CUTER)
     },
   },
-];
+]
 
-export type ModesT = keyof typeof mainMenus;
+export type ModesT = keyof typeof mainMenus

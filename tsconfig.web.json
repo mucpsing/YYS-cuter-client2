@@ -3,7 +3,7 @@
   "include": [
     "src/renderer/**/*.ts",
     "src/renderer/**/*.vue",
-    "src/types/*.d.ts",
+    "src/types/*.ts",
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {

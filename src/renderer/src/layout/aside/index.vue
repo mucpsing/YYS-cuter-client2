@@ -10,22 +10,18 @@
 
 <template>
   <aside
-    class="relative flex flex-col flex-shrink-0 w-24 h-screen px-4 py-3 overflow-x-hidden text-gray-400 cps__layout-aside group hover:w-56 bg-black-50 opacity-9 rounded-2xl"
+    :class="[
+      'relative flex flex-col flex-shrink-0 w-24 h-screen px-4 py-3 overflow-x-hidden text-gray-400 cps__layout-aside group',
+      'hover:w-56 bg-black-50 opacity-9',
+      'rounded-r-2xl',
+    ]"
   >
     <!-- 按钮部分 -->
     <header>
-      <div
-        class="flex items-center content-center justify-start w-16 py-2 ml-1"
-      >
-        <button
-          class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-red-500"
-        ></button>
-        <button
-          class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-yellow-400"
-        ></button>
-        <button
-          class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-green-400"
-        ></button>
+      <div class="flex items-center content-center justify-start w-16 py-2 ml-1">
+        <button class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-red-500"></button>
+        <button class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-yellow-400"></button>
+        <button class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-green-400"></button>
         <button @click="test">
           <c-icon-font
             iconName="zhankai"
@@ -58,22 +54,18 @@
     <menu-split-line height="10px"></menu-split-line>
 
     <!-- 辅助菜单 -->
-    <menuItem
-      title="Sub Menu"
-      bgColor="rgba(0,0,0,.5)"
-      :menus="subMenus"
-    ></menuItem>
+    <menuItem title="Sub Menu" bgColor="rgba(0,0,0,.5)" :menus="subMenus"></menuItem>
     <footer></footer>
   </aside>
 </template>
 
 <script setup lang="ts">
-import menuItem from "@renderer/layout/aside/asideMenuItem.vue";
-import menuSplitLine from "@renderer/layout/aside/asideSplitLine.vue";
-import { eventBus } from "@renderer/libs";
-import { SettingPageValue } from "@renderer/stores";
+import menuItem from "@renderer/layout/aside/asideMenuItem.vue"
+import menuSplitLine from "@renderer/layout/aside/asideSplitLine.vue"
+import { eventBus } from "@renderer/libs"
+import { SettingPageValue } from "@renderer/stores"
 
-const router = useRouter();
+const router = useRouter()
 
 /* 主要标题 */
 const mainMenus = [
@@ -87,15 +79,21 @@ const mainMenus = [
     name: "截图插件",
     icon: "caijian",
     iconSub: "tupiancaijian",
-    callback: () => router.push("/plugin/ImageCuter"),
+    callback: () => router.push("/ImageCuter"),
   },
   {
     name: "河道断面图",
-    icon: "caijian",
-    iconSub: "tupiancaijian",
+    icon: "icon-yys-chart-trend-full",
+    iconSub: "icon-yys-fsux_zhexiantu",
     callback: () => router.push("/ImageCuter"),
   },
-];
+  {
+    name: "GisAPI",
+    icon: "icon-yys-GISguankong",
+    iconSub: "icon-yys-logistic",
+    callback: () => router.push("/GisApi"),
+  },
+]
 
 /* 下方副标题 */
 const subMenus = [
@@ -104,15 +102,15 @@ const subMenus = [
     icon: "setting",
     iconSub: "s-operation",
     callback: () => {
-      eventBus.emit("showSettingsPage", SettingPageValue.GLOBAL);
+      eventBus.emit("showSettingsPage", SettingPageValue.GLOBAL)
     },
   },
   { name: "使用说明", icon: "bangzhu1", iconSub: "" },
   { name: "关于作者", icon: "info", iconSub: "link" },
-];
+]
 
 async function test() {
-  console.log("test");
+  console.log("test")
 }
 </script>
 

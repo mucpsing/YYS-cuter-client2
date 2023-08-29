@@ -4,32 +4,33 @@
 </template>
 
 <script lang="ts">
-import Layout from "@renderer/layout/index.vue";
-import cpsDialog from "@renderer/components/global/headLessDialog.vue";
-import { eventBus } from "@renderer/libs";
-import { CpsDialogElement } from "@renderer/global";
+import Layout from "@renderer/layout/index.vue"
+import cpsDialog from "@renderer/components/global/headLessDialog.vue"
+import { eventBus } from "@renderer/libs"
+import { CpsDialogElement } from "@renderer/global"
 
 export default defineComponent({
   components: { Layout, cpsDialog },
   setup() {
-    const cpsDialogRef = ref<CpsDialogElement>();
+    const cpsDialogRef = ref<CpsDialogElement>()
     async function eventOpenCpsDialog(opts: any) {
       if (cpsDialogRef && cpsDialogRef.value) {
-        cpsDialogRef.value.open(opts);
+        cpsDialogRef.value.open(opts)
       }
     }
 
     onMounted(() => {
-      eventBus.on("showDialog", eventOpenCpsDialog);
-    });
+      eventBus.on("showDialog", eventOpenCpsDialog)
+      console.log("app on load")
+    })
 
     onUnmounted(() => {
-      eventBus.off("showDialog", eventOpenCpsDialog);
-    });
+      eventBus.off("showDialog", eventOpenCpsDialog)
+    })
 
-    return { cpsDialogRef };
+    return { cpsDialogRef }
   },
-});
+})
 </script>
 
 <style lang="stylus">

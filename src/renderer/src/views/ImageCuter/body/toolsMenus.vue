@@ -29,25 +29,20 @@
       ]"
       @click="item.onClick"
     >
-      <t-tooltip
-        class="w-[120px] flex items-center"
-        :content="item.title"
-        :theme="item.theme"
-      >
-        <c-icon-font
-          :class="['text-2xl mr-2', currtMenus == item.name ? '' : '']"
-          :iconName="item.icon"
-        ></c-icon-font>
+      <t-tooltip class="w-[120px] flex items-center" :content="item.title" :theme="(item.theme as Theme)">
+        <c-icon-font :class="['text-2xl mr-2', currtMenus == item.name ? '' : '']" :iconName="item.icon"></c-icon-font>
       </t-tooltip>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import interact from "interactjs";
-const currtMenus = ref("crop");
-const showMask = ref(false);
-const toolsMenusRef = ref(null);
+import interact from "interactjs"
+
+type Theme = "default" | "success" | "light" | "primary" | "warning" | "danger"
+const currtMenus = ref("crop")
+const showMask = ref(false)
+const toolsMenusRef = ref(null)
 const menus = [
   {
     title: "添加坐标",
@@ -55,9 +50,9 @@ const menus = [
     name: "add",
     theme: "primary",
     onClick: (_e: MouseEvent) => {
-      currtMenus.value = "add";
+      currtMenus.value = "add"
 
-      console.log("添加坐标");
+      console.log("添加坐标")
     },
   },
   {
@@ -66,9 +61,9 @@ const menus = [
     name: "update",
     theme: "success",
     onClick: (_e: MouseEvent) => {
-      currtMenus.value = "update";
+      currtMenus.value = "update"
 
-      console.log("更新坐标");
+      console.log("更新坐标")
     },
   },
   {
@@ -77,22 +72,22 @@ const menus = [
     name: "delete",
     theme: "danger",
     onClick: (_e: MouseEvent) => {
-      currtMenus.value = "delete";
+      currtMenus.value = "delete"
 
-      console.log("删除坐标");
+      console.log("删除坐标")
     },
   },
-];
+]
 
 function onClick(e: MouseEvent) {
   if (e && e.target) {
-    const target = e.target as HTMLDivElement;
+    const target = e.target as HTMLDivElement
 
     if (target.className.toString().includes("cps-mask")) {
-      console.log("点击了mask");
+      console.log("点击了mask")
 
-      showMask.value = !showMask.value;
-      currtMenus.value = "";
+      showMask.value = !showMask.value
+      currtMenus.value = ""
     }
   }
 }
@@ -109,22 +104,22 @@ onMounted(() => {
       ],
       listeners: {
         move(event) {
-          const target = event.target;
+          const target = event.target
           // keep the dragged position in the data-x/data-y attributes
-          const x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-          const y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+          const x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx
+          const y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy
 
           // translate the element
-          target.style.transform = "translate(" + x + "px, " + y + "px)";
+          target.style.transform = "translate(" + x + "px, " + y + "px)"
 
           // update the posiion attributes
-          target.setAttribute("data-x", x);
-          target.setAttribute("data-y", y);
+          target.setAttribute("data-x", x)
+          target.setAttribute("data-y", y)
         },
       },
-    });
+    })
   }
-});
+})
 </script>
 
 <style lang="stylus" scoped>

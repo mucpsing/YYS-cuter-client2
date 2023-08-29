@@ -9,37 +9,37 @@
  * @Filename "api.ts"
  * @Description: 存放一些服务器相关的接口，对调用接口的结果进行处理，并返回
  */
-import Axios from "axios";
-import localStore from "../store";
-import config from "../store/config";
-import type { HwndInfo, CaptrueRes } from "../imageCuter";
+import Axios from "axios"
+import config from "../store/config"
+import type { HwndInfo, CaptrueRes } from "../imageCuter"
 
-const baseURL = `http://${config.SERVER_IP}:${config.SERVER_PROT}`;
-const server = Axios.create({ baseURL });
+const baseURL = `http://${config.SERVER_IP}:${config.SERVER_PROT}`
+const server = Axios.create({ baseURL })
 
-const API = {
+const RouterList = {
   checkAlive: "/test/get/yys-client-check",
-  findWindows: "/v1/find_windows",
+  findWindows: "/v1/find_window",
+  getWindow: "/v1/get_window",
   capture: "/v1/capture",
-};
+}
 
 /**
  * @description: 检查服务器是否已开启
  */
 export async function checkAlive() {
   try {
-    const res = await server.get(API.checkAlive, {
+    const res = await server.get("/test/get/yys-client-check", {
       params: { t: new Date() },
       timeout: 1200,
-    });
+    })
 
-    if (res.status == 200) return true;
+    if (res.status == 200) return true
 
-    return false;
+    return false
   } catch (e) {
-    console.log("isAlive fail:", e);
+    console.log("isAlive fail:", e)
 
-    return false;
+    return false
   }
 }
 
@@ -48,21 +48,21 @@ export async function checkAlive() {
  */
 export async function findWindows(): Promise<HwndInfo[]> {
   try {
-    const res = await server.get(API.findWindows, {
+    const res = await server.get(RouterList.findWindows, {
       params: { t: new Date() },
-    });
+    })
 
-    console.log("findWindows: ", res.data);
+    console.log("findWindows: ", res.data)
 
     if (res.status == 200 && res.data.success && res.data.res.length > 0) {
-      return res.data.res;
+      return res.data.res
     }
 
-    return [];
+    return []
   } catch (e) {
-    console.log("findWindows fail:", e);
+    console.log("findWindows fail:", e)
 
-    return [];
+    return []
   }
 }
 
@@ -72,21 +72,21 @@ export async function findWindows(): Promise<HwndInfo[]> {
  */
 export async function hwndCapture(hwnd: number) {
   try {
-    const res = await server.get(`${API.capture}/${hwnd}`, {
+    const res = await server.get(`${RouterList.capture}/${hwnd}`, {
       params: { output_name: "md5" },
-    });
+    })
 
-    console.log("hwndCapture:", res.data);
+    console.log("hwndCapture:", res.data)
 
     if (res.status == 200 && res.data.success) {
-      const ret = res.data.res as CaptrueRes;
-      return ret.file_path;
+      const ret = res.data.res as CaptrueRes
+      return ret.file_path
     }
 
-    return "";
+    return ""
   } catch (e) {
-    console.log("hwndCapture fail: ", { e });
+    console.log("hwndCapture fail: ", { e })
 
-    return "";
+    return ""
   }
 }
