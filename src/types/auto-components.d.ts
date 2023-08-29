@@ -7,7 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    Body: typeof import('./../renderer/src/views/ImageCuter/body/index.vue')['default']
+    Body: typeof import('./../renderer/src/views/GisApi/body.vue')['default']
     Config: typeof import('./../renderer/src/views/ImageCuter/config/index.vue')['default']
     CpsButton: typeof import('./../renderer/src/components/global/cpsButton.vue')['default']
     CpsIconFont: typeof import('./../renderer/src/components/cpsIconFont.vue')['default']
@@ -16,7 +16,7 @@ declare module 'vue' {
     DragResize_old: typeof import('./../renderer/src/views/ImageCuter/body/dragResize_old.vue')['default']
     Footer: typeof import('./../renderer/src/views/ImageCuter/footer/index.vue')['default']
     GisApi: typeof import('./../renderer/src/views/GisApi/index.vue')['default']
-    Header: typeof import('./../renderer/src/views/ImageCuter/header/index.vue')['default']
+    Header: typeof import('./../renderer/src/views/GisApi/header.vue')['default']
     HeadLessDialog: typeof import('./../renderer/src/components/global/headLessDialog.vue')['default']
     Home: typeof import('./../renderer/src/views/Home/index.vue')['default']
     ImageCuter: typeof import('./../renderer/src/views/ImageCuter/index.vue')['default']
@@ -39,7 +39,6 @@ declare module 'vue' {
     TCol: typeof import('tdesign-vue-next')['Col']
     TCollapse: typeof import('tdesign-vue-next')['Collapse']
     TCollapsePanel: typeof import('tdesign-vue-next')['CollapsePanel']
-    TDivider: typeof import('tdesign-vue-next')['Divider']
     TDrawer: typeof import('tdesign-vue-next')['Drawer']
     TDropdown: typeof import('tdesign-vue-next')['Dropdown']
     TForm: typeof import('tdesign-vue-next')['Form']
@@ -54,7 +53,6 @@ declare module 'vue' {
     TSwitch: typeof import('tdesign-vue-next')['Switch']
     TTabPanel: typeof import('tdesign-vue-next')['TabPanel']
     TTabs: typeof import('tdesign-vue-next')['Tabs']
-    TTag: typeof import('tdesign-vue-next')['Tag']
     TTextarea: typeof import('tdesign-vue-next')['Textarea']
     TTooltip: typeof import('tdesign-vue-next')['Tooltip']
   }
