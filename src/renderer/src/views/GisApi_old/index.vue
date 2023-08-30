@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import GisApiHeader from "./header.vue"
-import GisApiBody from "./body/index.vue"
+import GisApiBody from "./body.vue"
 export default {
   components: { GisApiHeader, GisApiBody },
   setup() {

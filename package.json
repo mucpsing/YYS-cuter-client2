@@ -38,6 +38,7 @@
     "pug": "^3.0.2",
     "stylus": "^0.59.0",
     "tdesign-vue-next": "^1.4.2",
+    "tdesign-icons-vue-next": "^0.2.2",
     "vanilla-jsoneditor": "^0.18.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"

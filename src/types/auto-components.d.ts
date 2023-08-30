@@ -7,8 +7,9 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    Body: typeof import('./../renderer/src/views/GisApi/body.vue')['default']
+    Body: typeof import('./../renderer/src/views/GisApi_old/body.vue')['default']
     Config: typeof import('./../renderer/src/views/ImageCuter/config/index.vue')['default']
+    Content: typeof import('./../renderer/src/views/GisApi/body/content.vue')['default']
     CpsButton: typeof import('./../renderer/src/components/global/cpsButton.vue')['default']
     CpsIconFont: typeof import('./../renderer/src/components/cpsIconFont.vue')['default']
     CropInput: typeof import('./../renderer/src/views/ImageCuter/footer/tabCropPanel/cropInput.vue')['default']
@@ -16,6 +17,7 @@ declare module 'vue' {
     DragResize_old: typeof import('./../renderer/src/views/ImageCuter/body/dragResize_old.vue')['default']
     Footer: typeof import('./../renderer/src/views/ImageCuter/footer/index.vue')['default']
     GisApi: typeof import('./../renderer/src/views/GisApi/index.vue')['default']
+    GisApi_old: typeof import('./../renderer/src/views/GisApi_old/index.vue')['default']
     Header: typeof import('./../renderer/src/views/GisApi/header.vue')['default']
     HeadLessDialog: typeof import('./../renderer/src/components/global/headLessDialog.vue')['default']
     Home: typeof import('./../renderer/src/views/Home/index.vue')['default']
@@ -35,6 +37,7 @@ declare module 'vue' {
     TabPictureInfo: typeof import('./../renderer/src/views/ImageCuter/footer/tabPictureInfo.vue')['default']
     TabSelection: typeof import('./../renderer/src/views/ImageCuter/footer/tabSelection.vue')['default']
     TabServerPanel: typeof import('./../renderer/src/views/ImageCuter/footer/tabServerPanel.vue')['default']
+    TBotton: typeof import('tdesign-vue-next')['Botton']
     TButton: typeof import('tdesign-vue-next')['Button']
     TCol: typeof import('tdesign-vue-next')['Col']
     TCollapse: typeof import('tdesign-vue-next')['Collapse']
