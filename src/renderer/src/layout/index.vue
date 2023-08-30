@@ -25,14 +25,14 @@
 </template>
 
 <script setup lang="ts">
-import layoutNav from "@renderer/layout/aside/index.vue";
-import settingsPage from "@renderer/components/settings.vue";
+import layoutNav from "@renderer/layout/aside/index.vue"
+import settingsPage from "@renderer/components/settings.vue"
 
-const router = useRouter();
+const router = useRouter()
 
 onMounted(() => {
-  router.push("/ImageCuter");
-});
+  router.push("/GisApi")
+})
 </script>
 
 <style lang="stylus" scoped>

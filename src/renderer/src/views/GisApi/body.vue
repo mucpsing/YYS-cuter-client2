@@ -4,6 +4,7 @@
       class="p2"
       :value="currtTab"
       :size="pannelSize"
+      default-value="0"
       @add="addTab"
       @change="changeTab"
       @remove="removeTab"
@@ -27,26 +28,37 @@
               模板说明模板说明模板说明模板说明模板说明模板说明
             </p>
 
-            <div class="max-w-[160px]">
-              <t-dropdown
-                :options="options"
-                :max-column-width="200"
-                :max-height="200"
-                @click="clickHandler"
-              >
-                <t-button class="w-full"
-                  >模版选择
-                  <template #suffix>
-                    <c-icon-font
-                      iconName="icon-yys-xiayiye"
-                      :rotate="90"
-                      color="white"
-                      :class="['text-white']"
-                    ></c-icon-font
-                  ></template>
-                </t-button>
-              </t-dropdown>
-
+            <div class="max-w-[200px]">
+              <div class="flex gap-1">
+                <t-dropdown
+                  :options="dropdownOptions"
+                  :max-column-width="200"
+                  :max-height="200"
+                  @click="clickHandler"
+                >
+                  <t-button class=""
+                    >{{ selected_template }}
+                    <template #icon>
+                      <c-icon-font
+                        iconName="icon-yys-open"
+                        :rotate="180"
+                        color="white"
+                        :class="['text-white mr-2']"
+                      ></c-icon-font
+                    ></template>
+                  </t-button>
+                </t-dropdown>
+                <t-tooltip content="下载模板" placement="right">
+                  <t-button>
+                    <template #icon>
+                      <c-icon-font
+                        iconName="icon-yys-xiazai"
+                        color="white"
+                        :class="['text-white']"
+                      ></c-icon-font>
+                    </template> </t-button
+                ></t-tooltip>
+              </div>
               <t-button class="w-full mt-1" theme="success"
                 >使用自定义模板
                 <template #suffix>
@@ -72,30 +84,28 @@
 import type { TabValue } from "tdesign-vue-next"
 import { templateInfo } from "./data"
 
-const id = ref(0)
+// 必须为0，用来记录总的添加删除的序号
+const pannelCountId = ref(0)
 
-const options = computed(() => {
+let selected_template = "未选择模板"
+
+const dropdownOptions = computed(() => {
   const res = [{ content: `模板选择 (${templateInfo.value.length})`, value: 3, divider: true }]
 
-  templateInfo.value.forEach((item, idx) => {
+  templateInfo.value.forEach((item) => {
     res.push({
-      content: `${idx + 1}、 ${item.mxd_name}`,
+      content: `${item.template_id}、 ${item.mxd_name}`,
       value: item.template_id,
       divider: false,
+      ...item,
     })
   })
   return res
 })
 
-// const options = [
-//   { content: `模板(${templateInfo.length})`, value: 3, divider: true },
-//   {
-//     content: "采样点_template",
-//     value: 1,
-//   },
-// ]
-
-const clickHandler = () => {}
+const clickHandler = (item) => {
+  if (item.template_id) selected_template = `${item.template_id} - ${item.template_name} `
+}
 
 const pannelSize = computed(() => {
   if (panelData.value.length > 4) {
@@ -111,10 +121,10 @@ interface Data {
   label: string
 }
 
-const currtTab = ref<TabValue>("1")
+const currtTab = ref<TabValue>(0)
 const panelData = ref<Data[]>([
   {
-    id: 0,
+    id: 1,
     template_id: 1,
     label: "未命名工况",
   },
@@ -135,7 +145,7 @@ const addTab = () => {
     label: "未命名工况",
   })
 
-  id.value += 1
+  pannelCountId.value += 1
 }
 
 const removeTab = ({ value, index }) => {
@@ -146,7 +156,7 @@ const removeTab = ({ value, index }) => {
   if (panelData.value.length === 0) {
     addTab()
   } else {
-    id.value -= 1
+    pannelCountId.value -= 1
   }
 }
 
