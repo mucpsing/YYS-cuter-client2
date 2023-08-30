@@ -1,7 +1,7 @@
 <template>
-  <section :class="['mt-2 p-2', 'rounded-xl']">
+  <section :class="['__gis-api__tabs', 'mb-2 p-2', 'rounded-xl', 'w-full h-full']">
     <t-tabs
-      class="p2"
+      class="h-full p2"
       :value="currtTab"
       :size="pannelSize"
       default-value="0"
@@ -11,18 +11,25 @@
     >
       <t-tab-panel
         v-for="(item, idx) in panelData"
+        class="flex flex-col h-full"
         :key="idx"
         :value="idx"
         :label="`${item.label} (${idx + 1}/${panelData.length})`"
         :removable="true"
       >
-        <!-- <t-button class="my-2" @click="addTab"> 新建工况 + </t-button> -->
-        <header :class="['w-full h-[200px] my-2 bg-gray-400 rounded-md', 'flex flex-row gap-2']">
-          <div :class="['h-full flex-1 bg-red-200', 'flex justify-center items-center']">
+        <!-- 模板选择 -->
+        <header
+          :class="[
+            'w-full min-h-[200px] my-2 bg-gray-400 rounded-md',
+            'flex flex-row gap-2',
+            'min-w-[200px]',
+          ]"
+        >
+          <div :class="['flex-1 bg-red-200', 'flex justify-center items-center']">
             <img src="" alt="预览图" />
           </div>
 
-          <div :class="['h-full py-2', 'flex-1', 'flex flex-col justify-center items-start gap-2']">
+          <div :class="['py-2', 'flex-1', 'flex flex-col justify-center items-start gap-2']">
             <h2 :class="['text-2xl']">模板名称.mxd</h2>
             <p :class="['flex-grow-[999] bg-red-300 py-2']">
               模板说明模板说明模板说明模板说明模板说明模板说明
@@ -59,7 +66,7 @@
                     </template> </t-button
                 ></t-tooltip>
               </div>
-              <t-button class="w-full mt-1" theme="success"
+              <t-button class="w-full mt-1" theme="success" @click="test"
                 >使用自定义模板
                 <template #suffix>
                   <c-icon-font
@@ -71,10 +78,48 @@
             </div>
           </div>
 
-          <div :class="['h-full flex-[2]', 'flex justify-center items-center']">
+          <div :class="['flex-[2]', 'flex justify-center items-center']">
             <img src="" alt="指示图" />
           </div>
         </header>
+
+        <section :class="['flex flex-row w-full gap-2 items-stretch']">
+          <div :class="['flex justify-center pt-8', 'min-w-[250px] bg-red-300']">
+            <t-steps v-model="currtSetp" layout="vertical" readonly :options="Sopts" />
+          </div>
+          <div class="flex-[3] bg-green-300">2</div>
+        </section>
+
+        <footer>
+          <div :class="['flex gap-1 items-stretch', 'mt-2']">
+            <t-button class="flex-[1]" disabled
+              >生成图片<template #icon>
+                <c-icon-font
+                  iconName="icon-yys-picture"
+                  color="white"
+                  :class="['text-white mr-2']"
+                ></c-icon-font> </template
+            ></t-button>
+            <t-button class="flex-[1]" disabled theme="success"
+              >下载图片
+              <template #icon>
+                <c-icon-font
+                  iconName="icon-yys-xiazai"
+                  color="white"
+                  :class="['text-white mr-2']"
+                ></c-icon-font>
+              </template>
+            </t-button>
+            <t-button class="flex-[1]" theme="danger"
+              >重置数据<template #icon>
+                <c-icon-font
+                  iconName="icon-yys-huifu"
+                  color="white"
+                  :class="['text-white mr-2']"
+                ></c-icon-font> </template
+            ></t-button>
+          </div>
+        </footer>
       </t-tab-panel>
     </t-tabs>
   </section>
@@ -82,12 +127,14 @@
 
 <script setup lang="ts">
 import type { TabValue } from "tdesign-vue-next"
-import { templateInfo } from "./data"
+import { templateInfo, templateSetpOptions as Sopts, currtSetp } from "./data"
 
 // 必须为0，用来记录总的添加删除的序号
 const pannelCountId = ref(0)
 
 let selected_template = "未选择模板"
+
+const test = () => (currtSetp.value += 1)
 
 const dropdownOptions = computed(() => {
   const res = [{ content: `模板选择 (${templateInfo.value.length})`, value: 3, divider: true }]
@@ -104,7 +151,11 @@ const dropdownOptions = computed(() => {
 })
 
 const clickHandler = (item) => {
-  if (item.template_id) selected_template = `${item.template_id} - ${item.template_name} `
+  if (item.template_id) {
+    selected_template = `${item.template_id} - ${item.template_name} `
+  } else {
+    selected_template = "未选择模板"
+  }
 }
 
 const pannelSize = computed(() => {
@@ -166,4 +217,8 @@ const changeTab = (newTabs: TabValue) => {
 }
 </script>
 
-<style scoped></style>
+<style lang="stylus">
+.__gis-api__tabs .t-tabs__content{
+  height 100%
+}
+</style>
