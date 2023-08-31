@@ -15,33 +15,6 @@
     <transition name="ImageReader__footerTab-fade">
       <component :is="Swiper[currtSetp]"></component>
     </transition>
-    <!-- <SwiperSetp1 /> -->
-    <!-- <t-swiper
-      class="bg-red-300 tdesign-demo-block--swiper"
-      animation="fade"
-      :height="610"
-      :autoplay="false"
-      :navigation="{
-        showSlideBtn: 'never',
-        size: 'large',
-        placement: 'inside',
-        type: 'dots',
-      }"
-      trigger="click"
-      :current="currtSetpId"
-    >
-      <t-swiper-item>
-        <SwiperSetp1 />
-      </t-swiper-item>
-
-      <t-swiper-item>
-        <div>1</div>
-      </t-swiper-item>
-
-      <t-swiper-item>
-        <div>2</div>
-      </t-swiper-item>
-    </t-swiper> -->
 
     <footer :class="['flex gap-1', 'mt-4', 'flex-grow-0']">
       <t-button class="flex-[1]" :disabled="currtSetp == 1" @click="swtichSetp('back')"
