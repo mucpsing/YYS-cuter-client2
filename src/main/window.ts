@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-08-12 01:43:45
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-08-20 11:58:36
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2023-08-31 09:16:56
  * @FilePath: \YYS-cuter-client2\src\main\window.ts
  * @Description: 处理一些窗口相关的事件和生命周期
  */
@@ -26,8 +26,8 @@ export interface WindowOptions {
 export async function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1024,
-    height: 800,
+    width: 1200,
+    height: 900,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),

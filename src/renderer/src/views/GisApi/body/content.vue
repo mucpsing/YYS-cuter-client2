@@ -1,6 +1,6 @@
 <template>
   <div :class="['flex flex-col h-full px-2']">
-    <header :class="['flex justify-between items-center', 'py-6 px-8 gap-16', 'min-w-[250px]']">
+    <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
       <t-button
         ><template #icon><AddIcon /></template
       ></t-button>
@@ -20,7 +20,7 @@
       <div :class="['flex-[1]', , 'flex flex-col justify-between items-start']">
         <div>
           <h2 :class="['text-2xl']">模板名称.mxd</h2>
-          <p :class="['bg-red-300 min-h-[400px]', 'p-2']">
+          <p :class="['bg-red-300 min-h-[400px]', 'py-2']">
             模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明
           </p>
         </div>
@@ -57,7 +57,7 @@
             ></t-tooltip>
           </div>
           <div class="flex gap-1">
-            <t-button theme="success" class="w-full"
+            <t-button theme="success" class="w-full" disabled
               >本地mxd模板
               <template #icon>
                 <c-icon-font
@@ -76,60 +76,6 @@
         </div>
       </div>
     </section>
-
-    <!-- <section :class="['flex flex-row w-full gap-2', 'flex-grow-[2]', 'bg-sky-200 rounded-xl p-2']">
-      <div :class="['flex-[3]', 'flex justify-start items-start']">
-        <img src="points_template.png" class="object-cover rounded-xl" alt="" />
-      </div>
-
-      <div :class="['flex-[1]', , 'flex flex-col justify-start items-start']">
-        <div>
-          <h2 :class="['text-2xl']">模板名称.mxd</h2>
-          <p :class="['bg-red-300 min-h-[500px]', 'p-2']">
-            模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明
-          </p>
-        </div>
-
-        <div class="flex flex-col w-full gap-2">
-          <div class="flex gap-1">
-            <t-dropdown
-              :options="dropdownOptions"
-              :max-column-width="200"
-              :max-height="200"
-              @click="clickHandler"
-            >
-              <t-button class="w-full"
-                >{{ selected_template }}
-                <template #icon>
-                  <c-icon-font
-                    iconName="icon-yys-open"
-                    :rotate="180"
-                    color="white"
-                    :class="['text-white mr-2']"
-                  ></c-icon-font
-                ></template>
-              </t-button>
-            </t-dropdown>
-            <t-tooltip content="下载模板" placement="right">
-              <t-button>
-                <template #icon>
-                  <c-icon-font
-                    iconName="icon-yys-xiazai"
-                    color="white"
-                    :class="['text-white']"
-                  ></c-icon-font>
-                </template> </t-button
-            ></t-tooltip>
-          </div>
-          <t-button class="w-full" theme="success"
-            >使用自定义模板
-            <template #suffix>
-              <c-icon-font iconName="icon-yys-shangchuan1" :class="['text-white']"></c-icon-font>
-            </template>
-          </t-button>
-        </div>
-      </div>
-    </section> -->
 
     <footer :class="['flex gap-1', 'mt-2', 'flex-grow-0']">
       <t-button class="flex-[1]" :disabled="currtSetp == 1" @click="swtichSetp('back')"
