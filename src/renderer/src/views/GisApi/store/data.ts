@@ -1,21 +1,11 @@
 import { reactive } from "vue"
+import type { TabValue } from "tdesign-vue-next"
 
-/** 关联下面的options.value，用来控制当前组件的setp */
-export const currtSetp = ref(1)
-export const templateSetpOptions = [
-  { title: "选择mxd模板", value: 1 },
-  { title: "上传工程文件", value: 2 },
-  { title: "模板配置", value: 3 },
-  { title: "点击生成图片", value: 4 },
-]
+export const defaultDataItem = {
+  label: "未命名工况",
+}
 
-// export const templateSetpOptions = [
-//   { title: "上传工程文件", value: 1, content: "上传工程前后的DFSU文件" },
-//   { title: "配置工程信息", value: 2, content: "工况选择、" },
-//   { title: "图片输出配置", value: 3, content: () => "数据点间隔、等值线值" },
-//   { title: "生成图片", value: 4, content: "点击切换步骤" },
-// ]
-
+// 从后端获取
 export const templateInfo = ref([
   {
     template_id: 1,
@@ -37,6 +27,33 @@ export const templateInfo = ref([
   },
 ])
 
-export const formDataList = ref([])
+export type EMPTY_STRING = ""
+/**
+ * @description: 整个组件的核心数据
+ * @return {*}
+ */
+interface TemplateParamItemBase {
+  label: string
+  tempalte_id: number
+  dfsu_be_file: File
+  dfsu_af_file: File
+  output_name: string
+  output_type: string // jpg|png
+  project_select: EMPTY_STRING | "10年一遇" | "20年一遇" | "50年一遇" | "100年一遇" | "200年一遇"
+  flood_Type: EMPTY_STRING | "以洪为主" | "以潮为主"
+}
+
+// 用户上传的自定义mxd，与id两者必须存在一个
+export type TemplateParamItem =
+  | (TemplateParamItemBase & { tempalte_id: number })
+  | (TemplateParamItemBase & { template_url: string })
+
+export const currtIndex = ref(0)
+export const data = ref([
+  {
+    id: 1 as TabValue,
+    label: "未命名工况",
+  },
+])
 
 export default reactive({})

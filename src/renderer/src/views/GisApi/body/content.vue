@@ -17,7 +17,7 @@
     </transition>
 
     <footer :class="['flex gap-1', 'mt-4', 'flex-grow-0']">
-      <t-button class="flex-[1]" :disabled="currtSetp == 1" @click="swtichSetp('back')"
+      <t-button class="flex-[1]" :disabled="currtSetp == 1" @click="swtichSetp('back')" size="large"
         >上一步<template #icon>
           <c-icon-font
             iconName="icon-yys-xiayiye"
@@ -26,8 +26,8 @@
             :class="['text-white mr-2']"
           ></c-icon-font> </template
       ></t-button>
-      <t-button class="flex-[1]" disabled theme="success"
-        >生成图片
+      <t-button class="flex-[1]" disabled theme="success" size="large"
+        >生成图片 (1/4)
         <template #icon>
           <c-icon-font
             iconName="icon-yys-picture"
@@ -36,7 +36,11 @@
           ></c-icon-font>
         </template>
       </t-button>
-      <t-button class="flex-[1]" :disabled="currtSetp == Sopts.length" @click="swtichSetp('next')"
+      <t-button
+        class="flex-[1]"
+        :disabled="currtSetp == Sopts.length"
+        @click="swtichSetp('next')"
+        size="large"
         >下一步<template #suffix>
           <c-icon-font
             iconName="icon-yys-xiayiye"
@@ -52,20 +56,22 @@
 import SwiperSetp1 from "./SwiperSetp1.vue"
 import SwiperSetp2 from "./SwiperSetp2.vue"
 import SwiperSetp3 from "./SwiperSetp3.vue"
+import SwiperSetp4 from "./SwiperSetp4.vue"
 
 const Swiper = {
   "1": "SwiperSetp1",
   "2": "SwiperSetp2",
   "3": "SwiperSetp3",
+  "4": "SwiperSetp4",
 }
-export default { components: { SwiperSetp1, SwiperSetp2, SwiperSetp3 } }
+export default { components: { SwiperSetp1, SwiperSetp2, SwiperSetp3, SwiperSetp4 } }
 </script>
 
 <script setup lang="ts">
-import { templateSetpOptions } from "../store/data"
+import { templateSetpOptions } from "../store/state"
 import { AddIcon } from "tdesign-icons-vue-next"
 
-const data = {}
+// inject()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 const Sopts = computed(() => templateSetpOptions)
 const currtSetp = ref(1)
