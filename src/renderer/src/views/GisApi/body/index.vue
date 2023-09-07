@@ -14,11 +14,11 @@
       @remove="removeTab"
     >
       <t-tab-panel
-        v-for="(item, idx) in panelData"
+        v-for="(item, idx) in data"
         class="flex flex-col h-full"
         :key="idx"
         :value="idx"
-        :label="`${item.label} (${idx + 1}/${panelData.length})`"
+        :label="`${item.label} (${idx + 1}/${data.length})`"
         :removable="true"
       >
         <!-- 模板选择 -->
@@ -30,13 +30,19 @@
 
 <script setup lang="ts">
 import BodyContent from "./content.vue"
-import type { TabValue } from "tdesign-vue-next"
-import { templateInfo } from "../store/data"
-import { useDropZone, useResizeObserver, UseResizeObserverOptions } from "@vueuse/core"
+import { useResizeObserver } from "@vueuse/core"
+
+import { data, defaultDataItem, currtIndex as currtTab } from "../store/data"
 
 const bodyElementRef = ref<HTMLDivElement>()
 
 onMounted(() => {
+  /* 注册全局事件 */
+  provide("dataChange", dataChange)
+  provide("addTab", addTab)
+  provide("removeTab", removeTab)
+  provide("changeTab", changeTab)
+
   useResizeObserver(bodyElementRef, (entries) => {
     const target = entries[0]
 
@@ -51,60 +57,11 @@ onMounted(() => {
   })
 })
 
-const currtSetp = ref(1)
-
 // 必须为0，用来记录总的添加删除的序号
 const pannelCountId = ref(0)
 
-let selected_template = "未选择模板"
-
-const dropdownOptions = computed(() => {
-  const res = [{ content: `模板选择 (${templateInfo.value.length})`, value: 3, divider: true }]
-
-  templateInfo.value.forEach((item) => {
-    res.push({
-      content: `${item.template_id}、 ${item.mxd_name}`,
-      value: item.template_id,
-      divider: false,
-      ...item,
-    })
-  })
-  return res
-})
-
-const clickHandler = (item) => {
-  if (item.template_id) {
-    selected_template = `${item.template_id} - ${item.template_name} `
-  } else {
-    selected_template = "未选择模板"
-  }
-}
-
-const pannelSize = computed(() => {
-  if (panelData.value.length > 4) {
-    return "medium"
-  } else {
-    return "large"
-  }
-})
-
-interface Data {
-  id: number
-  template_id: number
-  label: string
-}
-
-const currtTab = ref<TabValue>(0)
-const panelData = ref<Data[]>([
-  {
-    id: 1,
-    template_id: 1,
-    label: "未命名工况",
-  },
-])
-
 const dataChange = ({ id, value }) => {
-  panelData.value.forEach((item) => {
+  data.value.forEach((item) => {
     if (item.id == id) {
       item.label = value
     }
@@ -112,10 +69,9 @@ const dataChange = ({ id, value }) => {
 }
 
 const addTab = () => {
-  panelData.value.push({
-    id: panelData.value.length,
-    template_id: 0,
-    label: "未命名工况",
+  data.value.push({
+    id: data.value.length,
+    ...defaultDataItem,
   })
 
   pannelCountId.value += 1
@@ -124,16 +80,16 @@ const addTab = () => {
 const removeTab = ({ value, index }) => {
   if (index < 0) return false
 
-  panelData.value.splice(index, 1)
+  data.value.splice(index, 1)
 
-  if (panelData.value.length === 0) {
+  if (data.value.length === 0) {
     addTab()
   } else {
     pannelCountId.value -= 1
   }
 }
 
-const changeTab = (newTabs: TabValue) => {
+const changeTab = (newTabs: number) => {
   console.log({ newTabs })
   currtTab.value = newTabs
 }
