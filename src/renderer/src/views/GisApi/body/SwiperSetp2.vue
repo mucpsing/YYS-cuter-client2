@@ -1,8 +1,14 @@
 <template>
   <section :class="['flex flex-row w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2']">
-    <div class="h-full flex-grow-[1] left bg-gray-100 rounded-md overflow-hidden">
-      <div class="py-2 pl-3 pr-4">
-        <div>
+    <div
+      :class="[
+        'h-full flex-grow-[1] left bg-gray-100 rounded-md',
+        'cps__scroll_style overflow-y-auto',
+      ]"
+    >
+      <div class="h-0 py-2 pl-3 pr-4">
+        <!-- ------------------------- 【 模型数据 】 ------------------------- -->
+        <div class="">
           <h2 class="SwiperSetp__h2"><strong>模型数据</strong></h2>
           <t-divider class="my-2"></t-divider>
           <div class="flex flex-row items-center justify-between">
@@ -17,15 +23,17 @@
 
         <t-divider class="my-2"></t-divider>
 
+        <!-- ------------------------- 【 输出名称 】 ------------------------- -->
+
         <div class="flex items-center justify-between mt-2">
           <div class="flex flex-col items-start justify-between">
             <h2 class="SwiperSetp__h2"><strong>输出名称</strong></h2>
-            <p class="max-w-[90%]">
+            <p class="max-w-[80%]">
               指定图片的输出名称，默认情况下会尝试识别shp文件名称，根据最后一段_{xxx}的xxx来命名
             </p>
           </div>
-          <div class="flex gap-1">
-            <t-input class="" placeholder="文件名（不带后缀）"></t-input>
+          <div class="flex flex-col gap-1">
+            <t-input class="max-w-[110px]" placeholder="文件名" align="center"></t-input>
             <t-dropdown
               :options="outputExtList"
               @click="(item) => (outputExt = (item.value as string))"
@@ -37,6 +45,7 @@
 
         <t-divider class="my-2"></t-divider>
 
+        <!-- ------------------------- 【 工况选择 】 ------------------------- -->
         <div class="flex items-center justify-between mt-2">
           <div class="flex flex-col items-start justify-between">
             <h2 class="SwiperSetp__h2"><strong>工况选择</strong></h2>
@@ -64,10 +73,11 @@
         </div>
         <t-divider class="my-2"></t-divider>
 
+        <!-- ------------------------- 【 工况类型 】 ------------------------- -->
         <div class="flex items-center justify-between mt-2">
           <div class="flex flex-col items-start justify-between">
-            <h2 class="SwiperSetp__h2"><strong>工况类型</strong></h2>
-            <p class="max-w-[90%]">
+            <h2 class="SwiperSetp__h2 max-w-[90%]"><strong>工况类型</strong></h2>
+            <p class="">
               常见的工况类型有：
               <t-tag
                 class="mx-1 hover:cursor-pointer"
@@ -91,6 +101,7 @@
         </div>
         <t-divider class="my-2"></t-divider>
 
+        <!-- ------------------------- 【 河道选择 】 ------------------------- -->
         <div class="flex items-center justify-between mt-2">
           <div class="flex flex-col items-start justify-between">
             <h2 class="SwiperSetp__h2"><strong>河道选择</strong></h2>
@@ -110,6 +121,7 @@
         </div>
         <t-divider class="my-2"></t-divider>
 
+        <!-- ------------------------- 【 网格间距 】 ------------------------- -->
         <div class="flex items-center justify-between mt-2">
           <div class="flex flex-col items-start justify-between">
             <h2 class="SwiperSetp__h2"><strong>网格间距</strong></h2>
@@ -121,6 +133,7 @@
         </div>
         <t-divider class="my-2"></t-divider>
 
+        <!-- ------------------------- 【 流速范围 】 ------------------------- -->
         <div class="flex items-center justify-between mt-2">
           <div class="flex flex-col items-start justify-between">
             <h2 class="SwiperSetp__h2"><strong>流速范围</strong></h2>
@@ -134,6 +147,7 @@
         </div>
         <t-divider class="my-2"></t-divider>
 
+        <!-- ------------------------- 【 等值线序列 】 ------------------------- -->
         <div class="flex items-center justify-between mt-2">
           <div class="flex flex-col w-full gap-1">
             <h2 class="SwiperSetp__h2"><strong>等值线序列</strong></h2>
@@ -164,7 +178,7 @@ const counterSetp = ref("")
 
 const outputExt = ref(".jpg")
 const outputExtList = [
-  { content: `.jpeg`, value: `.jpg` },
+  { content: `.jpg`, value: `.jpg` },
   { content: `.jpeg`, value: `.jpeg` },
   { content: `.png`, value: `.png` },
 ]
@@ -184,10 +198,10 @@ const projectModeList = [
   { content: `以潮为主`, value: `以潮为主` },
 ]
 
-const formData = {
-  be_dfsu: "",
-  af_dfsu: "",
-}
+// const formData = {
+//   be_dfsu: "",
+//   af_dfsu: "",
+// }
 </script>
 
 <style lang="stylus" scoped>

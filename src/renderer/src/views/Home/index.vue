@@ -1,71 +1,21 @@
 <template>
   <div class="h-full testtt">
-    <t-tabs class="h-full p2" :value="value">
-      <t-tab-panel
-        v-for="data in panelData"
-        :key="data.value"
-        :value="data.value"
-        :label="data.label"
-      >
-        <section :class="['parent', 'h-full', 'flex flex-col']">
-          <header class="w-full son">
-            <div class="child">
-              {{ msg }}
-            </div>
-          </header>
-
-          <div class="w-full bg-green-200 flex-grow-[2]">{{ data.content }}</div>
-
-          <footer class="w-full bg-orange-200 h-[60px]">footer</footer>
-        </section>
-      </t-tab-panel>
-    </t-tabs>
-  </div>
-
-  <!-- <div class="h-full testtt">
     <section :class="['parent', 'h-full', 'flex flex-col']">
-      <header class="w-full son">
-        <div class="child">
-          {{ msg }}
-        </div>
-      </header>
+      <header class="w-full son h-[30px]">头部</header>
 
-      <div class="w-full bg-green-200 flex-grow-[2]">{{ msg }}</div>
+      <div class="w-full h-0 bg-green-200 flex-grow-[2]">
+        <div class="h-full overflow-auto">
+          <!-- 这里的子元素是动态获取，最终导致父级元素被撑开，无法完全使用合适的动态高度 -->
+          <p class="h-[200px]" v-for="(i, idex) of [1, 2, 3, 4, 56, 7, 89]" :key="idex">{{ i }}</p>
+        </div>
+      </div>
 
       <footer class="w-full bg-orange-200 h-[60px]">footer</footer>
     </section>
-  </div> -->
+  </div>
 </template>
 
-<script lang="ts" setup>
-const msg = ref("This is Home header")
-// const currtTab = ref("0")
-const value = ref("first")
-// const pannelCountId = ref(0)
-
-const panelData = ref([
-  {
-    value: "first",
-    label: "原有选项卡1",
-    removable: true,
-    content: "原有选项卡1内容",
-  },
-  {
-    value: "second",
-    label: "原有选项卡2",
-    removable: true,
-    content: "原有选项卡2内容",
-  },
-])
-</script>
-
 <style lang="stylus">
-.parent .child {
-  background red
-  height 300px
-  width  300px
-}
-
 .testtt .t-tabs__content{
   height 100%
 }

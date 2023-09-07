@@ -15,5 +15,14 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped></style>
+<style lang="stylus">
+.cps__scroll_style{
+  &::-webkit-scrollbar {
+    width 5px
+  }
+  &::-webkit-scrollbar-thumb{
+    width 2px
+    @apply bg-orange-300
+  }
+}
+</style>
