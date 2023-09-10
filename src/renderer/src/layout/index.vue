@@ -9,7 +9,7 @@
 -->
 
 <template>
-  <div class="flex w-full cps__layout">
+  <div class="flex w-screen h-screen cps__layout">
     <layoutNav />
     <main class="w-full cps__layout-main">
       <router-view v-slot="{ Component }">
@@ -36,21 +36,16 @@ onMounted(() => {
 </script>
 
 <style lang="stylus" scoped>
-// @import 'background-switch'
-html, body
-  width 100%
-  height 100%
-
 .cps__layout, cps__layout-main
   position relative
-  height 100%
+  height 100vh
 
 .scale-slide-enter-active, .scale-slide-leave-active
   position absolute
   transition all 0.6s ease
 
 .scale-slide-enter-from
-  transform translateX(100%)
+  transform translateX(100vh)
   opacity 0.5
 
 .scale-slide-enter-to

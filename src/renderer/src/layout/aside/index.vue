@@ -11,9 +11,11 @@
 <template>
   <aside
     :class="[
-      'relative flex flex-col flex-shrink-0 w-24 h-screen px-4 py-3 overflow-x-hidden text-gray-400 cps__layout-aside group',
-      'hover:w-56 bg-black-50 opacity-9',
-      'rounded-r-2xl',
+      'cps__layout-aside group',
+      'h-screen w-24 px-4 py-3 opacity-9',
+      'relative flex flex-col flex-shrink-0 ',
+      'hover:w-56 bg-black-50  text-gray-400',
+      'rounded-r-2xl overflow-x-hidden',
     ]"
   >
     <!-- 按钮部分 -->
