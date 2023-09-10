@@ -12,8 +12,8 @@
       ></t-button>
     </header>
 
-    <transition name="ImageReader__footerTab-fade">
-      <component :is="Swiper[currtSetp]"></component>
+    <transition name="GisApi__body-fade">
+      <component :is="SwiperComponentList[currtSetp]"></component>
     </transition>
 
     <footer :class="['flex gap-1', 'mt-4', 'flex-grow-0']">
@@ -58,7 +58,7 @@ import SwiperSetp2 from "./SwiperSetp2.vue"
 import SwiperSetp3 from "./SwiperSetp3.vue"
 import SwiperSetp4 from "./SwiperSetp4.vue"
 
-const Swiper = {
+const SwiperComponentList = {
   "1": "SwiperSetp1",
   "2": "SwiperSetp2",
   "3": "SwiperSetp3",
@@ -92,3 +92,20 @@ function swtichSetp(setp: "next" | "back") {
   }
 }
 </script>
+
+<style lang="stylus">
+/* 面板切换过渡动效 */
+.GisApi__body-fade-enter-active
+  position relative
+  opacity 1
+  transition all 0.3s ease-out 0.3s
+
+.GisApi__body-fade-leave-active
+  position relative
+  opacity 1
+  transition all 0.3s cubic-bezier(1, 0.5, 0.8, 1)
+
+.GisApi__body-fade-enter-from, .GisApi__body-fade-leave-to
+  position relative
+  opacity 0
+</style>

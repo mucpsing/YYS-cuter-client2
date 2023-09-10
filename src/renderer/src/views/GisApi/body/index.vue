@@ -96,6 +96,7 @@ const changeTab = (newTabs: number) => {
 </script>
 
 <style lang="stylus">
+
 .__gis-api__tabs .t-tabs__content{
   height 100%
 }

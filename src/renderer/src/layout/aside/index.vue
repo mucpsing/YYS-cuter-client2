@@ -65,35 +65,17 @@ import menuSplitLine from "@renderer/layout/aside/asideSplitLine.vue"
 import { eventBus } from "@renderer/libs"
 import { SettingPageValue } from "@renderer/stores"
 
+import routerList from "@renderer/router/routerList"
+
 const router = useRouter()
 
 /* 主要标题 */
-const mainMenus = [
-  {
-    name: "仪表盘",
-    icon: "yuzhiyibiaopan",
-    iconSub: "home1",
-    callback: () => router.push("/home"),
-  },
-  {
-    name: "截图插件",
-    icon: "caijian",
-    iconSub: "tupiancaijian",
-    callback: () => router.push("/ImageCuter"),
-  },
-  {
-    name: "河道断面图",
-    icon: "icon-yys-chart-trend-full",
-    iconSub: "icon-yys-fsux_zhexiantu",
-    callback: () => router.push("/ImageCuter"),
-  },
-  {
-    name: "GisAPI",
-    icon: "icon-yys-GISguankong",
-    iconSub: "icon-yys-logistic",
-    callback: () => router.push("/GisApi"),
-  },
-]
+const mainMenus = routerList.map((item) => ({
+  name: item.name,
+  icon: item.icon,
+  iconSub: item.iconSub,
+  callback: () => router.push(item.routerPath),
+}))
 
 /* 下方副标题 */
 const subMenus = [

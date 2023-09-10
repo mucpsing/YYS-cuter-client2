@@ -27,11 +27,11 @@
 <script setup lang="ts">
 import layoutNav from "@renderer/layout/aside/index.vue"
 import settingsPage from "@renderer/components/settings.vue"
-
+import { lastRouterPath } from "@renderer/router/routerList"
 const router = useRouter()
 
 onMounted(() => {
-  router.push("/GisApi")
+  router.push(lastRouterPath)
 })
 </script>
 
