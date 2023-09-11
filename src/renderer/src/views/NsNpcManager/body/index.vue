@@ -14,7 +14,7 @@
 
         <div :class="['flex flex-col w-full']">
           <div :class="['flex flex-col']">
-            <t-divider align="left" class="">NPC/怪物选择</t-divider>
+            <t-divider class=""><strong>NPC/怪物选择</strong></t-divider>
             <t-select v-model="currtNpcId" :options="npcOptions" placeholder="请选择" filterable />
           </div>
         </div>
@@ -40,12 +40,13 @@
 </template>
 
 <script setup lang="ts">
-import { NpcParamsField } from "../data"
+import { NpcParamsFieldName } from "../data/template"
 
-const currtNpcId = ref(1000)
+const currtNpcId = ref(0)
 const currtNpcName = ref("NPC/怪物名称")
 
 const npcList = [
+  { label: "未选择", value: 0 },
   { label: "NPC名称1<ID>", value: 1000 },
   { label: "NPC名称2<ID>", value: 5121 },
 ]
