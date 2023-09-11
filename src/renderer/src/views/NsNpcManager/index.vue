@@ -1,5 +1,5 @@
 <template>
-  <section class="h-screen flex-grow-[999]">
+  <section class="h-screen flex-grow-[999] flex flex-col">
     <NsHeader></NsHeader>
     <NsBody></NsBody>
   </section>
