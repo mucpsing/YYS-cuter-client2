@@ -24,14 +24,14 @@
     <!-- 【右边】 -->
     <div :class="['bg-red-400', 'flex-grow-[2]']">
       <div>
-        <t-tabs v-model="currtPannel" theme="normal">
+        <t-tabs v-model="currtPannel" theme="normal" size="large">
           <t-tab-panel
-            v-for="data in panelList"
-            :key="data.label"
+            v-for="(data, idx) of panelList"
+            :key="idx"
             :value="data.label"
             :label="data.label"
           >
-            <div class="p-2">{{ data.content }}</div>
+            <div class="p-2">{{ data }}</div>
           </t-tab-panel>
         </t-tabs>
       </div>
@@ -40,6 +40,8 @@
 </template>
 
 <script setup lang="ts">
+import { NpcParamsField } from "../data"
+
 const currtNpcId = ref(1000)
 const currtNpcName = ref("NPC/怪物名称")
 
@@ -58,7 +60,7 @@ const npcOptions = [
 ]
 
 const currtPannel = ref("基础属性")
-const panelList = ref([{ label: "基础属性" }, { label: "掉落配置" }, { label: "事件配置" }])
+const panelList = ref([{ label: "基础属性" }, { label: "掉落配置" }, { label: "事件编辑" }])
 
 let id = 0
 // const addTab = () => {
