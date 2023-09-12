@@ -8,6 +8,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Body: typeof import('./../renderer/src/views/GisApi_old/body.vue')['default']
+    BodyBaseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/bodyBaseInfo.vue')['default']
+    BodyBzseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/bodyBzseInfo.vue')['default']
     Config: typeof import('./../renderer/src/views/ImageCuter/config/index.vue')['default']
     Content: typeof import('./../renderer/src/views/GisApi/body/content.vue')['default']
     CpsButton: typeof import('./../renderer/src/components/global/cpsButton.vue')['default']
@@ -23,6 +25,7 @@ declare module 'vue' {
     Home: typeof import('./../renderer/src/views/Home/index.vue')['default']
     ImageCuter: typeof import('./../renderer/src/views/ImageCuter/index.vue')['default']
     NHeader: typeof import('./../renderer/src/views/NsNpcManager/n-header.vue')['default']
+    NpcBaseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/NpcBaseInfo.vue')['default']
     NSNPC: typeof import('./../renderer/src/views/NS-NPC/index.vue')['default']
     NsNpcManager: typeof import('./../renderer/src/views/NsNpcManager/index.vue')['default']
     PageDataEditor: typeof import('./../renderer/src/views/ImageCuter/body/pageDataEditor.vue')['default']
@@ -54,6 +57,7 @@ declare module 'vue' {
     TForm: typeof import('tdesign-vue-next')['Form']
     TFormItem: typeof import('tdesign-vue-next')['FormItem']
     TInput: typeof import('tdesign-vue-next')['Input']
+    TInputNumber: typeof import('tdesign-vue-next')['InputNumber']
     TLoading: typeof import('tdesign-vue-next')['Loading']
     ToolsBar: typeof import('./../renderer/src/views/ImageCuter/body/toolsBar.vue')['default']
     ToolsMenus: typeof import('./../renderer/src/views/ImageCuter/body/toolsMenus.vue')['default']
