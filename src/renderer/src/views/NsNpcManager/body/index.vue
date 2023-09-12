@@ -10,6 +10,50 @@
             <h2>{{ currtNpcName }}</h2>
             <span>NpcId: {{ currtNpcId }}</span>
           </div>
+
+          <div class="py-2"></div>
+
+          <div class="flex flex-col gap-2 whitespace-nowrap">
+            <div :class="['flex justify-between items-center', 'gap-4']">
+              <h3>
+                <strong>{{ NpcInfoFieldName.Hp }}</strong>
+              </h3>
+              <t-slider v-model="NpcInfo.Hp" />
+              <t-input v-model="NpcInfo.Hp" class="w-[40px]" placeholder=""></t-input>
+            </div>
+
+            <div :class="['flex justify-between items-center', 'gap-4']">
+              <h3>
+                <strong>{{ NpcInfoFieldName.Str }}</strong>
+              </h3>
+              <t-slider v-model="NpcInfo.Str" />
+              <span>{{ NpcInfo.Str }}</span>
+            </div>
+
+            <div :class="['flex justify-between items-center', 'gap-4']">
+              <h3>
+                <strong>{{ NpcInfoFieldName.Dex }}</strong>
+              </h3>
+              <t-slider v-model="NpcInfo.Dex" />
+              <span>{{ NpcInfo.Dex }}</span>
+            </div>
+
+            <div :class="['flex justify-between items-center', 'gap-4']">
+              <h3>
+                <strong>{{ NpcInfoFieldName.Con }}</strong>
+              </h3>
+              <t-slider v-model="NpcInfo.Con" />
+              <span>{{ NpcInfo.Con }}</span>
+            </div>
+
+            <div :class="['flex justify-between items-center', 'gap-4']">
+              <h3>
+                <strong>{{ NpcInfoFieldName.Int }}</strong>
+              </h3>
+              <t-slider v-model="NpcInfo.Int" />
+              <span>{{ NpcInfo.Int }}</span>
+            </div>
+          </div>
         </div>
 
         <div :class="['flex flex-col w-full']">
@@ -40,7 +84,15 @@
 </template>
 
 <script setup lang="ts">
-import { NpcParamsFieldName } from "../data/template"
+import { NpcInfoFieldName } from "../data/template"
+
+const NpcInfo = reactive({
+  Hp: 200,
+  Str: 50,
+  Dex: 20,
+  Int: 20,
+  Con: 30,
+})
 
 const currtNpcId = ref(0)
 const currtNpcName = ref("NPC/怪物名称")

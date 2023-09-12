@@ -59,6 +59,7 @@ declare module 'vue' {
     ToolsMenus: typeof import('./../renderer/src/views/ImageCuter/body/toolsMenus.vue')['default']
     TRow: typeof import('tdesign-vue-next')['Row']
     TSelect: typeof import('tdesign-vue-next')['Select']
+    TSlider: typeof import('tdesign-vue-next')['Slider']
     TSpace: typeof import('tdesign-vue-next')['Space']
     TSteps: typeof import('tdesign-vue-next')['Steps']
     TSwitch: typeof import('tdesign-vue-next')['Switch']
