@@ -1,15 +1,22 @@
 export type NpcParamTable = "NpcParams" | "NpcParams2"
 export type NpcDropTable = "NpcDropItemParams" | "NpcDropItemParams2"
-export type NpcTableName = NpcParamTable | NpcDropTable
+export type NpcTableName = NpcParamTable | NpcDropTable | "NpcDataParams"
 
 export interface NpcInfo {
   NpcId: number
-  NpcLusScript?: any
+  NpcLusScript: string
   NpcName: string
+  NpcDataParams: NpcDataParams | {}
   NpcParams: NpcParams
   NpcParams2: NpcParams
   NpcDropItemParams: NpcDropItemParams | {}
   NpcDropItemParams2: NpcDropItemParams | {}
+}
+
+export interface NpcDataParams {
+  NpcId: number
+  Data: string
+  Data_CN?: string
 }
 
 export interface NpcParams {

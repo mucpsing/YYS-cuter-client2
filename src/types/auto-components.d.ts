@@ -29,6 +29,8 @@ declare module 'vue' {
     NpcBaseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/NpcBaseInfo.vue')['default']
     NpcDrop: typeof import('./../renderer/src/views/NsNpcManager/body/NpcDrop.vue')['default']
     NpcParams: typeof import('./../renderer/src/views/NsNpcManager/body/NpcParams.vue')['default']
+    NpcScriptEditor: typeof import('./../renderer/src/views/NsNpcManager/body/NpcScriptEditor.vue')['default']
+    NpcScriptEditor2: typeof import('./../renderer/src/views/NsNpcManager/body/NpcScriptEditor2.vue')['default']
     NSNPC: typeof import('./../renderer/src/views/NS-NPC/index.vue')['default']
     NsNpcManager: typeof import('./../renderer/src/views/NsNpcManager/index.vue')['default']
     PageDataEditor: typeof import('./../renderer/src/views/ImageCuter/body/pageDataEditor.vue')['default']

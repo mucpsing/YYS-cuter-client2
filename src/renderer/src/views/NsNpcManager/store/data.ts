@@ -4,6 +4,7 @@ const NpcDataRaw = {
   NpcId: 8888,
   NpcName: "特卢克族贤者",
   NpcLusScript: "",
+  NpcDataParams: { NpcId: 8888, Data: "", Data_CN: "" },
   NpcParams: {
     NpcId: 8888,
     Region: 0,
@@ -248,6 +249,15 @@ export async function updateNpcData(newNpcData: NpcInfo) {
     }
   } else {
     NpcData["NpcDropItemParams2"] = {}
+  }
+
+  if (newNpcData["NpcDataParams"]) {
+    // 更新 NpcDataParams
+    for (let key in newNpcData["NpcDataParams"]) {
+      NpcData["NpcDataParams"][key] = newNpcData["NpcDataParams"][key]
+    }
+  } else {
+    NpcData["NpcDataParams"] = { NpcId: NpcData.NpcId, Data: "", Data_CN: "" }
   }
 
   // 更新外部

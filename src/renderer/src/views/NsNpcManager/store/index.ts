@@ -16,3 +16,5 @@ export const isRequesting = ref(false)
 export const currtNpcId = ref(1000)
 
 export const updateWithBothTable = ref(false)
+
+export const NpcTabPanelHeight = ref(850)

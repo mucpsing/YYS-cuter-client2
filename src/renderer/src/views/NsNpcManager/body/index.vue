@@ -3,10 +3,10 @@
     <!-- 【左边】 -->
     <div :class="['flex-grow-[0]']">
       <div>
-        <div :class="['flex flex-col justify-between', ' mb-2 py-2 px-4']">
-          <h2 class="flex items-center py-2">
-            <strong>名称：</strong>
-            <t-input v-model="NpcData[selectNpcTable].NpcName"></t-input>
+        <div :class="['flex justify-between', ' mb-2 py-2 px-4']">
+          <h2>
+            名称：
+            <strong>{{ NpcData[selectNpcTable].NpcName }}</strong>
           </h2>
           <span
             >NpcId: <strong class="text-red-500">{{ NpcData[selectNpcTable].NpcId }}</strong></span
@@ -95,8 +95,8 @@
 
     <!-- 【右边】 -->
     <div :class="['flex-grow-[2]']">
-      <div>
-        <t-tabs v-model="currtPannel" theme="normal" size="large">
+      <t-loading text="加载中..." size="small" :loading="loading">
+        <t-tabs v-model="currtPannel" theme="normal" size="large" :onChange="loadingWait">
           <t-tab-panel value="基础属性" label="基础属性">
             <NpcParams />
           </t-tab-panel>
@@ -106,10 +106,10 @@
           </t-tab-panel>
 
           <t-tab-panel value="事件编辑" label="事件编辑">
-            <!-- <NpcParams /> -->
+            <NpcScriptEditor />
           </t-tab-panel>
         </t-tabs>
-      </div>
+      </t-loading>
 
       <div class="flex gap-2">
         <t-button class="flex-grow-[1]" theme="success" @click="updateBtn">
@@ -133,6 +133,8 @@
 import NpcBaseInfo from "./NpcBaseInfo.vue"
 import NpcParams from "./NpcParams.vue"
 import NpcDrop from "./NpcDrop.vue"
+import NpcScriptEditor from "./NpcScriptEditor.vue"
+
 import { getNpcInfoById } from "../croe/api"
 import { updateWithBothTable } from "../store/index"
 
@@ -144,6 +146,14 @@ import { updateNpcInfoById } from "../croe/api"
 import type { NpcTableName } from "../types"
 
 const currtPannel = ref("基础属性")
+const loading = ref(false)
+
+const loadingWait = () => {
+  console.log("loadingWait...")
+  if (loading.value) return
+  loading.value = true
+  setTimeout(() => (loading.value = false), 1200)
+}
 
 async function onNpcIdChange(NpcId: number) {
   if (isRequesting.value) return // 这里请求中
@@ -175,5 +185,6 @@ async function updateBtn() {
   updateNpcInfoById(currtNpcId.value, NpcData["NpcParams2"], "NpcParams2", false)
   updateNpcInfoById(currtNpcId.value, NpcData["NpcDropItemParams"], "NpcDropItemParams", false)
   updateNpcInfoById(currtNpcId.value, NpcData["NpcDropItemParams2"], "NpcDropItemParams2", false)
+  updateNpcInfoById(currtNpcId.value, { Data: NpcData["Data"] }, "NpcDataParams", false)
 }
 </script>
