@@ -1,92 +1,39 @@
 <template>
-  <div class="flex flex-col gap-2 whitespace-nowrap">
-    <!-- 血量 -->
-    <div :class="['npc__baseinfo-item']">
+  <div class="flex flex-col w-full gap-2">
+    <t-divider><strong>基础属性</strong></t-divider>
+
+    <div class="flex items-center justify-between">
       <h3>
-        <strong>{{ NpcInfoFieldName.Hp }}</strong>
+        <strong>{{ NpcInfoFieldName["Level"].text }}</strong>
       </h3>
-      <t-slider v-model="NpcInfo.Hp" />
+      <t-input-number theme="column" v-model="NpcData[selectNpcTable]['Level']"> </t-input-number>
+    </div>
+
+    <div
+      v-for="(key, idx) of ['Hp', 'Str', 'Con', 'Dex', 'Int']"
+      :key="idx"
+      :class="['npc__baseinfo-item']"
+    >
+      <h3>
+        <strong>{{ NpcInfoFieldName[key].text }}</strong>
+      </h3>
+      <t-slider v-model="NpcData[selectNpcTable][key]" :max="NpcInfoFieldName[key].max" />
       <t-input-number
         type="number"
         theme="normal"
-        v-model="NpcInfo.Hp"
+        v-model="NpcData[selectNpcTable][key]"
         align="center"
-        class="w-[50px]"
-        placeholder=""
-      ></t-input-number>
-    </div>
-
-    <!-- 力量 -->
-    <div :class="['npc__baseinfo-item']">
-      <h3>
-        <strong>{{ NpcInfoFieldName.Str }}</strong>
-      </h3>
-      <t-slider v-model="NpcInfo.Str" :max="255" />
-      <t-input-number
-        type="number"
-        theme="normal"
-        v-model="NpcInfo.Str"
-        align="center"
-        class="w-[50px]"
-        placeholder=""
-      ></t-input-number>
-    </div>
-
-    <!-- 敏捷 -->
-    <div :class="['npc__baseinfo-item']">
-      <h3>
-        <strong>{{ NpcInfoFieldName.Dex }}</strong>
-      </h3>
-      <t-slider v-model="NpcInfo.Dex" :max="255" />
-      <t-input-number
-        type="number"
-        theme="normal"
-        v-model="NpcInfo.Dex"
-        align="center"
-        class="w-[50px]"
-        placeholder=""
-      ></t-input-number>
-    </div>
-
-    <div :class="['npc__baseinfo-item']">
-      <h3>
-        <strong>{{ NpcInfoFieldName.Con }}</strong>
-      </h3>
-      <t-slider v-model="NpcInfo.Con" :max="255" />
-      <t-input-number
-        v-model="NpcInfo.Con"
-        theme="normal"
-        align="center"
-        class="w-[50px]"
-        placeholder=""
-      ></t-input-number>
-    </div>
-
-    <div :class="['npc__baseinfo-item']">
-      <h3>
-        <strong>{{ NpcInfoFieldName.Int }}</strong>
-      </h3>
-      <t-slider v-model="NpcInfo.Int" :max="255" />
-      <t-input-number
-        v-model="NpcInfo.Int"
-        theme="normal"
-        align="center"
-        class="w-[50px]"
+        :class="[key == 'Hp' ? 'w-[100px]' : 'w-[60px]']"
         placeholder=""
       ></t-input-number>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { NpcInfoFieldName } from "../data/template"
-const NpcInfo = reactive({
-  Hp: 200,
-  Str: 50,
-  Dex: 20,
-  Int: 20,
-  Con: 30,
-})
+import { NpcData } from "../store/data"
+import { selectNpcTable } from "../store/index"
 </script>
 
 <style lang="stylus" scoped>

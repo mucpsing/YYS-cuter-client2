@@ -1,90 +1,179 @@
 <template>
-  <section :class="['flex flex-row gap-2 flex-grow-[999]', 'pt-2 px-4']">
+  <section :class="['flex flex-row gap-2 flex-grow-[999]', 'pt-2 px-4', 'whitespace-nowrap']">
     <!-- 【左边】 -->
-    <div :class="['bg-red-200', 'flex-grow-[0]']">
-      <!--  -->
-      <div :class="['flex flex-col justify-between items-center', 'h-full p-4']">
-        <div class="rouned-md flex-grow-[1]">
-          <img src="" alt="" :class="['min-w-[300px] min-h-[300px] bg-green-300 rouned-md']" />
-          <div :class="['flex flex-row justify-between', ' mb-2 py-2']">
-            <h2>{{ currtNpcName }}</h2>
-            <span>NpcId: {{ currtNpcId }}</span>
-          </div>
+    <div :class="['flex-grow-[0]']">
+      <div>
+        <div :class="['flex flex-col justify-between', ' mb-2 py-2 px-4']">
+          <h2 class="flex items-center py-2">
+            <strong>名称：</strong>
+            <t-input v-model="NpcData[selectNpcTable].NpcName"></t-input>
+          </h2>
+          <span
+            >NpcId: <strong class="text-red-500">{{ NpcData[selectNpcTable].NpcId }}</strong></span
+          >
+        </div>
+      </div>
 
-          <div class="py-2"></div>
+      <div :class="['flex flex-col flex-grow-[999] gap-4', 'h-full', 'p-4']">
+        <div class="rouned-md">
+          <img src="" alt="" :class="['min-w-[300px] min-h-[300px] bg-green-300 rouned-md']" />
 
           <NpcBaseInfo />
+
+          <div :class="['flex flex-col w-full']">
+            <div :class="['flex flex-col']">
+              <t-divider class=""> <strong> NPC/怪物选择</strong></t-divider>
+
+              <div class="flex flex-col gap-2">
+                <t-select
+                  :loading="isRequesting"
+                  v-model="currtNpcId"
+                  :options="npcList"
+                  filterable
+                  :scroll="{ type: 'virtual' }"
+                  style="width: 300px"
+                  :onChange="onNpcIdChange"
+                />
+
+                <div class="flex gap-1">
+                  <t-button>{{ "<" }}</t-button>
+                  <t-button
+                    :class="['flex-grow-[999]']"
+                    theme="success"
+                    @click="onNpcIdChange(currtNpcId)"
+                  >
+                    <template #icon>
+                      <c-icon-font :v-show="isRequesting" iconName="huifu"></c-icon-font
+                    ></template>
+                    <span class="ml-2">刷新</span>
+                  </t-button>
+                  <t-button>{{ ">" }}</t-button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div :class="['flex flex-col w-full']">
-          <div :class="['flex flex-col']">
-            <t-divider class=""><strong>NPC/怪物选择</strong></t-divider>
-            <t-select v-model="currtNpcId" :options="npcOptions" placeholder="请选择" filterable />
+        <div :class="['flex-col justify-between items-center', 'gap-2']">
+          <t-divider class=""><strong>表格选择</strong></t-divider>
+          <div class="flex items-center justify-between py-2">
+            <h4>双表同步修改</h4>
+            <t-switch size="large" v-model="updateWithBothTable">
+              <template v-slot:label="slotProps">{{ slotProps.value ? "开" : "关" }}</template>
+            </t-switch>
+          </div>
+          <t-button
+            variant="outline"
+            style="width: 300px"
+            @click="
+              () => {
+                selectNpcTable = selectNpcTable == 'NpcParams' ? 'NpcParams2' : 'NpcParams'
+              }
+            "
+            theme="primary"
+            ><strong>NPC表格：</strong>{{ selectNpcTable }}</t-button
+          >
+          <div class="py-2">
+            <t-button
+              variant="outline"
+              style="width: 300px"
+              @click="
+                () => {
+                  selectDropTable =
+                    selectDropTable == 'NpcDropItemParams'
+                      ? 'NpcDropItemParams2'
+                      : 'NpcDropItemParams'
+                }
+              "
+              theme="primary"
+              ><strong>掉落物表格：</strong>{{ selectDropTable }}</t-button
+            >
           </div>
         </div>
       </div>
     </div>
 
     <!-- 【右边】 -->
-    <div :class="['bg-red-400', 'flex-grow-[2]']">
+    <div :class="['flex-grow-[2]']">
       <div>
         <t-tabs v-model="currtPannel" theme="normal" size="large">
-          <t-tab-panel
-            v-for="(data, idx) of panelList"
-            :key="idx"
-            :value="data.label"
-            :label="data.label"
-          >
-            <div class="p-2">{{ data }}</div>
+          <t-tab-panel value="基础属性" label="基础属性">
+            <NpcParams />
+          </t-tab-panel>
+
+          <t-tab-panel value="掉落配置" label="掉落配置">
+            <NpcDrop />
+          </t-tab-panel>
+
+          <t-tab-panel value="事件编辑" label="事件编辑">
+            <!-- <NpcParams /> -->
           </t-tab-panel>
         </t-tabs>
+      </div>
+
+      <div class="flex gap-2">
+        <t-button class="flex-grow-[1]" theme="success" @click="updateBtn">
+          <template #icon>
+            <c-icon-font class="mr-2 text-md" iconName="huifu" />
+          </template>
+          更新数据
+        </t-button>
+        <t-button class="flex-grow-[1]" theme="danger">
+          恢复默认
+          <template #suffix>
+            <c-icon-font class="text-md" iconName="huifu" :rotate="180" />
+          </template>
+        </t-button>
       </div>
     </div>
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import NpcBaseInfo from "./NpcBaseInfo.vue"
+import NpcParams from "./NpcParams.vue"
+import NpcDrop from "./NpcDrop.vue"
+import { getNpcInfoById } from "../croe/api"
+import { updateWithBothTable } from "../store/index"
 
-const currtNpcId = ref(0)
-const currtNpcName = ref("NPC/怪物名称")
+import { selectNpcTable, selectDropTable, isRequesting, currtNpcId } from "../store/index"
+import { NpcData, updateNpcData } from "../store/data"
+import { NpcList as npcList } from "../data/npcList"
+import { updateNpcInfoById } from "../croe/api"
 
-const npcList = [
-  { label: "未选择", value: 0 },
-  { label: "NPC名称1<ID>", value: 1000 },
-  { label: "NPC名称2<ID>", value: 5121 },
-]
-const monsterList = [
-  { label: "怪物名称1<ID>", value: 1000 },
-  { label: "怪物名称2<ID>", value: 5121 },
-]
-
-const npcOptions = [
-  { group: "NPC 列表(90)", children: npcList },
-  { group: "怪物列表(20)", children: monsterList },
-]
+import type { NpcTableName } from "../types"
 
 const currtPannel = ref("基础属性")
-const panelList = ref([{ label: "基础属性" }, { label: "掉落配置" }, { label: "事件编辑" }])
 
-let id = 0
-// const addTab = () => {
-//   panelList.value.push({
-//     value: `${id}`,
-//     label: `新选项卡${id}`,
-//     removable: true,
-//     content: "新选项卡内容",
-//   })
-//   currtPannel.value = `${id}`
-//   id += 1
-// }
+async function onNpcIdChange(NpcId: number) {
+  if (isRequesting.value) return // 这里请求中
+  // 更新 data
+  isRequesting.value = true
+  const new_data = await getNpcInfoById(NpcId)
 
-// const removeTab = ({ value: val, index }) => {
-//   if (index < 0) return false
-//   panelList.value.splice(index, 1)
-//   if (panelList.value.length === 0) return
-//   if (currtPannel.value === val) {
-//     currtPannel.value = panelList.value[Math.max(index - 1, 0)].value
-//   }
-// }
+  if (new_data) await updateNpcData(new_data)
+
+  setTimeout(() => (isRequesting.value = false), 1000)
+}
+
+async function updateBtn() {
+  // let table_name: NpcTableName
+  // switch (currtPannel.value) {
+  //   case "基础属性":
+  //     table_name = selectNpcTable.value
+  //     break
+  //   case "掉落配置":
+  //     table_name = selectDropTable.value
+  //     break
+  //   default:
+  //     return
+  // }
+  // const res = await updateNpcInfoById(currtNpcId.value, NpcData[table_name], table_name, false)
+  // console.log("整体更新结果: ", res)
+
+  updateNpcInfoById(currtNpcId.value, NpcData["NpcParams"], "NpcParams", false)
+  updateNpcInfoById(currtNpcId.value, NpcData["NpcParams2"], "NpcParams2", false)
+  updateNpcInfoById(currtNpcId.value, NpcData["NpcDropItemParams"], "NpcDropItemParams", false)
+  updateNpcInfoById(currtNpcId.value, NpcData["NpcDropItemParams2"], "NpcDropItemParams2", false)
+}
 </script>
