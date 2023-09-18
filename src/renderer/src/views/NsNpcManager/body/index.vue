@@ -28,13 +28,19 @@
                 <t-select
                   :loading="isRequesting"
                   v-model="currtNpcId"
-                  :options="npcList"
+                  :options="NpcList"
                   filterable
-                  :scroll="{ type: 'virtual' }"
-                  style="width: 300px"
-                  :onChange="onNpcIdChange"
-                />
-
+                  :scroll="{ type: 'virtual', threshold: 20 }"
+                  style="width: 300px; padding-left: 0"
+                  :change="onNpcIdChange"
+                  :onFocus="
+                    (e) => {
+                      console.log('当前：', e)
+                    }
+                  "
+                >
+                  <template #suffixIcon> <SearchIcon /> </template>
+                </t-select>
                 <div class="flex gap-1">
                   <t-button>{{ "<" }}</t-button>
                   <t-button
@@ -55,7 +61,7 @@
         </div>
 
         <div :class="['flex-col justify-between items-center', 'gap-2']">
-          <t-divider class=""><strong>表格选择</strong></t-divider>
+          <!-- <t-divider class=""><strong>表格选择</strong></t-divider> -->
           <div class="flex items-center justify-between py-2">
             <h4>双表同步修改</h4>
             <t-switch size="large" v-model="updateWithBothTable">
@@ -95,7 +101,7 @@
 
     <!-- 【右边】 -->
     <div :class="['flex-grow-[2]']">
-      <t-loading text="加载中..." size="small" :loading="loading">
+      <t-loading size="small" :loading="loading">
         <t-tabs v-model="currtPannel" theme="normal" size="large" :onChange="loadingWait">
           <t-tab-panel value="基础属性" label="基础属性">
             <NpcParams />
@@ -108,10 +114,14 @@
           <t-tab-panel value="事件编辑" label="事件编辑">
             <NpcScriptEditor />
           </t-tab-panel>
+
+          <t-tab-panel value="数据查询" label="数据查询">
+            <DataSearch />
+          </t-tab-panel>
         </t-tabs>
       </t-loading>
 
-      <div class="flex gap-2">
+      <div class="flex gap-2 py-2">
         <t-button class="flex-grow-[1]" theme="success" @click="updateBtn">
           <template #icon>
             <c-icon-font class="mr-2 text-md" iconName="huifu" />
@@ -134,16 +144,17 @@ import NpcBaseInfo from "./NpcBaseInfo.vue"
 import NpcParams from "./NpcParams.vue"
 import NpcDrop from "./NpcDrop.vue"
 import NpcScriptEditor from "./NpcScriptEditor.vue"
+import DataSearch from "./DataSearch.vue"
 
 import { getNpcInfoById } from "../croe/api"
 import { updateWithBothTable } from "../store/index"
 
 import { selectNpcTable, selectDropTable, isRequesting, currtNpcId } from "../store/index"
 import { NpcData, updateNpcData } from "../store/data"
-import { NpcList as npcList } from "../data/npcList"
+import { NpcList } from "../data/npcList"
 import { updateNpcInfoById } from "../croe/api"
 
-import type { NpcTableName } from "../types"
+import { SearchIcon } from "tdesign-icons-vue-next"
 
 const currtPannel = ref("基础属性")
 const loading = ref(false)
@@ -152,7 +163,7 @@ const loadingWait = () => {
   console.log("loadingWait...")
   if (loading.value) return
   loading.value = true
-  setTimeout(() => (loading.value = false), 1200)
+  setTimeout(() => (loading.value = false), 300)
 }
 
 async function onNpcIdChange(NpcId: number) {
@@ -185,6 +196,6 @@ async function updateBtn() {
   updateNpcInfoById(currtNpcId.value, NpcData["NpcParams2"], "NpcParams2", false)
   updateNpcInfoById(currtNpcId.value, NpcData["NpcDropItemParams"], "NpcDropItemParams", false)
   updateNpcInfoById(currtNpcId.value, NpcData["NpcDropItemParams2"], "NpcDropItemParams2", false)
-  updateNpcInfoById(currtNpcId.value, { Data: NpcData["Data"] }, "NpcDataParams", false)
+  updateNpcInfoById(currtNpcId.value, NpcData["NpcDataParams"], "NpcDataParams", false)
 }
 </script>

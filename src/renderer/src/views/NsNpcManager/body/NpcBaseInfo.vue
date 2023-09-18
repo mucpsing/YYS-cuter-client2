@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col w-full gap-2">
-    <t-divider><strong>基础属性</strong></t-divider>
+  <div class="flex flex-col w-full gap-2 pt-4">
+    <!-- <t-divider><strong>基础属性</strong></t-divider> -->
 
     <div class="flex items-center justify-between">
       <h3>

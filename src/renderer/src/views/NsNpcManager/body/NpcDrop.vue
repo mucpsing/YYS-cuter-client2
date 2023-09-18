@@ -100,13 +100,22 @@
 </template>
 
 <script setup lang="ts">
-import { itemListSelectOptions } from "../data/itemList"
+import { itemListRaw } from "../data/itemList"
 import { NpcData } from "../store/data"
 import { selectDropTable, selectNpcTable, currtNpcId, NpcTabPanelHeight } from "../store/index"
 import { updateNpcInfoById } from "../croe/api"
 import type { NpcTableName } from "../types"
 
 const count = computed(() => (selectDropTable.value == "NpcDropItemParams" ? 24 : 48))
+
+const itemListSelectOptions = itemListRaw
+  .map((item, idx) => ({
+    label: `${item.ItemId}_${item.ItemName}`,
+    value: item.ItemId,
+    index: idx + 1,
+  }))
+  .sort((a, b) => a.value - b.value)
+itemListSelectOptions.push({ label: "0000000_无掉落", index: 0, value: 0 })
 
 async function updateRow(key, value, table_name: NpcTableName) {
   const res = await updateNpcInfoById(currtNpcId.value, { [key]: value }, table_name)
@@ -122,7 +131,6 @@ const tableColumns = [
   { colKey: "id", title: "序号", width: "40" },
   { colKey: "itemId", title: "掉落物品", width: "260" },
   { colKey: "pro", title: "掉落概率", width: "200" },
-  // { colKey: "edit", title: "操作", width: "60" },
 ]
 
 const tableData = computed(() => {
