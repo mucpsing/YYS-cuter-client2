@@ -107,10 +107,8 @@
 import { itemListRaw } from "../data/itemList"
 import { NpcData } from "../store/data"
 import { selectDropTable, selectNpcTable, currtNpcId, NpcTabPanelHeight } from "../store/index"
-import { updateNpcInfoById } from "../croe/api"
+import { updateNpcInfoById } from "@renderer/api/ns-api"
 import type { NpcTableName } from "../types"
-
-const count = computed(() => (selectDropTable.value == "NpcDropItemParams" ? 24 : 48))
 
 const itemListSelectOptions = itemListRaw
   .map((item, idx) => ({
@@ -126,6 +124,7 @@ async function updateRow(key, value, table_name: NpcTableName) {
 
   console.log("updateRow: ", res)
 }
+
 function cleanRow(row) {
   NpcData[selectDropTable.value][row.pro] = 0
   NpcData[selectDropTable.value][row.itemId] = 0
@@ -137,9 +136,12 @@ const tableColumns = [
   { colKey: "pro", title: "掉落概率", width: "200" },
 ]
 
+// const count = computed(() => (selectDropTable.value == "NpcDropItemParams" ? 24 : 48))
+
 const tableData = computed(() => {
   if (!NpcData[selectDropTable.value]) return []
-  const res = new Array(count.value).fill(1).map((_v, i) => {
+  const count = selectDropTable.value == "NpcDropItemParams" ? 24 : 48
+  const res = new Array(count).fill(1).map((_v, i) => {
     i += 1
     if (i.toString().length < 2) {
       return {
@@ -169,3 +171,4 @@ onMounted(() => {})
 </script>
 
 <style scoped></style>
+../../../croe/api

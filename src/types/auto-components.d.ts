@@ -27,7 +27,7 @@ declare module 'vue' {
     ImageCuter: typeof import('./../renderer/src/views/ImageCuter/index.vue')['default']
     InputSwitchSelect: typeof import('./../renderer/src/views/NsNpcManager/_conponents/inputSwitchSelect.vue')['default']
     ItemManager: typeof import('./../renderer/src/views/ItemManager/index.vue')['default']
-    NHeader: typeof import('./../renderer/src/views/NsNpcManager/n-header.vue')['default']
+    NHeader: typeof import('./../renderer/src/views/ItemManager/n-header.vue')['default']
     NpcBaseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/NpcBaseInfo.vue')['default']
     NpcDrop: typeof import('./../renderer/src/views/NsNpcManager/body/NpcDrop.vue')['default']
     NpcParams: typeof import('./../renderer/src/views/NsNpcManager/body/NpcParams.vue')['default']

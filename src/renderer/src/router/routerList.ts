@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-09-10 21:57:59
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-09-19 11:36:16
+ * @LastEditTime: 2023-09-19 21:15:38
  * @FilePath: \YYS-cuter-client2\src\renderer\src\router\routerList.ts
  * @Description: 路由元数据，用于生成路由和侧边栏的主菜单列
  */
@@ -46,8 +46,8 @@ export const routerList = [
     name: "NS-物品管理",
     icon: "icon-yys-youxi",
     iconSub: "icon-yys-yonghuziliao-xianxing",
-    routerPath: "/ItemManager",
-    comment: () => import("@renderer/views/ItemManager/index.vue"),
+    routerPath: "/NsItemManager",
+    comment: () => import("@renderer/views/NsItemManager/index.vue"),
   },
 ]
 

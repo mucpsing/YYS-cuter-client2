@@ -146,13 +146,12 @@ import NpcDrop from "./NpcDrop.vue"
 import NpcScriptEditor from "./NpcScriptEditor.vue"
 import DataSearch from "./DataSearch.vue"
 
-import { getNpcInfoById } from "../croe/api"
+import { getNpcInfoById, updateNpcInfoById } from "@renderer/api/ns-api"
 import { updateWithBothTable } from "../store/index"
 
 import { selectNpcTable, selectDropTable, isRequesting, currtNpcId } from "../store/index"
 import { NpcData, updateNpcData } from "../store/data"
 import { NpcList } from "../data/npcList"
-import { updateNpcInfoById } from "../croe/api"
 
 import { SearchIcon } from "tdesign-icons-vue-next"
 
@@ -199,3 +198,4 @@ async function updateBtn() {
   updateNpcInfoById(currtNpcId.value, NpcData["NpcDataParams"], "NpcDataParams", false)
 }
 </script>
+../../../croe/api../../../croe/api

@@ -219,7 +219,7 @@ const NpcDataRaw = {
 
 export type NpcDataKeysType = keyof typeof NpcDataRaw
 
-export const NpcData: NpcInfo = reactive(NpcDataRaw)
+export const NpcData = reactive<NpcInfo>(NpcDataRaw)
 
 export async function updateNpcData(newNpcData: NpcInfo) {
   console.log("更新数据1", newNpcData)
