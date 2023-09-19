@@ -67,12 +67,16 @@
             :scroll="{ type: 'virtual' }"
             style="width: 300px"
           />
-          <t-button
-            variant="outline"
+
+          <t-link
             theme="success"
+            hover="color"
             @click="updateRow(row.itemId, NpcData[selectDropTable][row.itemId], selectDropTable)"
-          ></t-button>
-          <t-button variant="outline" theme="danger"></t-button>
+          >
+            更新
+          </t-link>
+
+          <!-- <t-link theme="danger" hover="color" @click="cleanRow(row)"> 清空 </t-link> -->
         </div>
       </template>
 

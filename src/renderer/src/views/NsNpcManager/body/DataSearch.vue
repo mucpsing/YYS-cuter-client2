@@ -1,5 +1,5 @@
 <template>
-  <section class="h-screen flex-grow-[999] flex flex-col items-center py-5 gap-4">
+  <section class="flex-grow-[999] flex flex-col items-center py-5 gap-4">
     <t-card hoverShadow class="flex flex-col justify-center w-full max-w-[800px]">
       <div :class="['flex justify-between', 'pb-2']">
         <div class="flex items-end justify-center gap-2 text-base">
@@ -34,7 +34,7 @@
     </t-card>
 
     <t-card hoverShadow :class="['w-full max-w-[800px] min-h-[600px']" title="详细信息">
-      详细内容
+      <t-table hover :data="tableData"> </t-table>
     </t-card>
   </section>
 </template>
@@ -49,13 +49,13 @@ const NpcDetailList = npcListRaw.map((item) => ({
   label: `${item.NpcName}__${item.NpcId}__0x${item.NpcId.toString(16)}`,
   value: item.NpcId,
 }))
-NpcDetailList.push({ label: "未选择", value: 0 })
+// NpcDetailList.push({ label: "未选择", value: 0 })
 
 const MonsterDetailList = itemListRaw.map((item) => ({
   label: `${item.ItemName}__${item.ItemId}__0x${item.ItemId.toString(16)}`,
   value: item.ItemId,
 }))
-MonsterDetailList.push({ label: "未选择", value: 0 })
+// MonsterDetailList.push({ label: "未选择", value: 0 })
 
 const currtSelectList = [...NpcDetailList, ...MonsterDetailList, { label: "未选择", value: 0 }]
 
@@ -63,23 +63,9 @@ const currtValue = ref(0)
 const searchType = ref("物品")
 const searchTypeList = ["NPC", "怪物", "物品"]
 
-// const currtSelectList = computed(() => {
-//   let selectOptionList
-
-//   switch (searchType.value) {
-//     case "NPC":
-//     case "怪物":
-//       selectOptionList = NpcDetailList
-//       break
-
-//     case "物品":
-//       selectOptionList = MonsterDetailList
-//       break
-//     default:
-//       selectOptionList = []
-//   }
-//   return selectOptionList
-// })
+const tableData = computed(() => {
+  if (currtValue.value == 0) return []
+})
 
 async function onSearchChange() {}
 </script>
