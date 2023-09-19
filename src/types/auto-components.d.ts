@@ -7,7 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    Body: typeof import('./../renderer/src/views/GisApi_old/body.vue')['default']
+    Body: typeof import('./../renderer/src/views/GisApi/body/index.vue')['default']
     BodyBaseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/bodyBaseInfo.vue')['default']
     BodyBzseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/bodyBzseInfo.vue')['default']
     Config: typeof import('./../renderer/src/views/ImageCuter/config/index.vue')['default']
@@ -26,6 +26,7 @@ declare module 'vue' {
     Home: typeof import('./../renderer/src/views/Home/index.vue')['default']
     ImageCuter: typeof import('./../renderer/src/views/ImageCuter/index.vue')['default']
     InputSwitchSelect: typeof import('./../renderer/src/views/NsNpcManager/_conponents/inputSwitchSelect.vue')['default']
+    ItemManager: typeof import('./../renderer/src/views/ItemManager/index.vue')['default']
     NHeader: typeof import('./../renderer/src/views/NsNpcManager/n-header.vue')['default']
     NpcBaseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/NpcBaseInfo.vue')['default']
     NpcDrop: typeof import('./../renderer/src/views/NsNpcManager/body/NpcDrop.vue')['default']

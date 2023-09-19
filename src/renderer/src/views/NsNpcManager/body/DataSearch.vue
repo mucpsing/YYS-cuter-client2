@@ -65,6 +65,8 @@ const searchTypeList = ["NPC", "怪物", "物品"]
 
 const tableData = computed(() => {
   if (currtValue.value == 0) return []
+
+  // if()
 })
 
 async function onSearchChange() {}
