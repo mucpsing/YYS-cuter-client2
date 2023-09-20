@@ -5,13 +5,16 @@
       <div
         class="h-full flex-grow-[1] bg-gray-100 relative flex justify-center items-end rounded-sm"
       >
-        <t-button class="mb-2 min-w-[250px]" theme="danger">工程前 .dfsu</t-button>
+        <t-button class="mb-2 min-w-[250px]" theme="danger" :onClick="uploadHandler"
+          >工程前 .dfsu</t-button
+        >
       </div>
       <div
         class="h-full flex-grow-[1] bg-red-300 relative flex justify-center items-end rounded-sm"
       >
         <t-button class="mb-2 min-w-[250px]" theme="danger">工程后 .dfsu</t-button>
       </div>
+      <input type="file" style="display: none" ref="inputRef" @change="inputChange" />
     </header>
 
     <footer :class="['flex-grow-[1]']">
@@ -98,6 +101,9 @@
 </template>
 
 <script setup lang="ts">
+import { uploadFile } from "../api"
+const inputRef = ref<HTMLInputElement>()
+
 const outputExt = ref(".jpg")
 const outputExtList = [
   { content: `.jpg`, value: `.jpg` },
@@ -119,6 +125,27 @@ const projectTypeList = [
   { content: `100年一遇`, value: `100年一遇` },
   { content: `200年一遇`, value: `200年一遇` },
 ]
+
+async function uploadHandler(e) {
+  if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
+  
+  inputRef.value.click()
+}
+
+async function inputChange(e) {
+  if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
+  if (!inputRef.value.files) return console.log("input为空，不执行上传")
+
+  let file = inputRef.value.files[0]
+  let _fromData = new FormData()
+  _fromData.append("file", file)
+
+  let res = await uploadFile(_fromData)
+
+  console.log(res)
+}
+
+onMounted(() => {})
 </script>
 
 <style scoped></style>
