@@ -1,20 +1,9 @@
 <template>
   <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'bg-sky-600 rounded-xl p-2']">
     <!-- --------------- 【 工程前后的数据文件上传 】 --------------- -->
-    <header :class="['flex-grow-[1]', 'flex gap-2']">
-      <div
-        class="h-full flex-grow-[1] bg-gray-100 relative flex justify-center items-end rounded-sm"
-      >
-        <t-button class="mb-2 min-w-[250px]" theme="danger" :onClick="uploadHandler"
-          >工程前 .dfsu</t-button
-        >
-      </div>
-      <div
-        class="h-full flex-grow-[1] bg-red-300 relative flex justify-center items-end rounded-sm"
-      >
-        <t-button class="mb-2 min-w-[250px]" theme="danger">工程后 .dfsu</t-button>
-      </div>
-      <input type="file" style="display: none" ref="inputRef" @change="inputChange" />
+    <header :class="['flex-grow-[1]', 'flex gap-2', 'min-h-[250px]']">
+      <DfsuUpload title="工程前 - DFSU文件" />
+      <DfsuUpload title="工程后 - DFSU文件" />
     </header>
 
     <footer :class="['flex-grow-[1]']">
@@ -29,7 +18,11 @@
         <div class="flex gap-1">
           <t-input class="" placeholder="文件名（不带后缀）" align="center"></t-input>
           <t-dropdown
-            :options="outputExtList"
+            :options="[
+              { content: `.jpg`, value: `.jpg` },
+              { content: `.jpeg`, value: `.jpeg` },
+              { content: `.png`, value: `.png` },
+            ]"
             @click="(item) => (outputExt = (item.value as string))"
           >
             <t-button>{{ outputExt }}</t-button>
@@ -47,7 +40,13 @@
             常见的工况有：
             <t-tag
               class="mx-1 hover:cursor-pointer"
-              v-for="(item, idx) of projectTypeList"
+              v-for="(item, idx) of [
+                { content: `10年一遇`, value: `10年一遇` },
+                { content: `20年一遇`, value: `20年一遇` },
+                { content: `50年一遇`, value: `50年一遇` },
+                { content: `100年一遇`, value: `100年一遇` },
+                { content: `200年一遇`, value: `200年一遇` },
+              ]"
               :key="idx"
               theme="success"
               variant="light-outline"
@@ -58,7 +57,13 @@
         </div>
         <div class="flex gap-1">
           <t-dropdown
-            :options="projectTypeList"
+            :options="[
+              { content: `10年一遇`, value: `10年一遇` },
+              { content: `20年一遇`, value: `20年一遇` },
+              { content: `50年一遇`, value: `50年一遇` },
+              { content: `100年一遇`, value: `100年一遇` },
+              { content: `200年一遇`, value: `200年一遇` },
+            ]"
             @click="(item) => (outputPojectType = (item.value as string))"
           >
             <t-button>{{ outputPojectType }}</t-button>
@@ -76,7 +81,10 @@
             常见的<strong>洪水</strong>类型有：
             <t-tag
               class="mx-1 hover:cursor-pointer"
-              v-for="(item, idx) of floodModeList"
+              v-for="(item, idx) of [
+                { content: `以洪为主`, value: `以洪为主` },
+                { content: `以潮为主`, value: `以潮为主` },
+              ]"
               :key="idx"
               theme="warning"
               variant="light-outline"
@@ -87,7 +95,10 @@
         </div>
         <div class="flex gap-1">
           <t-dropdown
-            :options="floodModeList"
+            :options="[
+              { content: `以洪为主`, value: `以洪为主` },
+              { content: `以潮为主`, value: `以潮为主` },
+            ]"
             @click="(item) => (outputFloodMode = (item.value as string))"
           >
             <t-button>{{ outputFloodMode }}</t-button>
@@ -101,51 +112,16 @@
 </template>
 
 <script setup lang="ts">
-import { uploadFile } from "../api"
-const inputRef = ref<HTMLInputElement>()
+import DfsuUpload from "../_components/dfsuUpload.vue"
 
 const outputExt = ref(".jpg")
-const outputExtList = [
-  { content: `.jpg`, value: `.jpg` },
-  { content: `.jpeg`, value: `.jpeg` },
-  { content: `.png`, value: `.png` },
-]
-
 const outputFloodMode = ref("选择类型")
-const floodModeList = [
-  { content: `以洪为主`, value: `以洪为主` },
-  { content: `以潮为主`, value: `以潮为主` },
-]
-
 const outputPojectType = ref("选择工况")
-const projectTypeList = [
-  { content: `10年一遇`, value: `10年一遇` },
-  { content: `20年一遇`, value: `20年一遇` },
-  { content: `50年一遇`, value: `50年一遇` },
-  { content: `100年一遇`, value: `100年一遇` },
-  { content: `200年一遇`, value: `200年一遇` },
-]
 
-async function uploadHandler(e) {
-  if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
-  
-  inputRef.value.click()
-}
-
-async function inputChange(e) {
-  if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
-  if (!inputRef.value.files) return console.log("input为空，不执行上传")
-
-  let file = inputRef.value.files[0]
-  let _fromData = new FormData()
-  _fromData.append("file", file)
-
-  let res = await uploadFile(_fromData)
-
-  console.log(res)
-}
-
-onMounted(() => {})
+const formData = reactive({
+  be_dfsu: {} as File,
+  af_dfsu: {} as File,
+})
 </script>
 
 <style scoped></style>

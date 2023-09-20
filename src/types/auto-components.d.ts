@@ -16,6 +16,7 @@ declare module 'vue' {
     CpsIconFont: typeof import('./../renderer/src/components/cpsIconFont.vue')['default']
     CropInput: typeof import('./../renderer/src/views/ImageCuter/footer/tabCropPanel/cropInput.vue')['default']
     DataSearch: typeof import('./../renderer/src/views/NsNpcManager/body/DataSearch.vue')['default']
+    DfsuUpload: typeof import('./../renderer/src/views/GisApi/_components/dfsuUpload.vue')['default']
     DragResize: typeof import('./../renderer/src/views/ImageCuter/body/dragResize.vue')['default']
     DragResize_old: typeof import('./../renderer/src/views/ImageCuter/body/dragResize_old.vue')['default']
     Footer: typeof import('./../renderer/src/views/ImageCuter/footer/index.vue')['default']
