@@ -3,7 +3,6 @@ import { defineConfig, externalizeDepsPlugin } from "electron-vite"
 import vue from "@vitejs/plugin-vue"
 import vueJsx from "@vitejs/plugin-vue-jsx"
 
-import monacoEditorPlugin from "vite-plugin-monaco-editor"
 
 import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
@@ -33,7 +32,6 @@ export default defineConfig({
     plugins: [
       vue(),
       vueJsx(),
-      monacoEditorPlugin.default({ languages: ["json", "sql"] }),
       AutoImport({
         imports: ["vue", "vue-router"],
         dts: resolve("./src/types/auto-imports.d.ts"),

@@ -1,7 +1,7 @@
 <template>
   <div :class="['flex flex-col h-full px-2 gap-4']">
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
-      <t-button
+      <t-button :onClick="addTab"
         ><template #icon><AddIcon /></template
       ></t-button>
 
@@ -72,6 +72,8 @@ import { templateSetpOptions } from "../store/state"
 import { AddIcon } from "tdesign-icons-vue-next"
 
 // inject()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// const addTab = inject("addTab") as () => void
+const { addTab } = inject("tagControler")
 
 const Sopts = computed(() => templateSetpOptions)
 const currtSetp = ref(1)

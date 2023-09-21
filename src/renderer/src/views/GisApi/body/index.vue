@@ -34,15 +34,10 @@ import { useResizeObserver } from "@vueuse/core"
 
 import { data, defaultDataItem, currtIndex as currtTab } from "../store/data"
 
+
 const bodyElementRef = ref<HTMLDivElement>()
 
 onMounted(() => {
-  /* 注册全局事件 */
-  provide("dataChange", dataChange)
-  provide("addTab", addTab)
-  provide("removeTab", removeTab)
-  provide("changeTab", changeTab)
-
   useResizeObserver(bodyElementRef, (entries) => {
     const target = entries[0]
 
@@ -69,6 +64,8 @@ const dataChange = ({ id, value }) => {
 }
 
 const addTab = () => {
+  console.log("addTab...")
+
   data.value.push({
     id: data.value.length,
     ...defaultDataItem,
@@ -93,6 +90,19 @@ const changeTab = (newTabs: number) => {
   console.log({ newTabs })
   currtTab.value = newTabs
 }
+
+
+/* 注册全局事件 */
+provide("tagControler", {
+  dataChange,
+  addTab,
+  removeTab,
+  changeTab,
+})
+provide("dataChange", dataChange)
+provide("addTab", addTab)
+provide("removeTab", removeTab)
+provide("changeTab", changeTab)
 </script>
 
 <style lang="stylus">
