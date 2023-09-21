@@ -20,6 +20,7 @@
         :value="idx"
         :label="`${item.label} (${idx + 1}/${data.length})`"
         :removable="true"
+        :destroyOnHide="false"
       >
         <!-- 模板选择 -->
         <BodyContent />
@@ -30,32 +31,12 @@
 
 <script setup lang="ts">
 import BodyContent from "./content.vue"
-import { useResizeObserver } from "@vueuse/core"
-
-import { data, defaultDataItem, currtIndex as currtTab } from "../store/data"
-
-
+import { data } from "../store/data"
+import { formDataList, currtFormDataId as currtTab } from "../store/state"
 const bodyElementRef = ref<HTMLDivElement>()
 
-onMounted(() => {
-  useResizeObserver(bodyElementRef, (entries) => {
-    const target = entries[0]
-
-    if (target) {
-      const { width, height } = target.contentRect
-      if (width > height) {
-        console.log("宽")
-      } else {
-        console.log("高")
-      }
-    }
-  })
-})
-
-// 必须为0，用来记录总的添加删除的序号
-const pannelCountId = ref(0)
-
 const dataChange = ({ id, value }) => {
+  console.log("dataChange11111111111111111111111111111111111")
   data.value.forEach((item) => {
     if (item.id == id) {
       item.label = value
@@ -66,43 +47,67 @@ const dataChange = ({ id, value }) => {
 const addTab = () => {
   console.log("addTab...")
 
-  data.value.push({
-    id: data.value.length,
-    ...defaultDataItem,
+  const newTabId = parseInt(data.value.length.toString())
+
+  formDataList.value.push({
+    id: newTabId,
+    setp: 1,
   })
 
-  pannelCountId.value += 1
+  data.value.push({
+    id: newTabId,
+    label: `未命名${newTabId}`,
+  })
+
+  currtTab.value = newTabId
+
+  console.log(data.value[currtTab.value])
+  console.log(data.value)
 }
 
-const removeTab = ({ value, index }) => {
-  if (index < 0) return false
+const removeTab = ({ index }) => {
+  console.log(`要删除的id： ${index}`)
 
+  // if (data.value.length == 1) return console.log("剩下一个tab了，不执行关闭")
+
+  formDataList.value.splice(index, 1)
   data.value.splice(index, 1)
 
-  if (data.value.length === 0) {
+  if (data.value.length == 0) {
     addTab()
-  } else {
-    pannelCountId.value -= 1
+    currtTab.value = 0
+    return
   }
+
+  if (index == currtTab.value) {
+    // 删除第一个tab
+    currtTab.value = currtTab.value - 1
+  } else if (index <= currtTab.value) {
+    // 删除当前的tab
+    currtTab.value = currtTab.value - 1
+  } else {
+    console.log("dadadadadaaaaaaaaaaaa")
+  }
+
+  console.log(data.value[currtTab.value])
+  console.log(data.value)
 }
 
 const changeTab = (newTabs: number) => {
   console.log({ newTabs })
   currtTab.value = newTabs
+
+  console.log(data.value[currtTab.value])
+  console.log(data.value)
 }
 
-
 /* 注册全局事件 */
-provide("tagControler", {
-  dataChange,
+provide("tabControler", {
   addTab,
+  dataChange,
   removeTab,
   changeTab,
 })
-provide("dataChange", dataChange)
-provide("addTab", addTab)
-provide("removeTab", removeTab)
-provide("changeTab", changeTab)
 </script>
 
 <style lang="stylus">

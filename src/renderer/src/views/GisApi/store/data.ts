@@ -51,7 +51,7 @@ export type TemplateParamItem =
 export const currtIndex = ref(0)
 export const data = ref([
   {
-    id: 1 as TabValue,
+    id: 0 as TabValue,
     label: "未命名工况",
   },
 ])

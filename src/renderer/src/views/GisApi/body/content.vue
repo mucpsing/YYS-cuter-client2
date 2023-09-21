@@ -1,23 +1,29 @@
 <template>
   <div :class="['flex flex-col h-full px-2 gap-4']">
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
-      <t-button :onClick="addTab"
+      <t-button :onClick="tabControler.addTab"
         ><template #icon><AddIcon /></template
       ></t-button>
 
-      <t-steps v-model="currtSetp" layout="horizontal" :options="Sopts" />
+      <t-steps v-model="formDataList[currtFormDataId].setp" layout="horizontal" :options="Sopts" />
 
-      <t-button theme="danger"
+      <!-- <t-button theme="danger" :onClick="tabControler.removeTab"
         ><template #icon><c-icon-font iconName="icon-yys-huishouzhan" /></template
-      ></t-button>
+      ></t-button> -->
     </header>
 
     <transition name="GisApi__body-fade">
-      <component :is="SwiperComponentList[currtSetp]"></component>
+      <KeepAlive>
+        <component :is="SwiperComponentList[formDataList[currtFormDataId].setp]"></component>
+      </KeepAlive>
     </transition>
 
     <footer :class="['flex gap-1', 'mt-4', 'flex-grow-0']">
-      <t-button class="flex-[1]" :disabled="currtSetp == 1" @click="swtichSetp('back')" size="large"
+      <t-button
+        class="flex-[1]"
+        :disabled="formDataList[currtFormDataId].setp == 1"
+        @click="swtichSetp('back')"
+        size="large"
         >上一步<template #icon>
           <c-icon-font
             iconName="icon-yys-xiayiye"
@@ -38,7 +44,7 @@
       </t-button>
       <t-button
         class="flex-[1]"
-        :disabled="currtSetp == Sopts.length"
+        :disabled="formDataList[currtFormDataId].setp == Sopts.length"
         @click="swtichSetp('next')"
         size="large"
         >下一步<template #suffix>
@@ -70,27 +76,27 @@ export default { components: { SwiperSetp1, SwiperSetp2, SwiperSetp3, SwiperSetp
 <script setup lang="ts">
 import { templateSetpOptions } from "../store/state"
 import { AddIcon } from "tdesign-icons-vue-next"
+import { formDataList, currtFormDataId } from "../store/state"
 
-// inject()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// const addTab = inject("addTab") as () => void
-const { addTab } = inject("tagControler")
+const tabControler = inject("tabControler") as { addTab: () => void; removeTab: () => void }
 
 const Sopts = computed(() => templateSetpOptions)
-const currtSetp = ref(1)
-const currtSetpId = computed(() => currtSetp.value - 1)
+const currtSetp = computed(() => {
+  return formDataList.value[currtFormDataId.value].setp
+})
 
 function swtichSetp(setp: "next" | "back") {
   console.log(Sopts.value.length)
-  console.log(currtSetp.value)
+  console.log(formDataList.value[currtFormDataId.value].setp)
   switch (setp) {
     case "next":
-      if (currtSetp.value == Sopts.value.length) return
-      currtSetp.value += 1
+      if (formDataList.value[currtFormDataId.value].setp == Sopts.value.length) return
+      formDataList.value[currtFormDataId.value].setp += 1
       break
 
     case "back":
-      if (currtSetp.value == 0) return
-      currtSetp.value -= 1
+      if (formDataList.value[currtFormDataId.value].setp == 0) return
+      formDataList.value[currtFormDataId.value].setp -= 1
   }
 }
 </script>

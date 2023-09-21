@@ -7,3 +7,6 @@ export const templateSetpOptions = [
   { title: "模板配置", value: 3 },
   { title: "图片下载", value: 4 },
 ]
+
+export const formDataList = ref([{ id: 0, setp: 1 }])
+export const currtFormDataId = ref(0)
