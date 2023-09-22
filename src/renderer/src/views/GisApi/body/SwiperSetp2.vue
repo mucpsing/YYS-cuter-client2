@@ -1,15 +1,37 @@
 <template>
   <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2']">
     <!-- --------------- 【 工程前后的数据文件上传 】 --------------- -->
-    <header :class="['flex-grow-[1]', 'flex gap-2', 'min-h-[150px] flex-or']">
-      <t-card :class="['flex-grow-[1]']" title="工程前 - DFSU文件信息">
+    <header
+      ref="headerRef"
+      :class="['flex-grow-[1]', 'flex gap-2', 'min-h-[150px] flex-or relative']"
+    >
+      <!-- 拖拽激活后的样式遮罩层 -->
+      <div class="GisApi__drapMask" :class="{ 'GisApi__drapMask-show': isOverDropZone }">
+        <div class="GisApi__drapMaskTip">最多支持读取前两个dfsu文件</div>
+      </div>
+
+      <t-card
+        :loading="
+          !Boolean(
+            formDataList[currtFormDataId].beDfsuInfo.progress == 0 ||
+              formDataList[currtFormDataId].beDfsuInfo.progress == 100,
+          )
+        "
+        :class="['flex-grow-[1]']"
+        title="工程前 - DFSU文件信息"
+      >
         <div :class="['flex justify-start']">
           <div class="flex flex-col text-gray-500">
-            <h3 class="my-1 text-lg text-black"><strong>文件名：</strong>{{ beDfsuInfo.name }}</h3>
-            <p>文件路径：{{ beDfsuInfo.path }}</p>
-            <span>文件大小：{{ beDfsuInfo.size.toFixed(2) }} MB</span>
-            <span>解析进度：{{ beDfsuInfo.progress.toFixed(2) }}<strong>%</strong></span>
-            <span>上传名称：{{ beDfsuInfo.md5 }}.dfsu</span>
+            <h3 class="my-1 text-lg text-black">
+              <strong>文件名：</strong>{{ formDataList[currtFormDataId].beDfsuInfo.name }}
+            </h3>
+            <p>文件路径：{{ formDataList[currtFormDataId].beDfsuInfo.path }}</p>
+            <span>文件大小：{{ formDataList[currtFormDataId].beDfsuInfo.size.toFixed(2) }} MB</span>
+            <span
+              >解析进度：{{ formDataList[currtFormDataId].beDfsuInfo.progress.toFixed(2)
+              }}<strong>%</strong></span
+            >
+            <span>上传名称：{{ formDataList[currtFormDataId].beDfsuInfo.md5 }}.dfsu</span>
           </div>
         </div>
 
@@ -19,17 +41,32 @@
           ref="beInputRef"
           :onChange="() => onInputChange('be')"
           accept=".dfsu"
+          multiple
         />
       </t-card>
 
-      <t-card :class="['flex-grow-[1]']" title="工程后 - DFSU文件信息">
+      <t-card
+        :loading="
+          !Boolean(
+            formDataList[currtFormDataId].afDfsuInfo.progress == 0 ||
+              formDataList[currtFormDataId].afDfsuInfo.progress == 100,
+          )
+        "
+        :class="['flex-grow-[1]']"
+        title="工程后 - DFSU文件信息"
+      >
         <div :class="['flex justify-start']">
           <div class="flex flex-col text-gray-500">
-            <h3 class="my-1 text-lg text-black"><strong>文件名：</strong>{{ afDfsuInfo.name }}</h3>
-            <p>文件路径：{{ afDfsuInfo.path }}</p>
-            <span>文件大小：{{ afDfsuInfo.size.toFixed(2) }} MB</span>
-            <span>解析进度：{{ afDfsuInfo.progress.toFixed(2) }}<strong>%</strong></span>
-            <span>上传名称：{{ afDfsuInfo.md5 }}.dfsu</span>
+            <h3 class="my-1 text-lg text-black">
+              <strong>文件名：</strong>{{ formDataList[currtFormDataId].afDfsuInfo.name }}
+            </h3>
+            <p>文件路径：{{ formDataList[currtFormDataId].afDfsuInfo.path }}</p>
+            <span>文件大小：{{ formDataList[currtFormDataId].afDfsuInfo.size.toFixed(2) }} MB</span>
+            <span
+              >解析进度：{{ formDataList[currtFormDataId].afDfsuInfo.progress.toFixed(2)
+              }}<strong>%</strong></span
+            >
+            <span>上传名称：{{ formDataList[currtFormDataId].afDfsuInfo.md5 }}.dfsu</span>
           </div>
         </div>
         <input
@@ -38,6 +75,7 @@
           ref="afInputRef"
           :onChange="() => onInputChange('af')"
           accept=".dfsu"
+          multiple
         />
       </t-card>
     </header>
@@ -45,10 +83,14 @@
     <div class="flex gap-2 justify-evenly">
       <t-button
         class="min-w-[250px]"
-        :theme="beDfsuInfo.md5 ? 'success' : 'danger'"
+        :theme="formDataList[currtFormDataId].beDfsuInfo.md5 ? 'success' : 'danger'"
         :onClick="() => onUploadBtnClick('be')"
-        :loading="!Boolean(beDfsuInfo.progress == 0 || beDfsuInfo.progress == 100)"
-        :disabled="!Boolean(beDfsuInfo.progress == 0 || beDfsuInfo.progress == 100)"
+        :disabled="
+          !Boolean(
+            formDataList[currtFormDataId].beDfsuInfo.progress == 0 ||
+              formDataList[currtFormDataId].beDfsuInfo.progress == 100,
+          )
+        "
       >
         选择dfsu文件
       </t-button>
@@ -62,10 +104,14 @@
 
       <t-button
         class="min-w-[250px]"
-        :theme="afDfsuInfo.md5 ? 'success' : 'danger'"
+        :theme="formDataList[currtFormDataId].afDfsuInfo.md5 ? 'success' : 'danger'"
         :onClick="() => onUploadBtnClick('af')"
-        :loading="!Boolean(afDfsuInfo.progress == 0 || afDfsuInfo.progress == 100)"
-        :disabled="!Boolean(afDfsuInfo.progress == 0 || afDfsuInfo.progress == 100)"
+        :disabled="
+          !Boolean(
+            formDataList[currtFormDataId].afDfsuInfo.progress == 0 ||
+              formDataList[currtFormDataId].afDfsuInfo.progress == 100,
+          )
+        "
       >
         选择dfsu文件
       </t-button>
@@ -180,6 +226,18 @@
 // import DfsuUpload from "../_components/dfsuUpload.vue"
 import { uploadFile } from "../api"
 import { splitFileToSmallChunks, getMd5 } from "@renderer/utils/calculateMd5"
+import { useDropZone } from "@vueuse/core"
+
+import { formDataList, currtFormDataId } from "../store/state"
+
+const headerRef = ref<HTMLElement>()
+const { isOverDropZone } = useDropZone(headerRef, onDrop)
+async function onDrop(files: File[] | null) {
+  if (isOverDropZone && files) {
+    if (files.length == 1) {
+    }
+  }
+}
 
 const outputExt = ref(".jpg")
 const outputFloodMode = ref("选择类型")
@@ -187,93 +245,102 @@ const outputPojectType = ref("选择工况")
 const beInputRef = ref<HTMLInputElement>()
 const afInputRef = ref<HTMLInputElement>()
 
-const beDfsuInfo = reactive({
-  md5: "",
-  progress: 0,
-  size: 0,
-  path: "",
-  name: "",
-})
+// const beDfsuInfo = formDataList.value[currtFormDataId.value].beDfsuInfo
+// const afDfsuInfo = formDataList.value[currtFormDataId.value].afDfsuInfo
 
-const afDfsuInfo = reactive({
-  md5: "",
-  progress: 0,
-  size: 0,
-  path: "",
-  name: "",
-})
+// const beDfsuInfo = formDataList[currtFormDataId.value].beDfsuInfo
+// const afDfsuInfo = formDataList[currtFormDataId.value].afDfsuInfo
 
 async function switchf() {
-  const temp = Object.assign({}, beDfsuInfo)
-  Object.assign(beDfsuInfo, afDfsuInfo)
-  Object.assign(afDfsuInfo, temp)
+  const temp = Object.assign({}, formDataList.value[currtFormDataId.value].beDfsuInfo)
+  Object.assign(
+    formDataList.value[currtFormDataId.value].beDfsuInfo,
+    formDataList.value[currtFormDataId.value].afDfsuInfo,
+  )
+  Object.assign(formDataList.value[currtFormDataId.value].afDfsuInfo, temp)
+
+  console.log(formDataList.value[currtFormDataId.value])
+  // console.log(formDataList[currtFormDataId.value])
 }
 
 async function onUploadBtnClick(target: "af" | "be") {
-  let inputRef
-  switch (target) {
-    case "be":
-      inputRef = beInputRef
-      break
+  let inputRef = target == "af" ? afInputRef : beInputRef
 
-    case "af":
-      inputRef = afInputRef
-
-      break
-
-    default:
-      return
-  }
-
+  if (!inputRef || !inputRef.value) return
   if (inputRef.value.value) inputRef.value.value = ""
 
   inputRef.value.click()
 }
 
 async function onInputChange(target: "af" | "be") {
-  let inputRef, info
-
-  console.log("onInputChange", target)
-
-  switch (target) {
-    case "be":
-      inputRef = beInputRef
-      info = beDfsuInfo
-      break
-
-    case "af":
-      inputRef = afInputRef
-      info = afDfsuInfo
-      break
-
-    default:
-      return
+  let inputRef
+  let infoList
+  if (target == "be") {
+    inputRef = beInputRef
+    infoList = [formDataList.value[currtFormDataId.value].beDfsuInfo]
+  } else if (target == "af") {
+    inputRef = afInputRef
+    infoList = [formDataList.value[currtFormDataId.value].afDfsuInfo]
+  } else {
+    return
   }
-  console.log("onInputChange1")
 
   if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
   if (!inputRef.value.files) return console.log("input为空，不执行上传")
 
-  const file = inputRef.value.files[0]
-  console.log(file)
+  const files = inputRef.value.files
+  if (files.length >= 2) infoList.push(formDataList.value[currtFormDataId.value].afDfsuInfo)
 
-  info.size = file.size / 1024 / 1024
-  info.name = file.name
-  info.path = file.path.toString()
+  await readFiles(files, infoList)
+}
 
-  // 文件分块和md5生成
-  info.progress = 0
-  const chunks = await splitFileToSmallChunks(file)
-  info.md5 = await getMd5(chunks, info.progress)
-  info.progress = 100
+async function readFiles(files: File[], infoList: any[]) {
+  const count = infoList.length
+  
+  for (let index = 0; index < count; index++) {
+    const file = (files as File[])[index]
 
-  const _fromData = new FormData()
-  _fromData.append("filename", `${info.md5}.dfsu`)
-  _fromData.append("file", file)
+    infoList[index].size = file.size / 1024 / 1024
+    infoList[index].name = file.name
+    infoList[index].path = file.path.toString()
 
-  // 不一定需要更新，往父组件回传这个formData
-  await uploadFile(_fromData)
+    infoList[index].progress = 0
+    const chunks = await splitFileToSmallChunks(file)
+    infoList[index].md5 = await getMd5(chunks, infoList[index].progress)
+    infoList[index].progress = 100
+
+    const _fromData = new FormData()
+    _fromData.append("filename", `${infoList[index].md5}.dfsu`)
+    _fromData.append("file", file)
+
+    await uploadFile(_fromData)
+  }
 }
 </script>
 
-<style scoped></style>
+<style lang="stylus">
+/* 遮罩具体样式 */
+.GisApi__drapMask
+  position absolute
+  width 100%
+  height 100%
+  text-align center
+  display flex
+  align-items center
+  justify-content center
+  pointer-events none
+  color rgba(0, 0, 0,1)
+  background-color rgba(255, 255, 255, 0.1)
+  opacity 0
+  box-sizing border-box
+  border-radius 5px
+  backdrop-filter blur(5px)
+  transition all 0.6s cubic-bezier(0.25, 1, 0.5, 1)
+
+  .GisApi__drapMaskTip
+    font-size clamp(1rem, 4vh, 2rem)
+
+.GisApi__drapMask-show
+  opacity 1
+  z-index 50
+</style>

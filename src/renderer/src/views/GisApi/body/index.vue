@@ -32,8 +32,7 @@
 <script setup lang="ts">
 import BodyContent from "./content.vue"
 import { data } from "../store/data"
-import { formDataList, currtFormDataId as currtTab } from "../store/state"
-import { MessagePlugin } from "tdesign-vue-next"
+import { formDataList, createFormData, currtFormDataId as currtTab } from "../store/state"
 
 const bodyElementRef = ref<HTMLDivElement>()
 
@@ -50,15 +49,13 @@ const addTab = (extendId: number = -1) => {
   console.log("addTab...")
 
   const newTabId = parseInt(data.value.length.toString())
-  const newData = {
-    id: newTabId,
-    setp: 1,
-    title: "未命名",
-  }
+  const newData = createFormData(newTabId)
 
   if (extendId >= 0) Object.assign(newData, formDataList.value[extendId])
+  // if (extendId >= 0) Object.assign(newData, formDataList[extendId])
 
   formDataList.value.push(newData)
+  // formDataList.push(newData)
 
   data.value.push({
     id: newTabId,
@@ -77,6 +74,7 @@ const removeTab = ({ index }) => {
   // if (data.value.length == 1) return console.log("剩下一个tab了，不执行关闭")
 
   formDataList.value.splice(index, 1)
+  // formDataList.splice(index, 1)
   data.value.splice(index, 1)
 
   if (data.value.length == 0) {

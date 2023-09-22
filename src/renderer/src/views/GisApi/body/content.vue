@@ -83,11 +83,11 @@ const tabControler = inject("tabControler") as { addTab: () => void; removeTab: 
 const Sopts = computed(() => templateSetpOptions)
 const currtSetp = computed(() => {
   return formDataList.value[currtFormDataId.value].setp
+  // return formDataList[currtFormDataId.value].setp
 })
 
 function swtichSetp(setp: "next" | "back") {
   console.log(Sopts.value.length)
-  console.log(formDataList.value[currtFormDataId.value].setp)
   switch (setp) {
     case "next":
       if (formDataList.value[currtFormDataId.value].setp == Sopts.value.length) return
@@ -98,6 +98,17 @@ function swtichSetp(setp: "next" | "back") {
       if (formDataList.value[currtFormDataId.value].setp == 0) return
       formDataList.value[currtFormDataId.value].setp -= 1
   }
+
+  // switch (setp) {
+  //   case "next":
+  //     if (formDataList[currtFormDataId.value].setp == Sopts.value.length) return
+  //     formDataList[currtFormDataId.value].setp += 1
+  //     break
+
+  //   case "back":
+  //     if (formDataList[currtFormDataId.value].setp == 0) return
+  //     formDataList[currtFormDataId.value].setp -= 1
+  // }
 }
 </script>
 

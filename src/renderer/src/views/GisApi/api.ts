@@ -14,23 +14,30 @@ const baseURL = `http://${config.SERVER_IP}:${config.SERVER_PROT}/gis-api/`
 const server = Axios.create({ baseURL, timeout: 1000 })
 
 const API = {
-  getTemplateList:"/get_template_list",
+  getTemplateList: "/get_template_list",
   upload: "/upload_file",
   mxdToImg: "/export_img_by_mxd_template",
 }
 
-export interface MxdToImgForm{
-  dfsu_be:string
-  dfsu_af:string
-  project_range:string
-  river_range:"工程前"|"工程后"
-  
+export interface MxdToImgForm {
+  dfsu_be: string
+  dfsu_af: string
+  project_range: string
+  river_range: "工程前" | "工程后"
 }
 
 export async function uploadFile(formData: FormData) {
-  return await server.post(API.upload, formData, {
-    headers: { "content-type": "multipart/form-data" },
-  })
+  try {
+    const res = await server.post(API.upload, formData, {
+      headers: { "content-type": "multipart/form-data" },
+    })
+
+    if (res.status == 200 && res.data.success) return res.data.res
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+  return false
 }
 
 export async function mxdToImg() {}
