@@ -33,6 +33,8 @@
 import BodyContent from "./content.vue"
 import { data } from "../store/data"
 import { formDataList, currtFormDataId as currtTab } from "../store/state"
+import { MessagePlugin } from "tdesign-vue-next"
+
 const bodyElementRef = ref<HTMLDivElement>()
 
 const dataChange = ({ id, value }) => {
@@ -44,15 +46,19 @@ const dataChange = ({ id, value }) => {
   })
 }
 
-const addTab = () => {
+const addTab = (extendId: number = -1) => {
   console.log("addTab...")
 
   const newTabId = parseInt(data.value.length.toString())
-
-  formDataList.value.push({
+  const newData = {
     id: newTabId,
     setp: 1,
-  })
+    title: "未命名",
+  }
+
+  if (extendId >= 0) Object.assign(newData, formDataList.value[extendId])
+
+  formDataList.value.push(newData)
 
   data.value.push({
     id: newTabId,

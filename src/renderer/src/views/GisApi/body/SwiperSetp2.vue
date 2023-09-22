@@ -2,8 +2,67 @@
   <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'bg-sky-600 rounded-xl p-2']">
     <!-- --------------- 【 工程前后的数据文件上传 】 --------------- -->
     <header :class="['flex-grow-[1]', 'flex gap-2', 'min-h-[250px]']">
-      <DfsuUpload title="工程前 - DFSU文件" />
-      <DfsuUpload title="工程后 - DFSU文件" />
+      <t-card class="flex-grow-[1]" title="工程前 - DFSU文件">
+        <div :class="['flex justify-start']">
+          <div class="flex flex-col text-gray-500">
+            <h3 class="my-1 text-lg text-black"><strong>文件名：</strong>{{ beDfsuInfo.name }}</h3>
+            <p>文件路径：{{ beDfsuInfo.path }}</p>
+            <span>文件大小：{{ beDfsuInfo.size.toFixed(2) }} MB</span>
+            <span>解析进度：{{ beDfsuInfo.progress.toFixed(2) }}<strong>%</strong></span>
+            <span>上传名称：{{ beDfsuInfo.md5 }}.dfsu</span>
+          </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 flex justify-center w-full pb-2">
+          <t-button
+            class="min-w-[250px]"
+            theme="danger"
+            :onClick="uploadHandler"
+            :loading="!Boolean(beDfsuInfo.progress == 0 || beDfsuInfo.progress == 100)"
+            :disabled="!Boolean(beDfsuInfo.progress == 0 || beDfsuInfo.progress == 100)"
+          >
+            上传dfsu文件
+          </t-button>
+        </div>
+        <input
+          type="file"
+          style="display: none"
+          ref="beInputRef"
+          :onChange="onInputChange"
+          accept=".dfsu"
+        />
+      </t-card>
+
+      <t-card class="flex-grow-[1]" title="工程后 - DFSU文件">
+        <div :class="['flex justify-start']">
+          <div class="flex flex-col text-gray-500">
+            <h3 class="my-1 text-lg text-black"><strong>文件名：</strong>{{ beDfsuInfo.name }}</h3>
+            <p>文件路径：{{ afDfsuInfo.path }}</p>
+            <span>文件大小：{{ afDfsuInfo.size.toFixed(2) }} MB</span>
+            <span>解析进度：{{ afDfsuInfo.progress.toFixed(2) }}<strong>%</strong></span>
+            <span>上传名称：{{ afDfsuInfo.md5 }}.dfsu</span>
+          </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 flex justify-center w-full pb-2">
+          <t-button
+            class="min-w-[250px]"
+            theme="danger"
+            :onClick="uploadHandler"
+            :loading="!Boolean(afDfsuInfo.progress == 0 || afDfsuInfo.progress == 100)"
+            :disabled="!Boolean(afDfsuInfo.progress == 0 || afDfsuInfo.progress == 100)"
+          >
+            上传dfsu文件
+          </t-button>
+        </div>
+        <input
+          type="file"
+          style="display: none"
+          ref="afInputRef"
+          :onChange="onInputChange"
+          accept=".dfsu"
+        />
+      </t-card>
     </header>
 
     <footer :class="['flex-grow-[1]']">
@@ -112,16 +171,63 @@
 </template>
 
 <script setup lang="ts">
-import DfsuUpload from "../_components/dfsuUpload.vue"
+// import DfsuUpload from "../_components/dfsuUpload.vue"
+import { uploadFile } from "../api"
+import { splitFileToSmallChunks, getMd5 } from "@renderer/utils/calculateMd5"
 
 const outputExt = ref(".jpg")
 const outputFloodMode = ref("选择类型")
 const outputPojectType = ref("选择工况")
+const beInputRef = ref<HTMLInputElement>()
+const afInputRef = ref<HTMLInputElement>()
 
-const formData = reactive({
-  be_dfsu: {} as File,
-  af_dfsu: {} as File,
+const beDfsuInfo = reactive({
+  md5: "",
+  progress: 0,
+  size: 0,
+  path: "",
+  name: "",
 })
+
+const afDfsuInfo = reactive({
+  md5: "",
+  progress: 0,
+  size: 0,
+  path: "",
+  name: "",
+})
+
+async function uploadHandler(_e: Event) {
+  if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
+
+  if (inputRef.value.value) inputRef.value.value = ""
+
+  inputRef.value.click()
+}
+
+async function onInputChange(_e: HTMLInputElement) {
+  if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
+  if (!inputRef.value.files) return console.log("input为空，不执行上传")
+
+  const file = inputRef.value.files[0]
+
+  currtFileSize.value = file.size / 1024 / 1024
+  currtFileName.value = file.name
+  currtFilePath.value = file.path.toString()
+
+  // 文件分块和md5生成
+  progress.value = 0
+  const chunks = await splitFileToSmallChunks(file)
+  currtMd5.value = await getMd5(chunks, progress)
+  progress.value = 100
+
+  const _fromData = new FormData()
+  _fromData.append("filename", `${currtMd5.value}.dfsu`)
+  _fromData.append("file", file)
+
+  // 不一定需要更新，往父组件回传这个formData
+  await uploadFile(_fromData)
+}
 </script>
 
 <style scoped></style>

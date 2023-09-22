@@ -76,6 +76,7 @@ declare module 'vue' {
     ToolsBar: typeof import('./../renderer/src/views/ImageCuter/body/toolsBar.vue')['default']
     ToolsMenus: typeof import('./../renderer/src/views/ImageCuter/body/toolsMenus.vue')['default']
     TOption: typeof import('tdesign-vue-next')['Option']
+    TPopup: typeof import('tdesign-vue-next')['Popup']
     TRadioButton: typeof import('tdesign-vue-next')['RadioButton']
     TRadioGroup: typeof import('tdesign-vue-next')['RadioGroup']
     TRow: typeof import('tdesign-vue-next')['Row']

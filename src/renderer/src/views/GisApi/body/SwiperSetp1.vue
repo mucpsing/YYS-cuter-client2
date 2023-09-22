@@ -1,12 +1,23 @@
 <template>
   <section :class="['flex flex-row w-full gap-2', 'flex-grow-[2]', 'bg-sky-200 rounded-xl p-2']">
-    <div :class="['flex-[3]', 'flex justify-start items-start']">
-      <img src="points_template.png" class="object-cover h-full rounded-xl" alt="" />
-    </div>
-
     <div :class="['flex-[1]', , 'flex flex-col justify-between items-start']">
       <div>
-        <h2 :class="['text-2xl']">模板名称.mxd</h2>
+        <!-- <h2 :class="['text-2xl']">模板名称.mxd</h2> -->
+        <div class="flex items-center justify-center pb-2">
+          <strong :class="['text-lg whitespace-nowrap']">标签名称：</strong>
+          <t-popup
+            content="如果工况名称未指定，默认会继承使用标签名称"
+            destroy-on-close
+            trigger="focus"
+          >
+            <t-input
+              align="center"
+              tpye="text"
+              v-model="data[currtFormDataId].label"
+              placeholder="工况名称"
+            ></t-input>
+          </t-popup>
+        </div>
         <p :class="['bg-red-300 min-h-[400px]', 'p-2']">
           模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明
         </p>
@@ -62,13 +73,18 @@
         </div>
       </div>
     </div>
+
+    <div :class="['flex-[3]', 'flex justify-start items-start']">
+      <img src="points_template.png" class="object-cover h-full rounded-xl" alt="" />
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import { HelpCircleIcon } from "tdesign-icons-vue-next"
 import { templateInfo } from "../store/data"
-
+import { formDataList, currtFormDataId } from "../store/state"
+import { data } from "../store/data"
 let selected_template = "未选择模板"
 
 const dropdownOptions = computed(() => {
