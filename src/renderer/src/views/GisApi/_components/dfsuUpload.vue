@@ -2,11 +2,11 @@
   <t-card class="flex-grow-[1]" :title="props.title">
     <div :class="['flex justify-start']">
       <div class="flex flex-col text-gray-500">
-        <h3 class="my-1 text-lg text-black"><strong>文件名：</strong>{{ currtFileName }}</h3>
-        <p>文件路径：{{ currtFilePath }}</p>
-        <span>文件大小：{{ currtFileSize.toFixed(2) }} MB</span>
-        <span>解析进度：{{ progress.toFixed(2) }}<strong>%</strong></span>
-        <span>上传名称：{{ currtMd5 }}.dfsu</span>
+        <h3 class="my-1 text-lg text-black"><strong>文件名：</strong>{{ props.name }}</h3>
+        <p>文件路径：{{ props.path }}</p>
+        <span>文件大小：{{ props.size.toFixed(2) }} MB</span>
+        <span>解析进度：{{ props.progress.toFixed(2) }}<strong>%</strong></span>
+        <span>上传名称：{{ props.md5 }}.dfsu</span>
       </div>
     </div>
 
@@ -21,67 +21,23 @@
         上传dfsu文件
       </t-button>
     </div>
-    <input
-      type="file"
-      style="display: none"
-      ref="inputRef"
-      :onChange="onInputChange"
-      accept=".dfsu"
-    />
   </t-card>
 </template>
 
 <script setup lang="ts">
-import { uploadFile } from "../api"
-import { splitFileToSmallChunks, getMd5 } from "@renderer/utils/calculateMd5"
-
-const currtMd5 = ref("")
-const inputRef = ref<HTMLInputElement>()
-const progress = ref(0)
-const currtFileSize = ref(0)
-const currtFileName = ref("")
-const currtFilePath = ref("")
-
 const props = withDefaults(
   defineProps<{
     title?: string
+    name: string
+    path: string
+    size: string
+    md5: string
+    progress: string
   }>(),
   {
     title: "dfsu文件",
   },
 )
-
-async function uploadHandler(_e: Event) {
-  if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
-
-  if (inputRef.value.value) inputRef.value.value = ""
-
-  inputRef.value.click()
-}
-
-async function onInputChange(_e: HTMLInputElement) {
-  if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
-  if (!inputRef.value.files) return console.log("input为空，不执行上传")
-
-  const file = inputRef.value.files[0]
-
-  currtFileSize.value = file.size / 1024 / 1024
-  currtFileName.value = file.name
-  currtFilePath.value = file.path.toString()
-
-  // 文件分块和md5生成
-  progress.value = 0
-  const chunks = await splitFileToSmallChunks(file)
-  currtMd5.value = await getMd5(chunks, progress)
-  progress.value = 100
-
-  const _fromData = new FormData()
-  _fromData.append("filename", `${currtMd5.value}.dfsu`)
-  _fromData.append("file", file)
-
-  // 不一定需要更新，往父组件回传这个formData
-  await uploadFile(_fromData)
-}
 </script>
 
 <style scoped></style>

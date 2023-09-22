@@ -1,5 +1,5 @@
 import SparkMD5 from "spark-md5"
-import type { Ref } from "vue"
+
 /**
  * @description: 将大文件进行分割抽离特征再计算md5，加快计算
  */
@@ -31,7 +31,7 @@ export async function splitFileToSmallChunks(file: File) {
  * @param {Ref} progressRef 记录进度的一个响应式变量
  * @return {*}
  */
-export async function getMd5(chunks: Blob[], progressRef?: Ref<number>) {
+export async function getMd5(chunks: Blob[], progressRef?: number) {
   const spark = new SparkMD5.ArrayBuffer()
 
   for (let index = 0; index < chunks.length; index++) {
@@ -46,7 +46,7 @@ export async function getMd5(chunks: Blob[], progressRef?: Ref<number>) {
     })
 
     if (progressRef) {
-      progressRef.value += 100 / chunks.length
+      progressRef += 100 / chunks.length
     }
   }
 
