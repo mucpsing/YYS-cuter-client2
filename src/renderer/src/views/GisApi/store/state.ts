@@ -13,8 +13,9 @@ export function createFormData(newTabId: number) {
     id: newTabId,
     setp: 1,
     title: "未命名",
-    beDfsuInfo: { md5: "", progress: 0, size: 0, path: "", name: "" },
-    afDfsuInfo: { md5: "", progress: 0, size: 0, path: "", name: "" },
+    beDfsuInfo: { md5: "", progress: 0, size: 0, path: "", name: "", reading: false },
+    afDfsuInfo: { md5: "", progress: 0, size: 0, path: "", name: "", reading: false },
+    outputName: "",
   })
 }
 

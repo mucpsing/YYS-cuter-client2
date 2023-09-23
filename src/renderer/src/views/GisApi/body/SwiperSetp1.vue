@@ -4,7 +4,7 @@
       <div>
         <!-- <h2 :class="['text-2xl']">模板名称.mxd</h2> -->
         <div class="flex items-center justify-center pb-2">
-          <strong :class="['text-lg whitespace-nowrap']">标签名称：</strong>
+          <strong :class="['text-lg whitespace-nowrap']">输出名称：</strong>
           <t-popup
             content="如果工况名称未指定，默认会继承使用标签名称"
             destroy-on-close

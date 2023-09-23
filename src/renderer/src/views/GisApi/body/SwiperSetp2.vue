@@ -3,7 +3,7 @@
     <!-- --------------- 【 工程前后的数据文件上传 】 --------------- -->
     <header
       ref="headerRef"
-      :class="['flex-grow-[1]', 'flex gap-2', 'min-h-[150px] flex-or relative']"
+      :class="['flex-grow-[0]', 'flex gap-1', 'min-h-[150px] flex-or relative']"
     >
       <!-- 拖拽激活后的样式遮罩层 -->
       <div class="GisApi__drapMask" :class="{ 'GisApi__drapMask-show': isOverDropZone }">
@@ -11,14 +11,9 @@
       </div>
 
       <t-card
-        :loading="
-          !Boolean(
-            formDataList[currtFormDataId].beDfsuInfo.progress == 0 ||
-              formDataList[currtFormDataId].beDfsuInfo.progress == 100,
-          )
-        "
         :class="['flex-grow-[1]']"
         title="工程前 - DFSU文件信息"
+        :loading="formDataList[currtFormDataId].beDfsuInfo.reading"
       >
         <div :class="['flex justify-start']">
           <div class="flex flex-col text-gray-500">
@@ -27,33 +22,32 @@
             </h3>
             <p>文件路径：{{ formDataList[currtFormDataId].beDfsuInfo.path }}</p>
             <span>文件大小：{{ formDataList[currtFormDataId].beDfsuInfo.size.toFixed(2) }} MB</span>
-            <span
-              >解析进度：{{ formDataList[currtFormDataId].beDfsuInfo.progress.toFixed(2)
-              }}<strong>%</strong></span
-            >
             <span>上传名称：{{ formDataList[currtFormDataId].beDfsuInfo.md5 }}.dfsu</span>
           </div>
         </div>
 
-        <input
-          type="file"
-          style="display: none"
-          ref="beInputRef"
-          :onChange="() => onInputChange('be')"
-          accept=".dfsu"
-          multiple
-        />
+        <div class="flex justify-center w-full pt-3">
+          <t-button
+            class="min-w-[250px]"
+            :theme="formDataList[currtFormDataId].beDfsuInfo.md5 ? 'success' : 'danger'"
+            :onClick="async () => await onUploadBtnClick('be')"
+          >
+            选择dfsu文件
+          </t-button>
+        </div>
       </t-card>
 
+      <div
+        class="flex items-center justify-center px-2 bg-blue-100 rounded-sm cursor-pointer hover:bg-blue-300"
+        @click="switchf"
+      >
+        <c-icon-font iconName="huifu" class=""></c-icon-font>
+      </div>
+
       <t-card
-        :loading="
-          !Boolean(
-            formDataList[currtFormDataId].afDfsuInfo.progress == 0 ||
-              formDataList[currtFormDataId].afDfsuInfo.progress == 100,
-          )
-        "
         :class="['flex-grow-[1]']"
         title="工程后 - DFSU文件信息"
+        :loading="formDataList[currtFormDataId].afDfsuInfo.reading"
       >
         <div :class="['flex justify-start']">
           <div class="flex flex-col text-gray-500">
@@ -62,62 +56,23 @@
             </h3>
             <p>文件路径：{{ formDataList[currtFormDataId].afDfsuInfo.path }}</p>
             <span>文件大小：{{ formDataList[currtFormDataId].afDfsuInfo.size.toFixed(2) }} MB</span>
-            <span
-              >解析进度：{{ formDataList[currtFormDataId].afDfsuInfo.progress.toFixed(2)
-              }}<strong>%</strong></span
-            >
             <span>上传名称：{{ formDataList[currtFormDataId].afDfsuInfo.md5 }}.dfsu</span>
           </div>
         </div>
-        <input
-          type="file"
-          style="display: none"
-          ref="afInputRef"
-          :onChange="() => onInputChange('af')"
-          accept=".dfsu"
-          multiple
-        />
+
+        <div class="flex justify-center w-full pt-3">
+          <t-button
+            class="min-w-[250px]"
+            :theme="formDataList[currtFormDataId].afDfsuInfo.md5 ? 'success' : 'danger'"
+            :onClick="async () => await onUploadBtnClick('af')"
+          >
+            选择dfsu文件
+          </t-button>
+        </div>
       </t-card>
     </header>
 
-    <div class="flex gap-2 justify-evenly">
-      <t-button
-        class="min-w-[250px]"
-        :theme="formDataList[currtFormDataId].beDfsuInfo.md5 ? 'success' : 'danger'"
-        :onClick="() => onUploadBtnClick('be')"
-        :disabled="
-          !Boolean(
-            formDataList[currtFormDataId].beDfsuInfo.progress == 0 ||
-              formDataList[currtFormDataId].beDfsuInfo.progress == 100,
-          )
-        "
-      >
-        选择dfsu文件
-      </t-button>
-
-      <t-button :on-click="switchf">
-        反转
-        <template #icon>
-          <c-icon-font iconName="huifu" class="mr-2"></c-icon-font>
-        </template>
-      </t-button>
-
-      <t-button
-        class="min-w-[250px]"
-        :theme="formDataList[currtFormDataId].afDfsuInfo.md5 ? 'success' : 'danger'"
-        :onClick="() => onUploadBtnClick('af')"
-        :disabled="
-          !Boolean(
-            formDataList[currtFormDataId].afDfsuInfo.progress == 0 ||
-              formDataList[currtFormDataId].afDfsuInfo.progress == 100,
-          )
-        "
-      >
-        选择dfsu文件
-      </t-button>
-    </div>
-
-    <footer :class="['flex-grow-[1]']">
+    <t-card :class="['flex-grow-[1]']">
       <!-- --------------- 【 输出名称 】 --------------- -->
       <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col items-start justify-between">
@@ -218,7 +173,23 @@
       </div>
 
       <t-divider class="my-2"></t-divider>
-    </footer>
+    </t-card>
+    <input
+      type="file"
+      style="display: none"
+      ref="afInputRef"
+      :onChange="() => onInputChange('af')"
+      accept=".dfsu"
+      multiple
+    />
+    <input
+      type="file"
+      style="display: none"
+      ref="beInputRef"
+      :onChange="() => onInputChange('be')"
+      accept=".dfsu"
+      multiple
+    />
   </section>
 </template>
 
@@ -245,12 +216,6 @@ const outputPojectType = ref("选择工况")
 const beInputRef = ref<HTMLInputElement>()
 const afInputRef = ref<HTMLInputElement>()
 
-// const beDfsuInfo = formDataList.value[currtFormDataId.value].beDfsuInfo
-// const afDfsuInfo = formDataList.value[currtFormDataId.value].afDfsuInfo
-
-// const beDfsuInfo = formDataList[currtFormDataId.value].beDfsuInfo
-// const afDfsuInfo = formDataList[currtFormDataId.value].afDfsuInfo
-
 async function switchf() {
   const temp = Object.assign({}, formDataList.value[currtFormDataId.value].beDfsuInfo)
   Object.assign(
@@ -258,9 +223,6 @@ async function switchf() {
     formDataList.value[currtFormDataId.value].afDfsuInfo,
   )
   Object.assign(formDataList.value[currtFormDataId.value].afDfsuInfo, temp)
-
-  console.log(formDataList.value[currtFormDataId.value])
-  // console.log(formDataList[currtFormDataId.value])
 }
 
 async function onUploadBtnClick(target: "af" | "be") {
@@ -289,14 +251,16 @@ async function onInputChange(target: "af" | "be") {
   if (!inputRef.value.files) return console.log("input为空，不执行上传")
 
   const files = inputRef.value.files
-  if (files.length >= 2) infoList.push(formDataList.value[currtFormDataId.value].afDfsuInfo)
-
+  if (files.length >= 2) {
+    if (target == "be") infoList.push(formDataList.value[currtFormDataId.value].afDfsuInfo)
+    if (target == "af") infoList.push(formDataList.value[currtFormDataId.value].beDfsuInfo)
+  }
   await readFiles(files, infoList)
 }
 
 async function readFiles(files: File[], infoList: any[]) {
   const count = infoList.length
-  
+
   for (let index = 0; index < count; index++) {
     const file = (files as File[])[index]
 
@@ -304,10 +268,12 @@ async function readFiles(files: File[], infoList: any[]) {
     infoList[index].name = file.name
     infoList[index].path = file.path.toString()
 
-    infoList[index].progress = 0
+    infoList[index].reading = true
     const chunks = await splitFileToSmallChunks(file)
-    infoList[index].md5 = await getMd5(chunks, infoList[index].progress)
-    infoList[index].progress = 100
+    infoList[index].md5 = await getMd5(chunks)
+    setTimeout(() => {
+      infoList[index].reading = false
+    }, 1000)
 
     const _fromData = new FormData()
     _fromData.append("filename", `${infoList[index].md5}.dfsu`)

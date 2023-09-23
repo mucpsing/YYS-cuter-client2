@@ -6,10 +6,6 @@
       ></t-button>
 
       <t-steps v-model="formDataList[currtFormDataId].setp" layout="horizontal" :options="Sopts" />
-
-      <!-- <t-button theme="danger" :onClick="tabControler.removeTab"
-        ><template #icon><c-icon-font iconName="icon-yys-huishouzhan" /></template
-      ></t-button> -->
     </header>
 
     <transition name="GisApi__body-fade">
