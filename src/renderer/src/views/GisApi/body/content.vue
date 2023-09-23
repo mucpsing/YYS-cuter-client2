@@ -28,7 +28,12 @@
             :class="['text-white mr-2']"
           ></c-icon-font> </template
       ></t-button>
-      <t-button class="flex-[1]" disabled theme="success" size="large"
+      <t-button
+        :on-click="() => mxdToImg(formDataList[currtFormDataId])"
+        class="flex-[1]"
+        :disabled="formDataList[currtFormDataId].setp != 4"
+        theme="success"
+        size="large"
         >生成图片 (1/4)
         <template #icon>
           <c-icon-font
@@ -74,6 +79,8 @@ import { templateSetpOptions } from "../store/state"
 import { AddIcon } from "tdesign-icons-vue-next"
 import { formDataList, currtFormDataId } from "../store/state"
 
+import { mxdToImg } from "../api"
+
 const tabControler = inject("tabControler") as { addTab: () => void; removeTab: () => void }
 
 const Sopts = computed(() => templateSetpOptions)
@@ -81,6 +88,10 @@ const currtSetp = computed(() => {
   return formDataList.value[currtFormDataId.value].setp
   // return formDataList[currtFormDataId.value].setp
 })
+
+async function onClickMxdToImg() {
+  console.log()
+}
 
 function swtichSetp(setp: "next" | "back") {
   console.log(Sopts.value.length)
@@ -94,17 +105,6 @@ function swtichSetp(setp: "next" | "back") {
       if (formDataList.value[currtFormDataId.value].setp == 0) return
       formDataList.value[currtFormDataId.value].setp -= 1
   }
-
-  // switch (setp) {
-  //   case "next":
-  //     if (formDataList[currtFormDataId.value].setp == Sopts.value.length) return
-  //     formDataList[currtFormDataId.value].setp += 1
-  //     break
-
-  //   case "back":
-  //     if (formDataList[currtFormDataId.value].setp == 0) return
-  //     formDataList[currtFormDataId.value].setp -= 1
-  // }
 }
 </script>
 

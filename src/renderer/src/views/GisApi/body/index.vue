@@ -32,7 +32,8 @@
 <script setup lang="ts">
 import BodyContent from "./content.vue"
 import { data } from "../store/data"
-import { formDataList, createFormData, currtFormDataId as currtTab } from "../store/state"
+import { formDataList, createFormData } from "../store/state"
+import { currtFormDataId as currtTab } from "../store/state"
 
 const bodyElementRef = ref<HTMLDivElement>()
 
@@ -52,10 +53,8 @@ const addTab = (extendId: number = -1) => {
   const newData = createFormData(newTabId)
 
   if (extendId >= 0) Object.assign(newData, formDataList.value[extendId])
-  // if (extendId >= 0) Object.assign(newData, formDataList[extendId])
 
   formDataList.value.push(newData)
-  // formDataList.push(newData)
 
   data.value.push({
     id: newTabId,
@@ -64,17 +63,12 @@ const addTab = (extendId: number = -1) => {
 
   currtTab.value = newTabId
 
-  console.log(data.value[currtTab.value])
-  console.log(data.value)
+  console.log(formDataList.value)
 }
 
 const removeTab = ({ index }) => {
-  console.log(`要删除的id： ${index}`)
-
-  // if (data.value.length == 1) return console.log("剩下一个tab了，不执行关闭")
-
   formDataList.value.splice(index, 1)
-  // formDataList.splice(index, 1)
+
   data.value.splice(index, 1)
 
   if (data.value.length == 0) {
@@ -85,24 +79,18 @@ const removeTab = ({ index }) => {
 
   if (index == currtTab.value) {
     // 删除第一个tab
-    currtTab.value = currtTab.value - 1
+    if (index > 0) currtTab.value = currtTab.value - 1
   } else if (index <= currtTab.value) {
     // 删除当前的tab
     currtTab.value = currtTab.value - 1
   } else {
     console.log("dadadadadaaaaaaaaaaaa")
   }
-
-  console.log(data.value[currtTab.value])
-  console.log(data.value)
 }
 
 const changeTab = (newTabs: number) => {
-  console.log({ newTabs })
   currtTab.value = newTabs
-
-  console.log(data.value[currtTab.value])
-  console.log(data.value)
+  console.log(formDataList.value)
 }
 
 /* 注册全局事件 */

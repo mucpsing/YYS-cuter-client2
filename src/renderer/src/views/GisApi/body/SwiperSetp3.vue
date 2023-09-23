@@ -2,10 +2,31 @@
   <section :class="['flex flex-row w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2']">
     <div class="h-full flex-grow-[1] left bg-gray-100 rounded-md overflow-auto">
       <div class="py-2 pl-3 pr-4 h-[0]">
-        <!-- --------------- 【 河道选择 】 --------------- -->
-        <div class="flex items-center justify-start h-[200px]">
-          <div class="h-full w-full flex-grow-[1] max-w-[500px] max-h-[300px] bg-red-300"></div>
+        <!-- --------------- 【 工程范围 】 --------------- -->
+        <div class="flex items-center justify-between mt-2">
+          <div class="flex flex-col items-start justify-between">
+            <h2 class="SwiperSetp__h2"><strong>工程范围</strong></h2>
+            <p class="flex gap-2">
+              请选择完整的shp文件，包含格式如下：
+              <t-tag
+                variant="light-outline"
+                theme="success"
+                v-for="(ext, idx) of ['.cpg', '.dbf', '.sbn', '.sbx', '.shp', '.shx', '.shp.xml']"
+                :key="idx"
+              >
+                {{ ext }}
+              </t-tag>
+            </p>
+          </div>
+          <div class="flex gap-1">
+            <t-button theme="danger" variant="outline">选择工程范围文件(.shp)</t-button>
+          </div>
         </div>
+        <t-divider class="my-2"></t-divider>
+
+        <input type="file" style="display: none" accept=".cpg,.dbf,.sbn,.sbx,.shp,.shx,.shp.xml" />
+
+        <!-- --------------- 【 河道选择 】 --------------- -->
         <div class="flex items-center justify-between mt-2">
           <div class="flex flex-col items-start justify-between">
             <h2 class="SwiperSetp__h2"><strong>河道选择</strong></h2>
@@ -17,9 +38,9 @@
                 { content: `工程前`, value: `工程前` },
                 { content: `工程后`, value: `工程后` },
               ]"
-              @click="(item) => (outputPojectMode = (item.value as string))"
+              @click="(item) => (riverSelect = (item.value as string))"
             >
-              <t-button>{{ riverSelect }}</t-button>
+              <t-button variant="outline" theme="primary">{{ riverSelect }}</t-button>
             </t-dropdown>
           </div>
         </div>

@@ -16,8 +16,12 @@ export function createFormData(newTabId: number) {
     beDfsuInfo: { md5: "", progress: 0, size: 0, path: "", name: "", reading: false },
     afDfsuInfo: { md5: "", progress: 0, size: 0, path: "", name: "", reading: false },
     outputName: "",
+    riverRange: "工程前" as "工程前" | "工程后",
   })
 }
+const defaultFormData = createFormData(0)
 
+export type FormDataItemT = typeof defaultFormData
 export const currtFormDataId = ref(0)
-export const formDataList = ref([createFormData(0)])
+export const formDataList = ref([defaultFormData])
+export const formCount = ref(1)
