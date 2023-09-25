@@ -15,6 +15,7 @@ export function createFormData(newTabId: number) {
     title: "未命名",
     beDfsuInfo: { md5: "", progress: 0, size: 0, path: "", name: "", reading: false },
     afDfsuInfo: { md5: "", progress: 0, size: 0, path: "", name: "", reading: false },
+    projectRange: { md5: "", path: "", size: 0, name: "", reading: false, fileCount: 0 },
     outputName: "",
     riverRange: "工程前" as "工程前" | "工程后",
   })

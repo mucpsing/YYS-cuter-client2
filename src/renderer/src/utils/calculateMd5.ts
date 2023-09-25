@@ -1,3 +1,11 @@
+/*
+ * @Author: CPS holy.dandelion@139.com
+ * @Date: 2023-09-22 12:24:59
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2023-09-24 19:25:03
+ * @FilePath: \YYS-cuter-client2\src\renderer\src\utils\calculateMd5.ts
+ * @Description: 这里是对 spark-md5 模块的一个使用包装，只要提供file实例对象就可以计算出md5，file对象必须是Blob类型，既input元素或者拖拽元素获取到的files[x]
+ */
 import SparkMD5 from "spark-md5"
 
 /**
@@ -31,7 +39,9 @@ export async function splitFileToSmallChunks(file: File) {
  * @param {Ref} progressRef 记录进度的一个响应式变量
  * @return {*}
  */
-export async function getMd5(chunks: Blob[], progressRef?: number) {
+export async function getMd5(file: File, progressRef?: number) {
+  const chunks = await splitFileToSmallChunks(file)
+
   const spark = new SparkMD5.ArrayBuffer()
 
   for (let index = 0; index < chunks.length; index++) {

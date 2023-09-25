@@ -196,7 +196,7 @@
 <script setup lang="ts">
 // import DfsuUpload from "../_components/dfsuUpload.vue"
 import { uploadFile } from "../api"
-import { splitFileToSmallChunks, getMd5 } from "@renderer/utils/calculateMd5"
+import { getMd5 } from "@renderer/utils/calculateMd5"
 import { useDropZone } from "@vueuse/core"
 
 import { formDataList, currtFormDataId } from "../store/state"
@@ -269,17 +269,13 @@ async function readFiles(files: File[], infoList: any[]) {
     infoList[index].path = file.path.toString()
 
     infoList[index].reading = true
-    const chunks = await splitFileToSmallChunks(file)
-    infoList[index].md5 = await getMd5(chunks)
+    infoList[index].md5 = await getMd5(file)
+
     setTimeout(() => {
       infoList[index].reading = false
     }, 1000)
 
-    const _fromData = new FormData()
-    _fromData.append("filename", `${infoList[index].md5}.dfsu`)
-    _fromData.append("file", file)
-
-    await uploadFile(_fromData)
+    await uploadFile(`${infoList[index].md5}.dfsu`, file)
   }
 }
 </script>
