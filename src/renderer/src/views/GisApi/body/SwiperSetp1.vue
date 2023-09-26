@@ -1,16 +1,16 @@
 <template>
   <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'bg-sky-200 rounded-xl p-2']">
-    <div>
-      <t-input-adornment prepend="标题：">
+    <div class="flex justify-start">
+      <t-input-adornment prepend="输出名称：">
         <t-select-input
           size="small"
           :value="data[currtFormDataId].label"
           :popup-visible="popupVisible"
           :popup-props="{ overlayInnerStyle: { padding: '0px' } }"
-          placeholder="请输入任意关键词"
+          placeholder="点击列出常用命名推荐"
           allow-input
           clearable
-          style="width: 300px"
+          style="width: 400px"
           @input-change="onInputChange"
           @popup-visible-change="onPopupVisibleChange"
         >
@@ -22,7 +22,7 @@
                 :key="item"
                 @click="
                   () => {
-                    data[currtFormDataId].label = item
+                    data[currtFormDataId].label = `${data[currtFormDataId].label}${item}`
                     popupVisible = false
                   }
                 "
@@ -35,7 +35,7 @@
       </t-input-adornment>
     </div>
 
-    <div :class="['flex-[3]', 'flex justify-start items-start']">
+    <div :class="['flex-[3]', 'flex justify-center items-start', 'max-h-[500px]']">
       <img src="points_template.png" class="object-cover h-full rounded-xl" alt="" />
     </div>
 
@@ -43,7 +43,7 @@
       <div class="flex w-full gap-2">
         <div class="w-full">
           <h2><strong>当前模板</strong></h2>
-          <div class="flex justify-between gap-2">
+          <div class="flex justify-start gap-2">
             <p :class="['bg-red-300', 'p-2']">
               模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模明模板说明模板说明模板说
             </p>
@@ -133,16 +133,20 @@ const clickHandler = (item) => {
   }
 }
 
-const baseOptions = ["{}", "{}洪水", "{}年一遇", "以洪为主_{}年一遇", "以潮为主_{}年一遇"]
+const baseOptions = [
+  "洪水",
+  "10年一遇",
+  "20年一遇",
+  "50年一遇",
+  "100年一遇",
+  "200年一遇",
+  "以洪为主",
+  "以潮为主",
+]
 const options = ref(baseOptions)
 
 async function onInputChange(keyword) {
-  console.log({ keyword })
-  // data.value[currtFormDataId.value].label = keyword
-  options.value = baseOptions.map((t) => {
-    console.log(t)
-    return t.replace("{}", keyword)
-  })
+  data.value[currtFormDataId.value].label = keyword
 }
 
 const popupVisible = ref(false)
