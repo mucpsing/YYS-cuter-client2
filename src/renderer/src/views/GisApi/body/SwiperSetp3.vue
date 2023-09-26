@@ -2,7 +2,7 @@
   <section
     :class="['flex flex-row w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2 whitespace-nowrap']"
   >
-    <div class="h-full flex-grow-[1] left bg-gray-100 rounded-md overflow-auto text-xs xl:text-md">
+    <div class="h-full flex-grow-[1] left overflow-auto text-xs xl:text-md">
       <div class="py-2 pl-3 pr-4 h-[0]">
         <!-- --------------- 【 工程范围 】 --------------- -->
         <t-loading :loading="projectLoading" class="flex items-center justify-between mt-2">
