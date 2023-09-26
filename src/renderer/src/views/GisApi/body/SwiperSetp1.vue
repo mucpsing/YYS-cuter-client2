@@ -1,82 +1,106 @@
 <template>
-  <section :class="['flex flex-row w-full gap-2', 'flex-grow-[2]', 'bg-sky-200 rounded-xl p-2']">
-    <div :class="['flex-[1]', , 'flex flex-col justify-between items-start']">
-      <div>
-        <!-- <h2 :class="['text-2xl']">模板名称.mxd</h2> -->
-        <div class="flex items-center justify-center pb-2">
-          <strong :class="['text-lg whitespace-nowrap']">输出名称：</strong>
-          <t-popup
-            content="如果工况名称未指定，默认会继承使用标签名称"
-            destroy-on-close
-            trigger="focus"
-          >
-            <t-input
-              align="center"
-              tpye="text"
-              v-model="data[currtFormDataId].label"
-              placeholder="工况名称"
-            ></t-input>
-          </t-popup>
-        </div>
-        <p :class="['bg-red-300 min-h-[400px]', 'p-2']">
-          模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明
-        </p>
-      </div>
-
-      <div class="flex flex-col w-full gap-2">
-        <div class="flex gap-1">
-          <t-dropdown
-            :options="dropdownOptions"
-            :max-column-width="200"
-            :max-height="200"
-            @click="clickHandler"
-          >
-            <t-button class="w-full"
-              >{{ selected_template }}
-              <template #icon>
-                <c-icon-font
-                  iconName="icon-yys-open"
-                  :rotate="180"
-                  color="white"
-                  :class="['text-white mr-2']"
-                ></c-icon-font
-              ></template>
-            </t-button>
-          </t-dropdown>
-          <t-tooltip content="下载模板" placement="top">
-            <t-button>
-              <template #icon>
-                <c-icon-font
-                  iconName="icon-yys-xiazai"
-                  color="white"
-                  :class="['text-white']"
-                ></c-icon-font>
-              </template> </t-button
-          ></t-tooltip>
-        </div>
-        <div class="flex gap-1">
-          <t-button theme="success" class="w-full"
-            >本地mxd模板
-            <template #icon>
-              <c-icon-font
-                iconName="icon-yys-shangchuan1"
-                :class="['text-white mr-2']"
-              ></c-icon-font>
-            </template>
-          </t-button>
-          <t-tooltip content="模板规范" placement="top">
-            <t-button theme="warning">
-              <template #icon>
-                <HelpCircleIcon />
-              </template> </t-button
-          ></t-tooltip>
-        </div>
-      </div>
+  <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'bg-sky-200 rounded-xl p-2']">
+    <div>
+      <t-input-adornment prepend="标题：">
+        <t-select-input
+          size="small"
+          :value="data[currtFormDataId].label"
+          :popup-visible="popupVisible"
+          :popup-props="{ overlayInnerStyle: { padding: '0px' } }"
+          placeholder="请输入任意关键词"
+          allow-input
+          clearable
+          style="width: 300px"
+          @input-change="onInputChange"
+          @popup-visible-change="onPopupVisibleChange"
+        >
+          <template #panel>
+            <ul class="">
+              <li
+                class="p-1 cursor-pointer hover:bg-gray-200"
+                v-for="item in options"
+                :key="item"
+                @click="
+                  () => {
+                    data[currtFormDataId].label = item
+                    popupVisible = false
+                  }
+                "
+              >
+                {{ item }}
+              </li>
+            </ul>
+          </template>
+        </t-select-input>
+      </t-input-adornment>
     </div>
 
     <div :class="['flex-[3]', 'flex justify-start items-start']">
       <img src="points_template.png" class="object-cover h-full rounded-xl" alt="" />
     </div>
+
+    <t-card>
+      <div class="flex w-full gap-2">
+        <div class="w-full">
+          <h2><strong>当前模板</strong></h2>
+          <div class="flex justify-between gap-2">
+            <p :class="['bg-red-300', 'p-2']">
+              模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模明模板说明模板说明模板说
+            </p>
+
+            <div class="flex flex-col items-center justify-center gap-2">
+              <div class="flex w-full gap-1">
+                <t-dropdown
+                  :options="dropdownOptions"
+                  :max-column-width="200"
+                  :max-height="200"
+                  @click="clickHandler"
+                >
+                  <t-button class="w-full" size="small"
+                    >{{ selected_template }}
+                    <template #icon>
+                      <c-icon-font
+                        iconName="icon-yys-open"
+                        :rotate="180"
+                        color="white"
+                        :class="['text-white mr-2']"
+                      ></c-icon-font
+                    ></template>
+                  </t-button>
+                </t-dropdown>
+                <t-tooltip content="下载模板" placement="top">
+                  <t-button size="small">
+                    <template #icon>
+                      <c-icon-font
+                        iconName="icon-yys-xiazai"
+                        color="white"
+                        :class="['text-white']"
+                      ></c-icon-font>
+                    </template> </t-button
+                ></t-tooltip>
+              </div>
+              <div class="flex w-full gap-1">
+                <t-button theme="success" class="w-full" size="small"
+                  >本地mxd模板
+                  <template #icon>
+                    <c-icon-font
+                      iconName="icon-yys-shangchuan1"
+                      :class="['text-white mr-2']"
+                    ></c-icon-font>
+                  </template>
+                </t-button>
+                <t-tooltip content="模板规范" placement="top">
+                  <t-button theme="warning" size="small">
+                    <template #icon>
+                      <HelpCircleIcon />
+                    </template> </t-button
+                ></t-tooltip>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </t-card>
   </section>
 </template>
 
@@ -107,6 +131,23 @@ const clickHandler = (item) => {
   } else {
     selected_template = "未选择模板"
   }
+}
+
+const baseOptions = ["{}", "{}洪水", "{}年一遇", "以洪为主_{}年一遇", "以潮为主_{}年一遇"]
+const options = ref(baseOptions)
+
+async function onInputChange(keyword) {
+  console.log({ keyword })
+  // data.value[currtFormDataId.value].label = keyword
+  options.value = baseOptions.map((t) => {
+    console.log(t)
+    return t.replace("{}", keyword)
+  })
+}
+
+const popupVisible = ref(false)
+async function onPopupVisibleChange(val) {
+  popupVisible.value = val
 }
 </script>
 

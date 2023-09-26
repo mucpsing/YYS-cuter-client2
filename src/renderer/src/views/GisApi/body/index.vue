@@ -4,9 +4,9 @@
     ref="bodyElementRef"
   >
     <t-tabs
-      class="h-full p2"
+      class="h-full"
       :value="currtTab"
-      size="large"
+      size="medium"
       theme="card"
       default-value="0"
       @add="addTab"
@@ -46,8 +46,8 @@ const dataChange = ({ id, value }) => {
   })
 }
 
-const addTab = (extendId: number = -1) => {
-  console.log("addTab...")
+const addTab = (_context?: { e: MouseEvent }, extendId: number = -1) => {
+  console.log("addTab...", extendId)
 
   const newTabId = parseInt(data.value.length.toString())
   const newData = createFormData(newTabId)
@@ -114,5 +114,9 @@ provide("tabControler", {
 
 .__gis-api__tabs .t-tabs{
   height 100%
+}
+
+.SwiperSetp__h2 {
+  @apply text-slate-600 pb-1
 }
 </style>

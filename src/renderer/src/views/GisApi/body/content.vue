@@ -5,7 +5,12 @@
         ><template #icon><AddIcon /></template
       ></t-button>
 
-      <t-steps v-model="formDataList[currtFormDataId].setp" layout="horizontal" :options="Sopts" />
+      <t-steps
+        size="small"
+        v-model="formDataList[currtFormDataId].setp"
+        layout="horizontal"
+        :options="Sopts"
+      />
     </header>
 
     <transition name="GisApi__body-fade">
@@ -19,7 +24,7 @@
         class="flex-[1]"
         :disabled="formDataList[currtFormDataId].setp == 1"
         @click="swtichSetp('back')"
-        size="large"
+        size="medium"
         >上一步<template #icon>
           <c-icon-font
             iconName="icon-yys-xiayiye"
@@ -33,7 +38,7 @@
         class="flex-[1]"
         :disabled="formDataList[currtFormDataId].setp != 4"
         theme="success"
-        size="large"
+        size="medium"
         >生成图片 (1/4)
         <template #icon>
           <c-icon-font
@@ -47,7 +52,7 @@
         class="flex-[1]"
         :disabled="formDataList[currtFormDataId].setp == Sopts.length"
         @click="swtichSetp('next')"
-        size="large"
+        size="medium"
         >下一步<template #suffix>
           <c-icon-font
             iconName="icon-yys-xiayiye"

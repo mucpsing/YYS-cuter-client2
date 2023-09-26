@@ -1,5 +1,23 @@
 <template>
-  <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2']">
+  <section
+    :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2 text-xs xl:text-md']"
+  >
+    <input
+      type="file"
+      style="display: none"
+      ref="afInputRef"
+      @change="onInputChange($event, 'af')"
+      multiple
+      accept=".dfsu"
+    />
+    <input
+      type="file"
+      style="display: none"
+      ref="beInputRef"
+      @change="onInputChange($event, 'be')"
+      accept=".dfsu"
+      multiple
+    />
     <!-- --------------- 【 工程前后的数据文件上传 】 --------------- -->
     <header
       ref="headerRef"
@@ -12,15 +30,16 @@
 
       <t-card
         :class="['flex-grow-[1]']"
-        title="工程前 - DFSU文件信息"
+        title="DFSU文件(工程前)"
         :loading="formDataList[currtFormDataId].beDfsuInfo.reading"
       >
         <div :class="['flex justify-start']">
           <div class="flex flex-col text-gray-500">
-            <h3 class="my-1 text-lg text-black">
-              <strong>文件名：</strong>{{ formDataList[currtFormDataId].beDfsuInfo.name }}
+            <h3 class="my-1 text-black">
+              <strong>工程前：</strong>{{ formDataList[currtFormDataId].beDfsuInfo.name }}
             </h3>
-            <p>文件路径：{{ formDataList[currtFormDataId].beDfsuInfo.path }}</p>
+            <!-- TODO electron 才有的特性这里屏蔽掉，后期需要优化 -->
+            <!-- <p>文件路径：{{ formDataList[currtFormDataId].beDfsuInfo.path }}</p> -->
             <span>文件大小：{{ formDataList[currtFormDataId].beDfsuInfo.size.toFixed(2) }} MB</span>
             <span>上传名称：{{ formDataList[currtFormDataId].beDfsuInfo.md5 }}.dfsu</span>
           </div>
@@ -28,6 +47,7 @@
 
         <div class="flex justify-center w-full pt-3">
           <t-button
+            size="medium"
             class="min-w-[250px]"
             :theme="formDataList[currtFormDataId].beDfsuInfo.md5 ? 'success' : 'danger'"
             :onClick="async () => await onUploadBtnClick('be')"
@@ -46,15 +66,16 @@
 
       <t-card
         :class="['flex-grow-[1]']"
-        title="工程后 - DFSU文件信息"
+        title="DFSU文件(工程后)"
         :loading="formDataList[currtFormDataId].afDfsuInfo.reading"
       >
         <div :class="['flex justify-start']">
           <div class="flex flex-col text-gray-500">
-            <h3 class="my-1 text-lg text-black">
-              <strong>文件名：</strong>{{ formDataList[currtFormDataId].afDfsuInfo.name }}
+            <h3 class="my-1 text-black">
+              <strong>工程后：</strong>{{ formDataList[currtFormDataId].afDfsuInfo.name }}
             </h3>
-            <p>文件路径：{{ formDataList[currtFormDataId].afDfsuInfo.path }}</p>
+            <!-- TODO electron 才有的特性这里屏蔽掉，后期需要优化 -->
+            <!-- <p>文件路径：{{ formDataList[currtFormDataId].afDfsuInfo.path }}</p> -->
             <span>文件大小：{{ formDataList[currtFormDataId].afDfsuInfo.size.toFixed(2) }} MB</span>
             <span>上传名称：{{ formDataList[currtFormDataId].afDfsuInfo.md5 }}.dfsu</span>
           </div>
@@ -76,23 +97,28 @@
       <!-- --------------- 【 输出名称 】 --------------- -->
       <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col items-start justify-between">
-          <h2 class="SwiperSetp__h2"><strong>输出名称</strong></h2>
+          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>输出名称</strong></h2>
           <p class="max-w-[90%]">
             指定图片的输出名称，默认情况下会尝试识别shp文件名称，根据最后一段_{xxx}的xxx来命名
           </p>
         </div>
         <div class="flex gap-1">
-          <t-input class="" placeholder="文件名（不带后缀）" align="center"></t-input>
-          <t-dropdown
+          <t-input
+            v-model="formDataList[currtFormDataId].outputName"
+            size="small"
+            class=""
+            placeholder="文件名（不带后缀）"
+            align="center"
+          ></t-input>
+          <!-- <t-dropdown
             :options="[
               { content: `.jpg`, value: `.jpg` },
-              { content: `.jpeg`, value: `.jpeg` },
               { content: `.png`, value: `.png` },
             ]"
             @click="(item) => (outputExt = (item.value as string))"
           >
-            <t-button>{{ outputExt }}</t-button>
-          </t-dropdown>
+            <t-button size="small">{{ outputExt }}</t-button>
+          </t-dropdown> -->
         </div>
       </div>
 
@@ -101,7 +127,7 @@
       <!-- --------------- 【 工况选择 】 --------------- -->
       <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col items-start justify-between">
-          <h2 class="SwiperSetp__h2"><strong>工况选择</strong></h2>
+          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>工况选择</strong></h2>
           <p>
             常见的工况有：
             <t-tag
@@ -114,8 +140,10 @@
                 { content: `200年一遇`, value: `200年一遇` },
               ]"
               :key="idx"
+              size="small"
               theme="success"
               variant="light-outline"
+              v-model="formDataList[currtFormDataId].project"
               @click="outputPojectType = item.value"
               >{{ item.value }}</t-tag
             >
@@ -132,7 +160,9 @@
             ]"
             @click="(item) => (outputPojectType = (item.value as string))"
           >
-            <t-button>{{ outputPojectType }}</t-button>
+            <t-button variant="outline" theme="primary" size="small">{{
+              outputPojectType
+            }}</t-button>
           </t-dropdown>
         </div>
       </div>
@@ -142,7 +172,7 @@
       <!-- --------------- 【 洪水类型 】 --------------- -->
       <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col items-start justify-between">
-          <h2 class="SwiperSetp__h2"><strong>洪水类型</strong></h2>
+          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>洪水类型</strong></h2>
           <p>
             常见的<strong>洪水</strong>类型有：
             <t-tag
@@ -152,7 +182,8 @@
                 { content: `以潮为主`, value: `以潮为主` },
               ]"
               :key="idx"
-              theme="warning"
+              size="small"
+              :theme="idx % 2 == 1 ? 'danger' : 'primary'"
               variant="light-outline"
               @click="outputFloodMode = item.value"
               >{{ item.value }}</t-tag
@@ -167,29 +198,15 @@
             ]"
             @click="(item) => (outputFloodMode = (item.value as string))"
           >
-            <t-button>{{ outputFloodMode }}</t-button>
+            <t-button variant="outline" theme="primary" size="small">{{
+              outputFloodMode
+            }}</t-button>
           </t-dropdown>
         </div>
       </div>
 
       <t-divider class="my-2"></t-divider>
     </t-card>
-    <input
-      type="file"
-      style="display: none"
-      ref="afInputRef"
-      :onChange="() => onInputChange('af')"
-      accept=".dfsu"
-      multiple
-    />
-    <input
-      type="file"
-      style="display: none"
-      ref="beInputRef"
-      :onChange="() => onInputChange('be')"
-      accept=".dfsu"
-      multiple
-    />
   </section>
 </template>
 
@@ -231,12 +248,15 @@ async function onUploadBtnClick(target: "af" | "be") {
   if (!inputRef || !inputRef.value) return
   if (inputRef.value.value) inputRef.value.value = ""
 
+  console.log("按钮点击~~~~~~~~~~~~~~~~", inputRef)
   inputRef.value.click()
 }
 
-async function onInputChange(target: "af" | "be") {
-  let inputRef
-  let infoList
+async function onInputChange(e: any, target: "af" | "be") {
+  console.log("Input ~onInputChange--------------------", e)
+  let inputRef: globalThis.Ref<HTMLInputElement | undefined>
+  let infoList: any[]
+
   if (target == "be") {
     inputRef = beInputRef
     infoList = [formDataList.value[currtFormDataId.value].beDfsuInfo]
@@ -258,15 +278,19 @@ async function onInputChange(target: "af" | "be") {
   await readFiles(files, infoList)
 }
 
-async function readFiles(files: File[], infoList: any[]) {
+async function readFiles(files: FileList, infoList: any[]) {
+  console.log("readFiles--------------------")
+
   const count = infoList.length
 
   for (let index = 0; index < count; index++) {
-    const file = (files as File[])[index]
+    const file = (files as FileList)[index]
+
+    console.log({ file })
 
     infoList[index].size = file.size / 1024 / 1024
     infoList[index].name = file.name
-    infoList[index].path = file.path.toString()
+    // infoList[index].path = file.path.toString()
 
     infoList[index].reading = true
     infoList[index].md5 = await getMd5(file)
@@ -275,14 +299,14 @@ async function readFiles(files: File[], infoList: any[]) {
       infoList[index].reading = false
     }, 1000)
 
-    await uploadFile(`${infoList[index].md5}.dfsu`, file)
+    // await uploadFile(`${infoList[index].md5}.dfsu`, file)
   }
 }
 </script>
 
 <style lang="stylus">
 /* 遮罩具体样式 */
-.GisApi__drapMask
+.GisApi__drapMask{
   position absolute
   width 100%
   height 100%
@@ -299,10 +323,18 @@ async function readFiles(files: File[], infoList: any[]) {
   backdrop-filter blur(5px)
   transition all 0.6s cubic-bezier(0.25, 1, 0.5, 1)
 
-  .GisApi__drapMaskTip
+  .GisApi__drapMaskTip{
     font-size clamp(1rem, 4vh, 2rem)
+  }
+}
 
-.GisApi__drapMask-show
+.GisApi__drapMask-show{
   opacity 1
   z-index 50
+}
+
+.GisApi__SwiperSetp2-title{
+  opacity 1
+  @apply text-lg
+}
 </style>

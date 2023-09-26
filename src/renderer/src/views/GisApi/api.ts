@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-09-24 19:01:25
+ * @LastEditTime: 2023-09-25 22:44:53
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -26,6 +26,16 @@ export interface MxdToImgForm {
   project_range: string
   river_range: "工程前" | "工程后"
 }
+
+// export async function uploadShpFile(md5Filename:string, fileList:File[]){
+//   for (let each of fileList){
+//     const formData = new FormData()
+//     formData.append("filename", filename)
+//     formData.append("file", file)
+//   }
+
+//   Promise.all()
+// }
 
 export async function uploadFile(filename: string, file: File) {
   const formData = new FormData()
