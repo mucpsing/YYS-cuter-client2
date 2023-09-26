@@ -1,5 +1,11 @@
 <template>
-  <section class="h-screen flex-grow-[999] flex flex-col">
+  <section
+    :class="[
+      'h-screen flex-grow-[999] flex flex-col',
+      'md:text-sm xl:text-md',
+      'whitespace-nowrap',
+    ]"
+  >
     <NsHeader></NsHeader>
     <NsBody></NsBody>
   </section>

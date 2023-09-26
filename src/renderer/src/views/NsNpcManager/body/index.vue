@@ -1,11 +1,11 @@
 <template>
-  <section :class="['flex flex-row gap-2 flex-grow-[999]', 'pt-2 px-4', 'whitespace-nowrap']">
+  <section :class="['flex flex-row gap-2 flex-grow-[999]', 'pt-2 px-4']">
     <!-- 【左边】 -->
-    <div :class="['flex-grow-[0]']">
+    <div :class="['flex-grow-[0]']" v-show="currtPannel != '事件编辑'">
       <div>
-        <div :class="['flex justify-between', ' mb-2 py-2 px-4']">
+        <div :class="['flex justify-between', 'mb-2 py-2 px-4']">
           <h2>
-            名称：
+            名称:
             <strong>{{ NpcData[selectNpcTable].NpcName }}</strong>
           </h2>
           <span
@@ -16,7 +16,7 @@
 
       <div :class="['flex flex-col flex-grow-[999] gap-4', 'h-full', 'p-4']">
         <div class="rouned-md">
-          <img src="" alt="" :class="['min-w-[300px] min-h-[300px] bg-green-300 rouned-md']" />
+          <img :class="['w-[220px] h-[220px] bg-green-300 rouned-md']" />
 
           <NpcBaseInfo />
 
@@ -31,7 +31,6 @@
                   :options="NpcList"
                   filterable
                   :scroll="{ type: 'virtual', threshold: 20 }"
-                  style="width: 300px; padding-left: 0"
                   :change="onNpcIdChange"
                   :onFocus="
                     (e) => {
@@ -42,8 +41,9 @@
                   <template #suffixIcon> <SearchIcon /> </template>
                 </t-select>
                 <div class="flex gap-1">
-                  <t-button>{{ "<" }}</t-button>
+                  <t-button size="small">{{ "<" }}</t-button>
                   <t-button
+                    size="small"
                     :class="['flex-grow-[999]']"
                     theme="success"
                     @click="onNpcIdChange(currtNpcId)"
@@ -53,14 +53,14 @@
                     ></template>
                     <span class="ml-2">刷新</span>
                   </t-button>
-                  <t-button>{{ ">" }}</t-button>
+                  <t-button size="small">{{ ">" }}</t-button>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div :class="['flex-col justify-between items-center', 'gap-2']">
+        <div :class="['flex-col justify-between items-center', 'gap-2', 'max-w-[820px]']">
           <!-- <t-divider class=""><strong>表格选择</strong></t-divider> -->
           <div class="flex items-center justify-between py-2">
             <h4>双表同步修改</h4>
@@ -70,19 +70,21 @@
           </div>
           <t-button
             variant="outline"
-            style="width: 300px"
             @click="
               () => {
                 selectNpcTable = selectNpcTable == 'NpcParams' ? 'NpcParams2' : 'NpcParams'
               }
             "
+            size="small"
             theme="primary"
+            style="width: 100%"
             ><strong>NPC表格：</strong>{{ selectNpcTable }}</t-button
           >
           <div class="py-2">
             <t-button
+              size="small"
               variant="outline"
-              style="width: 300px"
+              style="width: 100%"
               @click="
                 () => {
                   selectDropTable =
@@ -101,8 +103,8 @@
 
     <!-- 【右边】 -->
     <div :class="['flex-grow-[2]']">
-      <t-loading size="small" :loading="loading">
-        <t-tabs v-model="currtPannel" theme="normal" size="large" :onChange="loadingWait">
+      <t-loading :loading="loading">
+        <t-tabs v-model="currtPannel" theme="normal" size="medium" :onChange="loadingWait">
           <t-tab-panel value="基础属性" label="基础属性">
             <NpcParams />
           </t-tab-panel>
@@ -163,6 +165,8 @@ const loadingWait = () => {
   if (loading.value) return
   loading.value = true
   setTimeout(() => (loading.value = false), 300)
+
+  console.log(currtPannel.value)
 }
 
 async function onNpcIdChange(NpcId: number) {
@@ -198,4 +202,3 @@ async function updateBtn() {
   updateNpcInfoById(currtNpcId.value, NpcData["NpcDataParams"], "NpcDataParams", false)
 }
 </script>
-../../../croe/api../../../croe/api

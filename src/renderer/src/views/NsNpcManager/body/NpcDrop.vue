@@ -3,7 +3,7 @@
     <!-- 按钮操作区域 -->
     <div class="flex justify-end py-2">
       <t-input-adornment prepend="表格高度">
-        <t-input-number :step="50" v-model="NpcTabPanelHeight" />
+        <t-input-number size="small" align="center" :step="50" v-model="NpcTabPanelHeight" />
       </t-input-adornment>
     </div>
 
@@ -22,33 +22,39 @@
       :onPageChange="onPageChange"
     >
       <template #footerSummary>
-        <div class="flex items-center gap-2 t-table__row-filter-inner">
+        <div class="flex items-center gap-1">
           <div>
-            <t-input-adornment prepend="掉落金币" v-if="NpcData[selectDropTable]">
+            <t-input-adornment prepend="金币" v-if="NpcData[selectDropTable]">
               <t-input-number
                 v-model="NpcData[selectDropTable].Gold"
+                size="small"
                 theme="normal"
                 placeholder="请输入内容"
-                style="width: 110px"
+                align="center"
+                style="width: 90px"
               />
             </t-input-adornment>
           </div>
           <div>
-            <t-input-adornment prepend="掉落蒸汽">
+            <t-input-adornment prepend="蒸汽">
               <t-input-number
                 v-model="NpcData[selectNpcTable].Ns"
+                size="small"
+                align="center"
                 theme="normal"
-                style="width: 110px"
+                style="width: 90px"
                 placeholder="请输入内容"
               />
             </t-input-adornment>
           </div>
           <div>
-            <t-input-adornment prepend="掉落经验">
+            <t-input-adornment prepend="经验">
               <t-input-number
                 v-model="NpcData[selectNpcTable].Exp"
+                align="center"
                 theme="normal"
-                style="width: 110px"
+                size="small"
+                style="width: 90px"
                 placeholder="请输入内容"
               />
             </t-input-adornment>
@@ -65,16 +71,16 @@
             filterable
             :defaultValue="NpcData[selectDropTable][row.itemId]"
             :scroll="{ type: 'virtual' }"
-            style="width: 300px"
+            style="width: 250px"
           />
 
-          <t-link
+          <!-- <t-link
             theme="success"
             hover="color"
             @click="updateRow(row.itemId, NpcData[selectDropTable][row.itemId], selectDropTable)"
           >
             更新
-          </t-link>
+          </t-link> -->
 
           <!-- <t-link theme="danger" hover="color" @click="cleanRow(row)"> 清空 </t-link> -->
         </div>
@@ -84,12 +90,15 @@
       <template #pro="{ row }">
         <t-input-number
           type="number"
+          theme="normal"
+          style="width: 70px"
+          align="center"
           v-model="NpcData[selectDropTable][row.pro]"
           placeholder="请输入内容"
         />
         <span class="px-1"></span>
 
-        <t-link
+        <!-- <t-link
           theme="primary"
           hover="color"
           @click="updateRow(row.pro, NpcData[selectDropTable][row.pro], selectDropTable)"
@@ -97,7 +106,20 @@
           更新
         </t-link>
         <span class="px-1"></span>
-        <t-link theme="danger" hover="color" @click="cleanRow(row)"> 清空 </t-link>
+        <t-link theme="danger" hover="color" @click="cleanRow(row)"> 清空 </t-link> -->
+      </template>
+
+      <template #edit="{ row }">
+        <t-link
+          theme="primary"
+          hover="color"
+          size="small"
+          @click="updateRow(row.pro, NpcData[selectDropTable][row.pro], selectDropTable)"
+        >
+          更新
+        </t-link>
+        <span class="px-1"></span>
+        <t-link size="small" theme="danger" hover="color" @click="cleanRow(row)"> 清空 </t-link>
       </template>
     </t-table>
   </section>
@@ -131,9 +153,10 @@ function cleanRow(row) {
 }
 
 const tableColumns = [
-  { colKey: "id", title: "序号", width: "40" },
-  { colKey: "itemId", title: "掉落物品", width: "260" },
-  { colKey: "pro", title: "掉落概率", width: "200" },
+  { colKey: "id", title: "序号", width: "30" },
+  { colKey: "itemId", title: "掉落物品", width: "200" },
+  { colKey: "pro", title: "掉落概率", width: "100" },
+  // { colKey: "edit", title: "操作", width: "40" },
 ]
 
 // const count = computed(() => (selectDropTable.value == "NpcDropItemParams" ? 24 : 48))

@@ -21,25 +21,27 @@
           <div class="flex flex-col">
             <div class="flex gap-2">
               <t-input-number
+                size="small"
                 v-model="NpcData[selectNpcTable].AttackMinDamage"
-                theme="column"
+                theme="normal"
                 align="center"
                 :max="NpcData[selectNpcTable].AttackMaxDamage"
                 :min="0"
                 :label="NpcInfoFieldName.AttackMinDamage.text"
-                style="width: 150px"
+                style="width: 130px"
               ></t-input-number>
 
               <strong> - </strong>
 
               <t-input-number
+                size="small"
                 v-model="NpcData[selectNpcTable].AttackMaxDamage"
-                theme="column"
+                theme="normal"
                 align="center"
                 :max="NpcInfoFieldName.AttackMaxDamage.max"
                 :min="NpcData[selectNpcTable].AttackMinDamage"
                 :label="NpcInfoFieldName.AttackMaxDamage.text"
-                style="width: 150px"
+                style="width: 130px"
               ></t-input-number>
             </div>
             <div class="flex gap-2 py-2">
@@ -196,7 +198,7 @@ async function resetData(tableName: string, keyName: string) {
   @apply whitespace-nowrap
 
   & h3{
-    @apply text-lg
+    @apply text-sm
   }
 }
 

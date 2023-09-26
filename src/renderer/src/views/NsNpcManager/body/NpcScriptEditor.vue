@@ -1,8 +1,23 @@
 <template>
   <div class="flex flex-col gap-2">
-    <div class="flex justify-end py-2">
-      <t-input-adornment prepend="表格高度">
-        <t-input-number :step="50" v-model="NpcTabPanelHeight" />
+    <div class="flex justify-between gap-2 py-2">
+      <t-select
+        size="small"
+        v-model="currtNpcId"
+        :options="NpcList"
+        filterable
+        :scroll="{ type: 'virtual', threshold: 20 }"
+        :onChange="() => onNpcIdChange(currtNpcId)"
+        :onFocus="
+          (e) => {
+            console.log('当前：', e)
+          }
+        "
+      >
+        <template #suffixIcon> <SearchIcon /> </template>
+      </t-select>
+      <t-input-adornment prepend="高度">
+        <t-input-number size="small" align="center" :step="50" v-model="NpcTabPanelHeight" />
       </t-input-adornment>
     </div>
     <codemirror
@@ -27,10 +42,15 @@
 
 <script setup lang="ts">
 import { Codemirror } from "vue-codemirror"
-import { StreamLanguage } from "@codemirror/language"
 import { lua } from "@codemirror/legacy-modes/mode/lua"
-import { NpcTabPanelHeight } from "../store/index"
-import { NpcData } from "../store/data"
+import { StreamLanguage } from "@codemirror/language"
+import { SearchIcon } from "tdesign-icons-vue-next"
+
+import { NpcData, updateNpcData } from "../store/data"
+import { NpcList } from "../data/npcList"
+import { NpcTabPanelHeight, isRequesting, currtNpcId } from "../store/index"
+import { getNpcInfoById } from "@renderer/api/ns-api"
+
 // import { json } from "@codemirror/lang-json"
 // import { sql } from "@codemirror/lang-sql"
 
@@ -71,6 +91,17 @@ const getCodemirrorStates = () => {
   const lines = state.doc.lines
 
   console.log({ state, ranges, selected, cursor, length, lines })
+}
+
+async function onNpcIdChange(NpcId: number) {
+  if (isRequesting.value) return // 这里请求中
+  // 更新 data
+  isRequesting.value = true
+  const new_data = await getNpcInfoById(NpcId)
+
+  if (new_data) await updateNpcData(new_data)
+
+  setTimeout(() => (isRequesting.value = false), 1000)
 }
 </script>
 
