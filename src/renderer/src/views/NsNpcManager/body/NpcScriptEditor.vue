@@ -16,9 +16,14 @@
       >
         <template #suffixIcon> <SearchIcon /> </template>
       </t-select>
-      <t-input-adornment prepend="高度">
-        <t-input-number size="small" align="center" :step="50" v-model="NpcTabPanelHeight" />
-      </t-input-adornment>
+      <div>
+        <t-input-adornment prepend="高度">
+          <t-input-number size="small" align="center" :step="50" v-model="NpcTabPanelHeight" />
+        </t-input-adornment>
+        <t-input-adornment prepend="宽度">
+          <t-input-number size="small" align="center" :step="50" v-model="maxWidth" />
+        </t-input-adornment>
+      </div>
     </div>
     <codemirror
       v-model="NpcData['NpcDataParams'].Data"
@@ -55,7 +60,7 @@ import { getNpcInfoById } from "@renderer/api/ns-api"
 // import { sql } from "@codemirror/lang-sql"
 
 const extensions = [StreamLanguage.define(lua)]
-
+const maxWidth = ref(600)
 //* 以下是【支持多种语言的写法】，暂时用不到 */
 
 // 皮肤加载在extensions[1]的位置

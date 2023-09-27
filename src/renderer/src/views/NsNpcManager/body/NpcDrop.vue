@@ -90,8 +90,7 @@
       <template #pro="{ row }">
         <t-input-number
           type="number"
-          theme="normal"
-          style="width: 70px"
+          style="width: 150px"
           align="center"
           v-model="NpcData[selectDropTable][row.pro]"
           placeholder="请输入内容"
@@ -153,9 +152,9 @@ function cleanRow(row) {
 }
 
 const tableColumns = [
-  { colKey: "id", title: "序号", width: "30" },
-  { colKey: "itemId", title: "掉落物品", width: "200" },
-  { colKey: "pro", title: "掉落概率", width: "100" },
+  { colKey: "id", title: "序号", width: "30", align: "center" },
+  { colKey: "itemId", title: "掉落物品", width: "200", align: "center" },
+  { colKey: "pro", title: "掉落概率", width: "100", align: "center" },
   // { colKey: "edit", title: "操作", width: "40" },
 ]
 

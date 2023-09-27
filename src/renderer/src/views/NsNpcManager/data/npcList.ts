@@ -3217,10 +3217,6 @@ export const npcListRaw = [
   },
   {
     NpcId: 805,
-    NpcName: "功勋负责人",
-  },
-  {
-    NpcId: 805,
     NpcName: "RvR信息",
   },
   {
@@ -3328,28 +3324,12 @@ export const npcListRaw = [
     NpcName: "萨伊肯之卵",
   },
   {
-    NpcId: 831,
-    NpcName: "",
-  },
-  {
     NpcId: 832,
     NpcName: "石像",
   },
   {
-    NpcId: 832,
-    NpcName: "",
-  },
-  {
     NpcId: 833,
     NpcName: "石像",
-  },
-  {
-    NpcId: 833,
-    NpcName: "",
-  },
-  {
-    NpcId: 834,
-    NpcName: "",
   },
   {
     NpcId: 834,
@@ -3357,15 +3337,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 835,
-    NpcName: "",
-  },
-  {
-    NpcId: 835,
     NpcName: "巨型萨伊肯之卵",
-  },
-  {
-    NpcId: 836,
-    NpcName: "",
   },
   {
     NpcId: 836,
@@ -3373,23 +3345,11 @@ export const npcListRaw = [
   },
   {
     NpcId: 837,
-    NpcName: "",
-  },
-  {
-    NpcId: 837,
     NpcName: "通道",
   },
   {
     NpcId: 838,
-    NpcName: "",
-  },
-  {
-    NpcId: 838,
     NpcName: "通道",
-  },
-  {
-    NpcId: 839,
-    NpcName: "",
   },
   {
     NpcId: 839,
@@ -3400,28 +3360,12 @@ export const npcListRaw = [
     NpcName: "BOSS日程",
   },
   {
-    NpcId: 840,
-    NpcName: "",
-  },
-  {
-    NpcId: 841,
-    NpcName: "",
-  },
-  {
     NpcId: 841,
     NpcName: "黑暗石头",
   },
   {
     NpcId: 842,
-    NpcName: "",
-  },
-  {
-    NpcId: 842,
     NpcName: "黑暗石头",
-  },
-  {
-    NpcId: 843,
-    NpcName: "",
   },
   {
     NpcId: 843,
@@ -3430,30 +3374,14 @@ export const npcListRaw = [
   {
     NpcId: 844,
     NpcName: "黑暗石头",
-  },
-  {
-    NpcId: 844,
-    NpcName: "",
   },
   {
     NpcId: 845,
     NpcName: "母亲之树",
   },
   {
-    NpcId: 845,
-    NpcName: "",
-  },
-  {
     NpcId: 846,
     NpcName: "死亡命令者管理",
-  },
-  {
-    NpcId: 846,
-    NpcName: "",
-  },
-  {
-    NpcId: 847,
-    NpcName: "",
   },
   {
     NpcId: 847,
@@ -3464,36 +3392,16 @@ export const npcListRaw = [
     NpcName: "封印箱子",
   },
   {
-    NpcId: 848,
-    NpcName: "",
-  },
-  {
     NpcId: 849,
     NpcName: "属性黑暗石头",
-  },
-  {
-    NpcId: 849,
-    NpcName: "",
   },
   {
     NpcId: 850,
     NpcName: "综合机器",
   },
   {
-    NpcId: 850,
-    NpcName: "",
-  },
-  {
     NpcId: 851,
     NpcName: "入口",
-  },
-  {
-    NpcId: 851,
-    NpcName: "",
-  },
-  {
-    NpcId: 852,
-    NpcName: "",
   },
   {
     NpcId: 852,
@@ -3501,15 +3409,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 853,
-    NpcName: "",
-  },
-  {
-    NpcId: 853,
     NpcName: "圣诞狂欢箱",
-  },
-  {
-    NpcId: 854,
-    NpcName: "",
   },
   {
     NpcId: 854,
@@ -3517,15 +3417,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 855,
-    NpcName: "",
-  },
-  {
-    NpcId: 855,
     NpcName: "扎利特的庭院",
-  },
-  {
-    NpcId: 856,
-    NpcName: "",
   },
   {
     NpcId: 856,
@@ -3536,14 +3428,6 @@ export const npcListRaw = [
     NpcName: "异次元裂缝",
   },
   {
-    NpcId: 857,
-    NpcName: "",
-  },
-  {
-    NpcId: 858,
-    NpcName: "",
-  },
-  {
     NpcId: 858,
     NpcName: "古代克罗纳斯",
   },
@@ -3552,14 +3436,6 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 859,
-    NpcName: "",
-  },
-  {
-    NpcId: 860,
-    NpcName: "",
-  },
-  {
     NpcId: 860,
     NpcName: "Error",
   },
@@ -3568,28 +3444,12 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 861,
-    NpcName: "",
-  },
-  {
     NpcId: 862,
     NpcName: "Error",
   },
   {
-    NpcId: 862,
-    NpcName: "",
-  },
-  {
     NpcId: 863,
     NpcName: "Error",
-  },
-  {
-    NpcId: 863,
-    NpcName: "",
-  },
-  {
-    NpcId: 864,
-    NpcName: "",
   },
   {
     NpcId: 864,
@@ -3597,15 +3457,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 865,
-    NpcName: "",
-  },
-  {
-    NpcId: 865,
     NpcName: "Error",
-  },
-  {
-    NpcId: 866,
-    NpcName: "",
   },
   {
     NpcId: 866,
@@ -3616,28 +3468,12 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 867,
-    NpcName: "",
-  },
-  {
     NpcId: 868,
     NpcName: "Error",
   },
   {
-    NpcId: 868,
-    NpcName: "",
-  },
-  {
     NpcId: 869,
     NpcName: "Error",
-  },
-  {
-    NpcId: 869,
-    NpcName: "",
-  },
-  {
-    NpcId: 870,
-    NpcName: "",
   },
   {
     NpcId: 870,
@@ -3645,15 +3481,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 871,
-    NpcName: "",
-  },
-  {
-    NpcId: 871,
     NpcName: "Error",
-  },
-  {
-    NpcId: 872,
-    NpcName: "",
   },
   {
     NpcId: 872,
@@ -3661,15 +3489,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 873,
-    NpcName: "",
-  },
-  {
-    NpcId: 873,
     NpcName: "Error",
-  },
-  {
-    NpcId: 874,
-    NpcName: "",
   },
   {
     NpcId: 874,
@@ -3677,23 +3497,11 @@ export const npcListRaw = [
   },
   {
     NpcId: 875,
-    NpcName: "",
-  },
-  {
-    NpcId: 875,
     NpcName: "Error",
   },
   {
     NpcId: 876,
-    NpcName: "",
-  },
-  {
-    NpcId: 876,
     NpcName: "Error",
-  },
-  {
-    NpcId: 877,
-    NpcName: "",
   },
   {
     NpcId: 877,
@@ -3704,28 +3512,12 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 878,
-    NpcName: "",
-  },
-  {
     NpcId: 879,
     NpcName: "Error",
   },
   {
-    NpcId: 879,
-    NpcName: "",
-  },
-  {
-    NpcId: 880,
-    NpcName: "",
-  },
-  {
     NpcId: 880,
     NpcName: "Error",
-  },
-  {
-    NpcId: 881,
-    NpcName: "",
   },
   {
     NpcId: 881,
@@ -3736,20 +3528,8 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 882,
-    NpcName: "",
-  },
-  {
     NpcId: 883,
     NpcName: "Error",
-  },
-  {
-    NpcId: 883,
-    NpcName: "",
-  },
-  {
-    NpcId: 884,
-    NpcName: "",
   },
   {
     NpcId: 884,
@@ -3757,15 +3537,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 885,
-    NpcName: "",
-  },
-  {
-    NpcId: 885,
     NpcName: "Error",
-  },
-  {
-    NpcId: 886,
-    NpcName: "",
   },
   {
     NpcId: 886,
@@ -3773,15 +3545,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 887,
-    NpcName: "",
-  },
-  {
-    NpcId: 887,
     NpcName: "Error",
-  },
-  {
-    NpcId: 888,
-    NpcName: "",
   },
   {
     NpcId: 888,
@@ -3792,20 +3556,8 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 889,
-    NpcName: "",
-  },
-  {
     NpcId: 890,
     NpcName: "Error",
-  },
-  {
-    NpcId: 890,
-    NpcName: "",
-  },
-  {
-    NpcId: 891,
-    NpcName: "",
   },
   {
     NpcId: 891,
@@ -3813,15 +3565,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 892,
-    NpcName: "",
-  },
-  {
-    NpcId: 892,
     NpcName: "Error",
-  },
-  {
-    NpcId: 893,
-    NpcName: "",
   },
   {
     NpcId: 893,
@@ -3829,15 +3573,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 894,
-    NpcName: "",
-  },
-  {
-    NpcId: 894,
     NpcName: "Error",
-  },
-  {
-    NpcId: 895,
-    NpcName: "",
   },
   {
     NpcId: 895,
@@ -3848,20 +3584,8 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 896,
-    NpcName: "",
-  },
-  {
     NpcId: 897,
     NpcName: "Error",
-  },
-  {
-    NpcId: 897,
-    NpcName: "",
-  },
-  {
-    NpcId: 898,
-    NpcName: "",
   },
   {
     NpcId: 898,
@@ -3872,36 +3596,16 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 899,
-    NpcName: "",
-  },
-  {
     NpcId: 900,
     NpcName: "Error",
-  },
-  {
-    NpcId: 900,
-    NpcName: "",
   },
   {
     NpcId: 901,
     NpcName: "Error",
   },
   {
-    NpcId: 901,
-    NpcName: "",
-  },
-  {
     NpcId: 902,
     NpcName: "Error",
-  },
-  {
-    NpcId: 902,
-    NpcName: "",
-  },
-  {
-    NpcId: 903,
-    NpcName: "",
   },
   {
     NpcId: 903,
@@ -3909,15 +3613,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 904,
-    NpcName: "",
-  },
-  {
-    NpcId: 904,
     NpcName: "Error",
-  },
-  {
-    NpcId: 905,
-    NpcName: "",
   },
   {
     NpcId: 905,
@@ -3928,28 +3624,12 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 906,
-    NpcName: "",
-  },
-  {
-    NpcId: 907,
-    NpcName: "",
-  },
-  {
     NpcId: 907,
     NpcName: "Error",
   },
   {
     NpcId: 908,
-    NpcName: "",
-  },
-  {
-    NpcId: 908,
     NpcName: "Error",
-  },
-  {
-    NpcId: 909,
-    NpcName: "",
   },
   {
     NpcId: 909,
@@ -3960,28 +3640,12 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 910,
-    NpcName: "",
-  },
-  {
-    NpcId: 911,
-    NpcName: "",
-  },
-  {
     NpcId: 911,
     NpcName: "Error",
   },
   {
     NpcId: 912,
-    NpcName: "",
-  },
-  {
-    NpcId: 912,
     NpcName: "Error",
-  },
-  {
-    NpcId: 913,
-    NpcName: "",
   },
   {
     NpcId: 913,
@@ -3992,36 +3656,16 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 914,
-    NpcName: "",
-  },
-  {
     NpcId: 915,
     NpcName: "Error",
-  },
-  {
-    NpcId: 915,
-    NpcName: "",
   },
   {
     NpcId: 916,
     NpcName: "Error",
   },
   {
-    NpcId: 916,
-    NpcName: "",
-  },
-  {
     NpcId: 917,
     NpcName: "Error",
-  },
-  {
-    NpcId: 917,
-    NpcName: "",
-  },
-  {
-    NpcId: 918,
-    NpcName: "",
   },
   {
     NpcId: 918,
@@ -4032,28 +3676,12 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 919,
-    NpcName: "",
-  },
-  {
     NpcId: 920,
     NpcName: "Error",
   },
   {
-    NpcId: 920,
-    NpcName: "",
-  },
-  {
     NpcId: 921,
     NpcName: "Error",
-  },
-  {
-    NpcId: 921,
-    NpcName: "",
-  },
-  {
-    NpcId: 922,
-    NpcName: "",
   },
   {
     NpcId: 922,
@@ -4061,15 +3689,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 923,
-    NpcName: "",
-  },
-  {
-    NpcId: 923,
     NpcName: "Error",
-  },
-  {
-    NpcId: 924,
-    NpcName: "",
   },
   {
     NpcId: 924,
@@ -4077,15 +3697,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 925,
-    NpcName: "",
-  },
-  {
-    NpcId: 925,
     NpcName: "Error",
-  },
-  {
-    NpcId: 926,
-    NpcName: "",
   },
   {
     NpcId: 926,
@@ -4093,23 +3705,11 @@ export const npcListRaw = [
   },
   {
     NpcId: 927,
-    NpcName: "",
-  },
-  {
-    NpcId: 927,
     NpcName: "Error",
   },
   {
     NpcId: 928,
-    NpcName: "",
-  },
-  {
-    NpcId: 928,
     NpcName: "Error",
-  },
-  {
-    NpcId: 929,
-    NpcName: "",
   },
   {
     NpcId: 929,
@@ -4118,10 +3718,6 @@ export const npcListRaw = [
   {
     NpcId: 930,
     NpcName: "Error",
-  },
-  {
-    NpcId: 930,
-    NpcName: "",
   },
   {
     NpcId: 1000,
@@ -4194,10 +3790,6 @@ export const npcListRaw = [
   {
     NpcId: 3598,
     NpcName: "属性黑暗石头",
-  },
-  {
-    NpcId: 3598,
-    NpcName: "矿石",
   },
   {
     NpcId: 3599,
@@ -8593,19 +8185,11 @@ export const npcListRaw = [
   },
   {
     NpcId: 5182,
-    NpcName: "夏日活动管理者",
-  },
-  {
-    NpcId: 5182,
     NpcName: "活动负责人",
   },
   {
     NpcId: 5183,
     NpcName: "活动负责人",
-  },
-  {
-    NpcId: 5183,
-    NpcName: "夏日活动管理者",
   },
   {
     NpcId: 5184,
@@ -8621,15 +8205,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 5187,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5187,
     NpcName: "凯斯特",
-  },
-  {
-    NpcId: 5188,
-    NpcName: "Error",
   },
   {
     NpcId: 5188,
@@ -8637,23 +8213,11 @@ export const npcListRaw = [
   },
   {
     NpcId: 5189,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5189,
     NpcName: "普利/排长",
   },
   {
     NpcId: 5190,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5190,
     NpcName: "凯昆",
-  },
-  {
-    NpcId: 5191,
-    NpcName: "Error",
   },
   {
     NpcId: 5191,
@@ -8664,14 +8228,6 @@ export const npcListRaw = [
     NpcName: "罗仁/排长",
   },
   {
-    NpcId: 5192,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5193,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5193,
     NpcName: "扎普",
   },
@@ -8680,28 +8236,12 @@ export const npcListRaw = [
     NpcName: "秀冒",
   },
   {
-    NpcId: 5194,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5195,
     NpcName: "曹特",
   },
   {
-    NpcId: 5195,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5196,
     NpcName: "罗斯",
-  },
-  {
-    NpcId: 5196,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5197,
-    NpcName: "Error",
   },
   {
     NpcId: 5197,
@@ -8709,15 +8249,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 5198,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5198,
     NpcName: "伊扎特",
-  },
-  {
-    NpcId: 5199,
-    NpcName: "Error",
   },
   {
     NpcId: 5199,
@@ -8728,14 +8260,6 @@ export const npcListRaw = [
     NpcName: "科里普",
   },
   {
-    NpcId: 5200,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5201,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5201,
     NpcName: "冒珀",
   },
@@ -8744,20 +8268,8 @@ export const npcListRaw = [
     NpcName: "罗少",
   },
   {
-    NpcId: 5202,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5203,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5203,
     NpcName: "尼伊特",
-  },
-  {
-    NpcId: 5204,
-    NpcName: "Error",
   },
   {
     NpcId: 5204,
@@ -8768,28 +8280,12 @@ export const npcListRaw = [
     NpcName: "它图噶/侦察队",
   },
   {
-    NpcId: 5205,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5206,
     NpcName: "米里昂/侦察队",
   },
   {
-    NpcId: 5206,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5207,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5207,
     NpcName: "考内普/侦察队",
-  },
-  {
-    NpcId: 5208,
-    NpcName: "Error",
   },
   {
     NpcId: 5208,
@@ -8800,20 +8296,8 @@ export const npcListRaw = [
     NpcName: "萨昆/侦察队",
   },
   {
-    NpcId: 5209,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5210,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5210,
     NpcName: "皇家战场管理员",
-  },
-  {
-    NpcId: 5211,
-    NpcName: "Error",
   },
   {
     NpcId: 5211,
@@ -8824,36 +8308,16 @@ export const npcListRaw = [
     NpcName: "转职负责人",
   },
   {
-    NpcId: 5212,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5213,
     NpcName: "物品安置",
-  },
-  {
-    NpcId: 5213,
-    NpcName: "Error",
   },
   {
     NpcId: 5214,
     NpcName: "普朗科/位置保存",
   },
   {
-    NpcId: 5214,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5215,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5215,
     NpcName: "普林/单手武器 ",
-  },
-  {
-    NpcId: 5216,
-    NpcName: "Error",
   },
   {
     NpcId: 5216,
@@ -8864,14 +8328,6 @@ export const npcListRaw = [
     NpcName: "萨林/轻甲",
   },
   {
-    NpcId: 5217,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5218,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5218,
     NpcName: "贝伦/披风",
   },
@@ -8880,28 +8336,12 @@ export const npcListRaw = [
     NpcName: "贝尔仑/轻重甲",
   },
   {
-    NpcId: 5219,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5220,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5220,
     NpcName: "柯莉/重甲",
   },
   {
     NpcId: 5221,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5221,
     NpcName: "哈内恩/仓库",
-  },
-  {
-    NpcId: 5222,
-    NpcName: "Error",
   },
   {
     NpcId: 5222,
@@ -8912,20 +8352,8 @@ export const npcListRaw = [
     NpcName: "棋谱里/道具",
   },
   {
-    NpcId: 5223,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5224,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5224,
     NpcName: "帕拉/蒸汽气球",
-  },
-  {
-    NpcId: 5225,
-    NpcName: "Error",
   },
   {
     NpcId: 5225,
@@ -8936,36 +8364,16 @@ export const npcListRaw = [
     NpcName: "普利/次园的缝隙入场",
   },
   {
-    NpcId: 5226,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5227,
     NpcName: "赫伊尔/古代工厂入场",
-  },
-  {
-    NpcId: 5227,
-    NpcName: "Error",
   },
   {
     NpcId: 5228,
     NpcName: "杰纳的/决斗场",
   },
   {
-    NpcId: 5228,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5229,
     NpcName: "才酷/蒸汽潜水艇",
-  },
-  {
-    NpcId: 5229,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5230,
-    NpcName: "Error",
   },
   {
     NpcId: 5230,
@@ -8976,36 +8384,16 @@ export const npcListRaw = [
     NpcName: "斯高/庭院负责人",
   },
   {
-    NpcId: 5231,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5232,
     NpcName: "尤昆/庭院负责人",
-  },
-  {
-    NpcId: 5232,
-    NpcName: "Error",
   },
   {
     NpcId: 5233,
     NpcName: "罗姆/庭院负责人",
   },
   {
-    NpcId: 5233,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5234,
     NpcName: "志昆/村庄移动",
-  },
-  {
-    NpcId: 5234,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5235,
-    NpcName: "Error",
   },
   {
     NpcId: 5235,
@@ -9013,15 +8401,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 5236,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5236,
     NpcName: "考斯/村庄移动",
-  },
-  {
-    NpcId: 5237,
-    NpcName: "Error",
   },
   {
     NpcId: 5237,
@@ -9032,36 +8412,16 @@ export const npcListRaw = [
     NpcName: "凯伊斯科/村庄移动",
   },
   {
-    NpcId: 5238,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5239,
     NpcName: "欧克利/村庄移动",
-  },
-  {
-    NpcId: 5239,
-    NpcName: "Error",
   },
   {
     NpcId: 5240,
     NpcName: "欧普劳/村庄移动",
   },
   {
-    NpcId: 5240,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5241,
     NpcName: "芝伊拉/村庄移动",
-  },
-  {
-    NpcId: 5241,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5242,
-    NpcName: "Error",
   },
   {
     NpcId: 5242,
@@ -9072,20 +8432,8 @@ export const npcListRaw = [
     NpcName: "技能初始化",
   },
   {
-    NpcId: 5243,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5244,
     NpcName: "熊猫帮助",
-  },
-  {
-    NpcId: 5244,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5245,
-    NpcName: "Error",
   },
   {
     NpcId: 5245,
@@ -9096,28 +8444,12 @@ export const npcListRaw = [
     NpcName: "泰鲁特/侦察队",
   },
   {
-    NpcId: 5246,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5247,
-    NpcName: "Error",
-  },
-  {
     NpcId: 5247,
     NpcName: "防御塔",
   },
   {
     NpcId: 5248,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5248,
     NpcName: "防御塔",
-  },
-  {
-    NpcId: 5249,
-    NpcName: "Error",
   },
   {
     NpcId: 5249,
@@ -9125,23 +8457,11 @@ export const npcListRaw = [
   },
   {
     NpcId: 5250,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5250,
     NpcName: "泰勒",
   },
   {
     NpcId: 5251,
-    NpcName: "Error",
-  },
-  {
-    NpcId: 5251,
     NpcName: "卡米尔",
-  },
-  {
-    NpcId: 5252,
-    NpcName: "Error",
   },
   {
     NpcId: 5252,
@@ -11424,10 +10744,6 @@ export const npcListRaw = [
     NpcName: "GM老婆",
   },
   {
-    NpcId: 5821,
-    NpcName: "gm",
-  },
-  {
     NpcId: 5822,
     NpcName: "Error",
   },
@@ -12917,7 +12233,7 @@ export const npcListRaw = [
   },
   {
     NpcId: 8444,
-    NpcName: "幼年针蜘蛛",
+    NpcName: "幼年针蜘蛛112233",
   },
   {
     NpcId: 8445,
@@ -14920,16 +14236,8 @@ export const npcListRaw = [
     NpcName: "Error",
   },
   {
-    NpcId: 8944,
-    NpcName: "",
-  },
-  {
     NpcId: 8945,
     NpcName: "Error",
-  },
-  {
-    NpcId: 8945,
-    NpcName: "",
   },
   {
     NpcId: 8946,
@@ -15517,10 +14825,6 @@ export const npcListRaw = [
   },
   {
     NpcId: 36865,
-    NpcName: "随机齿轮",
-  },
-  {
-    NpcId: 36865,
     NpcName: "圣诞猿矮人",
   },
   {
@@ -16042,10 +15346,6 @@ export const npcListRaw = [
   {
     NpcId: 45075,
     NpcName: "温顺的幼年克洛纳斯",
-  },
-  {
-    NpcId: 45075,
-    NpcName: "温顺的沼泽清道夫",
   },
   {
     NpcId: 45076,
