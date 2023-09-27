@@ -12,7 +12,7 @@ export function createFormData(newTabId: number) {
   return {
     id: newTabId,
     setp: 1,
-    title: "未命名",
+    title: "",
     beDfsuInfo: {
       md5: "",
       progress: 0,
@@ -39,6 +39,7 @@ export function createFormData(newTabId: number) {
       reading: false,
       fileCount: 0,
       fileList: [] as File[],
+      shpList: [] as string[],
     },
     outputName: "",
     riverRange: "工程前" as "工程前" | "工程后",

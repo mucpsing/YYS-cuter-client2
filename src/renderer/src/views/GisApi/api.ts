@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-09-25 22:44:53
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2023-09-27 16:18:09
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,9 +15,9 @@ const baseURL = `http://${config.SERVER_IP}:${config.SERVER_PROT}/gis-api/`
 const server = Axios.create({ baseURL, timeout: 1000 })
 
 const API = {
-  getTemplateList: "/get_template_list",
+  getTemplateList: "/mxd_template_list",
   upload: "/upload_file",
-  mxdToImg: "/mxt_to_img",
+  mxdToImg: "/mxd_to_img",
 }
 
 export interface MxdToImgForm {
@@ -36,6 +36,20 @@ export interface MxdToImgForm {
 
 //   Promise.all()
 // }
+
+export async function getTemplateList() {
+  try {
+    const { status, data } = await server.get(API.getTemplateList)
+    if (status == 200) {
+      return data.res as string[]
+    }
+
+    return []
+  } catch (err) {
+    console.log(err)
+    return []
+  }
+}
 
 export async function uploadFile(filename: string, file: File) {
   const formData = new FormData()

@@ -21,8 +21,8 @@
         class="flex items-center justify-center px-2 bg-blue-100 rounded-sm cursor-pointer hover:bg-blue-300"
         @click="switchf"
       >
-        <strong>
-          <c-icon-font iconName="icon-yys-04zhuanhuan" class="text-xl text-blue-600"></c-icon-font>
+        <strong class="transition-all" :style="{ transform: `rotate(${r}deg)` }">
+          <c-icon-font iconName="icon-yys-04zhuanhuan" class="text-xl text-white"></c-icon-font>
         </strong>
       </div>
       <DfsuInfo
@@ -164,9 +164,8 @@
                 <t-tag
                   variant="light-outline"
                   theme="success"
-                  v-for="(ext, idx) of projectShpList"
+                  v-for="(ext, idx) of formDataList[currtFormDataId].projectRange.shpList"
                   :key="idx"
-                  :onClick="() => ''"
                 >
                   {{ ext }}
                 </t-tag>
@@ -175,9 +174,9 @@
             <div class="flex gap-1">
               <t-button
                 :onClick="() => onUploadBtnClick('project')"
-                theme="danger"
+                theme="success"
                 variant="outline"
-                size="small"
+                size="medium"
               >
                 <template #icon>
                   <cps-icon-font iconName="icon-yys-folder-opened" class="mr-2" />
@@ -221,7 +220,7 @@
                 ]"
                 @click="(item) => (formDataList[currtFormDataId].riverRange = (item.value as `工程前`| `工程后`))"
               >
-                <t-button variant="outline" size="medium">
+                <t-button variant="outline" theme="success" size="medium">
                   {{ formDataList[currtFormDataId].riverRange }}
                 </t-button>
               </t-dropdown>
@@ -253,7 +252,7 @@
               <t-input placeholder="200" size="medium" class="w-[100px]" align="center"></t-input>
             </div>
           </div>
-          <t-divider class="my-2"></t-divider>
+          <!-- <t-divider class="my-2"></t-divider> -->
 
           <!-- --------------- 【 等值线序列 】 --------------- -->
           <!-- <div class="flex items-center justify-between mt-2">
@@ -286,10 +285,11 @@ import path from "path-browserify"
 
 import { formDataList, currtFormDataId } from "../store/state"
 
-const projectShpList = ref<string[]>([])
+const projectShpList = computed(
+  () => formDataList.value[currtFormDataId.value].projectRange.shpList,
+)
 const projectLoading = ref(false)
 
-// BUG FIX 尝试使用实例来解决选取文件卡顿的问题
 const inputElement = document.createElement("input")
 inputElement.type = "file"
 inputElement.multiple = true
@@ -304,6 +304,7 @@ async function onDrop(files: File[] | null) {
   }
 }
 
+const r = ref(90)
 async function switchf() {
   const temp = Object.assign({}, formDataList.value[currtFormDataId.value].beDfsuInfo)
   Object.assign(
@@ -311,6 +312,8 @@ async function switchf() {
     formDataList.value[currtFormDataId.value].afDfsuInfo,
   )
   Object.assign(formDataList.value[currtFormDataId.value].afDfsuInfo, temp)
+
+  r.value = r.value >= 1800 ? 0 : r.value + 180 // 点击旋转按钮效果
 }
 
 async function onUploadBtnClick(fileType: "be" | "af" | "project") {
@@ -335,16 +338,19 @@ async function onUploadBtnClick(fileType: "be" | "af" | "project") {
 async function onInputChange(e: any, target: "be" | "af" | "project") {
   if (!e.target) return console.log("获取实例失败")
   if (!e.target.files) return console.log("没有选中文件")
+
   const files = e.target.files
+  const beInfo = formDataList.value[currtFormDataId.value].beDfsuInfo
+  const afInfo = formDataList.value[currtFormDataId.value].afDfsuInfo
 
   let infoList: any[]
   if (target == "be") {
-    infoList = [formDataList.value[currtFormDataId.value].beDfsuInfo]
-    if (files.length >= 2) infoList.push(formDataList.value[currtFormDataId.value].afDfsuInfo)
+    infoList = [beInfo]
+    if (files.length >= 2) infoList.push(afInfo)
     await updateDfsuInfo(files, infoList)
   } else if (target == "af") {
-    infoList = [formDataList.value[currtFormDataId.value].afDfsuInfo]
-    if (files.length >= 2) infoList.push(formDataList.value[currtFormDataId.value].beDfsuInfo)
+    infoList = [afInfo]
+    if (files.length >= 2) infoList.push(beInfo)
     await updateDfsuInfo(files, infoList)
   } else if (target == "project") {
     await updateProjectRangeInfo(files)
@@ -353,58 +359,62 @@ async function onInputChange(e: any, target: "be" | "af" | "project") {
 }
 
 async function updateDfsuInfo(files: FileList, infoList: any[]) {
-  const count = files.length >= 2 ? 2 : 1 // 确保只识别前面两个dfsu文件
-
-  for (let index = 0; index < count; index++) {
+  infoList.forEach(async (fileInfo, index) => {
     const file = (files as FileList)[index]
 
-    infoList[index].size = file.size / 1024 / 1024
-    infoList[index].name = file.name
-    infoList[index].reading = true
-    infoList[index].md5 = await getMd5(file)
+    fileInfo.reading = true
+    fileInfo.size = file.size / 1024 / 1024
+    fileInfo.name = file.name
+    fileInfo.md5 = await getMd5(file)
+    fileInfo.file = file
 
-    setTimeout(() => {
-      infoList[index].reading = false
-    }, 600)
+    setTimeout(() => (fileInfo.reading = false), 600)
 
     // await uploadFile(`${infoList[index].md5}.dfsu`, file)
-  }
+  })
 }
 
 async function updateProjectRangeInfo(files: FileList) {
-  let basename = "" // 用来确保只会获取一个shp，其他不同名字的shp不会急需读取
+  let basename = "" // 用来确保只会获取一个shp，其他不同名字的shp不会进行读取
 
   const uploadBodyList: { file: File; ext: string }[] = []
+  const projectRangeInfo = formDataList.value[currtFormDataId.value].projectRange
+  const shpList = formDataList.value[currtFormDataId.value].projectRange.shpList
+
   projectLoading.value = true
-  projectShpList.value.length = 0
+  shpList.length = 0
+  projectRangeInfo.fileList.length = 0
 
   for (let file of files) {
-    // 识别shp文件
+    // 获取后缀
     let ext = path.extname(file.name)
     if (file.name.endsWith(".shp.xml")) ext = ".shp.xml"
-    if (!basename) {
-      basename = file.name.toString().replace(ext, "")
-    } else {
-      if (basename != file.name.toString().replace(ext, "")) {
-        setTimeout(() => (projectLoading.value = false), 600)
 
-        return console.log("请确保每次仅选择一套shp文件")
-      }
+    // 获取basename
+    if (!basename) basename = file.name.toString().replace(ext, "")
+
+    if (basename != file.name.toString().replace(ext, "")) {
+      setTimeout(() => (projectLoading.value = false), 600)
+      console.log("请确保每次仅选择一套shp文件")
+      continue
     }
 
     // 只记录shp文件的md5
     if (ext == ".shp") {
-      formDataList.value[currtFormDataId.value].projectRange.md5 = await getMd5(file)
-      formDataList.value[currtFormDataId.value].projectRange.name = path.basename(file.name, ext)
-      formDataList.value[currtFormDataId.value].projectRange.path = file.path
-      formDataList.value[currtFormDataId.value].projectRange.fileCount = files.length
+      projectRangeInfo.md5 = await getMd5(file)
+      projectRangeInfo.name = path.basename(file.name, ext)
+      projectRangeInfo.fileList.push(file)
     }
 
     uploadBodyList.push({ file, ext })
-    projectShpList.value.push(file.name)
+    shpList.push(file.name)
   }
 
-  // const md5 = formDataList.value[currtFormDataId.value].projectRange.md5
+  
+
+  projectRangeInfo.fileCount = shpList.length
+
+  // const md5 = projectRangeInfo.md5
   // console.log(uploadBodyList.map((item) => ({ filename: `${md5}${item.ext}`, file: item.file })))
 
   setTimeout(() => (projectLoading.value = false), 600)
