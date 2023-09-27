@@ -4,15 +4,15 @@ export const currtSetp = ref(1)
 export const templateSetpOptions = [
   { title: "选择模板", value: 1 },
   { title: "工程配置", value: 2 },
-  { title: "模板配置", value: 3 },
-  { title: "图片下载", value: 4 },
+  // { title: "模板配置", value: 3 },
+  { title: "图片生成", value: 4 },
 ]
 
 export function createFormData(newTabId: number) {
   return {
     id: newTabId,
     setp: 1,
-    title: "未命名",
+    title: "",
     beDfsuInfo: {
       md5: "",
       progress: 0,
@@ -39,6 +39,7 @@ export function createFormData(newTabId: number) {
       reading: false,
       fileCount: 0,
       fileList: [] as File[],
+      shpList: [] as string[],
     },
     outputName: "",
     riverRange: "工程前" as "工程前" | "工程后",

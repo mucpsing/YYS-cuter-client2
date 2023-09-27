@@ -73,7 +73,7 @@ import SwiperSetp4 from "./SwiperSetp4.vue"
 const SwiperComponentList = {
   "1": "SwiperSetp1",
   "2": "SwiperSetp2",
-  "3": "SwiperSetp3",
+  // "3": "SwiperSetp3",
   "4": "SwiperSetp4",
 }
 export default { components: { SwiperSetp1, SwiperSetp2, SwiperSetp3, SwiperSetp4 } }

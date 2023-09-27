@@ -1,16 +1,15 @@
 <template>
-  <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'bg-sky-200 rounded-xl p-2']">
-    <div class="flex justify-start">
+  <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'bg-sky-100 rounded-md p-2']">
+    <div class="flex justify-between">
       <t-input-adornment prepend="输出名称：">
         <t-select-input
-          size="small"
           :value="data[currtFormDataId].label"
           :popup-visible="popupVisible"
           :popup-props="{ overlayInnerStyle: { padding: '0px' } }"
           placeholder="点击列出常用命名推荐"
           allow-input
           clearable
-          style="width: 400px"
+          style="min-width: 200px"
           @input-change="onInputChange"
           @popup-visible-change="onPopupVisibleChange"
         >
@@ -22,7 +21,12 @@
                 :key="item"
                 @click="
                   () => {
-                    data[currtFormDataId].label = `${data[currtFormDataId].label}${item}`
+                    if (data[currtFormDataId].label == '') {
+                      data[currtFormDataId].label = item
+                    } else {
+                      const tabName = `${data[currtFormDataId].label}_${item}`
+                      data[currtFormDataId].label = tabName
+                    }
                     popupVisible = false
                   }
                 "
@@ -33,13 +37,34 @@
           </template>
         </t-select-input>
       </t-input-adornment>
+
+      <t-input-adornment append="模板选择">
+        <t-dropdown
+          :options="dropdownOptions"
+          :max-column-width="250"
+          :max-height="200"
+          @click="clickHandler"
+        >
+          <t-button class="w-[200px]" size="medium"
+            >{{ selected_template }}
+            <template #icon>
+              <c-icon-font
+                iconName="icon-yys-open"
+                :rotate="180"
+                color="white"
+                :class="['text-white mr-2']"
+              ></c-icon-font
+            ></template>
+          </t-button>
+        </t-dropdown>
+      </t-input-adornment>
     </div>
 
-    <div :class="['flex-[3]', 'flex justify-center items-start', 'max-h-[500px]']">
-      <img src="points_template.png" class="object-cover h-full rounded-xl" alt="" />
-    </div>
+    <t-card class="flex justify-center">
+      <div :class="['flex-[3]', 'flex justify-center items-start', 'w-full']">
+        <img src="points_template.png" class="object-cover h-full max-h-[450px]" alt="" />
+      </div>
 
-    <t-card>
       <div class="flex w-full gap-2">
         <div class="w-full">
           <h2><strong>当前模板</strong></h2>
@@ -109,8 +134,8 @@ import { HelpCircleIcon } from "tdesign-icons-vue-next"
 import { templateInfo } from "../store/data"
 import { formDataList, currtFormDataId } from "../store/state"
 import { data } from "../store/data"
-let selected_template = "未选择模板"
 
+const selected_template = ref("未选择模板")
 const dropdownOptions = computed(() => {
   const res = [{ content: `模板选择 (${templateInfo.value.length})`, value: 3, divider: true }]
 
@@ -127,9 +152,9 @@ const dropdownOptions = computed(() => {
 
 const clickHandler = (item) => {
   if (item.template_id) {
-    selected_template = `${item.template_id} - ${item.template_name} `
+    selected_template.value = `${item.template_id} - ${item.template_name} `
   } else {
-    selected_template = "未选择模板"
+    selected_template.value = "未选择模板"
   }
 }
 
