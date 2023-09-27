@@ -2,30 +2,6 @@
   <section
     :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2 text-xs xl:text-md']"
   >
-    <input
-      type="file"
-      style="display: none"
-      ref="afInputRef"
-      @change="onInputChange($event, 'af')"
-      multiple
-      accept=".dfsu"
-    />
-    <input
-      type="file"
-      style="display: none"
-      ref="beInputRef"
-      @change="onInputChange($event, 'be')"
-      accept=".dfsu"
-      multiple
-    />
-    <input
-      ref="projectRangeRef"
-      type="file"
-      style="display: none"
-      multiple
-      :onChange="onInputProjectRangeChange"
-      accept=".cpg,.dbf,.sbn,.sbx,.shp,.shx,.shp.xml"
-    />
     <!-- --------------- 【 工程前后的数据文件上传 】 --------------- -->
     <header
       ref="headerRef"
@@ -36,74 +12,31 @@
         <div class="GisApi__drapMaskTip">最多支持读取前两个dfsu文件</div>
       </div>
 
-      <t-card
-        :class="['flex-grow-[1]']"
+      <DfsuInfo
         title="DFSU文件(工程前)"
-        :loading="formDataList[currtFormDataId].beDfsuInfo.reading"
-      >
-        <div :class="['flex justify-start']">
-          <div class="flex flex-col text-gray-500">
-            <h3 class="my-1 text-black">
-              <strong>工程前：</strong>{{ formDataList[currtFormDataId].beDfsuInfo.name }}
-            </h3>
-            <!-- TODO electron 才有的特性这里屏蔽掉，后期需要优化 -->
-            <!-- <p>文件路径：{{ formDataList[currtFormDataId].beDfsuInfo.path }}</p> -->
-            <span>文件大小：{{ formDataList[currtFormDataId].beDfsuInfo.size.toFixed(2) }} MB</span>
-            <span>上传名称：{{ formDataList[currtFormDataId].beDfsuInfo.md5 }}.dfsu</span>
-          </div>
-        </div>
-
-        <div class="flex justify-center w-full pt-3">
-          <t-button
-            size="medium"
-            class="min-w-[250px]"
-            :theme="formDataList[currtFormDataId].beDfsuInfo.md5 ? 'success' : 'danger'"
-            :onClick="() => onUploadBtnClick('be')"
-          >
-            选择dfsu文件
-          </t-button>
-        </div>
-      </t-card>
-
+        :fileInfo="formDataList[currtFormDataId].beDfsuInfo"
+        @onBtnClick="() => onUploadBtnClick('be')"
+      />
       <div
         class="flex items-center justify-center px-2 bg-blue-100 rounded-sm cursor-pointer hover:bg-blue-300"
         @click="switchf"
       >
-        <c-icon-font iconName="huifu" class=""></c-icon-font>
+        <strong>
+          <c-icon-font iconName="icon-yys-04zhuanhuan" class="text-xl text-blue-600"></c-icon-font>
+        </strong>
       </div>
-
-      <t-card
-        :class="['flex-grow-[1]']"
+      <DfsuInfo
         title="DFSU文件(工程后)"
-        :loading="formDataList[currtFormDataId].afDfsuInfo.reading"
-      >
-        <div :class="['flex justify-start']">
-          <div class="flex flex-col text-gray-500">
-            <h3 class="my-1 text-black">
-              <strong>工程后：</strong>{{ formDataList[currtFormDataId].afDfsuInfo.name }}
-            </h3>
-            <!-- TODO electron 才有的特性这里屏蔽掉，后期需要优化 -->
-            <!-- <p>文件路径：{{ formDataList[currtFormDataId].afDfsuInfo.path }}</p> -->
-            <span>文件大小：{{ formDataList[currtFormDataId].afDfsuInfo.size.toFixed(2) }} MB</span>
-            <span>上传名称：{{ formDataList[currtFormDataId].afDfsuInfo.md5 }}.dfsu</span>
-          </div>
-        </div>
-
-        <div class="flex justify-center w-full pt-3">
-          <t-button
-            class="min-w-[250px]"
-            :theme="formDataList[currtFormDataId].afDfsuInfo.md5 ? 'success' : 'danger'"
-            :onClick="() => onUploadBtnClick('af')"
-          >
-            选择dfsu文件
-          </t-button>
-        </div>
-      </t-card>
+        :fileInfo="formDataList[currtFormDataId].afDfsuInfo"
+        @onBtnClick="() => onUploadBtnClick('af')"
+      />
     </header>
 
-    <t-card :class="['flex-grow-[1] ']">
-      <!-- --------------- 【 输出名称 】 --------------- -->
-      <!-- <div class="flex items-center justify-between mt-2">
+    <div :class="['flex-grow-[1] overflow-auto ']">
+      <div class="h-[0]">
+        <t-card>
+          <!-- --------------- 【 输出名称 】 --------------- -->
+          <!-- <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col items-start justify-between">
           <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>输出名称</strong></h2>
           <p class="max-w-[90%]">
@@ -123,8 +56,8 @@
 
       <t-divider class="my-2"></t-divider> -->
 
-      <!-- --------------- 【 工况选择 】 --------------- -->
-      <!-- <div class="flex items-center justify-between mt-2">
+          <!-- --------------- 【 工况选择 】 --------------- -->
+          <!-- <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col items-start justify-between">
           <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>工况选择</strong></h2>
           <p>
@@ -168,8 +101,8 @@
 
       <t-divider class="my-2"></t-divider> -->
 
-      <!-- --------------- 【 洪水类型 】 --------------- -->
-      <!-- <div class="flex items-center justify-between mt-2">
+          <!-- --------------- 【 洪水类型 】 --------------- -->
+          <!-- <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col items-start justify-between">
           <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>洪水类型</strong></h2>
           <p>
@@ -203,128 +136,127 @@
           </t-dropdown>
         </div>
       </div> -->
+          <t-loading :loading="projectLoading" class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
+                <strong
+                  >工程范围
+                  <t-tag theme="danger" size="small" variant="light-outline"
+                    >仅支持<strong>面shp文件</strong></t-tag
+                  ></strong
+                >
+              </h2>
+              <p>
+                <span
+                  ><strong>上传文件：</strong
+                  >{{ formDataList[currtFormDataId].projectRange.name + ".shp" }}</span
+                >
+              </p>
 
-      <!-- <t-divider class="my-2"></t-divider> -->
+              <p>
+                <strong
+                  >已选文件{{
+                    `(${formDataList[currtFormDataId].projectRange.fileCount})`
+                  }}：</strong
+                >
+              </p>
+              <p class="flex flex-wrap gap-2">
+                <t-tag
+                  variant="light-outline"
+                  theme="success"
+                  v-for="(ext, idx) of projectShpList"
+                  :key="idx"
+                  :onClick="() => ''"
+                >
+                  {{ ext }}
+                </t-tag>
+              </p>
+            </div>
+            <div class="flex gap-1">
+              <t-button
+                :onClick="() => onUploadBtnClick('project')"
+                theme="danger"
+                variant="outline"
+                size="small"
+              >
+                <template #icon>
+                  <cps-icon-font iconName="icon-yys-folder-opened" class="mr-2" />
+                </template>
 
-      <t-loading :loading="projectLoading" class="flex items-center justify-between mt-2">
-        <div class="flex flex-col items-start justify-between">
-          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
-            <strong
-              >工程范围
-              <t-tag theme="danger" size="small" variant="light-outline"
-                >仅支持<strong>面shp文件</strong></t-tag
-              ></strong
-            >
-          </h2>
-          <p>
-            <span
-              ><strong>上传文件：</strong
-              >{{ formDataList[currtFormDataId].projectRange.name + ".shp" }}</span
-            >
-          </p>
+                {{ formDataList[currtFormDataId].projectRange.name || "选择.shp文件" }}</t-button
+              >
+            </div>
+          </t-loading>
+          <t-divider class="my-2"></t-divider>
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>河道选择</strong></h2>
+              <p>
+                使用哪个工况的河道作用到图片中（一般建议采用工程前）：
+                <t-tag
+                  size="small"
+                  class="cursor-pointer"
+                  variant="light-outline"
+                  theme="primary"
+                  :onclick="() => (formDataList[currtFormDataId].riverRange = '工程前')"
+                  >工程前</t-tag
+                >
+                、
+                <t-tag
+                  size="small"
+                  class="cursor-pointer"
+                  variant="light-outline"
+                  theme="danger"
+                  :onclick="() => (formDataList[currtFormDataId].riverRange = '工程后')"
+                  >工程后</t-tag
+                >
+              </p>
+            </div>
+            <div class="flex gap-1 text-md">
+              <t-dropdown
+                size="medium"
+                :options="[
+                  { content: `工程前`, value: `工程前` },
+                  { content: `工程后`, value: `工程后` },
+                ]"
+                @click="(item) => (formDataList[currtFormDataId].riverRange = (item.value as `工程前`| `工程后`))"
+              >
+                <t-button variant="outline" size="medium">
+                  {{ formDataList[currtFormDataId].riverRange }}
+                </t-button>
+              </t-dropdown>
+            </div>
+          </div>
+          <t-divider class="my-2"></t-divider>
 
-          <p>
-            <strong
-              >已选文件{{ `(${formDataList[currtFormDataId].projectRange.fileCount})` }}：</strong
-            >
-          </p>
-          <p class="flex flex-wrap gap-2">
-            <t-tag
-              variant="light-outline"
-              theme="success"
-              v-for="(ext, idx) of projectShpList"
-              :key="idx"
-              :onClick="() => ''"
-            >
-              {{ ext }}
-            </t-tag>
-          </p>
-        </div>
-        <div class="flex gap-1">
-          <t-button
-            :onClick="onInputProjectRangeClick"
-            theme="danger"
-            variant="outline"
-            size="small"
-          >
-            <template #icon>
-              <cps-icon-font iconName="icon-yys-folder-opened" class="mr-2" />
-            </template>
+          <!-- --------------- 【 网格间距 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>网格间距</strong></h2>
+              <p>河道数据点的间距（后期自动根据河道自动识别）</p>
+            </div>
+            <div class="flex gap-1">
+              <t-input size="medium" placeholder="25" class="w-[100px]" align="center"></t-input>
+            </div>
+          </div>
+          <t-divider class="my-2"></t-divider>
 
-            {{ formDataList[currtFormDataId].projectRange.name || "选择.shp文件" }}</t-button
-          >
-        </div>
-      </t-loading>
-      <t-divider class="my-2"></t-divider>
-      <div class="flex items-center justify-between mt-2">
-        <div class="flex flex-col items-start justify-between">
-          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>河道选择</strong></h2>
-          <p>
-            使用哪个工况的河道作用到图片中（一般建议采用工程前）：
-            <t-tag
-              size="small"
-              class="cursor-pointer"
-              variant="light-outline"
-              theme="primary"
-              :onclick="() => (formDataList[currtFormDataId].riverRange = '工程前')"
-              >工程前</t-tag
-            >
-            、
-            <t-tag
-              size="small"
-              class="cursor-pointer"
-              variant="light-outline"
-              theme="danger"
-              :onclick="() => (formDataList[currtFormDataId].riverRange = '工程后')"
-              >工程后</t-tag
-            >
-          </p>
-        </div>
-        <div class="flex gap-1 text-md">
-          <t-dropdown
-            size="small"
-            :options="[
-              { content: `工程前`, value: `工程前` },
-              { content: `工程后`, value: `工程后` },
-            ]"
-            @click="(item) => (formDataList[currtFormDataId].riverRange = (item.value as `工程前`| `工程后`))"
-          >
-            <t-button variant="outline" size="small">{{
-              formDataList[currtFormDataId].riverRange
-            }}</t-button>
-          </t-dropdown>
-        </div>
-      </div>
-      <t-divider class="my-2"></t-divider>
+          <!-- --------------- 【 流速范围 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>流速范围</strong></h2>
+              <p class="max-w-[80%]">
+                大于这个长度的流速等值线才会被标注流速关系字段（不变，增大，减少）
+              </p>
+            </div>
+            <div class="flex gap-1">
+              <t-input placeholder="200" size="medium" class="w-[100px]" align="center"></t-input>
+            </div>
+          </div>
+          <t-divider class="my-2"></t-divider>
 
-      <!-- --------------- 【 网格间距 】 --------------- -->
-      <div class="flex items-center justify-between mt-2">
-        <div class="flex flex-col items-start justify-between">
-          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>网格间距</strong></h2>
-          <p>河道数据点的间距（后期自动根据河道自动识别）</p>
-        </div>
-        <div class="flex gap-1">
-          <t-input size="small" placeholder="25" class="w-[100px]" align="center"></t-input>
-        </div>
-      </div>
-      <t-divider class="my-2"></t-divider>
-
-      <!-- --------------- 【 流速范围 】 --------------- -->
-      <div class="flex items-center justify-between mt-2">
-        <div class="flex flex-col items-start justify-between">
-          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>流速范围</strong></h2>
-          <p class="max-w-[80%]">
-            大于这个长度的流速等值线才会被标注流速关系字段（不变，增大，减少）
-          </p>
-        </div>
-        <div class="flex gap-1">
-          <t-input placeholder="200" size="small" class="w-[100px]" align="center"></t-input>
-        </div>
-      </div>
-      <t-divider class="my-2"></t-divider>
-
-      <!-- --------------- 【 等值线序列 】 --------------- -->
-      <!-- <div class="flex items-center justify-between mt-2">
+          <!-- --------------- 【 等值线序列 】 --------------- -->
+          <!-- <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col w-full gap-1">
           <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>等值线序列</strong></h2>
           <p class="max-w-[90%]">自定义等值线步进，使用分号 ";" 分割每个步进</p>
@@ -339,12 +271,14 @@
         </div>
       </div>
       <t-divider class="my-2"></t-divider> -->
-    </t-card>
+        </t-card>
+      </div>
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
-// import DfsuUpload from "../_components/dfsuUpload.vue"
+import DfsuInfo from "../_components/dfsuInfo.vue"
 import { uploadFile } from "../api"
 import { getMd5 } from "@renderer/utils/calculateMd5"
 import { useDropZone } from "@vueuse/core"
@@ -352,9 +286,15 @@ import path from "path-browserify"
 
 import { formDataList, currtFormDataId } from "../store/state"
 
+const projectShpList = ref<string[]>([])
+const projectLoading = ref(false)
+
+// BUG FIX 尝试使用实例来解决选取文件卡顿的问题
 const inputElement = document.createElement("input")
 inputElement.type = "file"
+inputElement.multiple = true
 
+// 用来支持拖拽文件
 const headerRef = ref<HTMLElement>()
 const { isOverDropZone } = useDropZone(headerRef, onDrop)
 async function onDrop(files: File[] | null) {
@@ -363,16 +303,6 @@ async function onDrop(files: File[] | null) {
     }
   }
 }
-
-const outputExt = ref(".jpg")
-const outputFloodMode = ref("选择类型")
-const outputPojectType = ref("选择工况")
-const beInputRef = ref<HTMLInputElement>()
-const afInputRef = ref<HTMLInputElement>()
-
-const projectRangeRef = ref<HTMLInputElement>()
-const projectShpList = ref<string[]>([])
-const projectLoading = ref(false)
 
 async function switchf() {
   const temp = Object.assign({}, formDataList.value[currtFormDataId.value].beDfsuInfo)
@@ -383,85 +313,66 @@ async function switchf() {
   Object.assign(formDataList.value[currtFormDataId.value].afDfsuInfo, temp)
 }
 
-async function onUploadBtnClick(target: "af" | "be") {
-  // let inputRef = target == "af" ? afInputRef : beInputRef
+async function onUploadBtnClick(fileType: "be" | "af" | "project") {
+  const uploadFileType = {
+    dfsu: ".dfsu",
+    shp: ".cpg,.dbf,.sbn,.sbx,.shp,.shx,.shp.xml",
+  }
 
-  // if (!inputRef || !inputRef.value) return
-  // if (inputRef.value.value) inputRef.value.value = ""
+  let target: keyof typeof uploadFileType
+  if (["be", "af"].includes(fileType)) {
+    target = "dfsu"
+  } else {
+    target = "shp"
+  }
 
-  console.log("按钮点击~~~~~~~~~~~~~~~~", inputElement)
-  // inputRef.value.click()
-
-  inputElement.accept = ".dfsu"
+  inputElement.accept = uploadFileType[target]
+  inputElement.onchange = (e) => onInputChange(e, fileType)
+  if (inputElement.value) inputElement.value = ""
   inputElement.click()
 }
 
-async function onInputChange(e: any, target: "af" | "be") {
-  console.log("Input ~onInputChange--------------------", e)
-  let inputRef: globalThis.Ref<HTMLInputElement | undefined>
-  let infoList: any[]
+async function onInputChange(e: any, target: "be" | "af" | "project") {
+  if (!e.target) return console.log("获取实例失败")
+  if (!e.target.files) return console.log("没有选中文件")
+  const files = e.target.files
 
+  let infoList: any[]
   if (target == "be") {
-    inputRef = beInputRef
     infoList = [formDataList.value[currtFormDataId.value].beDfsuInfo]
+    if (files.length >= 2) infoList.push(formDataList.value[currtFormDataId.value].afDfsuInfo)
+    await updateDfsuInfo(files, infoList)
   } else if (target == "af") {
-    inputRef = afInputRef
     infoList = [formDataList.value[currtFormDataId.value].afDfsuInfo]
-  } else {
+    if (files.length >= 2) infoList.push(formDataList.value[currtFormDataId.value].beDfsuInfo)
+    await updateDfsuInfo(files, infoList)
+  } else if (target == "project") {
+    await updateProjectRangeInfo(files)
     return
   }
-
-  if (!inputRef || !inputRef.value) return console.log("input元素获取失败")
-  if (!inputRef.value.files) return console.log("input为空，不执行上传")
-
-  const files = inputRef.value.files
-  if (files.length >= 2) {
-    if (target == "be") infoList.push(formDataList.value[currtFormDataId.value].afDfsuInfo)
-    if (target == "af") infoList.push(formDataList.value[currtFormDataId.value].beDfsuInfo)
-  }
-  await readFiles(files, infoList)
 }
 
-async function readFiles(files: FileList, infoList: any[]) {
-  console.log("readFiles--------------------")
-
-  const count = infoList.length
+async function updateDfsuInfo(files: FileList, infoList: any[]) {
+  const count = files.length >= 2 ? 2 : 1 // 确保只识别前面两个dfsu文件
 
   for (let index = 0; index < count; index++) {
     const file = (files as FileList)[index]
 
-    console.log({ file })
-
     infoList[index].size = file.size / 1024 / 1024
     infoList[index].name = file.name
-    // infoList[index].path = file.path.toString()
-
     infoList[index].reading = true
     infoList[index].md5 = await getMd5(file)
 
     setTimeout(() => {
       infoList[index].reading = false
-    }, 1000)
+    }, 600)
 
     // await uploadFile(`${infoList[index].md5}.dfsu`, file)
   }
 }
 
-async function onInputProjectRangeClick() {
-  if (!projectRangeRef || !projectRangeRef.value) return
-  if (projectRangeRef.value.value) projectRangeRef.value.value = ""
-
-  projectRangeRef.value.click()
-}
-
-async function onInputProjectRangeChange(_e: Event) {
-  if (!projectRangeRef || !projectRangeRef.value) return console.log("input元素获取失败")
-  if (!projectRangeRef.value.files) return console.log("input为空，不执行上传")
-
-  const files = projectRangeRef.value.files
+async function updateProjectRangeInfo(files: FileList) {
   let basename = "" // 用来确保只会获取一个shp，其他不同名字的shp不会急需读取
-
-  if (files.length == 0) return
 
   const uploadBodyList: { file: File; ext: string }[] = []
   projectLoading.value = true
@@ -493,11 +404,9 @@ async function onInputProjectRangeChange(_e: Event) {
     projectShpList.value.push(file.name)
   }
 
-  let md5 = formDataList.value[currtFormDataId.value].projectRange.md5
+  // const md5 = formDataList.value[currtFormDataId.value].projectRange.md5
+  // console.log(uploadBodyList.map((item) => ({ filename: `${md5}${item.ext}`, file: item.file })))
 
-  // console.log(uploadBodyList)
-  console.log(uploadBodyList.map((item) => ({ filename: `${md5}${item.ext}`, file: item.file })))
-  // await readFiles(files, infoList)
   setTimeout(() => (projectLoading.value = false), 600)
 }
 </script>

@@ -1,149 +1,157 @@
 <template>
   <section
-    :class="['flex flex-row w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2 whitespace-nowrap']"
+    :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2 whitespace-nowrap']"
   >
+    <div>
+      <t-card title="test"> </t-card>
+    </div>
+
     <div class="h-full flex-grow-[1] left overflow-auto text-xs xl:text-md">
-      <div class="py-2 pl-3 pr-4 h-[0]">
-        <!-- --------------- 【 工程范围 】 --------------- -->
-        <t-loading :loading="projectLoading" class="flex items-center justify-between mt-2">
-          <div class="flex flex-col items-start justify-between">
-            <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
-              <strong
-                >工程范围
-                <t-tag theme="danger" size="small" variant="light-outline"
-                  >仅支持<strong>面shp文件</strong></t-tag
-                ></strong
-              >
-            </h2>
-            <p>
-              <span
-                ><strong>上传文件：</strong
-                >{{ formDataList[currtFormDataId].projectRange.name + ".shp" }}</span
-              >
-            </p>
+      <div class="h-[0]">
+        <t-card>
+          <!-- --------------- 【 工程范围 】 --------------- -->
+          <t-loading :loading="projectLoading" class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
+                <strong
+                  >工程范围
+                  <t-tag theme="danger" size="small" variant="light-outline"
+                    >仅支持<strong>面shp文件</strong></t-tag
+                  ></strong
+                >
+              </h2>
+              <p>
+                <span
+                  ><strong>上传文件：</strong
+                  >{{ formDataList[currtFormDataId].projectRange.name + ".shp" }}</span
+                >
+              </p>
 
-            <p>
-              <strong
-                >已选文件{{ `(${formDataList[currtFormDataId].projectRange.fileCount})` }}：</strong
+              <p>
+                <strong
+                  >已选文件{{
+                    `(${formDataList[currtFormDataId].projectRange.fileCount})`
+                  }}：</strong
+                >
+              </p>
+              <p class="flex flex-wrap gap-2">
+                <t-tag
+                  variant="light-outline"
+                  theme="success"
+                  v-for="(ext, idx) of projectShpList"
+                  :key="idx"
+                  :onClick="() => ''"
+                >
+                  {{ ext }}
+                </t-tag>
+              </p>
+            </div>
+            <div class="flex gap-1">
+              <t-button :onClick="onInputClick" theme="danger" variant="outline" size="small">
+                <template #icon>
+                  <cps-icon-font iconName="icon-yys-folder-opened" class="mr-2" />
+                </template>
+
+                {{ formDataList[currtFormDataId].projectRange.name || "选择.shp文件" }}</t-button
               >
-            </p>
-            <p class="flex flex-wrap gap-2">
-              <t-tag
-                variant="light-outline"
-                theme="success"
-                v-for="(ext, idx) of projectShpList"
-                :key="idx"
-                :onClick="() => ''"
-              >
-                {{ ext }}
-              </t-tag>
-            </p>
-          </div>
-          <div class="flex gap-1">
-            <t-button :onClick="onInputClick" theme="danger" variant="outline" size="small">
-              <template #icon>
-                <cps-icon-font iconName="icon-yys-folder-opened" class="mr-2" />
-              </template>
+            </div>
+          </t-loading>
+          <t-divider class="my-2"></t-divider>
 
-              {{ formDataList[currtFormDataId].projectRange.name || "选择.shp文件" }}</t-button
-            >
-          </div>
-        </t-loading>
-        <t-divider class="my-2"></t-divider>
+          <input
+            ref="projectRangeRef"
+            type="file"
+            style="display: none"
+            multiple
+            :onChange="onInputChange"
+            accept=".cpg,.dbf,.sbn,.sbx,.shp,.shx,.shp.xml"
+          />
 
-        <input
-          ref="projectRangeRef"
-          type="file"
-          style="display: none"
-          multiple
-          :onChange="onInputChange"
-          accept=".cpg,.dbf,.sbn,.sbx,.shp,.shx,.shp.xml"
-        />
-
-        <!-- --------------- 【 河道选择 】 --------------- -->
-        <div class="flex items-center justify-between mt-2">
-          <div class="flex flex-col items-start justify-between">
-            <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>河道选择</strong></h2>
-            <p>
-              使用哪个工况的河道作用到图片中（一般建议采用工程前）：
-              <t-tag
+          <!-- --------------- 【 河道选择 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>河道选择</strong></h2>
+              <p>
+                使用哪个工况的河道作用到图片中（一般建议采用工程前）：
+                <t-tag
+                  size="small"
+                  class="cursor-pointer"
+                  variant="light-outline"
+                  theme="primary"
+                  :onclick="() => (formDataList[currtFormDataId].riverRange = '工程前')"
+                  >工程前</t-tag
+                >
+                、
+                <t-tag
+                  size="small"
+                  class="cursor-pointer"
+                  variant="light-outline"
+                  theme="danger"
+                  :onclick="() => (formDataList[currtFormDataId].riverRange = '工程后')"
+                  >工程后</t-tag
+                >
+              </p>
+            </div>
+            <div class="flex gap-1 text-md">
+              <t-dropdown
                 size="small"
-                class="cursor-pointer"
-                variant="light-outline"
-                theme="primary"
-                :onclick="() => (formDataList[currtFormDataId].riverRange = '工程前')"
-                >工程前</t-tag
+                :options="[
+                  { content: `工程前`, value: `工程前` },
+                  { content: `工程后`, value: `工程后` },
+                ]"
+                @click="(item) => (formDataList[currtFormDataId].riverRange = item.value)"
               >
-              、
-              <t-tag
+                <t-button variant="outline" size="small">{{
+                  formDataList[currtFormDataId].riverRange
+                }}</t-button>
+              </t-dropdown>
+            </div>
+          </div>
+          <t-divider class="my-2"></t-divider>
+
+          <!-- --------------- 【 网格间距 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>网格间距</strong></h2>
+              <p>河道数据点的间距（后期自动根据河道自动识别）</p>
+            </div>
+            <div class="flex gap-1">
+              <t-input size="small" placeholder="25" class="w-[100px]" align="center"></t-input>
+            </div>
+          </div>
+          <t-divider class="my-2"></t-divider>
+
+          <!-- --------------- 【 流速范围 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>流速范围</strong></h2>
+              <p class="max-w-[80%]">
+                大于这个长度的流速等值线才会被标注流速关系字段（不变，增大，减少）
+              </p>
+            </div>
+            <div class="flex gap-1">
+              <t-input placeholder="200" size="small" class="w-[100px]" align="center"></t-input>
+            </div>
+          </div>
+          <t-divider class="my-2"></t-divider>
+
+          <!-- --------------- 【 等值线序列 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col w-full gap-1">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>等值线序列</strong></h2>
+              <p class="max-w-[90%]">自定义等值线步进，使用分号 ";" 分割每个步进</p>
+              <t-input
                 size="small"
-                class="cursor-pointer"
-                variant="light-outline"
-                theme="danger"
-                :onclick="() => (formDataList[currtFormDataId].riverRange = '工程后')"
-                >工程后</t-tag
-              >
-            </p>
+                v-model="counterSetp"
+                :placeholder="defaultCounterSetp"
+                class="w-[100%] text-sm"
+                type="text"
+                align="center"
+              ></t-input>
+            </div>
           </div>
-          <div class="flex gap-1 text-md">
-            <t-dropdown
-              size="small"
-              :options="[
-                { content: `工程前`, value: `工程前` },
-                { content: `工程后`, value: `工程后` },
-              ]"
-              @click="(item) => (formDataList[currtFormDataId].riverRange = item.value)"
-            >
-              <t-button variant="outline" size="small">{{
-                formDataList[currtFormDataId].riverRange
-              }}</t-button>
-            </t-dropdown>
-          </div>
-        </div>
-        <t-divider class="my-2"></t-divider>
-
-        <!-- --------------- 【 网格间距 】 --------------- -->
-        <div class="flex items-center justify-between mt-2">
-          <div class="flex flex-col items-start justify-between">
-            <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>网格间距</strong></h2>
-            <p>河道数据点的间距（后期自动根据河道自动识别）</p>
-          </div>
-          <div class="flex gap-1">
-            <t-input size="small" placeholder="25" class="w-[100px]" align="center"></t-input>
-          </div>
-        </div>
-        <t-divider class="my-2"></t-divider>
-
-        <!-- --------------- 【 流速范围 】 --------------- -->
-        <div class="flex items-center justify-between mt-2">
-          <div class="flex flex-col items-start justify-between">
-            <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>流速范围</strong></h2>
-            <p class="max-w-[80%]">
-              大于这个长度的流速等值线才会被标注流速关系字段（不变，增大，减少）
-            </p>
-          </div>
-          <div class="flex gap-1">
-            <t-input placeholder="200" size="small" class="w-[100px]" align="center"></t-input>
-          </div>
-        </div>
-        <t-divider class="my-2"></t-divider>
-
-        <!-- --------------- 【 等值线序列 】 --------------- -->
-        <div class="flex items-center justify-between mt-2">
-          <div class="flex flex-col w-full gap-1">
-            <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>等值线序列</strong></h2>
-            <p class="max-w-[90%]">自定义等值线步进，使用分号 ";" 分割每个步进</p>
-            <t-input
-              size="small"
-              v-model="counterSetp"
-              :placeholder="defaultCounterSetp"
-              class="w-[100%] text-sm"
-              type="text"
-              align="center"
-            ></t-input>
-          </div>
-        </div>
-        <t-divider class="my-2"></t-divider>
+          <t-divider class="my-2"></t-divider>
+        </t-card>
       </div>
     </div>
 
