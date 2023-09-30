@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@electron-toolkit/preload':
     specifier: ^2.0.0
@@ -56,6 +52,9 @@ dependencies:
   stylus:
     specifier: ^0.59.0
     version: registry.npmmirror.com/stylus@0.59.0
+  tdesign-icons-vue-next:
+    specifier: ^0.2.2
+    version: registry.npmmirror.com/tdesign-icons-vue-next@0.2.2(vue@3.3.4)
   tdesign-vue-next:
     specifier: ^1.4.2
     version: registry.npmmirror.com/tdesign-vue-next@1.4.2(vue@3.3.4)
@@ -130,9 +129,6 @@ devDependencies:
   tailwindcss:
     specifier: ^3.3.3
     version: registry.npmmirror.com/tailwindcss@3.3.3
-  tdesign-icons-vue-next:
-    specifier: ^0.2.2
-    version: registry.npmmirror.com/tdesign-icons-vue-next@0.2.2(vue@3.3.4)
   typescript:
     specifier: ^5.1.6
     version: registry.npmmirror.com/typescript@5.1.6
@@ -505,6 +501,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: registry.npmmirror.com/regenerator-runtime@0.14.0
+    dev: false
 
   registry.npmmirror.com/@babel/template@7.22.5:
     resolution: {integrity: sha512-X7yV7eiwAxdj9k94NEylvbVHLiVG1nvzCV2EAowhxLTwODV1jl9UzZ48leOC0sH7OnuHrIkllaBgneUykIcZaw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/template/-/template-7.22.5.tgz}
@@ -5314,6 +5311,7 @@ packages:
     resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/regenerator-runtime/-/regenerator-runtime-0.14.0.tgz}
     name: regenerator-runtime
     version: 0.14.0
+    dev: false
 
   registry.npmmirror.com/require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/require-directory/-/require-directory-2.1.1.tgz}
@@ -5866,7 +5864,7 @@ packages:
     dependencies:
       '@babel/runtime': registry.npmmirror.com/@babel/runtime@7.22.10
       vue: registry.npmmirror.com/vue@3.3.4
-    dev: true
+    dev: false
 
   registry.npmmirror.com/tdesign-vue-next@1.4.2(vue@3.3.4):
     resolution: {integrity: sha512-3c6aImb6/ygil56wYrSkHu2NK4O/RylsxwoFLspYVXM6Mq2YX7/XMxt1duY/3VfllryNwAe751z0kB27BEydIg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tdesign-vue-next/-/tdesign-vue-next-1.4.2.tgz}
@@ -6514,3 +6512,7 @@ packages:
     version: 0.1.0
     engines: {node: '>=10'}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
