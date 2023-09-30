@@ -1,5 +1,5 @@
 import { NpcData, type NpcDataKeysType } from "../store/data"
-import type { NpcParamTable, NpcDropTable } from "../types"
+import type { NpcParamTable, NpcDropTable } from "../../../../../types/npc"
 
 export const tableList = [
   { label: "表1", value: "NpcParams" },
@@ -17,4 +17,4 @@ export const currtNpcId = ref(1000)
 
 export const updateWithBothTable = ref(false)
 
-export const NpcTabPanelHeight = ref(650)
+export const NpcTabPanelHeight = ref(550)

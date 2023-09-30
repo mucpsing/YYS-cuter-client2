@@ -1,9 +1,9 @@
 <template>
-  <section :class="['flex flex-row gap-2 flex-grow-[999]', 'pt-2 px-4']">
+  <section :class="['flex flex-row gap-2 flex-grow-[999]', 'p-2']">
     <!-- 【左边】 -->
     <div :class="['flex-grow-[0]']" v-show="currtPannel != '事件编辑'">
       <div>
-        <div :class="['flex justify-between', 'mb-2 py-2 px-4']">
+        <div :class="['flex justify-between', 'p-2']">
           <h2>
             名称:
             <strong>{{ NpcData[selectNpcTable].NpcName }}</strong>
@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <div :class="['flex flex-col flex-grow-[999] gap-4', 'h-full', 'p-4']">
+      <div :class="['flex flex-col flex-grow-[999] gap-4', 'h-full', 'p-3']">
         <div class="rouned-md">
           <img :class="['w-[220px] h-[220px] bg-green-300 rouned-md']" />
 
@@ -116,10 +116,6 @@
           <t-tab-panel value="事件编辑" label="事件编辑">
             <NpcScriptEditor />
           </t-tab-panel>
-
-          <t-tab-panel value="数据查询" label="数据查询">
-            <DataSearch />
-          </t-tab-panel>
         </t-tabs>
       </t-loading>
 
@@ -142,20 +138,20 @@
 </template>
 
 <script setup lang="tsx">
+import { SearchIcon } from "tdesign-icons-vue-next"
+
 import NpcBaseInfo from "./NpcBaseInfo.vue"
 import NpcParams from "./NpcParams.vue"
 import NpcDrop from "./NpcDrop.vue"
 import NpcScriptEditor from "./NpcScriptEditor.vue"
-import DataSearch from "./DataSearch.vue"
 
 import { getNpcInfoById, updateNpcInfoById } from "@renderer/api/ns-api"
-import { updateWithBothTable } from "../store/index"
 
+import { updateWithBothTable } from "../store/index"
 import { selectNpcTable, selectDropTable, isRequesting, currtNpcId } from "../store/index"
 import { NpcData, updateNpcData } from "../store/data"
-import { NpcList } from "../data/npcList"
 
-import { SearchIcon } from "tdesign-icons-vue-next"
+import { NpcList } from "@nsData/npcList"
 
 const currtPannel = ref("基础属性")
 const loading = ref(false)

@@ -1,29 +1,26 @@
 <template>
   <div class="flex flex-col gap-2">
     <div class="flex justify-between gap-2 py-2">
-      <t-select
-        size="small"
-        v-model="currtNpcId"
-        :options="NpcList"
-        filterable
-        :scroll="{ type: 'virtual', threshold: 20 }"
-        :onChange="() => onNpcIdChange(currtNpcId)"
-        :onFocus="
-          (e) => {
-            console.log('当前：', e)
-          }
-        "
-      >
-        <template #suffixIcon> <SearchIcon /> </template>
-      </t-select>
-      <div>
-        <t-input-adornment prepend="高度">
-          <t-input-number size="small" align="center" :step="50" v-model="NpcTabPanelHeight" />
-        </t-input-adornment>
-        <t-input-adornment prepend="宽度">
-          <t-input-number size="small" align="center" :step="50" v-model="maxWidth" />
-        </t-input-adornment>
+      <div class="flex gap-2 flex-grow-[999]">
+        <t-select
+          size="small"
+          style="max-width: 400px"
+          v-model="currtNpcId"
+          :options="NpcList"
+          filterable
+          :scroll="{ type: 'virtual', threshold: 20 }"
+          :onChange="() => onNpcIdChange(currtNpcId)"
+          :onFocus="(e) => console.log('当前：', e)"
+        >
+          <template #suffixIcon> <SearchIcon /> </template>
+        </t-select>
+
+        <t-button size="small" :onClick="() => onNpcIdChange(currtNpcId)">刷新</t-button>
       </div>
+
+      <t-input-adornment prepend="编辑区高度">
+        <t-input-number size="small" align="center" :step="50" v-model="NpcTabPanelHeight" />
+      </t-input-adornment>
     </div>
     <codemirror
       v-model="NpcData['NpcDataParams'].Data"
@@ -38,10 +35,6 @@
       @focus="console.log('focus', $event)"
       @blur="console.log('blur', $event)"
     />
-    <div class="flex w-full gap-2 py-2">
-      <t-select :optons="[]">常用MSG</t-select>
-      <t-select :optons="[]">常用方法</t-select>
-    </div>
   </div>
 </template>
 
@@ -60,9 +53,8 @@ import { getNpcInfoById } from "@renderer/api/ns-api"
 // import { sql } from "@codemirror/lang-sql"
 
 const extensions = [StreamLanguage.define(lua)]
-const maxWidth = ref(600)
-//* 以下是【支持多种语言的写法】，暂时用不到 */
 
+//* 以下是【支持多种语言的写法】，暂时用不到 */
 // 皮肤加载在extensions[1]的位置
 // import { oneDark } from "@codemirror/theme-one-dark"
 // const languageObj = {
@@ -109,5 +101,3 @@ async function onNpcIdChange(NpcId: number) {
   setTimeout(() => (isRequesting.value = false), 1000)
 }
 </script>
-
-<style scoped></style>

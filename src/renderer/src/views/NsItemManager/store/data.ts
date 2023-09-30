@@ -1,4 +1,4 @@
-import type { ItemDataType } from "../types"
+import type { ItemDataType } from "../../../../../types/item"
 
 const ItemDataRaw = {
   ItemId: 0,

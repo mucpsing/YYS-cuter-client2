@@ -14,7 +14,7 @@
           <div>
             <h3>
               <strong>伤害范围</strong>
-              <span class="ml-2 text-xs">(Attack[*]Damage)</span>
+              <span class="ml-2 text-ss">(Attack[*]Damage)</span>
             </h3>
             <p>设置NPC/怪物的大小大小攻击范围</p>
           </div>
@@ -28,7 +28,7 @@
                 :max="NpcData[selectNpcTable].AttackMaxDamage"
                 :min="0"
                 :label="NpcInfoFieldName.AttackMinDamage.text"
-                style="width: 130px"
+                style="width: 80px"
               ></t-input-number>
 
               <strong> - </strong>
@@ -41,10 +41,10 @@
                 :max="NpcInfoFieldName.AttackMaxDamage.max"
                 :min="NpcData[selectNpcTable].AttackMinDamage"
                 :label="NpcInfoFieldName.AttackMaxDamage.text"
-                style="width: 130px"
+                style="width: 80px"
               ></t-input-number>
             </div>
-            <div class="flex gap-2 py-2">
+            <div class="flex gap-2 py-1">
               <t-slider
                 v-model="NpcData[selectNpcTable].AttackMinDamage"
                 :max="NpcData[selectNpcTable].AttackMaxDamage"
@@ -56,15 +56,6 @@
                 :max="NpcInfoFieldName.AttackMaxDamage.max"
                 :min="NpcData[selectNpcTable].AttackMinDamage"
               />
-              <t-button
-                size="small"
-                theme="danger"
-                @click="resetData(selectNpcTable, 'AttackMinDamage')"
-              >
-                <template #icon>
-                  <c-icon-font class="text-3xl text-white" iconName="huifu" />
-                </template>
-              </t-button>
             </div>
           </div>
         </div>
@@ -74,7 +65,7 @@
           <div>
             <h3>
               <strong>{{ NpcInfoFieldName[key].text }}</strong>
-              <span class="ml-2 text-xs">({{ key }})</span>
+              <span class="ml-2 text-ss">({{ key }})</span>
             </h3>
             <p>{{ NpcInfoFieldName[key].tip }}</p>
           </div>
@@ -82,8 +73,9 @@
           <div class="flex items-center justify-end w-2/3 gap-3">
             <template v-if="NpcInfoFieldName[key].selectOptions">
               <t-select
+                size="small"
                 v-model="NpcData[selectNpcTable][key]"
-                style="max-width: 100px"
+                style="max-width: 80px"
                 :options="NpcInfoFieldName[key].selectOptions"
                 align="center"
               >
@@ -93,6 +85,7 @@
               <t-slider v-model="NpcData[selectNpcTable][key]" :max="NpcInfoFieldName[key].max" />
               <div class="px-2"></div>
               <t-input-number
+                size="small"
                 v-model="NpcData[selectNpcTable][key]"
                 theme="normal"
                 align="center"
@@ -101,12 +94,6 @@
                 style="max-width: 80px"
               ></t-input-number>
             </template>
-
-            <t-button size="small" theme="danger" @click="resetData(selectNpcTable, key)">
-              <template #icon>
-                <c-icon-font class="text-white" iconName="huifu" />
-              </template>
-            </t-button>
           </div>
         </div>
       </t-collapse-panel>
@@ -124,7 +111,7 @@
           <div>
             <h3>
               <strong>{{ NpcInfoFieldName[key].text }}</strong>
-              <span class="ml-2 text-xs">({{ key }})</span>
+              <span class="ml-2 text-ss">({{ key }})</span>
             </h3>
             <p>{{ NpcInfoFieldName[key].tip }}</p>
           </div>
@@ -133,7 +120,8 @@
             <template v-if="NpcInfoFieldName[key].selectOptions">
               <t-select
                 v-model="NpcData[selectNpcTable][key]"
-                style="max-width: 100px"
+                style="max-width: 80px"
+                size="small"
                 :options="NpcInfoFieldName[key].selectOptions"
               >
               </t-select>
@@ -142,6 +130,7 @@
             <template v-else>
               <t-slider v-model="NpcData[selectNpcTable][key]" :max="NpcInfoFieldName[key].max" />
               <t-input-number
+                size="small"
                 v-model="NpcData[selectNpcTable][key]"
                 theme="normal"
                 align="center"
@@ -150,17 +139,6 @@
                 style="max-width: 80px"
               ></t-input-number>
             </template>
-
-            <t-button
-              size="small"
-              theme="danger"
-              class="text-xl w-[28px] h-[28px] flex-grow-0"
-              @click="resetData(selectNpcTable, key)"
-            >
-              <template #icon>
-                <c-icon-font class="text-white" iconName="huifu" />
-              </template>
-            </t-button>
           </div>
         </div>
       </t-collapse-panel>
@@ -204,10 +182,10 @@ async function resetData(tableName: string, keyName: string) {
 
 /** 内部样式 */
 .npc__NpcParams-Item {
-  @apply flex flex-row justify-between items-center p-2 gap-10
+  @apply flex flex-row justify-between items-center py-1 gap-2
 }
 
 .npc__NpcParamsItem-container .t-collapse-panel__content{
-  @apply px-3 py-4
+  @apply px-1 py-1
 }
 </style>

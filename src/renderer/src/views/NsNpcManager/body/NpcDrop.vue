@@ -66,6 +66,7 @@
       <template #itemId="{ row }">
         <div class="flex gap-2">
           <t-select
+            size="small"
             v-model="NpcData[selectDropTable][row.itemId]"
             :options="itemListSelectOptions"
             filterable
@@ -89,8 +90,9 @@
       <!-- 【掉落概率】 -->
       <template #pro="{ row }">
         <t-input-number
+          size="small"
           type="number"
-          style="width: 150px"
+          style="width: 120px"
           align="center"
           v-model="NpcData[selectDropTable][row.pro]"
           placeholder="请输入内容"
@@ -152,9 +154,9 @@ function cleanRow(row) {
 }
 
 const tableColumns = [
-  { colKey: "id", title: "序号", width: "30", align: "center" },
-  { colKey: "itemId", title: "掉落物品", width: "200", align: "center" },
-  { colKey: "pro", title: "掉落概率", width: "100", align: "center" },
+  { colKey: "id", title: "序号", width: "30" },
+  { colKey: "itemId", title: "掉落物品", width: "180" },
+  { colKey: "pro", title: "掉落概率", width: "100" },
   // { colKey: "edit", title: "操作", width: "40" },
 ]
 
@@ -191,6 +193,4 @@ async function onPageChange(pageInfo) {
 
 onMounted(() => {})
 </script>
-
-<style scoped></style>
-../../../croe/api
+../npc

@@ -8,7 +8,7 @@
         </div>
 
         <t-radio-group v-model="searchType" variant="default-filled" size="large">
-          <t-radio-button v-for="(item, idx) of searchTypeList" :key="idx" :value="item">{{
+          <t-radio-button v-for="(item, idx) of ['NPC', '怪物', '物品']" :key="idx" :value="item">{{
             item
           }}</t-radio-button>
         </t-radio-group>
@@ -42,20 +42,18 @@
 <script setup lang="ts">
 import { SearchIcon } from "tdesign-icons-vue-next"
 
-import { npcListRaw } from "../data/npcList"
-import { itemListRaw } from "../data/itemList"
+import { npcListRaw } from "@nsData/npcList"
+import { itemListRaw } from "@nsData/itemList"
 
 const NpcDetailList = npcListRaw.map((item) => ({
   label: `${item.NpcName}__${item.NpcId}__0x${item.NpcId.toString(16)}`,
   value: item.NpcId,
 }))
-// NpcDetailList.push({ label: "未选择", value: 0 })
 
 const MonsterDetailList = itemListRaw.map((item) => ({
   label: `${item.ItemName}__${item.ItemId}__0x${item.ItemId.toString(16)}`,
   value: item.ItemId,
 }))
-// MonsterDetailList.push({ label: "未选择", value: 0 })
 
 const currtSelectList = [...NpcDetailList, ...MonsterDetailList, { label: "未选择", value: 0 }]
 
@@ -66,10 +64,11 @@ const searchTypeList = ["NPC", "怪物", "物品"]
 const tableData = computed(() => {
   if (currtValue.value == 0) return []
 
-  // if()
+  return []
 })
 
 async function onSearchChange() {}
 </script>
 
 <style scoped></style>
+@renderer/data/ns/itemList

@@ -11,6 +11,11 @@
     "baseUrl": ".",
     "paths": {
       "@renderer/*": ["src/renderer/src/*"],
+      "@components/*":["src/renderer/src/components/*"],
+      "@views/*":["./src/renderer/src/views/*"],
+      "@data/*":["./src/renderer/src/data/*"],
+      "@nsData/*":["./src/renderer/src/data/ns/*"],
+      "@nsStore/*":["./src/renderer/src/stores/ns/*"],
       "@/*": ["src/*"],
     }
   }

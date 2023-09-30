@@ -1,4 +1,4 @@
-import type { NpcInfo } from "../types"
+import type { NpcInfo } from "@/types/npc"
 
 const NpcDataRaw = {
   NpcId: 8888,

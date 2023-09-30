@@ -114,3 +114,4 @@ async function updateBtn() {
   // updateNpcInfoById(currtNpcId.value, NpcData["NpcDataParams"], "NpcDataParams", false)
 }
 </script>
+../ns
