@@ -4,9 +4,9 @@
     ref="bodyElementRef"
   >
     <t-tabs
-      class="h-full p2"
+      class="h-full"
       :value="currtTab"
-      size="large"
+      size="medium"
       theme="card"
       default-value="0"
       @add="addTab"
@@ -20,6 +20,7 @@
         :value="idx"
         :label="`${item.label} (${idx + 1}/${data.length})`"
         :removable="true"
+        :destroyOnHide="false"
       >
         <!-- 模板选择 -->
         <BodyContent />
@@ -30,37 +31,14 @@
 
 <script setup lang="ts">
 import BodyContent from "./content.vue"
-import { useResizeObserver } from "@vueuse/core"
-
-import { data, defaultDataItem, currtIndex as currtTab } from "../store/data"
+import { data } from "../store/data"
+import { formDataList, createFormData } from "../store/state"
+import { currtFormDataId as currtTab } from "../store/state"
 
 const bodyElementRef = ref<HTMLDivElement>()
 
-onMounted(() => {
-  /* 注册全局事件 */
-  provide("dataChange", dataChange)
-  provide("addTab", addTab)
-  provide("removeTab", removeTab)
-  provide("changeTab", changeTab)
-
-  useResizeObserver(bodyElementRef, (entries) => {
-    const target = entries[0]
-
-    if (target) {
-      const { width, height } = target.contentRect
-      if (width > height) {
-        console.log("宽")
-      } else {
-        console.log("高")
-      }
-    }
-  })
-})
-
-// 必须为0，用来记录总的添加删除的序号
-const pannelCountId = ref(0)
-
 const dataChange = ({ id, value }) => {
+  console.log("dataChange11111111111111111111111111111111111")
   data.value.forEach((item) => {
     if (item.id == id) {
       item.label = value
@@ -68,34 +46,64 @@ const dataChange = ({ id, value }) => {
   })
 }
 
-const addTab = () => {
+const addTab = (_context?: { e: MouseEvent }, extendId: number = -1) => {
+  console.log("addTab...", extendId)
+
+  const newTabId = parseInt(data.value.length.toString())
+  const newData = createFormData(newTabId)
+
+  if (extendId >= 0) Object.assign(newData, formDataList.value[extendId])
+
+  formDataList.value.push(newData)
+
   data.value.push({
-    id: data.value.length,
-    ...defaultDataItem,
+    id: newTabId,
+    label: `未命名${newTabId}`,
   })
 
-  pannelCountId.value += 1
+  currtTab.value = newTabId
+
+  console.log(formDataList.value)
 }
 
-const removeTab = ({ value, index }) => {
-  if (index < 0) return false
+const removeTab = ({ index }) => {
+  formDataList.value.splice(index, 1)
 
   data.value.splice(index, 1)
 
-  if (data.value.length === 0) {
+  if (data.value.length == 0) {
     addTab()
+    currtTab.value = 0
+    return
+  }
+
+  if (index == currtTab.value) {
+    // 删除第一个tab
+    if (index > 0) currtTab.value = currtTab.value - 1
+  } else if (index <= currtTab.value) {
+    // 删除当前的tab
+    currtTab.value = currtTab.value - 1
   } else {
-    pannelCountId.value -= 1
+    console.log("dadadadadaaaaaaaaaaaa")
   }
 }
 
 const changeTab = (newTabs: number) => {
-  console.log({ newTabs })
   currtTab.value = newTabs
+  console.log(formDataList.value)
 }
+
+/* 注册全局事件 */
+provide("tabControler", {
+  addTab,
+  dataChange,
+  removeTab,
+  changeTab,
+})
 </script>
 
 <style lang="stylus">
+
 .__gis-api__tabs .t-tabs__content{
   height 100%
 }
@@ -106,5 +114,9 @@ const changeTab = (newTabs: number) => {
 
 .__gis-api__tabs .t-tabs{
   height 100%
+}
+
+.SwiperSetp__h2 {
+  @apply text-slate-600 pb-1
 }
 </style>

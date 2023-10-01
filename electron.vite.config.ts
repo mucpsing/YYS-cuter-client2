@@ -1,12 +1,12 @@
-import { resolve } from "path";
-import { defineConfig, externalizeDepsPlugin } from "electron-vite";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import { resolve } from "path"
+import { defineConfig, externalizeDepsPlugin } from "electron-vite"
+import vue from "@vitejs/plugin-vue"
+import vueJsx from "@vitejs/plugin-vue-jsx"
 
-import AutoImport from "unplugin-auto-import/vite";
-import Components from "unplugin-vue-components/vite";
-import { TDesignResolver } from "unplugin-vue-components/resolvers";
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import AutoImport from "unplugin-auto-import/vite"
+import Components from "unplugin-vue-components/vite"
+import { TDesignResolver } from "unplugin-vue-components/resolvers"
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
 
 export default defineConfig({
   main: {
@@ -25,6 +25,11 @@ export default defineConfig({
     resolve: {
       alias: {
         "@renderer": resolve("./src/renderer/src"),
+        "@components": resolve("./src/renderer/src/components"),
+        "@views": resolve("./src/renderer/src/views"),
+        "@data": resolve("./src/renderer/src/data"),
+        "@nsData": resolve("./src/renderer/src/data/ns"),
+        "@nsStore": resolve("./src/renderer/src/stores/ns"),
         "@": resolve("./src/"),
       },
     },
@@ -42,10 +47,7 @@ export default defineConfig({
         ],
       }),
       Components({
-        dirs: [
-          resolve("./src/renderer/src/components"),
-          resolve("./src/renderer/src/views"),
-        ],
+        dirs: [resolve("./src/renderer/src/components"), resolve("./src/renderer/src/views")],
         dts: resolve("./src/types/auto-components.d.ts"),
         resolvers: [
           ElementPlusResolver(),
@@ -56,4 +58,4 @@ export default defineConfig({
       }),
     ],
   },
-});
+})

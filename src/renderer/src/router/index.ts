@@ -10,28 +10,16 @@
  * @Description: 路由生成
  */
 
-import Home from "@renderer/views/Home/index.vue"
+import routerList from "@renderer/router/routerList"
 
 import { createRouter, createWebHistory } from "vue-router"
 import type { RouteRecordRaw } from "vue-router"
 
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: "/Home",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/ImageCuter",
-    name: "ImageCuter",
-    component: () => import("@renderer/views/ImageCuter/index.vue"),
-  },
-  {
-    path: "/GisApi",
-    name: "GisApi",
-    component: () => import("@renderer/views/GisApi/index.vue"),
-  },
-]
+const routes: Array<RouteRecordRaw> = routerList.map((item) => ({
+  path: item.routerPath,
+  name: item.name,
+  component: item.comment,
+}))
 
 const router = createRouter({
   history: createWebHistory(),

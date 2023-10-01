@@ -1,5 +1,5 @@
 <template>
-  <section :class="['h-full bg-yellow-100']">
+  <section :class="['text-xs md:text-md xl:text-xl', 'h-full bg-yellow-100']">
     <GisApiHeader></GisApiHeader>
     <GisApiBody></GisApiBody>
   </section>
@@ -24,5 +24,9 @@ export default {
     width 2px
     @apply bg-orange-300
   }
+}
+
+.GisApi__global{
+
 }
 </style>

@@ -39,8 +39,10 @@ body, html, div, span, p
   padding 0
   box-sizing border-box
 
-body
+body, html, #app
   overflow hidden
+  height:100vh
+  width 100vw
 
 #app
   display flex

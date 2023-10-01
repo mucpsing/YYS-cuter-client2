@@ -10,9 +10,12 @@
     "paths": {
       "@main/*":["./src/main/*"],
       "@renderer/*":["./src/renderer/src/*"],
+      "@views/*":["./src/renderer/views/*"],
+      "@data/*":["./src/renderer/data/*"],
+      "@components/*":["./src/renderer/src/components/*"],
       "@preload/*":["./src/preload/*"],
       "@/*": ["./src/*"]
     }
   },
-  // "include": ["src","src/**/*.ts","src/**/*.vue","src/types/*.ts"]
+  // "include": ["src","src/**/*.ts","src/**/*.vue","src/types/*.ts"]1
 }
