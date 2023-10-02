@@ -1,39 +1,50 @@
 <template>
-  <header :class="['flex items-center justify-between bg-white', 'h-[60px] w-full p-2']">
-    <h2 class="flex items-center justify-center">
-      <cps-icon-font class="mx-2 text-3xl" iconName="icon-yys-youxi" color="#31302d" />NS-NPC管理页
-    </h2>
+  <header :class="['flex flex-col items-center  bg-white', 'h-[60px] w-full p-2']">
+    <div class="flex justify-between w-full">
+      <h2 class="flex items-center justify-center">
+        <cps-icon-font
+          class="mx-2 text-3xl"
+          iconName="icon-yys-youxi"
+          color="#31302d"
+        />NS-NPC管理页
+      </h2>
 
-    <div class="flex gap-1">
-      <t-input-adornment>
-        <template #append>
-          <t-button variant="outline" :onClick="() => (dataTableShow = !dataTableShow)">
-            <template #icon> <SearchIcon /> </template> </t-button
-        ></template>
-        <t-select
-          clearable
-          v-model="currtValue"
-          :options="currtSelectList"
-          placeholder="快速搜索"
-          filterable
-          :scroll="{ type: 'virtual', threshold: 20 }"
-          style="min-width: 280px; padding-left: 0"
-          :onChange="onSearchChange"
-          :onFocus="(e) => console.log('当前：', e)"
-          :onClear="() => (currtValue = 0)"
-        >
-        </t-select>
-      </t-input-adornment>
+      <div class="flex gap-1">
+        <t-input-adornment>
+          <template #append>
+            <t-button variant="outline" :onClick="() => (dataTableShow = !dataTableShow)">
+              <template #icon> <SearchIcon /> </template> </t-button
+          ></template>
+          <t-select
+            clearable
+            v-model="currtValue"
+            :options="currtSelectList"
+            placeholder="快速搜索"
+            filterable
+            :scroll="{ type: 'virtual', threshold: 20 }"
+            style="min-width: 280px; padding-left: 0"
+            :onChange="onSearchChange"
+            :onFocus="(e) => console.log('当前：', e)"
+            :onClear="() => (currtValue = 0)"
+          >
+          </t-select>
+        </t-input-adornment>
 
-      <t-button variant="outline" :onClick="() => (dataTableShow = !dataTableShow)">
-        <template #icon> <SettingIcon /> </template>
-      </t-button>
+        <t-button variant="outline" :onClick="() => {}">
+          <template #icon> <SettingIcon /> </template>
+        </t-button>
+      </div>
+    </div>
 
+    <div>
       <t-dialog
         width="70%"
-        :closeBtn="true"
+        mode="modeless"
         :visible="dataTableShow"
-        :showOverlay="false"
+        :closeBtn="true"
+        :draggable="true"
+        :showOverlay="true"
+        :destroyOnClose="false"
         :closeOnEscKeydown="true"
         :onClose="() => (dataTableShow = false)"
         :footer="false"
@@ -103,7 +114,7 @@ const searchType = ref("全部")
 
 async function onSearchChange() {
   if (currtValue.value != 0) {
-    // dataTableShow.value = true
+    dataTableShow.value = true
   }
 }
 </script>
