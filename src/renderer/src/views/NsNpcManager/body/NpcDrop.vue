@@ -131,7 +131,7 @@ import { itemListRaw } from "../data/itemList"
 import { NpcData } from "../store/data"
 import { selectDropTable, selectNpcTable, currtNpcId, NpcTabPanelHeight } from "../store/index"
 import { updateNpcInfoById } from "@renderer/api/ns-api"
-import type { NpcTableName } from "../types"
+import type { NpcTableName } from "@/types/npc"
 
 const itemListSelectOptions = itemListRaw
   .map((item, idx) => ({

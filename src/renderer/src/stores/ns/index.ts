@@ -1,4 +1,5 @@
 import { defineStore } from "pinia"
+import { SkillTemplate } from "@data/ns/skill"
 
 export const useNsConfiglStore = defineStore("config", {
   state: () => ({
@@ -23,8 +24,25 @@ export const useNsItemStore = defineStore("item", {
 export const useNsSkillStore = defineStore("skill", {
   state: () => ({
     currtId: 0,
-    data: [],
+    data: [SkillTemplate],
   }),
+
+  getters: {
+    skillList(state) {
+      return state.data.map((item) => {
+        const res = {}
+        let deep = 1
+        for (const [key, value] of Object.entries(item)) {
+          if (deep == 1) {
+            return item[key]
+          }
+          deep += 1
+        }
+
+        return res
+      })
+    },
+  },
 
   actions: {
     setData(newData) {

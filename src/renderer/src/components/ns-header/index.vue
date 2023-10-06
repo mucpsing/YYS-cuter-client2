@@ -70,10 +70,10 @@
               clearable
               filterable
               v-model="currtValue"
-              :options="currtSelectList"
               placeholder="快速搜索"
               style="width: 100%; padding-left: 0"
               :scroll="{ type: 'virtual', threshold: 20 }"
+              :options="currtSelectList"
               :onChange="onSearchChange"
               :onFocus="(e) => console.log('当前：', e)"
             >
@@ -83,7 +83,7 @@
         </t-card>
         <div class="py-1"></div>
         <t-card hoverShadow :class="['']" title="详细信息">
-          <t-table hover :data="tableData"> </t-table>
+          <t-table hover :data="tableData" rowKey="index"> </t-table>
         </t-card>
       </t-dialog>
     </div>

@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-09-11 22:37:27
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-09-30 10:14:32
+ * @LastEditTime: 2023-10-03 10:14:44
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\NsNpcManager\croe\api.ts
  * @Description: 所有的api只能通过store里面的内部类进行调用，不对其他组件进行暴露
  */
@@ -133,3 +133,5 @@ export async function getSkilleList() {
     return []
   }
 }
+
+export async function updateSkillById() {}
