@@ -4,7 +4,7 @@ export type SkillResKeyType = keyof typeof skillResKey
 export const SkillTemplate = {
   SkillId: "技能ID",
   Job: "职业代码",
-  Skill_Name: "技能名称",
+  "Skill Name": "技能名称",
   SkillPoint: "SkillPoint",
   SkillPoint2: "SkillPoint2",
   LimitLevel: "最低学习等级",
@@ -17,12 +17,12 @@ export const SkillTemplate = {
   SkillOption2: "技能效果2",
   SkillValue2: "技能数值2",
   RangeType: "施法对象",
-  RangeValue_10cm: "释放距离？",
-  CastTime_Sec: "施法时间",
-  CoolTime_Sec: "冷却时间",
-  AttackSpeed_10_Sec: "释放速度",
-  DurationTimeSeed_Sec: "用作自身的持续时间",
-  DurationTime_Sec: "用作敌方的持续时间",
+  "RangeValue(10cm)": "释放距离？",
+  "CastTime(Sec)": "施法时间",
+  "CoolTime(Sec)": "冷却时间",
+  "AttackSpeed(10/Sec)": "释放速度",
+  "DurationTimeSeed(Sec)": "用作自身的持续时间",
+  "DurationTime(Sec)": "用作敌方的持续时间",
   Comment: "技能描述",
 }
 

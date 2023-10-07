@@ -39,7 +39,7 @@
     <div>
       <t-dialog
         width="70%"
-        mode="modeless"
+        class="z-[100]"
         :visible="dataTableShow"
         :closeBtn="true"
         :draggable="true"

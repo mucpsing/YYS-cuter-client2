@@ -1,5 +1,6 @@
 import { defineStore } from "pinia"
 import { SkillTemplate } from "@data/ns/skill"
+import { getSkillList, updateSkillById } from "@renderer/api/ns-api"
 
 export const useNsConfiglStore = defineStore("config", {
   state: () => ({
@@ -10,15 +11,11 @@ export const useNsConfiglStore = defineStore("config", {
 })
 
 export const useNsNpcStore = defineStore("npc", {
-  state: () => ({
-    currtId: 0,
-  }),
+  state: () => ({ currtId: 0 }),
 })
 
 export const useNsItemStore = defineStore("item", {
-  state: () => ({
-    currtId: 0,
-  }),
+  state: () => ({ currtId: 0 }),
 })
 
 export const useNsSkillStore = defineStore("skill", {
@@ -45,8 +42,28 @@ export const useNsSkillStore = defineStore("skill", {
   },
 
   actions: {
-    setData(newData) {
-      this.data = newData
+    async getSkillDataFromApi() {
+      const skillList = await getSkillList()
+      let index = 1
+      if (skillList.length > 0) this.data.length = 0
+
+      skillList.forEach((item) => {
+        const keys = Object.keys(item)
+
+        keys.forEach((key, idx) => {
+          if (keys.length == 1) {
+            item[key]["index"] = index
+            this.data.push(item[key])
+            index += 1
+          } else if (key != "技能说明") {
+            item[key]["index"] = index
+            this.data.push(item[key])
+            index += 1
+          }
+        })
+      })
+
+      console.log("this.data: ", this.data.length)
     },
   },
 })
