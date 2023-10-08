@@ -19,21 +19,20 @@
             @delCol="delColItem"
           ></ColConfig>
           <t-input-number size="medium" :step="50" v-model="maxHeight" />
-          <t-button size="medium" theme="success">刷新</t-button>
+          <t-button :loading="loading" :on-click="dataInit" size="medium" theme="success"
+            >刷新</t-button
+          >
         </div>
       </div>
 
-      <!-- :pagination="pagination" -->
-      <!-- @page-change="onPageChange" -->
-      <!-- :maxHeight="maxHeight" -->
-      <!-- resizable -->
       <div ref="resizeDivRef" :class="['border-0 border-indigo-400 rounded-md']">
         <t-table
           size="small"
           hover
           stripe
           bordered
-          :height="maxHeight"
+          :loading="loading"
+          :maxHeight="maxHeight"
           :data="store.data"
           :columns="(tableColumns as TableRowData[])"
           rowKey="index"
@@ -66,8 +65,8 @@ import { SkillIdMap } from "@data/ns/skill"
 import ColConfig from "@components/global/t-table-col-controler.vue"
 
 const resizeDivRef = ref<HTMLDivElement>()
-
-const maxHeight = ref(400)
+const loading = ref(false)
+const maxHeight = ref(550)
 const store = useNsSkillStore()
 const defaultColumns = ["index", "SkillId", "Job", "Skill Name"]
 
@@ -75,30 +74,24 @@ const tableColumnsBase: { colKey: string; title: string; width?: string }[] = [
   { colKey: "index", title: "序号", width: "50" },
 ]
 
+const filterObj = {
+  SkillId: {
+    type: "single",
+    list: Object.keys(SkillIdMap).map((key) => ({ label: SkillIdMap[key], value: key })),
+    // [
+    //   { label: "审批通过", value: 1 },
+    //   { label: "已过期", value: 2 },
+    //   { label: "审批失败", value: 3 },
+    // ],
+  },
+}
+
 Object.keys(SkillTemplate).forEach((key) => {
   tableColumnsBase.push({
     colKey: key,
     title: SkillTemplate[key],
   })
 })
-
-const pagination = computed(() => {
-  return {
-    current: 1,
-    pageSize: 15,
-    showJumper: true,
-    total: store.data.length,
-    onChange: (pageInfo) => {
-      console.log("pagination.onChange", pageInfo)
-    },
-  }
-})
-
-async function onPageChange(pageInfo) {
-  console.log("page-change", pageInfo)
-  pagination.value.current = pageInfo.current
-  pagination.value.pageSize = pageInfo.pageSize
-}
 
 const tableColumns = ref(
   defaultColumns.map((colName) => {
@@ -109,6 +102,30 @@ const tableColumns = ref(
     }
   }),
 )
+// const pagination = computed(() => {
+//   return {
+//     current: 1,
+//     pageSize: 15,
+//     showJumper: true,
+//     total: store.data.length,
+//     onChange: (pageInfo) => {
+//       console.log("pagination.onChange", pageInfo)
+//     },
+//   }
+// })
+
+// async function onPageChange(pageInfo) {
+//   console.log("page-change", pageInfo)
+//   pagination.value.current = pageInfo.current
+//   pagination.value.pageSize = pageInfo.pageSize
+// }
+
+async function dataInit() {
+  loading.value = true
+  await store.getSkillDataFromApi()
+
+  setTimeout(() => (loading.value = false), 600)
+}
 
 // 动态添加列
 async function addColItem(colKey: string) {
@@ -130,24 +147,6 @@ async function delColItem(colKey: string) {
 
 onMounted(() => {
   // 调用api获取技能信息
-  store.getSkillDataFromApi()
-
-  // if (resizeDivRef.value)
-  //   interact(resizeDivRef.value).resizable({
-  //     edges: { left: false, right: false, bottom: true, top: false },
-  //     modifiers: [
-  //       interact.modifiers.restrictEdges({ outer: "parent" }),
-  //       interact.modifiers.restrictSize({ min: { width: 1, height: 1 } }),
-  //     ],
-  //     listeners: {
-  //       move(event) {
-  //         const target = event.target
-  //         let y = parseFloat(target.getAttribute("data-y")) || 0
-  //         target.style.height = event.rect.height + "px"
-  //         maxHeight.value = event.rect.height - 10
-  //         target.setAttribute("data-y", y)
-  //       },
-  //     },
-  //   })
+  dataInit()
 })
 </script>
