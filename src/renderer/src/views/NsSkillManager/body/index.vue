@@ -12,7 +12,7 @@
         <div class="flex items-center justify-end gap-2 pb-2">
           <ColConfig
             size="medium"
-            :groupColumns="GROUP_COLUMNS"
+            :groupColumns="groupColumns"
             :columns="(tableColumns as TableRowData[])"
             :columnsNameMap="SkillTemplate"
             @addCol="addColItem"
@@ -27,7 +27,7 @@
       <!-- @page-change="onPageChange" -->
       <!-- :maxHeight="maxHeight" -->
       <!-- resizable -->
-      <div ref="resizeDivRef" :class="['border-4 border-indigo-400 rounded-md']">
+      <div ref="resizeDivRef" :class="['border-0 border-indigo-400 rounded-md']">
         <t-table
           size="small"
           hover
@@ -61,7 +61,8 @@
 import type { TableRowData } from "tdesign-vue-next"
 
 import { useNsSkillStore } from "@nsStore/index"
-import { SkillTemplate } from "@data/ns/skill"
+import { SkillTemplate, groupColumns } from "@data/ns/skill"
+import { SkillIdMap } from "@data/ns/skill"
 import ColConfig from "@components/global/t-table-col-controler.vue"
 
 const resizeDivRef = ref<HTMLDivElement>()
@@ -69,66 +70,6 @@ const resizeDivRef = ref<HTMLDivElement>()
 const maxHeight = ref(400)
 const store = useNsSkillStore()
 const defaultColumns = ["index", "SkillId", "Job", "Skill Name"]
-
-const SkillIdMap = {
-  "0": { label: "通用技能", theme: "default", icon: "" },
-  "1": { label: "武士系", theme: "danger", icon: "" },
-  "2": { label: "武士(武器大师)", theme: "danger", icon: "" },
-  "3": { label: "圣骑士(拥护者)", theme: "danger", icon: "" },
-  "33": { label: "法师系", theme: "primary", icon: "" },
-  "34": { label: "巫师(吟唱者)", theme: "primary", icon: "" },
-  "35": { label: "召唤师(元素使)", theme: "primary", icon: "" },
-  "65": { label: "工程师系", theme: "success", icon: "" },
-  "66": { label: "工程师 (鼓舞者)", theme: "success", icon: "" },
-  "67": { label: "工匠 (武器匠)", theme: "success", icon: "" },
-  "97": { label: "浪子系", theme: "warning", icon: "" },
-  "98": { label: "猎人 (追踪者)", theme: "warning", icon: "" },
-  "99": { label: "暗杀者 (黑暗行者)", theme: "warning", icon: "" },
-}
-
-const GROUP_COLUMNS = [
-  {
-    label: "基础属性",
-    value: "base",
-    columns: [
-      "index",
-      "SkillId",
-      "Job",
-      "Skill Name",
-      "SkillPoint",
-      "SkillPoint2",
-      "LimitLevel",
-      "UseKind",
-      "UsePoint",
-    ],
-  },
-  {
-    label: "技能类型",
-    value: "secondary",
-    columns: [
-      "SkillType1",
-      "SkillOption1",
-      "SkillValue1",
-      "SkillType2",
-      "SkillOption2",
-      "SkillValue2",
-    ],
-  },
-  {
-    label: "其他",
-    value: "data",
-    columns: [
-      "RangeType",
-      "RangeValue(10cm)",
-      "CastTime(Sec)",
-      "CoolTime(Sec)",
-      "AttackSpeed(10/Sec)",
-      "DurationTimeSeed(Sec)",
-      "DurationTime(Sec)",
-      "Comment",
-    ],
-  },
-]
 
 const tableColumnsBase: { colKey: string; title: string; width?: string }[] = [
   { colKey: "index", title: "序号", width: "50" },
