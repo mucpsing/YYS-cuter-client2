@@ -1,5 +1,13 @@
+/*
+ * @Author: CPS holy.dandelion@139.com
+ * @Date: 2023-09-30 09:40:42
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2023-10-09 22:23:24
+ * @FilePath: \YYS-cuter-client2\src\renderer\src\stores\ns\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { defineStore } from "pinia"
-import { SkillTemplate } from "@data/ns/skill"
+import { SkillTemplate, printDataMap } from "@data/ns/skill"
 import { getSkillList, updateSkillById } from "@renderer/api/ns-api"
 
 export const useNsConfiglStore = defineStore("config", {
@@ -43,6 +51,8 @@ export const useNsSkillStore = defineStore("skill", {
 
   actions: {
     async getSkillDataFromApi() {
+      console.log("getSkillDataFromApi")
+
       const skillList = await getSkillList()
       let index = 1
       if (skillList.length > 0) this.data.length = 0
@@ -63,7 +73,7 @@ export const useNsSkillStore = defineStore("skill", {
         })
       })
 
-      console.log("this.data: ", this.data.length)
+      printDataMap(this.data)
     },
   },
 })
