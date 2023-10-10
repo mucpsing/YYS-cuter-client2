@@ -1,3 +1,5 @@
+import { ref } from "vue"
+
 export const skillResKey = ["使用条件", "最大威力", "技能等级效果", "成功率"]
 export type SkillResKeyType = keyof typeof skillResKey
 
@@ -27,13 +29,118 @@ export function printDataMap(data) {
   }
   console.log("dataMap: ", dataMap)
   console.log("res: ", res)
+
+  // const SkillOptionObj = Object.assign({}, res["SkillOption1"], res["SkillOption2"])
+  // const SkillOptionMap = Object.keys(SkillOptionObj).map((key) => SkillOptionObj[key])
+
+  const SkillTypeObj = Object.assign({}, res["SkillType1"], res["SkillType2"])
+
+  console.log("SkillTypeObj", SkillTypeObj)
   return res
 }
 
+export const SkillTypeMap = {
+  Amulet: { value: "Amulet", label: "待定", theme: "", icon: "" },
+  BowAttack: { value: "BowAttack", label: "待定", theme: "", icon: "" },
+  Buff: { value: "Buff", label: "待定", theme: "", icon: "" },
+  Cure: { value: "Cure", label: "待定", theme: "", icon: "" },
+  Debuff: { value: "Debuff", label: "待定", theme: "", icon: "" },
+  Dummy: { value: "Dummy", label: "待定", theme: "", icon: "" },
+  Gel: { value: "Gel", label: "待定", theme: "", icon: "" },
+  Heal: { value: "Heal", label: "待定", theme: "", icon: "" },
+  MagicAttack: { value: "MagicAttack", label: "待定", theme: "", icon: "" },
+  MagicAttack2: { value: "MagicAttack2", label: "待定", theme: "", icon: "" },
+  MagicAttack3: { value: "MagicAttack3", label: "待定", theme: "", icon: "" },
+  MobControl: { value: "MobControl", label: "待定", theme: "", icon: "" },
+  NSNormalAttack: { value: "NSNormalAttack", label: "待定", theme: "", icon: "" },
+  NSSpecialAttack: { value: "NSSpecialAttack", label: "待定", theme: "", icon: "" },
+  NormalAttack: { value: "NormalAttack", label: "待定", theme: "", icon: "" },
+  Null: { value: "Null", label: "待定", theme: "", icon: "" },
+  Passive: { value: "Passive", label: "待定", theme: "", icon: "" },
+  PetControl: { value: "PetControl", label: "待定", theme: "", icon: "" },
+  Production: { value: "Production", label: "待定", theme: "", icon: "" },
+  Rebirth: { value: "Rebirth", label: "待定", theme: "", icon: "" },
+  Resolution: { value: "Resolution", label: "待定", theme: "", icon: "" },
+  Spawn: { value: "Spawn", label: "待定", theme: "", icon: "" },
+  SpecialAttack: { value: "SpecialAttack", label: "待定", theme: "", icon: "" },
+  Summoning: { value: "Summoning", label: "待定", theme: "", icon: "" },
+  Taming: { value: "Taming", label: "待定", theme: "", icon: "" },
+  Teleport: { value: "Teleport", label: "待定", theme: "", icon: "" },
+}
+
+/**
+ * @description: SkillOption的所有可选内容
+ */
+export const SkillOptionMap = {
+  "": { value: "", label: "未设定", theme: "", icon: "" },
+  Ac: { value: "Ac", label: "待定", theme: "", icon: "" },
+  Ap: { value: "Ap", label: "待定", theme: "", icon: "" },
+  ApBeast: { value: "ApBeast", label: "待定", theme: "", icon: "" },
+  ArmorBreak: { value: "ArmorBreak", label: "待定", theme: "", icon: "" },
+  AspecVolition: { value: "AspecVolition", label: "待定", theme: "", icon: "" },
+  Berserker: { value: "Berserker", label: "待定", theme: "", icon: "" },
+  BloodOcean: { value: "BloodOcean", label: "待定", theme: "", icon: "" },
+  BoneBreak: { value: "BoneBreak", label: "待定", theme: "", icon: "" },
+  Clarity: { value: "Clarity", label: "待定", theme: "", icon: "" },
+  CrushDivision: { value: "CrushDivision", label: "待定", theme: "", icon: "" },
+  CurseProperty: { value: "CurseProperty", label: "待定", theme: "", icon: "" },
+  DeathHealing: { value: "DeathHealing", label: "待定", theme: "", icon: "" },
+  DpBeast: { value: "DpBeast", label: "待定", theme: "", icon: "" },
+  DpBreak: { value: "DpBreak", label: "待定", theme: "", icon: "" },
+  DpPer: { value: "DpPer", label: "待定", theme: "", icon: "" },
+  Dr: { value: "Dr", label: "待定", theme: "", icon: "" },
+  Dump: { value: "Dump", label: "待定", theme: "", icon: "" },
+  DwellDeity: { value: "DwellDeity", label: "待定", theme: "", icon: "" },
+  DwellGoat: { value: "DwellGoat", label: "待定", theme: "", icon: "" },
+  DwellHero: { value: "DwellHero", label: "待定", theme: "", icon: "" },
+  FullBarrel: { value: "FullBarrel", label: "待定", theme: "", icon: "" },
+  FullSwine: { value: "FullSwine", label: "待定", theme: "", icon: "" },
+  Hidden: { value: "Hidden", label: "待定", theme: "", icon: "" },
+  HolyDefense: { value: "HolyDefense", label: "待定", theme: "", icon: "" },
+  HpDrain: { value: "HpDrain", label: "待定", theme: "", icon: "" },
+  ImmunPoison: { value: "ImmunPoison", label: "待定", theme: "", icon: "" },
+  ImmunRage: { value: "ImmunRage", label: "待定", theme: "", icon: "" },
+  ImmunRoot: { value: "ImmunRoot", label: "待定", theme: "", icon: "" },
+  ImmunSleep: { value: "ImmunSleep", label: "待定", theme: "", icon: "" },
+  ImmunSlow: { value: "ImmunSlow", label: "待定", theme: "", icon: "" },
+  ImmunStun: { value: "ImmunStun", label: "待定", theme: "", icon: "" },
+  Inspiration: { value: "Inspiration", label: "待定", theme: "", icon: "" },
+  Kilgician: { value: "Kilgician", label: "待定", theme: "", icon: "" },
+  LimitHpRecovery: { value: "LimitHpRecovery", label: "待定", theme: "", icon: "" },
+  LowCounter: { value: "LowCounter", label: "待定", theme: "", icon: "" },
+  MachineProtecter: { value: "MachineProtecter", label: "待定", theme: "", icon: "" },
+  MachineShield: { value: "MachineShield", label: "待定", theme: "", icon: "" },
+  MaxHp: { value: "MaxHp", label: "待定", theme: "", icon: "" },
+  MythicBone: { value: "MythicBone", label: "待定", theme: "", icon: "" },
+  MythicForce: { value: "MythicForce", label: "待定", theme: "", icon: "" },
+  MythicOcean: { value: "MythicOcean", label: "待定", theme: "", icon: "" },
+  NeedleCounter: { value: "NeedleCounter", label: "待定", theme: "", icon: "" },
+  NobleShield: { value: "NobleShield", label: "待定", theme: "", icon: "" },
+  Poison: { value: "Poison", label: "待定", theme: "", icon: "" },
+  PowerStaff: { value: "PowerStaff", label: "待定", theme: "", icon: "" },
+  Rage: { value: "Rage", label: "待定", theme: "", icon: "" },
+  RangeBlock: { value: "RangeBlock", label: "待定", theme: "", icon: "" },
+  RedPowder: { value: "RedPowder", label: "待定", theme: "", icon: "" },
+  Root: { value: "Root", label: "待定", theme: "", icon: "" },
+  RsPer: { value: "RsPer", label: "待定", theme: "", icon: "" },
+  SaveExp: { value: "SaveExp", label: "待定", theme: "", icon: "" },
+  SignTarget: { value: "SignTarget", label: "待定", theme: "", icon: "" },
+  Sleep: { value: "Sleep", label: "待定", theme: "", icon: "" },
+  Slow: { value: "Slow", label: "待定", theme: "", icon: "" },
+  Speed: { value: "Speed", label: "待定", theme: "", icon: "" },
+  SpeedBeast: { value: "SpeedBeast", label: "待定", theme: "", icon: "" },
+  Stun: { value: "Stun", label: "待定", theme: "", icon: "" },
+  SummonMaster: { value: "SummonMaster", label: "待定", theme: "", icon: "" },
+  TendMelee: { value: "TendMelee", label: "待定", theme: "", icon: "" },
+  TendRange: { value: "TendRange", label: "待定", theme: "", icon: "" },
+  Thorn: { value: "Thorn", label: "待定", theme: "", icon: "" },
+  WeaponBreak: { value: "WeaponBreak", label: "待定", theme: "", icon: "" },
+  WeaveIllusion: { value: "WeaveIllusion", label: "待定", theme: "", icon: "" },
+}
 /**
  * @description: 技能id的对应含义
  */
-export const SkillIdMap = {
+export const JobMap = {
   "0": { value: "0", label: "通用技能", theme: "default", icon: "" },
   "1": { value: "1", label: "武士系", theme: "danger", icon: "" },
   "2": { value: "2", label: "武士(武器大师)", theme: "danger", icon: "" },
@@ -68,10 +175,6 @@ export const SkillPoint2Map = {
   "7": { value: "7", label: "未知", theme: "success", icon: "" },
   "8": { value: "8", label: "未知", theme: "success", icon: "" },
   "10": { value: "10", label: "未知", theme: "success", icon: "" },
-}
-
-export const SkillTypeMap = {
-  "0": { label: "通用技能", theme: "default", icon: "" },
 }
 
 /**
@@ -150,3 +253,5 @@ export const SkillTemplate = {
 }
 
 export type SkillItemType = keyof typeof SkillTemplate
+
+export const columns = ref([{}])

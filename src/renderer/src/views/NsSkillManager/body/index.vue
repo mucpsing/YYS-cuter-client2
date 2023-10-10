@@ -25,7 +25,8 @@
         </div>
       </div>
 
-      <div ref="resizeDivRef" :class="['border-0 border-indigo-400 rounded-md']">
+      <!-- :columns="(tableColumns as TableRowData[])" -->
+      <div :class="['border-0 border-indigo-400 rounded-md']">
         <t-table
           size="small"
           hover
@@ -33,17 +34,19 @@
           bordered
           :loading="loading"
           :maxHeight="maxHeight"
-          :data="store.data"
+          :data="data"
           :columns="(tableColumns as TableRowData[])"
           rowKey="index"
+          :filter-value="filterValue"
+          @filter-change="onFilterChange"
         >
           <template #Job="{ row }">
             <t-tag
               shape="round"
-              :theme="SkillIdMap[row.Job] ? SkillIdMap[row.Job].theme : 'default'"
+              :theme="JobMap[row.Job] ? JobMap[row.Job].theme : 'default'"
               variant="light-outline"
             >
-              {{ SkillIdMap[row.Job] ? SkillIdMap[row.Job].label : row.Job }}
+              {{ JobMap[row.Job] ? JobMap[row.Job].label : row.Job }}
             </t-tag>
           </template>
         </t-table>
@@ -61,28 +64,31 @@ import type { TableRowData } from "tdesign-vue-next"
 
 import { useNsSkillStore } from "@nsStore/index"
 import { SkillTemplate, groupColumns } from "@data/ns/skill"
-import { SkillIdMap } from "@data/ns/skill"
+import { JobMap } from "@data/ns/skill"
 import ColConfig from "@components/global/t-table-col-controler.vue"
 
-const resizeDivRef = ref<HTMLDivElement>()
+const store = useNsSkillStore()
+const data = ref([...store.data])
+
 const loading = ref(false)
 const maxHeight = ref(550)
-const store = useNsSkillStore()
-const defaultColumns = ["index", "SkillId", "Job", "Skill Name"]
+const defaultColumns = ["index", "SkillId", "Skill Name"]
 
-const tableColumnsBase: { colKey: string; title: string; width?: string }[] = [
+const tableColumnsBase: { colKey: string; title: string; width?: string; filter?: {} }[] = [
   { colKey: "index", title: "序号", width: "50" },
 ]
 
+type FilterItemT = { label: string; value?: string; checkAll?: boolean }
+
 const filterObj = {
-  SkillId: {
-    type: "single",
-    list: Object.keys(SkillIdMap).map((key) => ({ label: SkillIdMap[key], value: key })),
-    // [
-    //   { label: "审批通过", value: 1 },
-    //   { label: "已过期", value: 2 },
-    //   { label: "审批失败", value: 3 },
-    // ],
+  Job: {
+    type: "multiple",
+    list: [{ label: "All", checkAll: true } as FilterItemT].concat(
+      Object.keys(JobMap).map((key) => ({
+        label: JobMap[key].label as string,
+        value: key as string,
+      })),
+    ),
   },
 }
 
@@ -90,6 +96,7 @@ Object.keys(SkillTemplate).forEach((key) => {
   tableColumnsBase.push({
     colKey: key,
     title: SkillTemplate[key],
+    filter: Object.hasOwn(filterObj, key) ? filterObj[key] : {},
   })
 })
 
@@ -100,8 +107,17 @@ const tableColumns = ref(
         return tableColumnsBase[index]
       }
     }
+    throw new Error(`Column "${colName}" not found in tableColumnsBase.`);
   }),
 )
+
+// const columns = computed(() => {
+//   tableColumns.value.forEach(item=>{
+//     if(Object.hasOwn(filterObj,item.colKey))
+//   })
+//   return tableColumns.value
+// })
+
 // const pagination = computed(() => {
 //   return {
 //     current: 1,
@@ -122,7 +138,10 @@ const tableColumns = ref(
 
 async function dataInit() {
   loading.value = true
-  await store.getSkillDataFromApi()
+
+  await store.dataUpdateByApi()
+
+  data.value = [...store.data]
 
   setTimeout(() => (loading.value = false), 600)
 }
@@ -143,6 +162,22 @@ async function delColItem(colKey: string) {
       tableColumns.value.splice(index, 1)
     }
   }
+}
+
+const filterValue = ref({ Job: [] })
+const onFilterChange = (filters, ctx) => {
+  console.log("filter-change", filters, ctx)
+  const newData = store.data.filter((item) => {
+    let result = true
+    if (filters.Job) {
+      result = filters.Job.includes(item.Job)
+    }
+
+    return result
+  })
+  console.log(newData.length)
+
+  data.value = [...newData]
 }
 
 onMounted(() => {

@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-09-30 09:40:42
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-10-09 22:23:24
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2023-10-10 16:22:29
  * @FilePath: \YYS-cuter-client2\src\renderer\src\stores\ns\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -50,7 +50,7 @@ export const useNsSkillStore = defineStore("skill", {
   },
 
   actions: {
-    async getSkillDataFromApi() {
+    async dataUpdateByApi() {
       console.log("getSkillDataFromApi")
 
       const skillList = await getSkillList()
