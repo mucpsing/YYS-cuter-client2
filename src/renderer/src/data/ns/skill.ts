@@ -40,9 +40,9 @@ export function printDataMap(data) {
 }
 
 export const SkillTypeMap = {
-  Amulet: { value: "Amulet", label: "待定", theme: "", icon: "" },
+  Amulet: { value: "Amulet", label: "护符", theme: "", icon: "" },
   BowAttack: { value: "BowAttack", label: "待定", theme: "", icon: "" },
-  Buff: { value: "Buff", label: "待定", theme: "", icon: "" },
+  Buff: { value: "Buff", label: "增益", theme: "", icon: "" },
   Cure: { value: "Cure", label: "待定", theme: "", icon: "" },
   Debuff: { value: "Debuff", label: "待定", theme: "", icon: "" },
   Dummy: { value: "Dummy", label: "待定", theme: "", icon: "" },
@@ -52,9 +52,9 @@ export const SkillTypeMap = {
   MagicAttack2: { value: "MagicAttack2", label: "待定", theme: "", icon: "" },
   MagicAttack3: { value: "MagicAttack3", label: "待定", theme: "", icon: "" },
   MobControl: { value: "MobControl", label: "待定", theme: "", icon: "" },
-  NSNormalAttack: { value: "NSNormalAttack", label: "待定", theme: "", icon: "" },
-  NSSpecialAttack: { value: "NSSpecialAttack", label: "待定", theme: "", icon: "" },
-  NormalAttack: { value: "NormalAttack", label: "待定", theme: "", icon: "" },
+  NSNormalAttack: { value: "NSNormalAttack", label: "蒸汽普通伤害", theme: "", icon: "" },
+  NSSpecialAttack: { value: "NSSpecialAttack", label: "蒸汽特殊伤害", theme: "", icon: "" },
+  NormalAttack: { value: "NormalAttack", label: "普通伤害", theme: "", icon: "" },
   Null: { value: "Null", label: "待定", theme: "", icon: "" },
   Passive: { value: "Passive", label: "待定", theme: "", icon: "" },
   PetControl: { value: "PetControl", label: "待定", theme: "", icon: "" },
@@ -62,7 +62,7 @@ export const SkillTypeMap = {
   Rebirth: { value: "Rebirth", label: "待定", theme: "", icon: "" },
   Resolution: { value: "Resolution", label: "待定", theme: "", icon: "" },
   Spawn: { value: "Spawn", label: "待定", theme: "", icon: "" },
-  SpecialAttack: { value: "SpecialAttack", label: "待定", theme: "", icon: "" },
+  SpecialAttack: { value: "SpecialAttack", label: "特殊伤害", theme: "", icon: "" },
   Summoning: { value: "Summoning", label: "待定", theme: "", icon: "" },
   Taming: { value: "Taming", label: "待定", theme: "", icon: "" },
   Teleport: { value: "Teleport", label: "待定", theme: "", icon: "" },

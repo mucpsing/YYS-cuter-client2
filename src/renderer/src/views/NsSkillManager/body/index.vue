@@ -49,6 +49,19 @@
               {{ JobMap[row.Job] ? JobMap[row.Job].label : row.Job }}
             </t-tag>
           </template>
+
+          <template #SkillType1="{ row }">
+            <!-- <t-tag size="small" theme="primary" variant="outline"> -->
+            <t-tooltip :content="row.SkillType1">
+              <span class="text-xs">
+                {{ SkillTypeMap[row.SkillType1] ? SkillTypeMap[row.SkillType1].label : "" }}
+              </span>
+            </t-tooltip>
+            <!-- </t-tag> -->
+          </template>
+          <template #SkillOption1="{ row }">
+            {{ row.SkillOption1 }}
+          </template>
         </t-table>
       </div>
     </t-card>
@@ -63,7 +76,7 @@
 import type { TableRowData } from "tdesign-vue-next"
 
 import { useNsSkillStore } from "@nsStore/index"
-import { SkillTemplate, groupColumns } from "@data/ns/skill"
+import { SkillTemplate, groupColumns, SkillTypeMap } from "@data/ns/skill"
 import { JobMap } from "@data/ns/skill"
 import ColConfig from "@components/global/t-table-col-controler.vue"
 
@@ -72,7 +85,7 @@ const data = ref([...store.data])
 
 const loading = ref(false)
 const maxHeight = ref(550)
-const defaultColumns = ["index", "SkillId", "Skill Name"]
+const defaultColumns = ["index", "Skill Name", "SkillType1", "SkillOption1"]
 
 const tableColumnsBase: { colKey: string; title: string; width?: string; filter?: {} }[] = [
   { colKey: "index", title: "序号", width: "50" },
@@ -107,7 +120,7 @@ const tableColumns = ref(
         return tableColumnsBase[index]
       }
     }
-    throw new Error(`Column "${colName}" not found in tableColumnsBase.`);
+    throw new Error(`Column "${colName}" not found in tableColumnsBase.`)
   }),
 )
 
