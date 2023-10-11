@@ -29,19 +29,14 @@ export function printDataMap(data) {
       res[key][eachVal] = { value: eachVal, label: "待定", theme: "", icon: "" }
     })
   }
-  console.log("dataMap: ", dataMap)
-  console.log("res: ", res)
 
-  // const SkillOptionObj = Object.assign({}, res["SkillOption1"], res["SkillOption2"])
-  // const SkillOptionMap = Object.keys(SkillOptionObj).map((key) => SkillOptionObj[key])
+  console.log("res: ", Object.keys(res).length)
 
-  const SkillTypeObj = Object.assign({}, res["SkillType1"], res["SkillType2"])
-
-  console.log("SkillTypeObj", SkillTypeObj)
   return res
 }
 
 export const SkillTypeMap = {
+  "": { value: "", label: "未设定", theme: "", icon: "" },
   Null: { value: "Null", label: "未设定", theme: "", icon: "" },
   Amulet: { value: "Amulet", label: "护符", theme: "", icon: "" },
   BowAttack: { value: "BowAttack", label: "弓箭攻击", theme: "", icon: "" },
@@ -85,24 +80,24 @@ export const SkillTypeFilter = {
  */
 export const SkillOptionMap = {
   "": { value: "", label: "未设定", theme: "", icon: "" },
-  Ac: { value: "Ac", label: "物理穿透", theme: "", icon: "" },
+  Ac: { value: "Ac", label: "物理防御", theme: "", icon: "" },
   Ap: { value: "Ap", label: "魔法攻击", theme: "", icon: "" },
   ApBeast: { value: "ApBeast", label: "野兽魔法攻击", theme: "", icon: "" },
   ArmorBreak: { value: "ArmorBreak", label: "破甲", theme: "", icon: "" },
-  AspecVolition: { value: "AspecVolition", label: "决意光辉", theme: "", icon: "" },
+  AspecVolition: { value: "AspecVolition", label: "守护", theme: "", icon: "" },
   Berserker: { value: "Berserker", label: "狂战士", theme: "", icon: "" },
   BloodOcean: { value: "BloodOcean", label: "鲜血之海", theme: "", icon: "" },
   BoneBreak: { value: "BoneBreak", label: "骨折", theme: "", icon: "" },
-  Clarity: { value: "Clarity", label: "清晰", theme: "", icon: "" },
-  CrushDivision: { value: "CrushDivision", label: "碎裂分割", theme: "", icon: "" },
+  Clarity: { value: "Clarity", label: "隐身", theme: "", icon: "" },
+  CrushDivision: { value: "CrushDivision", label: "碾压风暴", theme: "", icon: "" },
   CurseProperty: { value: "CurseProperty", label: "诅咒属性", theme: "", icon: "" },
   DeathHealing: { value: "DeathHealing", label: "死亡治愈", theme: "", icon: "" },
   DpBeast: { value: "DpBeast", label: "野兽防御", theme: "", icon: "" },
   DpBreak: { value: "DpBreak", label: "防御破甲", theme: "", icon: "" },
-  DpPer: { value: "DpPer", label: "每防御点", theme: "", icon: "" },
+  DpPer: { value: "DpPer", label: "神之佑护", theme: "", icon: "" },
   Dr: { value: "Dr", label: "治疗减免", theme: "", icon: "" },
-  Dump: { value: "Dump", label: "倾泻", theme: "", icon: "" },
-  DwellDeity: { value: "DwellDeity", label: "居住神明", theme: "", icon: "" },
+  Dump: { value: "Dump", label: "单次抵消", theme: "", icon: "" },
+  DwellDeity: { value: "DwellDeity", label: "战神之盾", theme: "", icon: "" },
   DwellGoat: { value: "DwellGoat", label: "居住山羊", theme: "", icon: "" },
   DwellHero: { value: "DwellHero", label: "居住英雄", theme: "", icon: "" },
   FullBarrel: { value: "FullBarrel", label: "全力一击", theme: "", icon: "" },

@@ -28,6 +28,7 @@
       <!-- :columns="(tableColumns as TableRowData[])" -->
       <div :class="['border-0 border-indigo-400 rounded-md']">
         <t-table
+          class="ns__skill_table"
           size="small"
           hover
           stripe
@@ -89,13 +90,14 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 // import { npcListRaw } from "@nsData/npcList"
 // import { itemListRaw } from "@nsData/itemList"
 // import { SettingIcon, SearchIcon } from "tdesign-icons-vue-next"
 
 import type { TableRowData } from "tdesign-vue-next"
 
+import tableTitleComponent from "@renderer/components/ns/tableTitleComponent.vue"
 import { useNsSkillStore } from "@nsStore/index"
 import { SkillTemplate, groupColumns } from "@data/ns/skill"
 import { JobMap, SkillOptionMap, SkillTypeMap } from "@data/ns/skill"
@@ -115,10 +117,10 @@ const tableColumnsBase: { colKey: string; title: string; width?: string; filter?
 
 const filterObj = {
   Job: JobFilter,
-  SkillType1: SkillTypeFilter,
-  // SkillType2: SkillTypeFilter,
-  // SkillOption1: SkillOptionFilter,
-  // SkillOption2: SkillOptionFilter,
+  SkillType1: Object.assign({ component: tableTitleComponent }, SkillTypeFilter),
+  SkillType2: SkillTypeFilter,
+  SkillOption1: SkillOptionFilter,
+  SkillOption2: SkillOptionFilter,
 }
 
 /**
@@ -209,6 +211,10 @@ const onFilterChange = (filters, ctx) => {
       result = filters.SkillType1.includes(item.SkillType1)
     }
 
+    if (filters.SkillOption1) {
+      result = filters.SkillOption1.includes(item.SkillOption1)
+    }
+
     return result
   })
   console.log(newData.length)
@@ -221,3 +227,12 @@ onMounted(() => {
   dataInit()
 })
 </script>
+
+<style lang="stylus">
+/** 因为自带的筛选太长不会出现滚动条，这里强制出现滚动条 */
+.ns__skill_table .t-checkbox-group{
+  max-height 300px
+  overflow-y scroll
+}
+
+</style>

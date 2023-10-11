@@ -50,6 +50,7 @@ declare module 'vue' {
     SwiperSetp3: typeof import('./../renderer/src/views/GisApi/body/SwiperSetp3.vue')['default']
     SwiperSetp4: typeof import('./../renderer/src/views/GisApi/body/SwiperSetp4.vue')['default']
     TabCropPanel: typeof import('./../renderer/src/views/ImageCuter/footer/tabCropPanel/index.vue')['default']
+    TableTitleComponent: typeof import('./../renderer/src/components/ns/tableTitleComponent.vue')['default']
     TabPictureInfo: typeof import('./../renderer/src/views/ImageCuter/footer/tabPictureInfo.vue')['default']
     TabSelection: typeof import('./../renderer/src/views/ImageCuter/footer/tabSelection.vue')['default']
     TabServerPanel: typeof import('./../renderer/src/views/ImageCuter/footer/tabServerPanel.vue')['default']
