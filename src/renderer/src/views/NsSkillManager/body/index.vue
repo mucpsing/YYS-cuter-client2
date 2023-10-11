@@ -60,7 +60,28 @@
             <!-- </t-tag> -->
           </template>
           <template #SkillOption1="{ row }">
-            {{ row.SkillOption1 }}
+            <t-tooltip :content="row.SkillOption1">
+              <span class="text-xs">
+                {{ SkillOptionMap[row.SkillOption1] ? SkillOptionMap[row.SkillOption1].label : "" }}
+              </span>
+            </t-tooltip>
+          </template>
+
+          <template #SkillType2="{ row }">
+            <!-- <t-tag size="small" theme="primary" variant="outline"> -->
+            <t-tooltip :content="row.SkillType2">
+              <span class="text-xs">
+                {{ SkillTypeMap[row.SkillType2] ? SkillTypeMap[row.SkillType2].label : "" }}
+              </span>
+            </t-tooltip>
+            <!-- </t-tag> -->
+          </template>
+          <template #SkillOption2="{ row }">
+            <t-tooltip :content="row.SkillOption2">
+              <span class="text-xs">
+                {{ SkillOptionMap[row.SkillOption2] ? SkillOptionMap[row.SkillOption2].label : "" }}
+              </span>
+            </t-tooltip>
           </template>
         </t-table>
       </div>
@@ -76,8 +97,9 @@
 import type { TableRowData } from "tdesign-vue-next"
 
 import { useNsSkillStore } from "@nsStore/index"
-import { SkillTemplate, groupColumns, SkillTypeMap } from "@data/ns/skill"
-import { JobMap } from "@data/ns/skill"
+import { SkillTemplate, groupColumns } from "@data/ns/skill"
+import { JobMap, SkillOptionMap, SkillTypeMap } from "@data/ns/skill"
+import { JobFilter, SkillOptionFilter, SkillTypeFilter } from "@data/ns/skill"
 import ColConfig from "@components/global/t-table-col-controler.vue"
 
 const store = useNsSkillStore()
@@ -85,26 +107,23 @@ const data = ref([...store.data])
 
 const loading = ref(false)
 const maxHeight = ref(550)
-const defaultColumns = ["index", "Skill Name", "SkillType1", "SkillOption1"]
+const defaultColumns = ["index", "Skill Name", "SkillType1", "SkillOption1", "SkillValue1"]
 
 const tableColumnsBase: { colKey: string; title: string; width?: string; filter?: {} }[] = [
   { colKey: "index", title: "序号", width: "50" },
 ]
 
-type FilterItemT = { label: string; value?: string; checkAll?: boolean }
-
 const filterObj = {
-  Job: {
-    type: "multiple",
-    list: [{ label: "All", checkAll: true } as FilterItemT].concat(
-      Object.keys(JobMap).map((key) => ({
-        label: JobMap[key].label as string,
-        value: key as string,
-      })),
-    ),
-  },
+  Job: JobFilter,
+  SkillType1: SkillTypeFilter,
+  // SkillType2: SkillTypeFilter,
+  // SkillOption1: SkillOptionFilter,
+  // SkillOption2: SkillOptionFilter,
 }
 
+/**
+ * @description: 根据SkillTemplate替换表头字段为中文
+ */
 Object.keys(SkillTemplate).forEach((key) => {
   tableColumnsBase.push({
     colKey: key,
@@ -184,6 +203,10 @@ const onFilterChange = (filters, ctx) => {
     let result = true
     if (filters.Job) {
       result = filters.Job.includes(item.Job)
+    }
+
+    if (filters.SkillType1) {
+      result = filters.SkillType1.includes(item.SkillType1)
     }
 
     return result
