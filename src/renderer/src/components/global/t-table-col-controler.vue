@@ -1,10 +1,10 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
- * @Date: 2023-10-04 10:23:03
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2023-10-11 18:31:54
+ * @Date: 2023-10-11 21:04:11
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2023-10-11 23:08:17
  * @FilePath: \YYS-cuter-client2\src\renderer\src\components\global\t-table-col-controler.vue
- * @Description: 这是模拟官方列配置的弹出框组件，暂时每个键值都需要分组，而且全选功能没实现
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div :class="class">
@@ -110,7 +110,7 @@ const getColKeyName = (colKey: string) => {
 const columnsList = computed(() => {
   return props.groupColumns.map((item) => ({
     colKey: "index",
-    title: () => <strong class="text-black">{item.label}</strong>,
+    title: item.label,
   }))
 })
 
@@ -120,12 +120,11 @@ async function onChange(checked: boolean, colKey: string, groupName: string) {
   if (checked) {
     // 显示
     emit("addCol", colKey)
-    console.log("增加: ", colKey)
+
     checkObj[groupName].push(colKey)
   } else {
     // 隐藏
     emit("delCol", colKey)
-    console.log("删除: ", colKey)
 
     if (checkObj[groupName].includes(colKey)) {
       const delIdx = checkObj[groupName].indexOf(colKey)
@@ -139,9 +138,8 @@ async function onChange(checked: boolean, colKey: string, groupName: string) {
 async function onChanges(groupName: string) {
   if (!Object.hasOwn(checkObj, groupName)) checkObj[groupName] = []
 
-  console.log("onChanges", groupName)
-
   let targetGroup: string[] = []
+
   props.groupColumns.forEach((item) => {
     if (item.value == groupName) {
       targetGroup = item.columns
@@ -149,20 +147,20 @@ async function onChanges(groupName: string) {
   })
 
   if (targetGroup.length == checkObj[groupName].length) {
-    console.log("清空")
     // 数量想等，进行清空
-    checkObj[groupName].forEach((colKey) => onChange(false, colKey, groupName))
+    targetGroup.forEach((colKey) => {
+      onChange(false, colKey, groupName)
+    })
   } else {
-    console.log("增加")
     // 将不存在的添加进
-    checkObj[groupName].forEach((colKey) => {
-      if (!targetGroup.includes(colKey)) onChange(true, colKey, groupName)
+
+    targetGroup.forEach((colKey) => {
+      if (!checkObj[groupName].includes(colKey)) onChange(true, colKey, groupName)
     })
   }
 }
 
 onMounted(() => {
-  console.log("onMounted: =>")
   props.groupColumns.forEach((item) => {
     checkObj[item.value] = []
     props.columns.forEach((colItem) => {
@@ -170,7 +168,6 @@ onMounted(() => {
         checkObj[item.value].push(colItem.colKey)
       }
     })
-    // console.log(props.columns)
   })
 })
 </script>

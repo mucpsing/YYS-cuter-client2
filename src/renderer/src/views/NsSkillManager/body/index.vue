@@ -33,12 +33,13 @@
           hover
           stripe
           bordered
+          :data="data"
+          rowKey="index"
           :loading="loading"
           :maxHeight="maxHeight"
-          :data="data"
-          :columns="(tableColumns as TableRowData[])"
-          rowKey="index"
           :filter-value="filterValue"
+          :onCellClick="(item) => console.log(item)"
+          :columns="(tableColumns as TableRowData[])"
           @filter-change="onFilterChange"
         >
           <template #Job="{ row }">
@@ -54,7 +55,7 @@
           <template #SkillType1="{ row }">
             <!-- <t-tag size="small" theme="primary" variant="outline"> -->
             <t-tooltip :content="row.SkillType1">
-              <span class="text-xs">
+              <span>
                 {{ SkillTypeMap[row.SkillType1] ? SkillTypeMap[row.SkillType1].label : "" }}
               </span>
             </t-tooltip>
@@ -62,7 +63,7 @@
           </template>
           <template #SkillOption1="{ row }">
             <t-tooltip :content="row.SkillOption1">
-              <span class="text-xs">
+              <span>
                 {{ SkillOptionMap[row.SkillOption1] ? SkillOptionMap[row.SkillOption1].label : "" }}
               </span>
             </t-tooltip>
@@ -71,7 +72,7 @@
           <template #SkillType2="{ row }">
             <!-- <t-tag size="small" theme="primary" variant="outline"> -->
             <t-tooltip :content="row.SkillType2">
-              <span class="text-xs">
+              <span>
                 {{ SkillTypeMap[row.SkillType2] ? SkillTypeMap[row.SkillType2].label : "" }}
               </span>
             </t-tooltip>
@@ -79,7 +80,7 @@
           </template>
           <template #SkillOption2="{ row }">
             <t-tooltip :content="row.SkillOption2">
-              <span class="text-xs">
+              <span>
                 {{ SkillOptionMap[row.SkillOption2] ? SkillOptionMap[row.SkillOption2].label : "" }}
               </span>
             </t-tooltip>
@@ -111,9 +112,13 @@ const loading = ref(false)
 const maxHeight = ref(550)
 const defaultColumns = ["index", "Skill Name", "SkillType1", "SkillOption1", "SkillValue1"]
 
-const tableColumnsBase: { colKey: string; title: string; width?: string; filter?: {} }[] = [
-  { colKey: "index", title: "序号", width: "50" },
-]
+const tableColumnsBase: {
+  colKey: string
+  title: string
+  width?: string
+  filter?: {}
+  fixed?: string
+}[] = [{ colKey: "index", title: "序号", width: "50" }]
 
 const filterObj = {
   Job: JobFilter,
@@ -234,5 +239,4 @@ onMounted(() => {
   max-height 300px
   overflow-y scroll
 }
-
 </style>

@@ -200,19 +200,14 @@ export const SkillPoint2Map = {
  */
 export const groupColumns = [
   {
+    label: "默认",
+    value: "default",
+    columns: ["index", "Skill Name"],
+  },
+  {
     label: "基础属性",
     value: "base",
-    columns: [
-      "index",
-      "SkillId",
-      "Job",
-      "Skill Name",
-      "SkillPoint",
-      "SkillPoint2",
-      "LimitLevel",
-      "UseKind",
-      "UsePoint",
-    ],
+    columns: ["SkillId", "Job", "SkillPoint", "SkillPoint2", "LimitLevel", "UseKind", "UsePoint"],
   },
   {
     label: "技能类型",

@@ -16,6 +16,7 @@ declare module 'vue' {
     DataSearch: typeof import('./../renderer/src/views/NsNpcManager/body/DataSearch.vue')['default']
     DataSearchManager: typeof import('./../renderer/src/components/dataSearchManager.vue')['default']
     DfsuInfo: typeof import('./../renderer/src/views/GisApi/_components/dfsuInfo.vue')['default']
+    DialogSkillEditor: typeof import('./../renderer/src/views/NsSkillManager/components/dialogSkillEditor.vue')['default']
     DragResize: typeof import('./../renderer/src/views/ImageCuter/body/dragResize.vue')['default']
     DragResize_old: typeof import('./../renderer/src/views/ImageCuter/body/dragResize_old.vue')['default']
     Footer: typeof import('./../renderer/src/views/ImageCuter/footer/index.vue')['default']
