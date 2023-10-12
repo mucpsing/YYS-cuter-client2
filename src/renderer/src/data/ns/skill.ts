@@ -31,6 +31,7 @@ export function printDataMap(data) {
   }
 
   console.log("res: ", Object.keys(res).length)
+  console.log("res: ", res)
 
   return res
 }
@@ -195,6 +196,13 @@ export const SkillPoint2Map = {
   "10": { value: "10", label: "未知", theme: "success", icon: "" },
 }
 
+export const UseKindMap = {
+  "0": { value: "0", label: "无消耗", theme: "", icon: "" },
+  "1": { value: "1", label: "耐力值", theme: "", icon: "" },
+  "2": { value: "2", label: "魔法值", theme: "", icon: "" },
+  "3": { value: "3", label: "蒸汽", theme: "", icon: "" },
+}
+
 /**
  * @description: 一个符合table自带列配置分类的数据格式
  */
@@ -210,16 +218,15 @@ export const groupColumns = [
     columns: ["SkillId", "Job", "SkillPoint", "SkillPoint2", "LimitLevel", "UseKind", "UsePoint"],
   },
   {
-    label: "技能类型",
-    value: "secondary",
-    columns: [
-      "SkillType1",
-      "SkillOption1",
-      "SkillValue1",
-      "SkillType2",
-      "SkillOption2",
-      "SkillValue2",
-    ],
+    label: "技能1",
+    value: "skill1",
+    columns: ["SkillType1", "SkillOption1", "SkillValue1"],
+  },
+
+  {
+    label: "技能2",
+    value: "skill2",
+    columns: ["SkillType2", "SkillOption2", "SkillValue2"],
   },
   {
     label: "其他",
