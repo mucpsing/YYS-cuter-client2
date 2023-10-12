@@ -38,7 +38,7 @@
           :loading="loading"
           :maxHeight="maxHeight"
           :filter-value="filterValue"
-          :onCellClick="(item) => console.log(item)"
+          :onCellClick="(item) => editData(item)"
           :columns="(tableColumns as TableRowData[])"
           @filter-change="onFilterChange"
         >
@@ -88,6 +88,7 @@
         </t-table>
       </div>
     </t-card>
+    <dialogSkillEditor :data="showDialogData" :show="showDialogEdit"></dialogSkillEditor>
   </section>
 </template>
 
@@ -99,6 +100,7 @@
 import type { TableRowData } from "tdesign-vue-next"
 
 import tableTitleComponent from "@renderer/components/ns/tableTitleComponent.vue"
+import dialogSkillEditor from "../components/dialogSkillEditor.vue"
 import { useNsSkillStore } from "@nsStore/index"
 import { SkillTemplate, groupColumns } from "@data/ns/skill"
 import { JobMap, SkillOptionMap, SkillTypeMap } from "@data/ns/skill"
@@ -107,6 +109,8 @@ import ColConfig from "@components/global/t-table-col-controler.vue"
 
 const store = useNsSkillStore()
 const data = ref([...store.data])
+const showDialogEdit = ref(false)
+const showDialogData = reactive({})
 
 const loading = ref(false)
 const maxHeight = ref(550)
@@ -149,6 +153,12 @@ const tableColumns = ref(
     throw new Error(`Column "${colName}" not found in tableColumnsBase.`)
   }),
 )
+
+async function editData(data) {
+  showDialogEdit.value = true
+  console.log(data)
+  // Object.assign(showDialogData, data)
+}
 
 // const columns = computed(() => {
 //   tableColumns.value.forEach(item=>{
