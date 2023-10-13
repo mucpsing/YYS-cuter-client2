@@ -19,9 +19,10 @@
             @delCol="delColItem"
           ></ColConfig>
           <t-input-number size="medium" :step="50" v-model="maxHeight" />
-          <t-button :loading="loading" :on-click="dataInit" size="medium" theme="success"
-            >刷新</t-button
-          >
+          <t-button :loading="loading" :on-click="dataInit" size="medium" theme="success">
+            刷新
+          </t-button>
+          <t-button :on-click="() => (showDialogEdit = true)"> test </t-button>
         </div>
       </div>
 
@@ -88,7 +89,7 @@
         </t-table>
       </div>
     </t-card>
-    <dialogSkillEditor :data="showDialogData" :show="showDialogEdit"></dialogSkillEditor>
+    <dialogSkillEditor :data="showDialogData" v-model:show="showDialogEdit"></dialogSkillEditor>
   </section>
 </template>
 
@@ -110,7 +111,7 @@ import ColConfig from "@components/global/t-table-col-controler.vue"
 const store = useNsSkillStore()
 const data = ref([...store.data])
 const showDialogEdit = ref(false)
-const showDialogData = reactive({})
+const showDialogData = reactive(SkillTemplate)
 
 const loading = ref(false)
 const maxHeight = ref(550)

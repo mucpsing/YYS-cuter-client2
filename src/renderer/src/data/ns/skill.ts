@@ -271,7 +271,7 @@ export const SkillTemplate = {
   "DurationTime(Sec)": "用作敌方的持续时间",
   Comment: "技能描述",
 }
-
-export type SkillItemType = keyof typeof SkillTemplate
+export type SkillItemType = typeof SkillTemplate
+export type SkillItemKeysType = keyof typeof SkillTemplate
 
 export const columns = ref([{}])
