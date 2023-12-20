@@ -35,144 +35,46 @@
     <div :class="['flex-grow-[1] overflow-auto ']">
       <div class="h-[0]">
         <t-card>
-          <!-- --------------- 【 输出名称 】 --------------- -->
-          <!-- <div class="flex items-center justify-between mt-2">
-        <div class="flex flex-col items-start justify-between">
-          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>输出名称</strong></h2>
-          <p class="max-w-[90%]">
-            指定图片的输出名称，默认情况下会尝试识别shp文件名称，根据最后一段_{xxx}的xxx来命名
-          </p>
-        </div>
-        <div class="flex gap-1">
-          <t-input
-            v-model="formDataList[currtFormDataId].outputName"
-            size="small"
-            class=""
-            placeholder="文件名（不带后缀）"
-            align="center"
-          ></t-input>
-        </div>
-      </div>
-
-      <t-divider class="my-2"></t-divider> -->
-
-          <!-- --------------- 【 工况选择 】 --------------- -->
-          <!-- <div class="flex items-center justify-between mt-2">
-        <div class="flex flex-col items-start justify-between">
-          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>工况选择</strong></h2>
-          <p>
-            常见的工况有：
-            <t-tag
-              class="mx-1 hover:cursor-pointer"
-              v-for="(item, idx) of [
-                { content: `10年一遇`, value: `10年一遇` },
-                { content: `20年一遇`, value: `20年一遇` },
-                { content: `50年一遇`, value: `50年一遇` },
-                { content: `100年一遇`, value: `100年一遇` },
-                { content: `200年一遇`, value: `200年一遇` },
-              ]"
-              :key="idx"
-              size="small"
-              theme="success"
-              variant="light-outline"
-              v-model="formDataList[currtFormDataId].project"
-              @click="outputPojectType = item.value"
-              >{{ item.value }}</t-tag
-            >
-          </p>
-        </div>
-        <div class="flex gap-1">
-          <t-dropdown
-            :options="[
-              { content: `10年一遇`, value: `10年一遇` },
-              { content: `20年一遇`, value: `20年一遇` },
-              { content: `50年一遇`, value: `50年一遇` },
-              { content: `100年一遇`, value: `100年一遇` },
-              { content: `200年一遇`, value: `200年一遇` },
-            ]"
-            @click="(item) => (outputPojectType = (item.value as string))"
-          >
-            <t-button variant="outline" theme="primary" size="small">{{
-              outputPojectType
-            }}</t-button>
-          </t-dropdown>
-        </div>
-      </div>
-
-      <t-divider class="my-2"></t-divider> -->
-
-          <!-- --------------- 【 洪水类型 】 --------------- -->
-          <!-- <div class="flex items-center justify-between mt-2">
-        <div class="flex flex-col items-start justify-between">
-          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>洪水类型</strong></h2>
-          <p>
-            常见的<strong>洪水</strong>类型有：
-            <t-tag
-              class="mx-1 hover:cursor-pointer"
-              v-for="(item, idx) of [
-                { content: `以洪为主`, value: `以洪为主` },
-                { content: `以潮为主`, value: `以潮为主` },
-              ]"
-              :key="idx"
-              size="small"
-              :theme="idx % 2 == 1 ? 'danger' : 'primary'"
-              variant="light-outline"
-              @click="outputFloodMode = item.value"
-              >{{ item.value }}</t-tag
-            >
-          </p>
-        </div>
-        <div class="flex gap-1">
-          <t-dropdown
-            :options="[
-              { content: `以洪为主`, value: `以洪为主` },
-              { content: `以潮为主`, value: `以潮为主` },
-            ]"
-            @click="(item) => (outputFloodMode = (item.value as string))"
-          >
-            <t-button variant="outline" theme="primary" size="small">{{
-              outputFloodMode
-            }}</t-button>
-          </t-dropdown>
-        </div>
-      </div> -->
           <t-loading :loading="projectLoading" class="flex items-center justify-between mt-2">
             <div class="flex flex-col items-start justify-between">
               <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
-                <strong
-                  >工程范围
-                  <t-tag theme="danger" size="small" variant="light-outline"
-                    >仅支持<strong>面shp文件</strong></t-tag
-                  ></strong
-                >
+                <strong>工程范围 </strong>
+
+                <t-radio-group class="ml-2" v-model="projectRangeType">
+                  <t-radio value="shp">shp文件</t-radio>
+                  <t-radio value="point">指定点</t-radio>
+                </t-radio-group>
               </h2>
-              <p>
+              <p v-if="projectRangeType == 'shp'">
                 <span
-                  ><strong>上传文件：</strong
-                  >{{ formDataList[currtFormDataId].projectRange.name + ".shp" }}</span
+                  >上传文件<strong class="text-xs">(面SHP文件)</strong>：{{
+                    formDataList[currtFormDataId].projectRange.name
+                      ? formDataList[currtFormDataId].projectRange.name + ".shp"
+                      : "未选择"
+                  }}</span
                 >
               </p>
-
-              <p>
+              <p v-if="projectRangeType == 'shp'">
                 <strong
                   >已选文件{{
                     `(${formDataList[currtFormDataId].projectRange.fileCount})`
                   }}：</strong
                 >
               </p>
-              <p class="flex flex-wrap gap-2">
+              <p v-if="projectRangeType == 'shp'" class="flex flex-wrap gap-2">
                 <t-tag
                   variant="light-outline"
                   theme="success"
-                  v-for="(ext, idx) of formDataList[currtFormDataId].projectRange.shpList"
+                  v-for="(item, idx) of formDataList[currtFormDataId].projectRange.fileList"
                   :key="idx"
                 >
-                  {{ ext }}
+                  {{ item.name }}
                 </t-tag>
               </p>
             </div>
             <div class="flex gap-1">
               <t-button
+                v-if="projectRangeType == 'shp'"
                 :onClick="() => onUploadBtnClick('project')"
                 theme="success"
                 variant="outline"
@@ -184,6 +86,11 @@
 
                 {{ formDataList[currtFormDataId].projectRange.name || "选择.shp文件" }}</t-button
               >
+              <div v-if="projectRangeType == 'point'">
+                <t-input-number theme="normal" placeholder="输入X坐标"></t-input-number>
+                ，
+                <t-input-number theme="normal" placeholder="输入Y坐标"></t-input-number>
+              </div>
             </div>
           </t-loading>
           <t-divider class="my-2"></t-divider>
@@ -252,24 +159,6 @@
               <t-input placeholder="200" size="medium" class="w-[100px]" align="center"></t-input>
             </div>
           </div>
-          <!-- <t-divider class="my-2"></t-divider> -->
-
-          <!-- --------------- 【 等值线序列 】 --------------- -->
-          <!-- <div class="flex items-center justify-between mt-2">
-        <div class="flex flex-col w-full gap-1">
-          <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>等值线序列</strong></h2>
-          <p class="max-w-[90%]">自定义等值线步进，使用分号 ";" 分割每个步进</p>
-          <t-input
-            size="small"
-            v-model="counterSetp"
-            :placeholder="defaultCounterSetp"
-            class="w-[100%] text-sm"
-            type="text"
-            align="center"
-          ></t-input>
-        </div>
-      </div>
-      <t-divider class="my-2"></t-divider> -->
         </t-card>
       </div>
     </div>
@@ -285,11 +174,8 @@ import path from "path-browserify"
 
 import { formDataList, currtFormDataId } from "../store/state"
 
-const projectShpList = computed(
-  () => formDataList.value[currtFormDataId.value].projectRange.shpList,
-)
+const projectRangeType = ref("point")
 const projectLoading = ref(false)
-
 const inputElement = document.createElement("input")
 inputElement.type = "file"
 inputElement.multiple = true
@@ -316,6 +202,10 @@ async function switchf() {
   r.value = r.value >= 1800 ? 0 : r.value + 180 // 点击旋转按钮效果
 }
 
+/**
+ * @description: 实时修改accept来控制文件上传
+ * @param {*} fileType be和AF用来标识dfsu，其他文件认作shp
+ */
 async function onUploadBtnClick(fileType: "be" | "af" | "project") {
   const uploadFileType = {
     dfsu: ".dfsu",
@@ -377,13 +267,15 @@ async function updateDfsuInfo(files: FileList, infoList: any[]) {
 async function updateProjectRangeInfo(files: FileList) {
   let basename = "" // 用来确保只会获取一个shp，其他不同名字的shp不会进行读取
 
-  const uploadBodyList: { file: File; ext: string }[] = []
+  // const uploadBodyList: { file: File; ext: string }[] = []
   const projectRangeInfo = formDataList.value[currtFormDataId.value].projectRange
-  const shpList = formDataList.value[currtFormDataId.value].projectRange.shpList
+  // const shpList = formDataList.value[currtFormDataId.value].projectRange.shpList
 
   projectLoading.value = true
-  shpList.length = 0
+  // shpList.length = 0
   projectRangeInfo.fileList.length = 0
+
+  console.log("当前文件数： ", files.length)
 
   for (let file of files) {
     // 获取后缀
@@ -403,16 +295,14 @@ async function updateProjectRangeInfo(files: FileList) {
     if (ext == ".shp") {
       projectRangeInfo.md5 = await getMd5(file)
       projectRangeInfo.name = path.basename(file.name, ext)
-      projectRangeInfo.fileList.push(file)
     }
 
-    uploadBodyList.push({ file, ext })
-    shpList.push(file.name)
+    projectRangeInfo.fileList.push({ file, ext, name: file.name })
+    // uploadBodyList.push({ file, ext })
+    // shpList.push(file.name)
   }
 
-  
-
-  projectRangeInfo.fileCount = shpList.length
+  projectRangeInfo.fileCount = projectRangeInfo.fileList.length
 
   // const md5 = projectRangeInfo.md5
   // console.log(uploadBodyList.map((item) => ({ filename: `${md5}${item.ext}`, file: item.file })))

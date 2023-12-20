@@ -3,15 +3,15 @@
     <div class="flex justify-between">
       <t-input-adornment prepend="输出名称：">
         <t-select-input
-          :value="data[currtFormDataId].label"
+          :value="formDataList[currtFormDataId].title"
           :popup-visible="popupVisible"
           :popup-props="{ overlayInnerStyle: { padding: '0px' } }"
           placeholder="点击列出常用命名推荐"
           allow-input
           clearable
           style="min-width: 200px"
-          @input-change="onInputChange"
-          @popup-visible-change="onPopupVisibleChange"
+          @input-change="onTitleChange"
+          @popup-visible-change="(val) => (popupVisible = val)"
         >
           <template #panel>
             <ul class="">
@@ -19,17 +19,7 @@
                 class="p-1 cursor-pointer hover:bg-gray-200"
                 v-for="item in options"
                 :key="item"
-                @click="
-                  () => {
-                    if (data[currtFormDataId].label == '') {
-                      data[currtFormDataId].label = item
-                    } else {
-                      const tabName = `${data[currtFormDataId].label}_${item}`
-                      data[currtFormDataId].label = tabName
-                    }
-                    popupVisible = false
-                  }
-                "
+                @click="() => onTitleWithPopupChange(item)"
               >
                 {{ item }}
               </li>
@@ -38,145 +28,117 @@
         </t-select-input>
       </t-input-adornment>
 
-      <t-input-adornment append="模板选择">
-        <t-dropdown
-          :options="dropdownOptions"
-          :max-column-width="250"
-          :max-height="200"
-          @click="clickHandler"
-        >
-          <t-button class="w-[200px]" size="medium"
-            >{{ selected_template }}
-            <template #icon>
-              <c-icon-font
-                iconName="icon-yys-open"
-                :rotate="180"
-                color="white"
-                :class="['text-white mr-2']"
-              ></c-icon-font
-            ></template>
-          </t-button>
-        </t-dropdown>
-      </t-input-adornment>
+      <t-button class="w-[120px]" size="medium"
+        >{{
+          formDataList[currtFormDataId].mxdName
+            ? formDataList[currtFormDataId].mxdName
+            : "当前未选择"
+        }}
+        <template #icon>
+          <c-icon-font
+            iconName="icon-yys-open"
+            :rotate="180"
+            color="white"
+            :class="['text-white mr-2']"
+          ></c-icon-font
+        ></template>
+      </t-button>
     </div>
 
-    <t-card class="flex justify-center">
-      <div :class="['flex-[3]', 'flex justify-center items-start', 'w-full']">
-        <img src="points_template.png" class="object-cover h-full max-h-[450px]" alt="" />
-      </div>
+    <!-- 父级元素可被撑开 -->
+    <section :class="['parent', 'h-full', 'flex flex-col']">
+      <div class="w-full h-0 flex-grow-[2]">
+        <!-- 设置了height 0 的元素内部元素要设置可以滚动 -->
+        <div class="h-full overflow-auto">
+          <!-- 这里的子元素是动态获取，最终导致父级元素被撑开，无法完全使用合适的动态高度 -->
+          <!-- 多包一层div是因为button使用flex后内容的布局特性不能跟div一样，所以这里套多一层 -->
+          <div
+            :class="['p-1 my-2']"
+            v-for="(item, idx) of templateInfo"
+            :key="idx"
+            @click="() => clickHandler(item)"
+          >
+            <!-- 这里使用button是为了可以对已选择模板固定一个样式 -->
+            <!-- 样式通过 focus: 来实现已选状态记录 -->
+            <button
+              :class="[
+                'w-full px-2',
+                'h-[150px]  bg-white  rounded-md',
+                'flex items-center gap-4',
+                'outline outline-offset-2 outline-1 outline-blue-100',
+                'focus:outline-red-400 focus:outline-2',
+                'hover:outline-blue-500 hover:outline-2',
+                'hover:cursor-pointer',
+              ]"
+            >
+              <img
+                :src="item.preview"
+                :class="['object-cover max-h-[100px]']"
+                alt="请选择一个要导出的类型"
+              />
 
-      <div class="flex w-full gap-2">
-        <div class="w-full">
-          <h2><strong>当前模板</strong></h2>
-          <div class="flex justify-start gap-2">
-            <p :class="['bg-red-300', 'p-2']">
-              模板说明模板说明模板说明模板说明模板说明模板说明模板说明模板说明模明模板说明模板说明模板说
-            </p>
-
-            <div class="flex flex-col items-center justify-center gap-2">
-              <div class="flex w-full gap-1">
-                <t-dropdown
-                  :options="dropdownOptions"
-                  :max-column-width="200"
-                  :max-height="200"
-                  @click="clickHandler"
-                >
-                  <t-button class="w-full" size="small"
-                    >{{ selected_template }}
-                    <template #icon>
-                      <c-icon-font
-                        iconName="icon-yys-open"
-                        :rotate="180"
-                        color="white"
-                        :class="['text-white mr-2']"
-                      ></c-icon-font
-                    ></template>
-                  </t-button>
-                </t-dropdown>
-                <t-tooltip content="下载模板" placement="top">
-                  <t-button size="small">
-                    <template #icon>
-                      <c-icon-font
-                        iconName="icon-yys-xiazai"
-                        color="white"
-                        :class="['text-white']"
-                      ></c-icon-font>
-                    </template> </t-button
-                ></t-tooltip>
+              <div :class="['flex flex-col justify-start items-start']">
+                <span>
+                  <strong>{{ `${item.template_id} - ${item.template_name}` }}</strong>
+                </span>
+                <p class="text-left">{{ item.description }}</p>
               </div>
-              <div class="flex w-full gap-1">
-                <t-button theme="success" class="w-full" size="small"
-                  >本地mxd模板
-                  <template #icon>
-                    <c-icon-font
-                      iconName="icon-yys-shangchuan1"
-                      :class="['text-white mr-2']"
-                    ></c-icon-font>
-                  </template>
-                </t-button>
-                <t-tooltip content="模板规范" placement="top">
-                  <t-button theme="warning" size="small">
-                    <template #icon>
-                      <HelpCircleIcon />
-                    </template> </t-button
-                ></t-tooltip>
-              </div>
-            </div>
+            </button>
           </div>
         </div>
       </div>
-    </t-card>
+    </section>
   </section>
 </template>
 
 <script setup lang="ts">
-import { HelpCircleIcon } from "tdesign-icons-vue-next"
-import { templateInfo } from "../store/data"
-import { formDataList, currtFormDataId } from "../store/state"
-import { data } from "../store/data"
+import { templateInfo, keyWord, data } from "../store/data"
+import { currtFormDataId, currtTemplateId, formDataList } from "../store/state"
 
-const selected_template = ref("未选择模板")
-const dropdownOptions = computed(() => {
-  const res = [{ content: `模板选择 (${templateInfo.value.length})`, value: 3, divider: true }]
+onMounted(() => {
+  console.log("创建1")
 
-  templateInfo.value.forEach((item) => {
-    res.push({
-      content: `${item.template_id}、 ${item.mxd_name}`,
-      value: item.template_id,
-      divider: false,
-      ...item,
-    })
-  })
-  return res
+  // 请求数据
 })
 
+const options = ref(keyWord) // 提示词列表
+const popupVisible = ref(false) // 是否显示提示列表的状态
+
+/**
+ * @description: 选择模板的处理函数
+ */
 const clickHandler = (item) => {
   if (item.template_id) {
-    selected_template.value = `${item.template_id} - ${item.template_name} `
-  } else {
-    selected_template.value = "未选择模板"
+    currtTemplateId.value = item.template_id
+    formDataList.value[currtFormDataId.value].mxdId = item.template_id
+    formDataList.value[
+      currtFormDataId.value
+    ].mxdName = `${item.template_id} - ${item.template_name} `
   }
 }
 
-const baseOptions = [
-  "洪水",
-  "10年一遇",
-  "20年一遇",
-  "50年一遇",
-  "100年一遇",
-  "200年一遇",
-  "以洪为主",
-  "以潮为主",
-]
-const options = ref(baseOptions)
-
-async function onInputChange(keyword) {
-  data.value[currtFormDataId.value].label = keyword
+/**
+ * @description: 输入新标题时，同步tab标题显示的函数
+ */
+async function onTitleChange(newTitle: string) {
+  formDataList.value[currtFormDataId.value].title = newTitle
+  data.value[currtFormDataId.value].label = newTitle
 }
 
-const popupVisible = ref(false)
-async function onPopupVisibleChange(val) {
-  popupVisible.value = val
+/**
+ * @description: 选择了常用后缀的触发函数
+ */
+async function onTitleWithPopupChange(new_popup: string) {
+  let newTitle: string
+  if (formDataList.value[currtFormDataId.value].title == "") {
+    newTitle = new_popup
+  } else {
+    newTitle = `${formDataList.value[currtFormDataId.value].title}_${new_popup}`
+  }
+
+  formDataList.value[currtFormDataId.value].title = newTitle
+  data.value[currtFormDataId.value].label = newTitle
+  popupVisible.value = false
 }
 </script>
 

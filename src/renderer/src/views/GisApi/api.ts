@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2023-09-27 16:18:09
+ * @LastEditTime: 2023-12-13 09:56:08
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -51,17 +51,24 @@ export async function getTemplateList() {
   }
 }
 
-export async function uploadFile(filename: string, file: File) {
+export async function uploadFile(filen_name_md5: string, file: File) {
   const formData = new FormData()
-  formData.append("filename", filename)
+  formData.append("filen_name_md5", filen_name_md5)
   formData.append("file", file)
+
+  console.log("file: ", filen_name_md5)
 
   try {
     const res = await server.post(API.upload, formData, {
       headers: { "content-type": "multipart/form-data" },
     })
 
-    if (res.status == 200 && res.data.success) return res.data.res
+    console.log(res)
+
+    if (res.status == 200 && res.data.success) {
+      // return res.data.res
+      return true
+    }
   } catch (err) {
     console.log(err)
     return false
@@ -78,6 +85,7 @@ export async function mxdToImg(data: FormDataItemT) {
   }
 
   console.log(body)
+  console.log(data)
 
   // try {
   //   const res = await server.post(API.mxdToImg, data)

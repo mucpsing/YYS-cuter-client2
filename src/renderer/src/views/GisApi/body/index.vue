@@ -35,10 +35,13 @@ import { data } from "../store/data"
 import { formDataList, createFormData } from "../store/state"
 import { currtFormDataId as currtTab } from "../store/state"
 
+// const data = computed(() => {
+//   return formDataList.value.map((item) => ({ id: item.id, label: item.title }))
+// })
+
 const bodyElementRef = ref<HTMLDivElement>()
 
 const dataChange = ({ id, value }) => {
-  console.log("dataChange11111111111111111111111111111111111")
   data.value.forEach((item) => {
     if (item.id == id) {
       item.label = value
@@ -46,19 +49,29 @@ const dataChange = ({ id, value }) => {
   })
 }
 
+/**
+ * @description: 创建一个新的Tab，新的工况
+ * @param {*} _context 事件实例
+ * @param {*} extendId 继承，是否继承上一个tab的数据
+ */
 const addTab = (_context?: { e: MouseEvent }, extendId: number = -1) => {
   console.log("addTab...", extendId)
 
   const newTabId = parseInt(data.value.length.toString())
   const newData = createFormData(newTabId)
 
-  if (extendId >= 0) Object.assign(newData, formDataList.value[extendId])
+  if (extendId >= 0) {
+    Object.assign(newData, formDataList.value[extendId])
+
+    currtTab.value = currtTab.value + 1
+  }
 
   formDataList.value.push(newData)
 
+  // tab的标题
   data.value.push({
     id: newTabId,
-    label: `未命名${newTabId}`,
+    label: newData.title ? newData.title : `未命名${newTabId}`,
   })
 
   currtTab.value = newTabId
@@ -88,8 +101,8 @@ const removeTab = ({ index }) => {
   }
 }
 
-const changeTab = (newTabs: number) => {
-  currtTab.value = newTabs
+const changeTab = (newTabs: number | string) => {
+  currtTab.value = newTabs as number
   console.log(formDataList.value)
 }
 
