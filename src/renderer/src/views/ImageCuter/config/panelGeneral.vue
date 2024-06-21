@@ -26,19 +26,19 @@
     </t-form-item>
 
     <t-form-item label="常用操作" name="">
-      <t-space>
+      <div>
         <t-button theme="primary">
           <template #icon>
             <c-icon-font iconName="baocun" class="mr-2 text-xl" />
           </template>
           导出
         </t-button>
-      </t-space>
+      </div>
 
-      <t-space>
+      <div>
         <div class="ml-4">自动聚焦:</div>
         <t-switch v-model="localStore.autoFcous"></t-switch>
-      </t-space>
+      </div>
     </t-form-item>
 
     <t-form-item label="调式模式" name="">

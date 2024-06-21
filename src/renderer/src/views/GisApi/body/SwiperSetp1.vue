@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-06-21 17:39:30
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-06-21 22:13:46
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -40,40 +40,38 @@
       </template>
     </t-card>
 
-    <t-card title="2. 选择模板：" :bordered="false" hover-shadow :style="{ height: '100%' }">
-      <t-row> 搜索框 </t-row>
-      <t-row>
-        <t-col :flex="3">
-          <t-image
-            :key="templateInfo[0].template_name"
-            :src="templateInfo[0].preview"
-            :style="{  height: '100%' }"
-            :lazy="true"
-          />
-        </t-col>
+    <t-card title="2. 选择模板：" :bordered="false" hover-shadow :style="{ width: '100%' }">
+      <!-- 搜索框 -->
+      <!-- <t-space :class="['flex flex-col gap-4']"> -->
+      <t-space :size="10" direction="vertical">
+        <t-auto-complete
+          v-model="test1"
+          :options="template_name_list"
+          placeholder="请输入关键词搜索常用模板"
+          highlight-keyword
+          filterable
+          class="t-demo-autocomplete__search"
+        >
+          <template #suffixIcon><SearchIcon /></template>
+        </t-auto-complete>
 
-        <t-col :flex="3">
-          <t-card theme="poster2" :style="{ height: '150px' }">
-            <template #footer>
-              <t-comment
-                :avatar="templateInfo[0].preview"
-                :author="templateInfo[0].template_name"
-                :content="templateInfo[0].description"
-                @click="() => console.log(123)"
-              />
-            </template>
-            <template #actions>
-              <t-dropdown :options="options" :min-column-width="112" @click="clickHandler">
-                <t-button variant="text" shape="square">
-                  <more-icon />
-                </t-button>
-              </t-dropdown>
-            </template>
-          </t-card>
-        </t-col>
-      </t-row>
+        <t-card theme="poster2">
+          <div :class="['flex gap-4']">
+            <t-image
+              :key="templateInfo[0].template_name"
+              :src="templateInfo[0].preview"
+              :style="{ height: '120px', width: '200px' }"
+              :lazy="true"
+            />
+            <t-comment
+              :author="templateInfo[0].template_name"
+              :content="templateInfo[0].description"
+              @click="() => console.log(123)"
+            />
+          </div>
+        </t-card>
+      </t-space>
     </t-card>
-
     <!-- 父级元素可被撑开 -->
     <!-- <test ></test> -->
   </section>
@@ -82,8 +80,8 @@
 <script setup lang="ts">
 import { templateInfo, keyWord, data } from "../store/data"
 import { currtFormDataId, currtTemplateId, formDataList } from "../store/state"
+import { SearchIcon } from "tdesign-icons-vue-next"
 
-import test from "../_components/test.vue"
 onMounted(() => {
   console.log("创建1")
 
@@ -92,6 +90,10 @@ onMounted(() => {
 
 const options = ref(keyWord) // 提示词列表
 const popupVisible = ref(false) // 是否显示提示列表的状态
+const test1 = ref("test")
+const template_name_list = computed(() =>
+  templateInfo.value.map((item, idx) => `${idx}.${item.template_name}`),
+)
 
 /**
  * @description: 选择模板的处理函数
