@@ -40,7 +40,7 @@ export function createFormData(newTabId: number) {
       path: "",
       name: "",
       reading: false,
-      file: {} as File,
+      file: {} as File, // 文件实例，已缓存在浏览器
     },
     projectRange: {
       // 项目范围 shp文件信息

@@ -1,7 +1,15 @@
+<!--
+ * @Author: cpasion-office-win10 373704015@qq.com
+ * @Date: 2023-09-26 14:23:33
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-06-21 17:39:30
+ * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
   <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'bg-sky-100 rounded-md p-2']">
-    <div class="flex justify-between">
-      <t-input-adornment prepend="输出名称：">
+    <t-card title="1. 指定输出名称：" :bordered="false" hover-shadow>
+      <t-input-adornment prepend="名称：">
         <t-select-input
           :value="formDataList[currtFormDataId].title"
           :popup-visible="popupVisible"
@@ -27,67 +35,47 @@
           </template>
         </t-select-input>
       </t-input-adornment>
+      <template #actions>
+        <a href="javascript:void(0)" @click="clickHandler">快速配置</a>
+      </template>
+    </t-card>
 
-      <t-button class="w-[120px]" size="medium"
-        >{{
-          formDataList[currtFormDataId].mxdName
-            ? formDataList[currtFormDataId].mxdName
-            : "当前未选择"
-        }}
-        <template #icon>
-          <c-icon-font
-            iconName="icon-yys-open"
-            :rotate="180"
-            color="white"
-            :class="['text-white mr-2']"
-          ></c-icon-font
-        ></template>
-      </t-button>
-    </div>
+    <t-card title="2. 选择模板：" :bordered="false" hover-shadow :style="{ height: '100%' }">
+      <t-row> 搜索框 </t-row>
+      <t-row>
+        <t-col :flex="3">
+          <t-image
+            :key="templateInfo[0].template_name"
+            :src="templateInfo[0].preview"
+            :style="{  height: '100%' }"
+            :lazy="true"
+          />
+        </t-col>
+
+        <t-col :flex="3">
+          <t-card theme="poster2" :style="{ height: '150px' }">
+            <template #footer>
+              <t-comment
+                :avatar="templateInfo[0].preview"
+                :author="templateInfo[0].template_name"
+                :content="templateInfo[0].description"
+                @click="() => console.log(123)"
+              />
+            </template>
+            <template #actions>
+              <t-dropdown :options="options" :min-column-width="112" @click="clickHandler">
+                <t-button variant="text" shape="square">
+                  <more-icon />
+                </t-button>
+              </t-dropdown>
+            </template>
+          </t-card>
+        </t-col>
+      </t-row>
+    </t-card>
 
     <!-- 父级元素可被撑开 -->
-    <section :class="['parent', 'h-full', 'flex flex-col']">
-      <div class="w-full h-0 flex-grow-[2]">
-        <!-- 设置了height 0 的元素内部元素要设置可以滚动 -->
-        <div class="h-full overflow-auto">
-          <!-- 这里的子元素是动态获取，最终导致父级元素被撑开，无法完全使用合适的动态高度 -->
-          <!-- 多包一层div是因为button使用flex后内容的布局特性不能跟div一样，所以这里套多一层 -->
-          <div
-            :class="['p-1 my-2']"
-            v-for="(item, idx) of templateInfo"
-            :key="idx"
-            @click="() => clickHandler(item)"
-          >
-            <!-- 这里使用button是为了可以对已选择模板固定一个样式 -->
-            <!-- 样式通过 focus: 来实现已选状态记录 -->
-            <button
-              :class="[
-                'w-full px-2',
-                'h-[150px]  bg-white  rounded-md',
-                'flex items-center gap-4',
-                'outline outline-offset-2 outline-1 outline-blue-100',
-                'focus:outline-red-400 focus:outline-2',
-                'hover:outline-blue-500 hover:outline-2',
-                'hover:cursor-pointer',
-              ]"
-            >
-              <img
-                :src="item.preview"
-                :class="['object-cover max-h-[100px]']"
-                alt="请选择一个要导出的类型"
-              />
-
-              <div :class="['flex flex-col justify-start items-start']">
-                <span>
-                  <strong>{{ `${item.template_id} - ${item.template_name}` }}</strong>
-                </span>
-                <p class="text-left">{{ item.description }}</p>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- <test ></test> -->
   </section>
 </template>
 
@@ -95,6 +83,7 @@
 import { templateInfo, keyWord, data } from "../store/data"
 import { currtFormDataId, currtTemplateId, formDataList } from "../store/state"
 
+import test from "../_components/test.vue"
 onMounted(() => {
   console.log("创建1")
 

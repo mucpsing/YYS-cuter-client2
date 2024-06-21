@@ -153,23 +153,16 @@ function nextCheck(currtSetp: number): boolean {
   switch (currtSetp) {
     case 1:
       // 【1】检查是否已设置输入名称
-      if (data.title.length == 0) {
+      if (data.title.length == 0 || data.title == "未命名工况") {
         NotifyPlugin("error", {
-          title: `当前未指定正确的输出名称`,
-          duration: 2000,
-        })
-        return false
-      }
-      if (data.title == "未命名工况") {
-        NotifyPlugin("error", {
-          title: `当前未指定正确的输出名称`,
+          title: `未指定的输出名称（必须）`,
           duration: 2000,
         })
         return false
       }
 
       // 【2】检查是否已选择mxd模板
-      if (data.mxdId < 0) {
+      else if (data.mxdId < 0) {
         NotifyPlugin("error", {
           title: `未选择mxd文件模板（输出类型：采样点、流速、流场）`,
           duration: 2000,
@@ -215,25 +208,34 @@ function swtichSetp(setp: "next" | "back") {
  */
 async function mxdToImg(data: FormDataItemT) {
   loading.value = true
+  console.log({ data })
 
-  // 上传文件
-  const resList = await Promise.all([
+  // 创建上传列表
+  const upload_list = [
     uploadFileApi(`${data.beDfsuInfo.md5}.dfsu`, data.beDfsuInfo.file), // 上传工程前 dfsu
-    uploadFileApi(`${data.afDfsuInfo.md5}.dfsu`, data.afDfsuInfo.file), // 上传工厂吧 dfsu
-    ...data.projectRange.fileList.map((eachFile) =>
-      uploadFileApi(`${data.projectRange.md5}${eachFile.ext}`, eachFile.file),
-    ),
-  ])
+    uploadFileApi(`${data.afDfsuInfo.md5}.dfsu`, data.afDfsuInfo.file), // 上传工程后 dfsu
+  ]
 
-  if (!resList.every((res) => res)) {
+  // 如果存在
+  if (data.projectRange.fileList.length > 0) {
+    data.projectRange.fileList.map((eachFile) => {
+      upload_list.push(uploadFileApi(`${data.projectRange.md5}${eachFile.ext}`, eachFile.file))
+    })
+  }
+
+  console.log("开始上传文件，数量: ", upload_list.length)
+  console.log({ upload_list })
+  const file_upload_res_list = await Promise.all(upload_list)
+
+  // 检查是否上传成功
+  if (!file_upload_res_list.every((res) => res)) {
     console.log("有文件上传失败")
-    console.log(resList)
+    console.log(file_upload_res_list)
   } else {
     console.log("所有文件上传成功")
   }
 
   // 拼接api所需要的参数格式body
-  console.log({ data })
   const body: MxdToImgFormT = {
     template_id: data.mxdId,
     dfsu_be_md5: data.beDfsuInfo.md5,
@@ -249,12 +251,12 @@ async function mxdToImg(data: FormDataItemT) {
   } else {
     body["project_md5"] = data.projectRange.md5
   }
+  console.log({ body })
 
-  const res = await mxdToImgApi(body)
+  // const res = await mxdToImgApi(body)
 
   loading.value = false
-
-  return res
+  // return res
 }
 </script>
 
