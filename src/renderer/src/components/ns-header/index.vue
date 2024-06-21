@@ -95,6 +95,7 @@ import { SettingIcon, SearchIcon } from "tdesign-icons-vue-next"
 // import { dataManager } from "@components/dataSearchManager.vue"
 import { npcListRaw } from "@nsData/npcList"
 import { itemListRaw } from "@nsData/itemList"
+import { skillListRaw } from "@nsData/skillList"
 
 const NpcDetailList = npcListRaw.map((item) => ({
   label: `${item.NpcName}__${item.NpcId}__0x${item.NpcId.toString(16)}`,
@@ -106,8 +107,18 @@ const MonsterDetailList = itemListRaw.map((item) => ({
   value: item.ItemId,
 }))
 
+const SkillDetailList = skillListRaw.map((item) => ({
+  label: `${item.name}__0x${item.id}__${parseInt(item.id, 16)}`,
+  value: item.id,
+}))
+
 const dataTableShow = ref(false)
-const currtSelectList = [...NpcDetailList, ...MonsterDetailList, { label: "快速搜索", value: 0 }]
+const currtSelectList = [
+  ...NpcDetailList,
+  ...MonsterDetailList,
+  ...SkillDetailList,
+  { label: "快速搜索", value: 0 },
+]
 const tableData = ref([])
 const currtValue = ref(0)
 const searchType = ref("全部")
