@@ -1,5 +1,5 @@
 <template>
-  <section :class="['text-xs md:text-md xl:text-xl', 'h-full bg-yellow-100']">
+  <section :class="['text-xs md:text-md xl:text-xl', 'h-full bg-gray-100']">
     <GisApiHeader></GisApiHeader>
     <GisApiBody></GisApiBody>
   </section>

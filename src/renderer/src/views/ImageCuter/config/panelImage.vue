@@ -23,12 +23,12 @@
     <t-form-item label="文件大小" name="IMG_MAX_SIZE">
       <t-row :gutter="16">
         <t-col :span="8">
-          <t-input
+          <t-input-number
             type="number"
             :value="fileMaxSize"
             :suffix="`(${config.IMG_MAX_SIZE})`"
             @change="onSizeUnitInputChange"
-          ></t-input>
+          ></t-input-number>
         </t-col>
         <t-col :span="4">
           <t-select
@@ -49,7 +49,7 @@
       >
         <template #panelTopContent>
           <div style="padding: 6px 6px 0 6px">
-            <t-input
+            <t-input-number
               v-model="searchMimeType"
               placeholder="请输入关键词搜索"
               @change="onSearchMimeType"
@@ -62,45 +62,41 @@
 </template>
 
 <script lang="ts" setup>
-import localStore from "../store";
-import config, { defaultConfig } from "../store/config";
+import localStore from "../store"
+import config, { defaultConfig } from "../store/config"
 
-import { MIME_TYPE_LIST } from "@renderer/utils/mime-type";
-import { getObjectKeysWithStart } from "@renderer/utils/tools";
+import { MIME_TYPE_LIST } from "@renderer/utils/mime-type"
+import { getObjectKeysWithStart } from "@renderer/utils/tools"
 
-const IMG_KEYS = getObjectKeysWithStart(config, "SCREEN_");
+const IMG_KEYS = getObjectKeysWithStart(config, "SCREEN_")
 
-const resetConfigData = inject("resetConfigData") as (
-  configItemKey: string[]
-) => void;
+const resetConfigData = inject("resetConfigData") as (configItemKey: string[]) => void
 
-const sizeUnit = ref(1024 * 1024);
-const fileMaxSize = ref(config.IMG_MAX_SIZE / sizeUnit.value);
+const sizeUnit = ref(1024 * 1024)
+const fileMaxSize = ref(config.IMG_MAX_SIZE / sizeUnit.value)
 
 const onSizeUnitInputChange = (input: number) => {
-  fileMaxSize.value = input;
-  config.IMG_MAX_SIZE = fileMaxSize.value * sizeUnit.value;
-};
+  fileMaxSize.value = input
+  config.IMG_MAX_SIZE = fileMaxSize.value * sizeUnit.value
+}
 
 const onSizeUnitSelectChange = (newSizeUnit: number) => {
-  fileMaxSize.value = config.IMG_MAX_SIZE / newSizeUnit;
-};
+  fileMaxSize.value = config.IMG_MAX_SIZE / newSizeUnit
+}
 
-type SelectOptions = { value: string | number; label: string }[];
-const mimeTypeOptions: SelectOptions = [];
+type SelectOptions = { value: string | number; label: string }[]
+const mimeTypeOptions: SelectOptions = []
 MIME_TYPE_LIST.forEach((item) => {
-  mimeTypeOptions.push({ label: item.ext, value: item.contentType });
-});
-const options1 = ref(mimeTypeOptions);
-const searchMimeType = ref("");
+  mimeTypeOptions.push({ label: item.ext, value: item.contentType })
+})
+const options1 = ref(mimeTypeOptions)
+const searchMimeType = ref("")
 const onSearchMimeType = () => {
-  options1.value = mimeTypeOptions.filter(
-    (item) => item.label.indexOf(searchMimeType.value) !== -1
-  );
-};
+  options1.value = mimeTypeOptions.filter((item) => item.label.indexOf(searchMimeType.value) !== -1)
+}
 
 const sizeOptions: SelectOptions = [
   { label: "MB", value: 1024 * 1024 },
   { label: "KB", value: 1024 },
-];
+]
 </script>

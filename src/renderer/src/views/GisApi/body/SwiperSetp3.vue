@@ -116,7 +116,12 @@
               <p>河道数据点的间距（后期自动根据河道自动识别）</p>
             </div>
             <div class="flex gap-1">
-              <t-input size="small" placeholder="25" class="w-[100px]" align="center"></t-input>
+              <t-input-number
+                size="small"
+                placeholder="25"
+                class="w-[100px]"
+                align="center"
+              ></t-input-number>
             </div>
           </div>
           <t-divider class="my-2"></t-divider>
@@ -130,7 +135,12 @@
               </p>
             </div>
             <div class="flex gap-1">
-              <t-input placeholder="200" size="small" class="w-[100px]" align="center"></t-input>
+              <t-input-number
+                placeholder="200"
+                size="small"
+                class="w-[100px]"
+                align="center"
+              ></t-input-number>
             </div>
           </div>
           <t-divider class="my-2"></t-divider>
@@ -140,14 +150,14 @@
             <div class="flex flex-col w-full gap-1">
               <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>等值线序列</strong></h2>
               <p class="max-w-[90%]">自定义等值线步进，使用分号 ";" 分割每个步进</p>
-              <t-input
+              <t-input-number
                 size="small"
                 v-model="counterSetp"
                 :placeholder="defaultCounterSetp"
                 class="w-[100%] text-sm"
                 type="text"
                 align="center"
-              ></t-input>
+              ></t-input-number>
             </div>
           </div>
           <t-divider class="my-2"></t-divider>

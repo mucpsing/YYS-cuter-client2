@@ -1,3 +1,11 @@
+<!--
+ * @Author: cpasion-office-win10 373704015@qq.com
+ * @Date: 2023-09-22 14:23:07
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2023-12-21 10:38:58
+ * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\dfsuInfo.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
   <t-card class="flex-grow-[1]" :title="props.title" :loading="props.fileInfo.reading">
     <div :class="['flex justify-start']">
@@ -25,19 +33,18 @@
 
 <script setup lang="ts">
 const emit = defineEmits(["onBtnClick"])
-interface PropsType {
-  name: string
-  path: string
-  size: number
-  md5: string
-  progress: number
-  reading: boolean
-  file?: File
-}
 
 const props = withDefaults(
   defineProps<{
-    fileInfo: PropsType
+    fileInfo: {
+      name: string
+      path: string
+      size: number
+      md5: string
+      progress: number
+      reading: boolean
+      file?: File
+    }
     title?: string
   }>(),
   {

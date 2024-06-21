@@ -35,17 +35,51 @@
     <div :class="['flex-grow-[1] overflow-auto ']">
       <div class="h-[0]">
         <t-card>
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
+                <strong>DFSU流向单位</strong>
+              </h2>
+              <p>
+                dfsu文件默认导出是使用弧度（rad）为单位，但也可以以角度（deg）为单位，如果没有修改，默认为弧度。
+              </p>
+            </div>
+            <div class="flex gap-1 text-md">
+              <t-dropdown
+                size="medium"
+                :options="[
+                  { content: `弧度(rad)`, value: `弧度` },
+                  { content: `角度(deg)`, value: `角度` },
+                ]"
+                @click="(item) => (formDataList[currtFormDataId].radian_or_angle = (item.value as `弧度`| `角度`))"
+              >
+                <t-button
+                  variant="outline"
+                  :theme="
+                    formDataList[currtFormDataId].radian_or_angle == '弧度' ? 'danger' : 'warning'
+                  "
+                  size="medium"
+                >
+                  {{ formDataList[currtFormDataId].radian_or_angle }}
+                </t-button>
+              </t-dropdown>
+            </div>
+          </div>
+          <t-divider class="my-2"></t-divider>
           <t-loading :loading="projectLoading" class="flex items-center justify-between mt-2">
             <div class="flex flex-col items-start justify-between">
               <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
                 <strong>工程范围 </strong>
 
-                <t-radio-group class="ml-2" v-model="projectRangeType">
-                  <t-radio value="shp">shp文件</t-radio>
-                  <t-radio value="point">指定点</t-radio>
+                <t-radio-group
+                  class="ml-2"
+                  v-model="formDataList[currtFormDataId].projectRangeType"
+                >
+                  <t-radio value="shp">shp面文件</t-radio>
+                  <t-radio value="point">指定坐标</t-radio>
                 </t-radio-group>
               </h2>
-              <p v-if="projectRangeType == 'shp'">
+              <p v-if="formDataList[currtFormDataId].projectRangeType == 'shp'">
                 <span
                   >上传文件<strong class="text-xs">(面SHP文件)</strong>：{{
                     formDataList[currtFormDataId].projectRange.name
@@ -54,14 +88,17 @@
                   }}</span
                 >
               </p>
-              <p v-if="projectRangeType == 'shp'">
+              <p v-if="formDataList[currtFormDataId].projectRangeType == 'shp'">
                 <strong
                   >已选文件{{
                     `(${formDataList[currtFormDataId].projectRange.fileCount})`
                   }}：</strong
                 >
               </p>
-              <p v-if="projectRangeType == 'shp'" class="flex flex-wrap gap-2">
+              <p
+                v-if="formDataList[currtFormDataId].projectRangeType == 'shp'"
+                class="flex flex-wrap gap-2"
+              >
                 <t-tag
                   variant="light-outline"
                   theme="success"
@@ -74,7 +111,7 @@
             </div>
             <div class="flex gap-1">
               <t-button
-                v-if="projectRangeType == 'shp'"
+                v-if="formDataList[currtFormDataId].projectRangeType == 'shp'"
                 :onClick="() => onUploadBtnClick('project')"
                 theme="success"
                 variant="outline"
@@ -86,10 +123,18 @@
 
                 {{ formDataList[currtFormDataId].projectRange.name || "选择.shp文件" }}</t-button
               >
-              <div v-if="projectRangeType == 'point'">
-                <t-input-number theme="normal" placeholder="输入X坐标"></t-input-number>
+              <div v-if="formDataList[currtFormDataId].projectRangeType == 'point'">
+                <t-input-number
+                  v-model="formDataList[currtFormDataId].projectPoints.x"
+                  theme="normal"
+                  placeholder="X坐标"
+                ></t-input-number>
                 ，
-                <t-input-number theme="normal" placeholder="输入Y坐标"></t-input-number>
+                <t-input-number
+                  v-model="formDataList[currtFormDataId].projectPoints.y"
+                  theme="normal"
+                  placeholder="Y坐标"
+                ></t-input-number>
               </div>
             </div>
           </t-loading>
@@ -127,7 +172,13 @@
                 ]"
                 @click="(item) => (formDataList[currtFormDataId].riverRange = (item.value as `工程前`| `工程后`))"
               >
-                <t-button variant="outline" theme="success" size="medium">
+                <t-button
+                  variant="outline"
+                  :theme="
+                    formDataList[currtFormDataId].riverRange == '工程前' ? 'primary' : 'danger'
+                  "
+                  size="medium"
+                >
                   {{ formDataList[currtFormDataId].riverRange }}
                 </t-button>
               </t-dropdown>
@@ -139,24 +190,36 @@
           <div class="flex items-center justify-between mt-2">
             <div class="flex flex-col items-start justify-between">
               <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>网格间距</strong></h2>
-              <p>河道数据点的间距（后期自动根据河道自动识别）</p>
+              <p>河道数据点的间距（如果工程前后网格相同，则不会采用本参数）</p>
             </div>
             <div class="flex gap-1">
-              <t-input size="medium" placeholder="25" class="w-[100px]" align="center"></t-input>
+              <t-input-number
+                theme="normal"
+                size="medium"
+                v-model="formDataList[currtFormDataId].mesh_size"
+                class="w-[100px]"
+                align="center"
+              ></t-input-number>
             </div>
           </div>
           <t-divider class="my-2"></t-divider>
 
-          <!-- --------------- 【 流速范围 】 --------------- -->
+          <!-- --------------- 【 等值线显示范围 】 --------------- -->
           <div class="flex items-center justify-between mt-2">
             <div class="flex flex-col items-start justify-between">
-              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>流速范围</strong></h2>
-              <p class="max-w-[80%]">
-                大于这个长度的流速等值线才会被标注流速关系字段（不变，增大，减少）
-              </p>
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
+                <strong>等值线显示范围</strong>
+              </h2>
+              <p>大于这个长度的流速等值线才会绘制（不变，增大，减少3中颜色线段）</p>
             </div>
             <div class="flex gap-1">
-              <t-input placeholder="200" size="medium" class="w-[100px]" align="center"></t-input>
+              <t-input-number
+                v-model="formDataList[currtFormDataId].contour_range"
+                theme="normal"
+                size="medium"
+                class="w-[100px]"
+                align="center"
+              ></t-input-number>
             </div>
           </div>
         </t-card>
@@ -167,14 +230,12 @@
 
 <script setup lang="ts">
 import DfsuInfo from "../_components/dfsuInfo.vue"
-import { uploadFile } from "../api"
 import { getMd5 } from "@renderer/utils/calculateMd5"
 import { useDropZone } from "@vueuse/core"
 import path from "path-browserify"
 
 import { formDataList, currtFormDataId } from "../store/state"
 
-const projectRangeType = ref("point")
 const projectLoading = ref(false)
 const inputElement = document.createElement("input")
 inputElement.type = "file"

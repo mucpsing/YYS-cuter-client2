@@ -22,7 +22,8 @@
     </template>
 
     <t-form-item label="服务器路径" name="SERVER_EXE_PATH">
-      <t-input v-model="config.SERVER_EXE_PATH" type="string" status="warning"> </t-input>
+      <t-input-number v-model="config.SERVER_EXE_PATH" type="string" status="warning">
+      </t-input-number>
       <div class="px-2"></div>
       <t-button variant="outline" @click="serverSelectFilePath"> 更改路径 </t-button>
     </t-form-item>
@@ -40,11 +41,11 @@
     </t-form-item>
 
     <t-form-item label="服务器IP" name="SERVER_IP">
-      <t-input v-model="config.SERVER_IP"></t-input>
+      <t-input-number v-model="config.SERVER_IP"></t-input-number>
     </t-form-item>
 
     <t-form-item label="服务器端口" name="SERVER_PROT">
-      <t-input v-model="config.SERVER_PROT" type="number"></t-input>
+      <t-input-number v-model="config.SERVER_PROT" type="number"></t-input-number>
     </t-form-item>
   </t-collapse-panel>
 </template>

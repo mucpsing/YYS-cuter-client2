@@ -10,18 +10,10 @@
 <template>
   <t-collapse-panel value="显示配置" header="显示配置" class="collapse-style">
     <template #expandIcon>
-      <c-icon-font
-        class="text-xl"
-        iconName="xianshi"
-        color="#31302d"
-      ></c-icon-font>
+      <c-icon-font class="text-xl" iconName="xianshi" color="#31302d"></c-icon-font>
     </template>
     <template #headerRightContent>
-      <t-button
-        size="small"
-        theme="danger"
-        @click="resetConfigData(SCREEN_KEYS)"
-      >
+      <t-button size="small" theme="danger" @click="resetConfigData(SCREEN_KEYS)">
         <template #icon>
           <c-icon-font class="mr-2 text-white" iconName="huifu"> </c-icon-font>
         </template>
@@ -32,20 +24,20 @@
     <t-form-item label="最大尺寸" name="SCREEN_MAX">
       <t-row :gutter="16">
         <t-col :span="6">
-          <t-input
+          <t-input-number
             v-model="config.SCREEN_MAX_HEIGHT"
             type="number"
             label="高度："
             suffix="px"
-          ></t-input>
+          ></t-input-number>
         </t-col>
         <t-col :span="6">
-          <t-input
+          <t-input-number
             v-model="config.SCREEN_MAX_WIDTH"
             type="number"
             label="宽度："
             suffix="px"
-          ></t-input>
+          ></t-input-number>
         </t-col>
       </t-row>
     </t-form-item>
@@ -53,11 +45,11 @@
     <t-form-item label="裁剪框宽度" name="CROP_BORDER_WIDTH">
       <t-row :gutter="16">
         <t-col :span="6">
-          <t-input
+          <t-input-number
             v-model="config.CROP_BORDER_WIDTH"
             type="number"
             suffix="px"
-          ></t-input>
+          ></t-input-number>
         </t-col>
       </t-row>
     </t-form-item>
@@ -72,10 +64,7 @@
 
     <!-- 自动加载粘贴板图片 -->
     <t-form-item label="监听粘贴板" name="WATCH_CHIPBOARD_IMG">
-      <t-switch
-        v-model="config.SCREEN_WATCH_CHIPBOARD"
-        :label="['图片', '图片']"
-      ></t-switch>
+      <t-switch v-model="config.SCREEN_WATCH_CHIPBOARD" :label="['图片', '图片']"></t-switch>
 
       <!-- 实时预览 -->
       <div class="mx-2"></div>
@@ -86,14 +75,12 @@
 </template>
 
 <script lang="ts" setup>
-import localStore from "../store";
-import config, { defaultConfig } from "../store/config";
+import localStore from "../store"
+import config, { defaultConfig } from "../store/config"
 
-import { getObjectKeysWithStart } from "@renderer/utils/tools";
+import { getObjectKeysWithStart } from "@renderer/utils/tools"
 
-const resetConfigData = inject("resetConfigData") as (
-  configItemKey: string[]
-) => void;
+const resetConfigData = inject("resetConfigData") as (configItemKey: string[]) => void
 
-const SCREEN_KEYS = getObjectKeysWithStart(config, "SCREEN_");
+const SCREEN_KEYS = getObjectKeysWithStart(config, "SCREEN_")
 </script>

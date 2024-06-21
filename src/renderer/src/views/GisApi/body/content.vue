@@ -37,7 +37,7 @@
         size="small"
         v-model="formDataList[currtFormDataId].setp"
         layout="horizontal"
-        readonly
+        :readonly="false"
         :options="Sopts"
       />
     </header>
@@ -114,7 +114,8 @@ import { templateSetpOptions } from "../store/state"
 import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
 import { formDataList, currtFormDataId, currtExtendId, showAddTapDialog } from "../store/state"
 
-import { uploadFile } from "../api"
+import { uploadFileApi, mxdToImgApi } from "../api"
+import type { MxdToImgFormT } from "../api"
 import type { FormDataItemT } from "../store/state"
 import { NotifyPlugin } from "tdesign-vue-next"
 
@@ -213,47 +214,47 @@ function swtichSetp(setp: "next" | "back") {
  * @return {*}
  */
 async function mxdToImg(data: FormDataItemT) {
-  console.log("mxdToImg: -->")
-
   loading.value = true
 
   // 上传文件
   const resList = await Promise.all([
-    uploadFile(`${data.beDfsuInfo.md5}.dfsu`, data.beDfsuInfo.file), // 上传工程前 dfsu
-    uploadFile(`${data.afDfsuInfo.md5}.dfsu`, data.afDfsuInfo.file), // 上传工厂吧 dfsu
+    uploadFileApi(`${data.beDfsuInfo.md5}.dfsu`, data.beDfsuInfo.file), // 上传工程前 dfsu
+    uploadFileApi(`${data.afDfsuInfo.md5}.dfsu`, data.afDfsuInfo.file), // 上传工厂吧 dfsu
     ...data.projectRange.fileList.map((eachFile) =>
-      uploadFile(`${data.projectRange.md5}${eachFile.ext}`, eachFile.file),
+      uploadFileApi(`${data.projectRange.md5}${eachFile.ext}`, eachFile.file),
     ),
   ])
 
   if (!resList.every((res) => res)) {
     console.log("有文件上传失败")
+    console.log(resList)
   } else {
     console.log("所有文件上传成功")
   }
 
-  // 创建post请求体
-  const body = {
+  // 拼接api所需要的参数格式body
+  console.log({ data })
+  const body: MxdToImgFormT = {
+    template_id: data.mxdId,
     dfsu_be_md5: data.beDfsuInfo.md5,
     dfsu_af_md5: data.afDfsuInfo.md5,
     output_name: data.title,
     river_range: data.riverRange,
+    radian_or_angle: data.radian_or_angle == "弧度" ? "radian" : "angle",
   }
 
-  console.log({ body })
-  console.log({ data })
+  // 项目范围或者点
+  if (data.projectRangeType == "point") {
+    body["project_point"] = `${data.projectPoints.x},${data.projectPoints.y}`
+  } else {
+    body["project_md5"] = data.projectRange.md5
+  }
 
-  // try {
-  //   const res = await server.post(API.mxdToImg, data)
-
-  //   if (res.status == 200 && res.data.success) return res.data.res
-  // } catch (err) {
-  //   console.log(err)
-  //   return false
-  // }
-  // return false
+  const res = await mxdToImgApi(body)
 
   loading.value = false
+
+  return res
 }
 </script>
 

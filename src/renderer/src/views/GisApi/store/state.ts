@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2023-12-20 16:35:43
+ * @LastEditTime: 2023-12-21 10:52:06
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\state.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -56,8 +56,14 @@ export function createFormData(newTabId: number) {
     outputName: "",
     riverRange: "工程前" as "工程前" | "工程后",
     mxdId: -1, // 要使用的mxd模板id
-    mxdName:"",
-    // counterSetp: "",
+    mxdName: "",
+    projectRangeType: "shp" as "point" | "shp",
+    projectPoints: { x: -1, y: -1 },
+    radian_or_angle: "弧度" as `弧度` | `角度`,
+    show_range: 600,
+    mesh_size: 25,
+    contour_range: 200, // 大于这个长度的流速等值线才会被显示
+    contour_setp: [] as number[], // 等值线要显示哪些值
   }
 }
 const defaultFormData = createFormData(0)

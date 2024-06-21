@@ -1,18 +1,10 @@
 <template>
   <t-collapse-panel value="通用配置" header="通用配置" class="collapse-style">
     <template #expandIcon>
-      <c-icon-font
-        class="text-xl"
-        iconName="daochu"
-        color="#31302d"
-      ></c-icon-font>
+      <c-icon-font class="text-xl" iconName="daochu" color="#31302d"></c-icon-font>
     </template>
     <template #headerRightContent>
-      <t-button
-        size="small"
-        theme="danger"
-        @click="resetConfigData(GENERAL_KEYS)"
-      >
+      <t-button size="small" theme="danger" @click="resetConfigData(GENERAL_KEYS)">
         <template #icon>
           <c-icon-font class="mr-2 text-white" iconName="huifu"> </c-icon-font>
         </template>
@@ -22,13 +14,13 @@
 
     <!-- 工作目录 -->
     <t-form-item label="工作目录" name="WORK_SPACE">
-      <t-input v-model="config.WORK_SPACE" status="warning"> </t-input>
+      <t-input-number v-model="config.WORK_SPACE" status="warning"> </t-input-number>
       <div class="px-2"></div>
       <t-button variant="outline" @click="setWorkSpace"> 更改路径 </t-button>
     </t-form-item>
 
     <t-form-item label="配置文件" name="JSON_EXPORT_PATH">
-      <t-input v-model="config.JSON_EXPORT_PATH" status="warning"> </t-input>
+      <t-input-number v-model="config.JSON_EXPORT_PATH" status="warning"> </t-input-number>
       <div class="px-2"></div>
       <t-button variant="outline" @click="setConfigJson"> 更改路径 </t-button>
     </t-form-item>
@@ -56,26 +48,24 @@
 </template>
 
 <script lang="ts" setup>
-import localData from "../store/jsonData";
-import localStore from "../store";
-import config from "../store/config";
-import type { OpenDialogReturnValue, OpenDialogOptions } from "electron";
+import localData from "../store/jsonData"
+import localStore from "../store"
+import config from "../store/config"
+import type { OpenDialogReturnValue, OpenDialogOptions } from "electron"
 
-import { eventBusMain } from "@renderer/libs";
+import { eventBusMain } from "@renderer/libs"
 
-const configSuffix = ["SERVER_", "IMG_", "SCREEN_"];
-const GENERAL_KEYS: string[] = [];
+const configSuffix = ["SERVER_", "IMG_", "SCREEN_"]
+const GENERAL_KEYS: string[] = []
 Object.keys(config).filter((keyName: string) => {
-  let isGeneralConfig = true;
+  let isGeneralConfig = true
   configSuffix.forEach((item: string) => {
-    if (keyName.startsWith(item)) isGeneralConfig = false;
-  });
+    if (keyName.startsWith(item)) isGeneralConfig = false
+  })
 
-  if (isGeneralConfig) GENERAL_KEYS.push(keyName);
-});
-const resetConfigData = inject("resetConfigData") as (
-  configItemKey: string[]
-) => void;
+  if (isGeneralConfig) GENERAL_KEYS.push(keyName)
+})
+const resetConfigData = inject("resetConfigData") as (configItemKey: string[]) => void
 
 /**
  * 指定一个目录作为工作空间，所有操作都会基于这个路径
@@ -93,9 +83,9 @@ async function setWorkSpace() {
     title: "设置工作目录",
     buttonLabel: "确定选择",
     message: "选择一个目录作为软件默认的工作目录",
-  });
+  })
 
-  console.log({ userSelectFolder });
+  console.log({ userSelectFolder })
 
   // if (userSelectFolder) config.WORK_SPACE = userSelectFolder;
 
@@ -116,7 +106,7 @@ async function setWorkSpace() {
  * 指定一个配置文件，如果不存在，则创建，具体逻辑在主进程进行
  */
 async function setConfigJson() {
-  console.log("setConfigJson ->");
+  console.log("setConfigJson ->")
 
   // // 在浏览器中
   // if (!window.electron) return;
