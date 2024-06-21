@@ -3,6 +3,7 @@ dist
 out
 *.log*
 auto-components.d.ts
+src/types/auto-components.d.ts
 
 ############### Vue3-自动导入生成的文件 ############### 
 components.d.ts
