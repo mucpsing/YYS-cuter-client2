@@ -2,14 +2,14 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-21 22:13:46
+ * @LastEditTime: 2024-06-21 23:39:14
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <section :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'bg-sky-100 rounded-md p-2']">
-    <t-card title="1. 指定输出名称：" :bordered="false" hover-shadow>
-      <t-input-adornment prepend="名称：">
+  <section :class="['flex flex-col w-full', 'flex-grow-[2]', ' rounded-md p-2']">
+    <t-card title="模板配置" :bordered="true">
+      <t-input-adornment prepend="1、输出名称：">
         <t-select-input
           :value="formDataList[currtFormDataId].title"
           :popup-visible="popupVisible"
@@ -38,49 +38,44 @@
       <template #actions>
         <a href="javascript:void(0)" @click="clickHandler">快速配置</a>
       </template>
+
+      <div class="my-2"></div>
+
+      <t-input-adornment prepend="2、选择模板：">
+        <div :class="['flex flex-row', 'flex-grow-[1]']">
+          <t-auto-complete
+            v-model="formDataList[currtFormDataId].mxdName"
+            :options="template_name_list"
+            placeholder="选择一个mxd模板"
+            clearable
+            highlight-keyword
+            filterable
+            class="t-demo-autocomplete__search"
+          >
+            <template #suffixIcon><SearchIcon /></template>
+            <!-- <template #suffixIcon><SearchIcon /></template> -->
+          </t-auto-complete>
+          <t-button class="ml-1" theme="success">
+            本地上传
+            <template #icon><cloud-upload-icon :style="{ fontSize: '28px' }" /> </template>
+          </t-button>
+        </div>
+      </t-input-adornment>
     </t-card>
 
-    <t-card title="2. 选择模板：" :bordered="false" hover-shadow :style="{ width: '100%' }">
-      <!-- 搜索框 -->
-      <!-- <t-space :class="['flex flex-col gap-4']"> -->
-      <t-space :size="10" direction="vertical">
-        <t-auto-complete
-          v-model="test1"
-          :options="template_name_list"
-          placeholder="请输入关键词搜索常用模板"
-          highlight-keyword
-          filterable
-          class="t-demo-autocomplete__search"
-        >
-          <template #suffixIcon><SearchIcon /></template>
-        </t-auto-complete>
 
-        <t-card theme="poster2">
-          <div :class="['flex gap-4']">
-            <t-image
-              :key="templateInfo[0].template_name"
-              :src="templateInfo[0].preview"
-              :style="{ height: '120px', width: '200px' }"
-              :lazy="true"
-            />
-            <t-comment
-              :author="templateInfo[0].template_name"
-              :content="templateInfo[0].description"
-              @click="() => console.log(123)"
-            />
-          </div>
-        </t-card>
-      </t-space>
-    </t-card>
+
     <!-- 父级元素可被撑开 -->
-    <!-- <test ></test> -->
+    <odl_setp1_pannel></odl_setp1_pannel>
   </section>
 </template>
 
 <script setup lang="ts">
 import { templateInfo, keyWord, data } from "../store/data"
 import { currtFormDataId, currtTemplateId, formDataList } from "../store/state"
-import { SearchIcon } from "tdesign-icons-vue-next"
+import { SearchIcon, CloudUploadIcon } from "tdesign-icons-vue-next"
+
+import odl_setp1_pannel from "../_components/odl_setp1_pannel.vue"
 
 onMounted(() => {
   console.log("创建1")
@@ -90,7 +85,7 @@ onMounted(() => {
 
 const options = ref(keyWord) // 提示词列表
 const popupVisible = ref(false) // 是否显示提示列表的状态
-const test1 = ref("test")
+const popupVisible2 = ref(false) // 是否显示提示列表的状态
 const template_name_list = computed(() =>
   templateInfo.value.map((item, idx) => `${idx}.${item.template_name}`),
 )
