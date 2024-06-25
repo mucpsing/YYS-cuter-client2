@@ -1,12 +1,12 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-22 08:48:27
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-21 22:32:12
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-06-25 16:50:55
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\data.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { reactive } from "vue"
+import { reactive, Ref } from "vue"
 import type { TabValue } from "tdesign-vue-next"
 
 export type EMPTY_STRING = ""
@@ -15,8 +15,16 @@ export const defaultDataItem = {
   label: "未命名工况",
 }
 
+export interface TemplateInfo {
+  template_id: number
+  template_name: string
+  mxd_name: string
+  preview: string
+  description: string
+}
+
 // 从后端获取mxd模板数据
-export const templateInfo = ref([
+export const templateInfo: Ref<TemplateInfo[]> = ref([
   {
     template_id: 1,
     template_name: "采样点",

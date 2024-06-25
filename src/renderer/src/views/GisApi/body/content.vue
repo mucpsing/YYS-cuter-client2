@@ -95,7 +95,7 @@
   </div>
 </template>
 <script lang="ts">
-import SwiperSetp1 from "./SwiperSetp1.vue"
+import SwiperSetp1 from "./SwiperSetp1/index.vue"
 import SwiperSetp2 from "./SwiperSetp2.vue"
 // import SwiperSetp3 from "./SwiperSetp3.vue"
 import SwiperSetp4 from "./SwiperSetp4.vue"

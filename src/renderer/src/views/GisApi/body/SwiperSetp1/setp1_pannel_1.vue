@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-21 16:10:44
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-22 14:31:04
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-06-25 10:57:30
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @Description: 样式不太好看，保留这个样式暂不使用。
@@ -15,7 +15,7 @@
     <div class="w-full h-0 flex-grow-[2]">
       <!-- 设置了height 0 的元素内部元素要设置可以滚动 -->
       <div class="h-full overflow-auto">
-        <t-space
+        <div
           :size="10"
           direction="vertical"
           :style="{
@@ -65,15 +65,15 @@
               </div>
             </t-card>
           </template>
-        </t-space>
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { templateInfo } from "../store/data"
-import { currtFormDataId, currtTemplateId, formDataList } from "../store/state"
+import { templateInfo } from "@renderer/views/GisApi/store/data"
+import { currtFormDataId, currtTemplateId, formDataList } from "@renderer/views/GisApi/store/state"
 import { SearchIcon, DownloadIcon, GestureClickIcon } from "tdesign-icons-vue-next"
 const template_name_list = computed(() =>
   templateInfo.value.map((item, idx) => `${idx}.${item.template_name}`),

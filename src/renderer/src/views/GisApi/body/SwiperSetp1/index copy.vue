@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-21 23:39:14
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-06-25 10:56:49
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -63,19 +63,17 @@
       </t-input-adornment>
     </t-card>
 
-
-
     <!-- 父级元素可被撑开 -->
-    <odl_setp1_pannel></odl_setp1_pannel>
+    <setp1_pannel></setp1_pannel>
   </section>
 </template>
 
 <script setup lang="ts">
-import { templateInfo, keyWord, data } from "../store/data"
-import { currtFormDataId, currtTemplateId, formDataList } from "../store/state"
+import { templateInfo, keyWord, data } from "@renderer/views/GisApi/store/data"
+import { currtFormDataId, currtTemplateId, formDataList } from "@renderer/views/GisApi/store/state"
 import { SearchIcon, CloudUploadIcon } from "tdesign-icons-vue-next"
 
-import odl_setp1_pannel from "../_components/odl_setp1_pannel.vue"
+import setp1_pannel from "./setp1_pannel_2.vue"
 
 onMounted(() => {
   console.log("创建1")
