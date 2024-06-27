@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-22 14:23:07
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-06-27 09:32:41
+ * @LastEditTime: 2024-06-27 15:26:11
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\dfsuInfo.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -34,30 +34,29 @@
 <script setup lang="ts">
 const emit = defineEmits(["onBtnClick"])
 
-const props = withDefaults(
-  defineProps<{
-    fileInfo: {
-      name: string
-      path: string
-      size: number
-      md5: string
-      progress: number
-      reading: boolean
-      file?: File
-    }
-    title?: string
-  }>(),
-  {
-    fileInfo: {
-      name: "",
-      path: "",
-      size: 0,
-      md5: "",
-      progress: "",
-      reading: false,
-      file: {},
-    },
-    title: "dfsu文件",
+interface DefaultPropsT {
+  fileInfo: {
+    name: string
+    path: string
+    size: number
+    md5: string
+    progress: number
+    reading: boolean
+    file?: File
+  }
+  title?: string
+}
+
+const props = withDefaults(defineProps<DefaultPropsT>(), {
+  fileInfo: {
+    name: "",
+    path: "",
+    size: 0,
+    md5: "",
+    progress: 0,
+    reading: false,
+    // file: {},
   },
-)
+  title: "dfsu文件",
+})
 </script>
