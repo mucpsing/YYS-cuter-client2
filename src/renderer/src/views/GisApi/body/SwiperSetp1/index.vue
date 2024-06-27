@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-06-25 17:04:53
+ * @LastEditTime: 2024-06-25 17:13:20
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -46,7 +46,7 @@
                   <template #panel>
                     <ul class="">
                       <li
-                        class="p-1 cursor-pointer hover:bg-gray-200"
+                        class="w-full p-2 cursor-pointer hover:bg-gray-200"
                         v-for="item in outNameTipWordsList"
                         :key="item"
                         @click="() => onTitleWithPopupChange(item)"

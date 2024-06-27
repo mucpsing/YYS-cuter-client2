@@ -15,11 +15,12 @@
       <DfsuInfo
         title="DFSU文件(工程前)"
         :fileInfo="formDataList[currtFormDataId].beDfsuInfo"
-        @onBtnClick="() => onUploadBtnClick('be')"
+        @onBtnClick="() => onUploadBtnClickHandler('be')"
       />
+      <!-- 切换按钮 -->
       <div
         class="flex items-center justify-center px-2 bg-blue-100 rounded-sm cursor-pointer hover:bg-blue-300"
-        @click="switchf"
+        @click="switchAfAndBeDfsuFile"
       >
         <strong class="transition-all" :style="{ transform: `rotate(${r}deg)` }">
           <c-icon-font iconName="icon-yys-04zhuanhuan" class="text-xl text-white"></c-icon-font>
@@ -28,7 +29,7 @@
       <DfsuInfo
         title="DFSU文件(工程后)"
         :fileInfo="formDataList[currtFormDataId].afDfsuInfo"
-        @onBtnClick="() => onUploadBtnClick('af')"
+        @onBtnClick="() => onUploadBtnClickHandler('af')"
       />
     </header>
 
@@ -112,7 +113,7 @@
             <div class="flex gap-1">
               <t-button
                 v-if="formDataList[currtFormDataId].projectRangeType == 'shp'"
-                :onClick="() => onUploadBtnClick('project')"
+                :onClick="() => onUploadBtnClickHandler('project')"
                 theme="success"
                 variant="outline"
                 size="medium"
@@ -236,10 +237,21 @@ import path from "path-browserify"
 
 import { formDataList, currtFormDataId } from "../store/state"
 
+onMounted(() => {
+  customFileUpInputElement = document.createElement("input")
+})
+
+onUnmounted(() => {
+  document.body.appendChild(customFileUpInputElement)
+  document.body.removeChild(customFileUpInputElement)
+})
+
 const projectLoading = ref(false)
-const inputElement = document.createElement("input")
-inputElement.type = "file"
-inputElement.multiple = true
+let customFileUpInputElement: HTMLInputElement
+const UP_FILE_ACCEPT_TYPE = {
+  dfsu: ".dfsu",
+  shp: ".cpg,.dbf,.sbn,.sbx,.shp,.shx,.shp.xml",
+}
 
 // 用来支持拖拽文件
 const headerRef = ref<HTMLElement>()
@@ -252,7 +264,10 @@ async function onDrop(files: File[] | null) {
 }
 
 const r = ref(90)
-async function switchf() {
+/**
+ * @description: 交换工程前和工程后两个文件的信息
+ */
+async function switchAfAndBeDfsuFile() {
   const temp = Object.assign({}, formDataList.value[currtFormDataId.value].beDfsuInfo)
   Object.assign(
     formDataList.value[currtFormDataId.value].beDfsuInfo,
@@ -267,23 +282,21 @@ async function switchf() {
  * @description: 实时修改accept来控制文件上传
  * @param {*} fileType be和AF用来标识dfsu，其他文件认作shp
  */
-async function onUploadBtnClick(fileType: "be" | "af" | "project") {
-  const uploadFileType = {
-    dfsu: ".dfsu",
-    shp: ".cpg,.dbf,.sbn,.sbx,.shp,.shx,.shp.xml",
-  }
-
-  let target: keyof typeof uploadFileType
+async function onUploadBtnClickHandler(fileType: "be" | "af" | "project") {
+  let target: keyof typeof UP_FILE_ACCEPT_TYPE
   if (["be", "af"].includes(fileType)) {
     target = "dfsu"
   } else {
     target = "shp"
   }
 
-  inputElement.accept = uploadFileType[target]
-  inputElement.onchange = (e) => onInputChange(e, fileType)
-  if (inputElement.value) inputElement.value = ""
-  inputElement.click()
+  // 调用点击事件
+  customFileUpInputElement.accept = UP_FILE_ACCEPT_TYPE[target]
+  customFileUpInputElement.onchange = (e) => onInputChange(e, fileType)
+  customFileUpInputElement.type = "file"
+  customFileUpInputElement.multiple = true
+  if (customFileUpInputElement.value) customFileUpInputElement.value = ""
+  customFileUpInputElement.click()
 }
 
 async function onInputChange(e: any, target: "be" | "af" | "project") {

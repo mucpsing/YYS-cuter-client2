@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-22 14:23:07
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2023-12-21 10:38:58
+ * @LastEditTime: 2024-06-27 09:32:41
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\dfsuInfo.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -21,11 +21,11 @@
     <div class="flex justify-center w-full pt-3">
       <t-button
         size="medium"
-        class="min-w-[250px]"
+        class="min-w-[250px] text-sm"
         :theme="props.fileInfo.md5 ? 'success' : 'danger'"
         :onClick="() => emit('onBtnClick')"
       >
-        选择dfsu文件
+        选择dfsu（点击或拖拽）
       </t-button>
     </div>
   </t-card>

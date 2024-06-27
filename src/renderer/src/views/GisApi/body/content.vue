@@ -251,11 +251,15 @@ async function mxdToImg(data: FormDataItemT) {
   } else {
     body["project_md5"] = data.projectRange.md5
   }
-  console.log({ body })
 
-  // const res = await mxdToImgApi(body)
+  console.log("## 开始调用合成接口")
+
+  console.log({body})
+  const res = await mxdToImgApi(body)
+  console.log({res})
 
   loading.value = false
+
   // return res
 }
 </script>

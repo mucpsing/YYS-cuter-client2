@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-06-21 15:49:50
+ * @LastEditTime: 2024-06-27 10:39:51
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -88,16 +88,17 @@ export async function uploadFileApi(filen_name_md5: string, file: File) {
 }
 
 export async function mxdToImgApi(body: MxdToImgFormBase): Promise<boolean> {
-
   try {
-    const res = await server.post(API.mxdToImg, body)
-    console.log("调用结果: ", res)
+    const res = await server.post(API.mxdToImg, body, { timeout: 60000 })
+    console.log({ res })
 
-    if (res.status == 200 && res.data.success) return true
+    if (res.status == 200 && res.data.success) {
+      return true
+    }
+
+    return false
   } catch (err) {
     console.log(err)
     return false
   }
-
-  return false
 }
