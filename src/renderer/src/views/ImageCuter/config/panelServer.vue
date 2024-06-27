@@ -2,7 +2,7 @@
  * @Author: CPS-surfacePro7 holy.dandelion@139.com
  * @Date: 2023-01-24 23:51:02
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-08-24 22:55:27
+ * @LastEditTime: 2024-06-27 22:28:16
  * @FilePath: \yys-cuter-client\src\components\ImageCuter\config\panelServer.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -22,8 +22,8 @@
     </template>
 
     <t-form-item label="服务器路径" name="SERVER_EXE_PATH">
-      <t-input-number v-model="config.SERVER_EXE_PATH" type="string" status="warning">
-      </t-input-number>
+      <t-input v-model="config.SERVER_EXE_PATH" status="warning">
+      </t-input>
       <div class="px-2"></div>
       <t-button variant="outline" @click="serverSelectFilePath"> 更改路径 </t-button>
     </t-form-item>
@@ -41,18 +41,18 @@
     </t-form-item>
 
     <t-form-item label="服务器IP" name="SERVER_IP">
-      <t-input-number v-model="config.SERVER_IP"></t-input-number>
+      <t-input v-model="config.SERVER_IP"></t-input>
     </t-form-item>
 
     <t-form-item label="服务器端口" name="SERVER_PROT">
-      <t-input-number v-model="config.SERVER_PROT" type="number"></t-input-number>
+      <t-input v-model="config.SERVER_PROT" type="number"></t-input>
     </t-form-item>
   </t-collapse-panel>
 </template>
 
 <script lang="ts" setup>
 import { IS_CONNECT } from "../store/server"
-import config, { defaultConfig } from "../store/config"
+import config from "../store/config"
 import { getObjectKeysWithStart } from "@renderer/utils/tools"
 
 import { serverSwitch, serverSelectFilePath } from "../core/server"

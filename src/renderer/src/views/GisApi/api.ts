@@ -1,18 +1,24 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-06-27 10:39:51
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-06-27 23:04:05
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
-import Axios from "axios"
+import Axios, { type AxiosInstance } from "axios"
 import config from "./store/config"
-import type { FormDataItemT } from "./store/state"
 
-const baseURL = `http://${config.SERVER_IP}:${config.SERVER_PROT}/gis-api/`
-const server = Axios.create({ baseURL, timeout: 1000 })
+let BASE_URL = `${config.SERVER_PROTOCOL}://${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}/`
+let SERVER: AxiosInstance
+const server = () => {
+  let baseURL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}/`
+  if (baseURL != BASE_URL) {
+    SERVER = Axios.create({ baseURL, timeout: 1000 })
+  }
+  return SERVER
+}
 
 const API = {
   getTemplateList: "/mxd_template_list",
@@ -52,7 +58,7 @@ export type MxdToImgFormT = MxdToImgFormProjectShp | MxdToImgFormProjectPoints
 
 export async function getTemplateList() {
   try {
-    const { status, data } = await server.get(API.getTemplateList)
+    const { status, data } = await server().get(API.getTemplateList)
     if (status == 200) {
       return data.res as string[]
     }
@@ -72,7 +78,7 @@ export async function uploadFileApi(filen_name_md5: string, file: File) {
   // console.log("file: ", filen_name_md5)
 
   try {
-    const res = await server.post(API.upload, formData, {
+    const res = await server().post(API.upload, formData, {
       headers: { "content-type": "multipart/form-data" },
     })
 
@@ -89,7 +95,7 @@ export async function uploadFileApi(filen_name_md5: string, file: File) {
 
 export async function mxdToImgApi(body: MxdToImgFormBase): Promise<boolean> {
   try {
-    const res = await server.post(API.mxdToImg, body, { timeout: 60000 })
+    const res = await server().post(API.mxdToImg, body, { timeout: 60000 })
     console.log({ res })
 
     if (res.status == 200 && res.data.success) {

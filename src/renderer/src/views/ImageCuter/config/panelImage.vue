@@ -2,7 +2,7 @@
  * @Author: CPS-surfacePro7 holy.dandelion@139.com
  * @Date: 2023-01-24 23:53:09
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-08-19 17:58:05
+ * @LastEditTime: 2024-06-27 22:22:12
  * @FilePath: \yys-cuter-client\src\components\ImageCuter\config\paneImage.vue
  * @Description: 截图插件的图片配置折叠栏
 -->
@@ -21,23 +21,42 @@
     </template>
 
     <t-form-item label="文件大小" name="IMG_MAX_SIZE">
-      <t-row :gutter="16">
-        <t-col :span="8">
-          <t-input-number
-            type="number"
+      <div :style="{display:'block'}">
+        <t-col :span="8" :class="['w-full']">
+          <t-input-number 
             :value="fileMaxSize"
             :suffix="`(${config.IMG_MAX_SIZE})`"
-            @change="onSizeUnitInputChange"
+            @onChange="onSizeUnitInputChange"
           ></t-input-number>
         </t-col>
-        <t-col :span="4">
+
+        <t-col :span="4" :class="['w-full']">
           <t-select
             v-model="sizeUnit"
             :options="sizeOptions"
-            @change="onSizeUnitSelectChange"
+            @onChange="onSizeUnitSelectChange"
+          ></t-select>
+        </t-col>
+      </div>
+
+      <t-row :gutter="16">
+        <t-col :span="8" :class="['w-full']">
+          <t-input-number 
+            :value="fileMaxSize"
+            :suffix="`(${config.IMG_MAX_SIZE})`"
+            @onChange="onSizeUnitInputChange"
+          ></t-input-number>
+        </t-col>
+        <t-col :span="4" :class="['w-full']">
+          <t-select
+            v-model="sizeUnit"
+            :options="sizeOptions"
+            @onChange="onSizeUnitSelectChange"
           ></t-select>
         </t-col>
       </t-row>
+
+      
     </t-form-item>
 
     <t-form-item label="支持格式" name="IMG_SUPORT_TYPES">

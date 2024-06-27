@@ -16,18 +16,19 @@ export const UP_FILE_ACCEPT_TYPE = {
 
 export default reactive({
   // http协议
-  PROTOCOL: "http",
+  SERVER_PROTOCOL: "http",
   // 服务器IP
-  SERVER_IP: "http://192.168.1.100",
+  SERVER_IP: "192.168.1.100",
   // 服务器端口
-  SERVER_PROT:"4040",
+  SERVER_PROT: "4040",
 
-  DEFAULT_RADIAN_OR_ANGLE:"弧度" as "弧度" | "角度",
+  SERVER_API: "gis-api",
 
-  DEFAULT_RIVER_RANGE:"工程后" as "工程前" | "工程后",
+  DEFAULT_RADIAN_OR_ANGLE: "弧度" as "弧度" | "角度",
 
-  DEFAULT_MESH_DISTANCE:"25",
+  DEFAULT_RIVER_RANGE: "工程后" as "工程前" | "工程后",
 
-  DEFAULT_CONTOUR_RANGE:200,
+  DEFAULT_MESH_DISTANCE: "25",
 
+  DEFAULT_CONTOUR_RANGE: 200,
 })

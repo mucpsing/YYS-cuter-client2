@@ -14,13 +14,13 @@
 
     <!-- 工作目录 -->
     <t-form-item label="工作目录" name="WORK_SPACE">
-      <t-input-number v-model="config.WORK_SPACE" status="warning"> </t-input-number>
+      <t-input v-model="config.WORK_SPACE" status="warning"> </t-input>
       <div class="px-2"></div>
       <t-button variant="outline" @click="setWorkSpace"> 更改路径 </t-button>
     </t-form-item>
 
     <t-form-item label="配置文件" name="JSON_EXPORT_PATH">
-      <t-input-number v-model="config.JSON_EXPORT_PATH" status="warning"> </t-input-number>
+      <t-input v-model="config.JSON_EXPORT_PATH" status="warning"> </t-input>
       <div class="px-2"></div>
       <t-button variant="outline" @click="setConfigJson"> 更改路径 </t-button>
     </t-form-item>
