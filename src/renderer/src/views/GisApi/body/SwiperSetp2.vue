@@ -176,7 +176,7 @@
                 <t-button
                   variant="outline"
                   :theme="
-                    formDataList[currtFormDataId].riverRange == '工程前' ? 'primary' : 'danger'
+                    formDataList[currtFormDataId].riverRange == '工程后' ? 'primary' : 'danger'
                   "
                   size="medium"
                 >
@@ -234,6 +234,7 @@ import DfsuInfo from "../_components/dfsuInfo.vue"
 import { getMd5 } from "@renderer/utils/calculateMd5"
 import { useDropZone } from "@vueuse/core"
 import path from "path-browserify"
+import { UP_FILE_ACCEPT_TYPE } from '../store/config'
 
 import { formDataList, currtFormDataId } from "../store/state"
 
@@ -248,10 +249,7 @@ onUnmounted(() => {
 
 const projectLoading = ref(false)
 let customFileUpInputElement: HTMLInputElement
-const UP_FILE_ACCEPT_TYPE = {
-  dfsu: ".dfsu",
-  shp: ".cpg,.dbf,.sbn,.sbx,.shp,.shx,.shp.xml",
-}
+
 
 // 用来支持拖拽文件
 const headerRef = ref<HTMLElement>()

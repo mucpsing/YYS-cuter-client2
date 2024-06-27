@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-06-27 15:42:28
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-06-27 21:56:57
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -164,10 +164,6 @@ const template_name_list = computed(() =>
 const selectLocalTemplate = () => {
   // 选择本地模板，弹出文件选择
   // 校验文件
-}
-
-const selectCommonTemplate = () => {
-  // 选择常用模板
 }
 
 /**

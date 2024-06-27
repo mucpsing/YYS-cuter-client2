@@ -99,7 +99,7 @@
                   { content: `工程前`, value: `工程前` },
                   { content: `工程后`, value: `工程后` },
                 ]"
-                @click="(item) => (formDataList[currtFormDataId].riverRange = item.value)"
+                @click="(item) => (formDataList[currtFormDataId].riverRange = item.value as "工程前" | "工程后")"
               >
                 <t-button variant="outline" size="small">{{
                   formDataList[currtFormDataId].riverRange
@@ -171,11 +171,9 @@
 
 <script setup lang="ts">
 import { formDataList, currtFormDataId } from "../store/state"
-import { uploadFile } from "../api"
 import path from "path-browserify"
 import { getMd5 } from "@renderer/utils/calculateMd5"
 
-const riverSelect = ref("工程后")
 const projectRangeRef = ref<HTMLInputElement>()
 const projectShpList = ref<string[]>([])
 const projectLoading = ref(false)
@@ -235,10 +233,8 @@ async function onInputChange(_e: Event) {
 }
 
 // const projectRangeFile
-
 const defaultCounterSetp =
   "0.01;-0.01;0.03;-0.03;0.05;-0.05;0.1;-0.1;0.15;-0.15;0.2;-0.2;0;-0.3;0.3"
 const counterSetp = ref("")
 
-const outputPojectMode = ref("选择类型")
 </script>

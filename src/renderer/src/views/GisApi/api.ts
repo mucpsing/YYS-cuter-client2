@@ -8,7 +8,7 @@
  */
 
 import Axios from "axios"
-import config from "./config"
+import config from "./store/config"
 import type { FormDataItemT } from "./store/state"
 
 const baseURL = `http://${config.SERVER_IP}:${config.SERVER_PROT}/gis-api/`
