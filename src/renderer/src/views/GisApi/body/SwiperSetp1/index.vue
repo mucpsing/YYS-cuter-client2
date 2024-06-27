@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-06-25 17:04:53
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-06-27 12:47:36
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -15,7 +15,7 @@
             <a href="javascript:void(0)" @click="selectLocalTemplate">使用本地模板</a>
           </template>
 
-          <div :class="['flex-col flex-[111] flex gap-8 justify-between', 'h-full']">
+          <div :class="['flex-col flex-[111] flex gap-8 justify-around', 'h-full']">
             <div :class="['flex flex-row items-center justify-center', 'flex-1  flex-grow-[11]']">
               <div
                 :class="[
