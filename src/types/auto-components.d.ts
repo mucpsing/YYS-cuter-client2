@@ -52,7 +52,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Setp1_pannel_1: typeof import('./../renderer/src/views/GisApi/body/SwiperSetp1/setp1_pannel_1.vue')['default']
     Setp1_pannel_2: typeof import('./../renderer/src/views/GisApi/body/SwiperSetp1/setp1_pannel_2.vue')['default']
-    Settings: typeof import('./../renderer/src/components/settings.vue')['default']
+    Settings: typeof import('./../renderer/src/views/NsNpcManager/settings.vue')['default']
     SwiperSetp1: typeof import('./../renderer/src/views/GisApi/body/SwiperSetp1.vue')['default']
     SwiperSetp2: typeof import('./../renderer/src/views/GisApi/body/SwiperSetp2.vue')['default']
     SwiperSetp3: typeof import('./../renderer/src/views/GisApi/body/SwiperSetp3.vue')['default']

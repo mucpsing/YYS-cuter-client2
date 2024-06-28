@@ -1,29 +1,32 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-27 23:04:05
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-06-28 11:17:17
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
-import Axios, { type AxiosInstance } from "axios"
-import config from "./store/config"
+import Axios from "axios"
+import config, { API } from "./store/config"
 
-let BASE_URL = `${config.SERVER_PROTOCOL}://${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}/`
-let SERVER: AxiosInstance
+const DEFAULT_AXIOS_TIMEOUT = 2000
+let BASE_URL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}`
+let SERVER = Axios.create({ baseURL: BASE_URL, timeout: DEFAULT_AXIOS_TIMEOUT })
+
+/**
+ * @description: 首先检查当前的url是否有被更改，如果更改了就重新创建axios，否则返回原始的axios
+ * @return {*}
+ */
 const server = () => {
-  let baseURL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}/`
-  if (baseURL != BASE_URL) {
-    SERVER = Axios.create({ baseURL, timeout: 1000 })
-  }
-  return SERVER
-}
+  let baseURL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}`
 
-const API = {
-  getTemplateList: "/mxd_template_list",
-  upload: "/upload_file",
-  mxdToImg: "/mxd_to_img",
+  if (baseURL != BASE_URL || !SERVER) {
+    console.log("重新创建baseURL：", baseURL)
+    SERVER = Axios.create({ baseURL, timeout: DEFAULT_AXIOS_TIMEOUT })
+  }
+
+  return SERVER
 }
 
 export type MxdToImgFormBase = {
@@ -102,6 +105,20 @@ export async function mxdToImgApi(body: MxdToImgFormBase): Promise<boolean> {
       return true
     }
 
+    return false
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+export async function serverCheckApi(): Promise<boolean> {
+  try {
+    const res = await server().get(API.test)
+
+    if (res.status == 200 && res.data.success) {
+      return true
+    }
     return false
   } catch (err) {
     console.log(err)

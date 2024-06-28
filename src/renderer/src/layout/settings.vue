@@ -21,16 +21,10 @@
     @click-cancel="close"
   >
     <template #header>
-      <h3 class="text-xl">
-        <c-icon-font class="mr-2" iconName="setting"></c-icon-font>软件配置
-      </h3>
+      <h3 class="text-xl"><c-icon-font class="mr-2" iconName="setting"></c-icon-font>软件配置</h3>
     </template>
 
-    <t-tabs
-      v-model="globalStore.settingPageSelect"
-      default-value="global"
-      @onChange="onTabsChange"
-    >
+    <t-tabs v-model="globalStore.settingPageSelect" default-value="global" @onChange="onTabsChange">
       <!-- 全局配置 -->
       <t-tab-panel value="global">
         <template #label>
@@ -57,10 +51,12 @@
       <!-- gis-api配置 -->
       <t-tab-panel value="gisApiConfig">
         <template #label>
-          <c-icon-font class="mr-2" iconName="icon-yys-GISguankong"> </c-icon-font>截图插件
+          <c-icon-font class="mr-2 text-xl" iconName="icon-yys-GISguankong"> </c-icon-font
+          ><strong>Gis-Api</strong>
         </template>
         <gisApiSettingPage />
       </t-tab-panel>
+      
     </t-tabs>
     <div class="flex justify-center w-full p-2">
       <t-button size="large" theme="success">完 成 配 置</t-button>
@@ -69,41 +65,41 @@
 </template>
 
 <script setup lang="ts">
-import { eventBus } from "@renderer/libs";
-import { useGlobalStore } from "@renderer/stores";
+import { eventBus } from "@renderer/libs"
+import { useGlobalStore } from "@renderer/stores"
 
-import imageCuterSettingPage from "@renderer/views/ImageCuter/config/index.vue";
-import gisApiSettingPage from "@renderer/views/GisApi/settings/index.vue";
+import imageCuterSettingPage from "@renderer/views/ImageCuter/config/index.vue"
+import gisApiSettingPage from "@renderer/views/GisApi/settings/index.vue"
 
-import { openConfigPannelList as IMCPanelList } from "@renderer/views/ImageCuter/store";
+import { openConfigPannelList as IMCPanelList } from "@renderer/views/ImageCuter/store"
 
-const globalStore = useGlobalStore();
+const globalStore = useGlobalStore()
 
 function testBtn() {
   eventBus.emit("showDialog", {
     type: "input",
     title: "测试全局弹框",
     message: "测试文本",
-  });
+  })
 }
 
 function onTabsChange(value: string) {
-  console.log("onTabsChange: ", { value });
-  console.log({ IMCPanelList });
-  console.log("当前展开的列表数: ", IMCPanelList.value.length);
+  console.log("onTabsChange: ", { value })
+  console.log({ IMCPanelList })
+  console.log("当前展开的列表数: ", IMCPanelList.value.length)
 }
 
 function close() {
-  globalStore.setSettingPageShow(false);
+  globalStore.setSettingPageShow(false)
 }
 
 onMounted(() => {
-  eventBus.on("showSettingsPage", globalStore.switchSettingPage);
-});
+  eventBus.on("showSettingsPage", globalStore.switchSettingPage)
+})
 
 onUnmounted(() => {
-  eventBus.off("showSettingsPage", globalStore.switchSettingPage);
-});
+  eventBus.off("showSettingsPage", globalStore.switchSettingPage)
+})
 </script>
 
 <style lang="stylus">

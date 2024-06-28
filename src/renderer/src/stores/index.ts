@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-08-29 10:39:32
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2023-12-13 10:21:23
+ * @LastEditTime: 2024-06-28 09:56:51
  * @FilePath: \yys-cuter-client2\src\renderer\src\stores\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,6 +23,7 @@ import { defineStore } from "pinia"
 export enum SettingPageValue {
   GLOBAL = "global",
   IMAGE_CUTER = "imageCuterConfig",
+  GIS_API = "gisApiConfig",
 }
 
 type PagesType = "ImageCuter" | "Home"

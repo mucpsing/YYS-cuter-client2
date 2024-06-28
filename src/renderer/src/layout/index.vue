@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import layoutNav from "@renderer/layout/aside/index.vue"
-import settingsPage from "@renderer/components/settings.vue"
+import settingsPage from "@renderer/layout/settings.vue"
 import { lastRouterPath } from "@renderer/router/routerList"
 const router = useRouter()
 
