@@ -92,6 +92,8 @@
           ></c-icon-font> </template
       ></t-button>
     </footer>
+
+    <GuideSetp ref="GuideSetpRef" />
   </div>
 </template>
 <script lang="ts">
@@ -118,6 +120,10 @@ import { uploadFileApi, mxdToImgApi } from "../api"
 import type { MxdToImgFormT } from "../api"
 import type { FormDataItemT } from "../store/state"
 import { NotifyPlugin } from "tdesign-vue-next"
+
+import GuideSetp from "../_components/guide.vue"
+
+const GuideSetpRef = ref(null)
 
 const loading = ref(false)
 
@@ -158,6 +164,8 @@ function nextCheck(currtSetp: number): boolean {
           title: `未指定的输出名称（必须）`,
           duration: 2000,
         })
+
+        GuideSetpRef.value.show("setp1")
         return false
       }
 
@@ -254,9 +262,9 @@ async function mxdToImg(data: FormDataItemT) {
 
   console.log("## 开始调用合成接口")
 
-  console.log({body})
+  console.log({ body })
   const res = await mxdToImgApi(body)
-  console.log({res})
+  console.log({ res })
 
   loading.value = false
 

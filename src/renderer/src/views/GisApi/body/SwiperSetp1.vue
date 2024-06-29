@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-27 21:56:57
+ * @LastEditTime: 2024-06-30 00:44:24
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -12,11 +12,11 @@
       <div :class="['flex flex-col gap-4 flex-1 h-full']">
         <t-card title="模板配置" :bordered="true" :style="{ flex: 1 }">
           <template #actions>
-            <a href="javascript:void(0)" @click="selectLocalTemplate">使用本地模板</a>
+            <a href="javascript:void(0)" @click="selectLocalTemplate">更多...</a>
           </template>
 
           <div :class="['flex-col flex-[111] flex gap-8 justify-around', 'h-full']">
-            <div :class="['flex flex-row items-center justify-center', 'flex-1  flex-grow-[11]']">
+            <div :class="['flex flex-col', 'flex-1  flex-grow-[11]']">
               <div
                 :class="[
                   'border-2 border-sky-400',
@@ -29,11 +29,14 @@
                   :error="'未选择任何模板'"
                 ></t-image>
               </div>
+
+              {{ currtMxdName }}
             </div>
 
             <t-space direction="vertical" size="10px">
               <t-input-adornment prepend="1、输出名称：">
                 <t-select-input
+                  id="Gis-Api__template_input_seletc"
                   :value="currtFormDataList[currtFormDataId].title"
                   :popup-visible="tipWrodsPopupVisible"
                   :popup-props="{ overlayInnerStyle: { padding: '0px' } }"
@@ -61,13 +64,14 @@
               <t-input-adornment prepend="2、选择模板：">
                 <div :class="['flex flex-row', 'flex-grow-[1]']">
                   <t-auto-complete
-                    v-model="currtFormDataList[currtFormDataId].mxdName"
+                    :v-model="currtMxdName"
                     :options="template_name_list"
-                    placeholder="选择一个mxd模板"
+                    placeholder="从右方【模板列表】中选择"
                     clearable
                     highlight-keyword
                     filterable
                     class="t-demo-autocomplete__search"
+                    :onChange="onSelectInputHandler"
                   >
                     <template #suffixIcon><SearchIcon /></template>
                     <!-- <template #suffixIcon><SearchIcon /></template> -->
@@ -81,10 +85,13 @@
 
       <div :class="['flex-1 h-full', 'py-[16px] px-[16px] border-1 border rounded-md']">
         <div :class="['flex-col flex gap-2 flex-1 h-full']">
-          <div :class="['mb-[16px]']">
+          <div :class="['mb-[16px] flex flex-row items-center justify-between']">
             <h3 :class="['text-base']">
               <strong>{{ `模板选择(${templateInfo.length})` }}</strong>
             </h3>
+            <span>
+              <t-button variant="text" theme="primary">使用本地模板</t-button>
+            </span>
           </div>
           <div
             :class="[
@@ -106,15 +113,18 @@
                     :style="{ height: '80px', width: '200px' }"
                     :lazy="true"
                   />
-                  <t-comment
-                    :author="item.template_name"
-                    :content="item.description"
-                    @click="selectCommonTemplateHandler(item)"
-                  />
+                  <t-tooltip :content="item.description">
+                    <t-comment
+                      :author="`${item.template_id}-${item.template_name}`"
+                      :content="truncateText(item.description, 25)"
+                      @click="selectCommonTemplateHandler(item)"
+                    />
+                  </t-tooltip>
                   <div :class="['flex flex-col gap-2 items-center justify-center']">
                     <t-button
                       :style="{ width: '100%', height: '40px' }"
                       theme="default"
+                      size="small"
                       @click="selectCommonTemplateHandler(item)"
                     >
                       点击选择
@@ -139,14 +149,12 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { templateInfo, keyWord, data } from "@renderer/views/GisApi/store/data"
+import { truncateText } from "../utils/index"
 import type { TemplateInfo } from "@renderer/views/GisApi/store/data"
-import {
-  currtFormDataId,
-  currtTemplateId,
-  formDataList as currtFormDataList,
-} from "@renderer/views/GisApi/store/state"
+import { currtFormDataId, currtTemplateId } from "@renderer/views/GisApi/store/state"
+import { formDataList as currtFormDataList } from "@renderer/views/GisApi/store/state"
 
 import { SearchIcon, DownloadIcon, GestureClickIcon } from "tdesign-icons-vue-next"
 
@@ -158,12 +166,38 @@ const outNameTipWordsList = ref(keyWord) // 提示词列表
 const tipWrodsPopupVisible = ref(false) // 是否显示提示列表的状态
 
 const template_name_list = computed(() =>
-  templateInfo.value.map((item, idx) => `${idx}.${item.template_name}`),
+  templateInfo.value.map((item) => `${item.template_id}-${item.template_name}`),
 )
+
+const currtMxdName = ref("未选择任何mxd模板")
 
 const selectLocalTemplate = () => {
   // 选择本地模板，弹出文件选择
   // 校验文件
+}
+
+const onSelectInputHandler = (s: string) => {
+  if (!s) return
+
+  // 假设模板ID和模板名称之间只有一个中文字符的顿号
+  const parts = s.trim().split("-")
+
+  // 检查是否只有两个部分（ID和名称）
+  if (parts.length !== 2) {
+    throw new Error(`无效的输入字符串格式: ${s}, 预期格式为 'ID-Name'。`)
+  }
+
+  // 尝试将ID部分转换为整数
+  const template_id = parseInt(parts[0], 10)
+  if (isNaN(template_id)) {
+    throw new Error("无效的模板ID。预期为整数。")
+  }
+
+  // 名称部分直接作为字符串使用
+  const template_name = parts[1]
+
+  // 构造并返回对象
+  selectCommonTemplateHandler({ template_id, template_name })
 }
 
 /**
@@ -174,9 +208,11 @@ const selectCommonTemplateHandler = (item: TemplateInfo) => {
     // 设置状态
     currtTemplateId.value = item.template_id
     currtFormDataList.value[currtFormDataId.value].mxdId = item.template_id
-    currtFormDataList.value[
-      currtFormDataId.value
-    ].mxdName = `${item.template_id} - ${item.template_name} `
+
+    currtMxdName.value = `${item.template_id} - ${item.template_name}`
+    // currtFormDataList.value[
+    //   currtFormDataId.value
+    // ].mxdName = `${item.template_id} - ${item.template_name}`
   }
 }
 

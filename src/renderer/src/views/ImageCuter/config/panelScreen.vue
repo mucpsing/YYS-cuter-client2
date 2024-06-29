@@ -2,7 +2,7 @@
  * @Author: CPS-surfacePro7 holy.dandelion@139.com
  * @Date: 2023-01-24 23:51:30
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2023-08-19 17:58:40
+ * @LastEditTime: 2024-06-28 16:13:44
  * @FilePath: \yys-cuter-client\src\components\ImageCuter\config\panelScreen.vue
  * @Description: 截图插件的【显示配置】部分
 -->

@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-27 22:05:24
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-06-28 11:08:16
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-06-29 22:30:46
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\settings\generalSettingl.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -24,7 +24,14 @@
     </template>
 
     <t-form-item label="服务器IP" name="SERVER_IP">
-      <t-input v-model="config.SERVER_IP"></t-input>
+      <t-auto-complete
+        v-model="config.SERVER_IP"
+        :options="['192.168.100.37', 'DESKTOP-0ROH1ER']"
+        highlight-keyword
+        :filterable="false"
+        placeholder="请输入关键词搜索"
+        clearable
+      />
     </t-form-item>
 
     <t-form-item label="服务器端口" name="SERVER_PROT">
@@ -51,8 +58,12 @@
 
     <div class="w-full mx-2 text-xs text-center text-gray-400">当前服务器： {{ V }}</div>
 
-    <t-button class="w-full my-4 text-sm" @click="checkServer"
-      >{{ isGisServerConnected ? "关闭连接" : "点击重连" }}
+    <t-button
+      class="w-full my-4 text-sm"
+      @click="checkServer"
+      :loading="btnLoading"
+      :theme="btnTheme"
+      >{{ isGisServerConnected ? "测试连接" : "点击重连" }}
     </t-button>
   </t-collapse-panel>
 </template>
@@ -61,6 +72,8 @@
 import config from "../store/config"
 import { isGisServerConnected } from "../store/state"
 import { serverCheckApi } from "../api"
+const btnLoading = ref(false)
+const btnTheme = computed(() => (isGisServerConnected.value ? "success" : "danger"))
 
 const V = computed(
   () =>
@@ -72,8 +85,10 @@ const resetConfigData = (item) => {
 const SERVER_KEYS = ["SERVER_IP", "SERVER_PROT"]
 
 const checkServer = async () => {
+  btnLoading.value = true
   isGisServerConnected.value = await serverCheckApi()
 
   // 设置按钮状态
+  setTimeout(() => (btnLoading.value = false), 1000)
 }
 </script>
