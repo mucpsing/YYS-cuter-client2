@@ -33,7 +33,7 @@
       />
     </header>
 
-    <div :class="['flex-grow-[1] overflow-auto ']">
+    <div :class="['flex-grow-[1] overflow-auto __scrollbar-bule']">
       <div class="h-[0]">
         <t-card>
           <div class="flex items-center justify-between mt-2">
@@ -234,7 +234,7 @@ import DfsuInfo from "../_components/dfsuInfo.vue"
 import { getMd5 } from "@renderer/utils/calculateMd5"
 import { useDropZone } from "@vueuse/core"
 import path from "path-browserify"
-import { UP_FILE_ACCEPT_TYPE } from '../store/config'
+import { UP_FILE_ACCEPT_TYPE } from "../store/config"
 
 import { formDataList, currtFormDataId } from "../store/state"
 
@@ -249,7 +249,6 @@ onUnmounted(() => {
 
 const projectLoading = ref(false)
 let customFileUpInputElement: HTMLInputElement
-
 
 // 用来支持拖拽文件
 const headerRef = ref<HTMLElement>()
@@ -346,8 +345,6 @@ async function updateProjectRangeInfo(files: FileList) {
   projectLoading.value = true
   // shpList.length = 0
   projectRangeInfo.fileList.length = 0
-
-  console.log("当前文件数： ", files.length)
 
   for (let file of files) {
     // 获取后缀

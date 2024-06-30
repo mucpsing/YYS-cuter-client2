@@ -1,3 +1,31 @@
-.cps__scroll_style::-webkit-scrollbar {
-     
+.cps__scroll_style{
+  &::-webkit-scrollbar {
+    width 5px
+  }
+  &::-webkit-scrollbar-thumb{
+    width 2px
+    @apply bg-orange-300
+  }
+}
+
+
+.__scrollbar-bule{
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+      background: #b5c7ff; // 滑块颜色
+      border-radius: 5px; // 滑块圆角
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+      background: #366ef4; // 鼠标移入滑块颜色
+      cursor pointer
+  }
+
+  &::-webkit-scrollbar-track {
+      border-radius: 10px; // 轨道圆角
+      background-color: #f6f6f6 // 轨道颜色
+  }
 }

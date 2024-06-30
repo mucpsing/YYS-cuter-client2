@@ -97,7 +97,7 @@
   </div>
 </template>
 <script lang="ts">
-import SwiperSetp1 from "./SwiperSetp1.vue"
+import SwiperSetp1 from "./SwiperSetp1/index.vue"
 import SwiperSetp2 from "./SwiperSetp2.vue"
 // import SwiperSetp3 from "./SwiperSetp3.vue"
 import SwiperSetp4 from "./SwiperSetp4.vue"
@@ -122,9 +122,9 @@ import type { FormDataItemT } from "../store/state"
 import { NotifyPlugin } from "tdesign-vue-next"
 
 import GuideSetp from "../_components/guide.vue"
+import { isGisServerConnected } from "../store/state"
 
-const GuideSetpRef = ref(null)
-
+const GuideSetpRef = ref<InstanceType<typeof GuideSetp> | null>(null)
 const loading = ref(false)
 
 const tabControler = inject("tabControler") as {
@@ -156,25 +156,47 @@ async function onAddTap() {
 function nextCheck(currtSetp: number): boolean {
   const data = formDataList.value[currtFormDataId.value]
 
+  if (!isGisServerConnected.value) {
+    if (GuideSetpRef.value) {
+      GuideSetpRef.value.show("header", 0)
+    } else {
+      NotifyPlugin("error", {
+        title: `合成服务端口未连接，请手动配置服务器重新连接`,
+        duration: 2000,
+      })
+    }
+
+    return false
+  }
+
   switch (currtSetp) {
     case 1:
       // 【1】检查是否已设置输入名称
       if (data.title.length == 0 || data.title == "未命名工况") {
-        NotifyPlugin("error", {
-          title: `未指定的输出名称（必须）`,
-          duration: 2000,
-        })
+        if (GuideSetpRef.value) {
+          GuideSetpRef.value.show("setp1", 0)
+        } else {
+          NotifyPlugin("error", {
+            title: `未指定的输出名称（必须）`,
+            duration: 2000,
+          })
+        }
 
-        GuideSetpRef.value.show("setp1")
         return false
       }
 
       // 【2】检查是否已选择mxd模板
       else if (data.mxdId < 0) {
-        NotifyPlugin("error", {
-          title: `未选择mxd文件模板（输出类型：采样点、流速、流场）`,
-          duration: 2000,
-        })
+        console.log(data.mxdId)
+        if (GuideSetpRef.value) {
+          GuideSetpRef.value.show("setp1", 1)
+        } else {
+          NotifyPlugin("error", {
+            title: `未选择mxd文件模板（输出类型：采样点、流速、流场）`,
+            duration: 2000,
+          })
+        }
+
         return false
       }
 
@@ -192,7 +214,6 @@ function nextCheck(currtSetp: number): boolean {
  * @description: 点击下一步，上一步按钮的中转函数
  */
 function swtichSetp(setp: "next" | "back") {
-  console.log(Sopts.value.length)
   switch (setp) {
     case "next":
       if (formDataList.value[currtFormDataId.value].setp == Sopts.value.length) return

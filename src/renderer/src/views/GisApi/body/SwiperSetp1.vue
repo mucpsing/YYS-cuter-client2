@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-30 00:44:24
+ * @LastEditTime: 2024-06-30 16:27:46
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -12,7 +12,7 @@
       <div :class="['flex flex-col gap-4 flex-1 h-full']">
         <t-card title="模板配置" :bordered="true" :style="{ flex: 1 }">
           <template #actions>
-            <a href="javascript:void(0)" @click="selectLocalTemplate">更多...</a>
+            <a href="javascript:void(0)" @click="selectLocalTemplate">使用本地mxd</a>
           </template>
 
           <div :class="['flex-col flex-[111] flex gap-8 justify-around', 'h-full']">
@@ -30,13 +30,14 @@
                 ></t-image>
               </div>
 
-              {{ currtMxdName }}
+              <h3>{{ currtMxdName }}</h3>
+              <p>{{ currtMxdDocs }}</p>
             </div>
 
             <t-space direction="vertical" size="10px">
               <t-input-adornment prepend="1、输出名称：">
                 <t-select-input
-                  id="Gis-Api__template_input_seletc"
+                  id="Gis-Api__template_input_mxd_name"
                   :value="currtFormDataList[currtFormDataId].title"
                   :popup-visible="tipWrodsPopupVisible"
                   :popup-props="{ overlayInnerStyle: { padding: '0px' } }"
@@ -62,21 +63,25 @@
               </t-input-adornment>
 
               <t-input-adornment prepend="2、选择模板：">
-                <div :class="['flex flex-row', 'flex-grow-[1]']">
-                  <t-auto-complete
-                    :v-model="currtMxdName"
-                    :options="template_name_list"
-                    placeholder="从右方【模板列表】中选择"
-                    clearable
-                    highlight-keyword
-                    filterable
-                    class="t-demo-autocomplete__search"
-                    :onChange="onSelectInputHandler"
-                  >
-                    <template #suffixIcon><SearchIcon /></template>
-                    <!-- <template #suffixIcon><SearchIcon /></template> -->
-                  </t-auto-complete>
-                </div>
+                <t-auto-complete
+                  id="Gis-Api__template_input_select"
+                  v-model="currtFormDataList[currtFormDataId].mxdName"
+                  :options="template_name_list"
+                  placeholder="从右方【模板列表】中选择"
+                  clearable
+                  highlight-keyword
+                  filterable
+                  @change="onSelectInputHandler"
+                  @clear="
+                    () => {
+                      console.log('clear')
+                      currtFormDataList[currtFormDataId].mxdId = -1
+                      currtFormDataList[currtFormDataId].mxdName = ''
+                    }
+                  "
+                >
+                  <template #suffixIcon><SearchIcon /></template>
+                </t-auto-complete>
               </t-input-adornment>
             </t-space>
           </div>
@@ -90,7 +95,7 @@
               <strong>{{ `模板选择(${templateInfo.length})` }}</strong>
             </h3>
             <span>
-              <t-button variant="text" theme="primary">使用本地模板</t-button>
+              <t-button variant="text" theme="primary">刷新列表</t-button>
             </span>
           </div>
           <div
@@ -101,8 +106,8 @@
               'pr-[8px]',
             ]"
           >
-            <template v-for="item in templateInfo" :key="item.template_id">
-              <t-card theme="poster2">
+            <template v-if="templateInfo.length > 0">
+              <t-card v-for="item in templateInfo" :key="item.template_id" theme="poster2">
                 <div
                   :class="['flex gap-4', 'cursor-pointer', 'hover:bg-red-100/10']"
                   @click="selectCommonTemplateHandler(item)"
@@ -113,13 +118,13 @@
                     :style="{ height: '80px', width: '200px' }"
                     :lazy="true"
                   />
-                  <t-tooltip :content="item.description">
-                    <t-comment
-                      :author="`${item.template_id}-${item.template_name}`"
-                      :content="truncateText(item.description, 25)"
-                      @click="selectCommonTemplateHandler(item)"
-                    />
-                  </t-tooltip>
+
+                  <t-comment
+                    :author="`${item.template_id}-${item.template_name}`"
+                    :content="truncateText(item.description, 25)"
+                    @click="selectCommonTemplateHandler(item)"
+                  />
+
                   <div :class="['flex flex-col gap-2 items-center justify-center']">
                     <t-button
                       :style="{ width: '100%', height: '40px' }"
@@ -142,6 +147,9 @@
                 </div>
               </t-card>
             </template>
+            <template v-else>
+              <div>暂无模板列表</div>
+            </template>
           </div>
         </div>
       </div>
@@ -150,16 +158,21 @@
 </template>
 
 <script setup lang="tsx">
-import { templateInfo, keyWord, data } from "@renderer/views/GisApi/store/data"
-import { truncateText } from "../utils/index"
+import { debounce } from "lodash"
+import { SearchIcon, DownloadIcon, GestureClickIcon } from "tdesign-icons-vue-next"
 import type { TemplateInfo } from "@renderer/views/GisApi/store/data"
+
+import { templateInfo, keyWord, data } from "@renderer/views/GisApi/store/data"
 import { currtFormDataId, currtTemplateId } from "@renderer/views/GisApi/store/state"
 import { formDataList as currtFormDataList } from "@renderer/views/GisApi/store/state"
 
-import { SearchIcon, DownloadIcon, GestureClickIcon } from "tdesign-icons-vue-next"
+import { isGisServerConnected } from "../store/state"
+import { truncateText } from "../utils/index"
 
 onMounted(() => {
   console.log("setp1 on mounted")
+  if (isGisServerConnected.value) {
+  }
 })
 
 const outNameTipWordsList = ref(keyWord) // 提示词列表
@@ -170,6 +183,7 @@ const template_name_list = computed(() =>
 )
 
 const currtMxdName = ref("未选择任何mxd模板")
+const currtMxdDocs = ref("")
 
 const selectLocalTemplate = () => {
   // 选择本地模板，弹出文件选择
@@ -177,6 +191,7 @@ const selectLocalTemplate = () => {
 }
 
 const onSelectInputHandler = (s: string) => {
+  // console.log(s)
   if (!s) return
 
   // 假设模板ID和模板名称之间只有一个中文字符的顿号
@@ -203,18 +218,19 @@ const onSelectInputHandler = (s: string) => {
 /**
  * @description: 选择常用模板的触发函数
  */
-const selectCommonTemplateHandler = (item: TemplateInfo) => {
+const selectCommonTemplateHandler = debounce((item: TemplateInfo) => {
+  console.log({ data: templateInfo.value })
   if (item.template_id) {
     // 设置状态
     currtTemplateId.value = item.template_id
     currtFormDataList.value[currtFormDataId.value].mxdId = item.template_id
 
-    currtMxdName.value = `${item.template_id} - ${item.template_name}`
-    // currtFormDataList.value[
-    //   currtFormDataId.value
-    // ].mxdName = `${item.template_id} - ${item.template_name}`
+    currtMxdName.value = `${item.template_id}-${item.template_name}`
+    currtFormDataList.value[
+      currtFormDataId.value
+    ].mxdName = `${item.template_id} - ${item.template_name}`
   }
-}
+}, 100)
 
 /**
  * @description: 输入新标题时，同步tab标题显示的函数
@@ -240,26 +256,3 @@ async function onTitleWithPopupChange(new_popup: string) {
   tipWrodsPopupVisible.value = false
 }
 </script>
-
-<style lang="stylus">
-.__scrollbar-bule{
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-      background: #b5c7ff; // 滑块颜色
-      border-radius: 5px; // 滑块圆角
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-      background: #366ef4; // 鼠标移入滑块颜色
-      cursor pointer
-  }
-
-  &::-webkit-scrollbar-track {
-      border-radius: 10px; // 轨道圆角
-      background-color: #f6f6f6 // 轨道颜色
-  }
-}
-</style>

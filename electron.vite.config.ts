@@ -1,3 +1,11 @@
+/*
+ * @Author: CPS holy.dandelion@139.com
+ * @Date: 2024-06-21 21:40:50
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-06-30 22:05:17
+ * @FilePath: \YYS-cuter-client2\electron.vite.config.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { resolve } from "path"
 import { defineConfig, externalizeDepsPlugin } from "electron-vite"
 import vue from "@vitejs/plugin-vue"
@@ -27,6 +35,7 @@ export default defineConfig({
         "@renderer": resolve("./src/renderer/src"),
         "@components": resolve("./src/renderer/src/components"),
         "@views": resolve("./src/renderer/src/views"),
+        "@gisapi": resolve("./src/renderer/src/views/GisApi"),
         "@data": resolve("./src/renderer/src/data"),
         "@nsData": resolve("./src/renderer/src/data/ns"),
         "@nsStore": resolve("./src/renderer/src/stores/ns"),

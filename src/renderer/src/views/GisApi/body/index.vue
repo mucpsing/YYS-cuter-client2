@@ -35,8 +35,6 @@ import { data } from "../store/data"
 import { formDataList, createFormData } from "../store/state"
 import { currtFormDataId as currtTab } from "../store/state"
 
-import GuideSetp from "../_components/guide.vue"
-
 const bodyElementRef = ref<HTMLDivElement>()
 
 const dataChange = ({ id, value }) => {
