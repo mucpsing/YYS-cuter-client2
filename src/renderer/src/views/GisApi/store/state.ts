@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-30 16:38:11
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-05 15:45:02
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\state.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @Description: 建议所有state变量使用currtXxxxXxxx来命名
@@ -13,9 +13,9 @@ export const currtSetp = ref(1)
 export const templateSetpOptions = [
   { title: "选择模板", value: 1 },
   { title: "工程配置", value: 2 },
-  // { title: "模板配置", value: 3 },
+  { title: "处理范围", value: 3 },
   // { title: "图片生成", value: 4 },
-  { title: "图片生成", value: 3 },
+  { title: "图片生成", value: 4 },
 ]
 
 export function createFormData(newTabId: number) {

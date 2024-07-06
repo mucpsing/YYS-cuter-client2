@@ -99,16 +99,16 @@
 <script lang="ts">
 import SwiperSetp1 from "./SwiperSetp1/index.vue"
 import SwiperSetp2 from "./SwiperSetp2.vue"
-// import SwiperSetp3 from "./SwiperSetp3.vue"
+import SwiperSetp3 from "./SwiperSetp3.vue"
 import SwiperSetp4 from "./SwiperSetp4.vue"
 
 const SwiperComponentList = {
   "1": "SwiperSetp1",
   "2": "SwiperSetp2",
-  // "3": "SwiperSetp3",
-  "3": "SwiperSetp4",
+  "3": "SwiperSetp3",
+  "4": "SwiperSetp4",
 }
-export default { components: { SwiperSetp1, SwiperSetp2, SwiperSetp4 } }
+export default { components: { SwiperSetp1, SwiperSetp2, SwiperSetp4, SwiperSetp3 } }
 </script>
 
 <script setup lang="ts">
