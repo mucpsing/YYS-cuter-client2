@@ -103,7 +103,7 @@ import SwiperSetp3 from "./SwiperSetp3.vue"
 import SwiperSetp4 from "./SwiperSetp4.vue"
 
 const SwiperComponentList = {
-  "1": "SwiperSetp1",
+  "1": "SwiperSetp3",
   "2": "SwiperSetp2",
   "3": "SwiperSetp3",
   "4": "SwiperSetp4",
