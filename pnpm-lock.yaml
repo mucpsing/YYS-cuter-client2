@@ -50,6 +50,9 @@ importers:
       codemirror:
         specifier: ^6.0.1
         version: https://registry.npmmirror.com/codemirror/-/codemirror-6.0.1.tgz(@lezer/common@1.1.0)
+      default-passive-events:
+        specifier: ^2.0.0
+        version: 2.0.0
       echarts:
         specifier: ^5.4.3
         version: https://registry.npmmirror.com/echarts/-/echarts-5.4.3.tgz
@@ -1605,7 +1608,7 @@ packages:
     version: 2.0.6
 
   core-util-is@1.0.2:
-    resolution: {integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=}
+    resolution: {integrity: sha512-3lqz5YjWTYnW6dlDa5TLaTCcShfar1e40rmcJVwCBJC6mWlFuj0eCHIElmG1g5kyuJ/GD+8Wn4FFCcz4gJPfaQ==}
 
   core-util-is@https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.3.tgz:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==, tarball: https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.3.tgz}
@@ -1690,6 +1693,9 @@ packages:
   deep-is@https://registry.npmmirror.com/deep-is/-/deep-is-0.1.4.tgz:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==, tarball: https://registry.npmmirror.com/deep-is/-/deep-is-0.1.4.tgz}
     version: 0.1.4
+
+  default-passive-events@2.0.0:
+    resolution: {integrity: sha512-eMtt76GpDVngZQ3ocgvRcNCklUMwID1PaNbCNxfpDXuiOXttSh0HzBbda1HU9SIUsDc02vb7g9+3I5tlqe/qMQ==}
 
   defer-to-connect@https://registry.npmmirror.com/defer-to-connect/-/defer-to-connect-2.0.1.tgz:
     resolution: {integrity: sha512-4tvttepXG1VaYGrRibk5EwJd1t4udunSOVMdLSAL6mId1ix438oPwPZMALY41FCijukO1L0twNcGsdzS7dHgDg==, tarball: https://registry.npmmirror.com/defer-to-connect/-/defer-to-connect-2.0.1.tgz}
@@ -5218,6 +5224,8 @@ snapshots:
       mimic-response: https://registry.npmmirror.com/mimic-response/-/mimic-response-3.1.0.tgz
 
   deep-is@https://registry.npmmirror.com/deep-is/-/deep-is-0.1.4.tgz: {}
+
+  default-passive-events@2.0.0: {}
 
   defer-to-connect@https://registry.npmmirror.com/defer-to-connect/-/defer-to-connect-2.0.1.tgz: {}
 

@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-08 00:23:17
+ * @LastEditTime: 2024-07-08 12:17:42
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -23,15 +23,15 @@ import { getOddIndexedElements } from "@gisapi/utils/index"
 
 export default defineComponent({
   name: "PolygonChart",
-  createDraggingLayer(myChart) {},
+
   setup() {
     const chartContainer = ref(null)
     let myChart: echarts.ECharts | null = null
 
     const test = () => {
-      const start = myChart.convertToPixel({ seriesId: "polygon_base" }, polygon[0])
+      const start = myChart?.convertToPixel({ seriesId: "polygon_base" }, polygon[0])
       console.log({ start })
-      myChart.setOption({
+      myChart?.setOption({
         graphic: [
           {
             id: "sel_rect",
@@ -42,9 +42,9 @@ export default defineComponent({
     }
 
     const test1 = () => {
-      const start = myChart.convertToPixel({ seriesId: "polygon_base" }, polygon[0])
+      const start = myChart?.convertToPixel({ seriesId: "polygon_base" }, polygon[0])
       console.log({ start })
-      myChart.setOption({
+      myChart?.setOption({
         graphic: [
           {
             id: "sel_rect",
@@ -54,7 +54,7 @@ export default defineComponent({
       })
     }
 
-    const coords = [444148.69649, 2514477.95128542, 453274.64157178, 2517030.60091383]
+    // const coords = [444148.69649, 2514477.95128542, 453274.64157178, 2517030.60091383]
 
     const bounds = {
       coords: [444148.69649, 2514477.95128542, 453274.64157178, 2517030.60091383],
@@ -75,14 +75,12 @@ export default defineComponent({
     polygon = getOddIndexedElements(polygon)
     const boundsW = (bounds.maxx - bounds.minx) / 2
     const boundsH = (bounds.maxy - bounds.miny) / 2
-    const react = {
-      w: boundsW / 2,
-      h: boundsH / 2,
-      x: bounds.minx + boundsW,
-      y: bounds.miny + boundsH,
-    }
-
-    const reactData = []
+    // const react = {
+    //   w: boundsW / 2,
+    //   h: boundsH / 2,
+    //   x: bounds.minx + boundsW,
+    //   y: bounds.miny + boundsH,
+    // }
 
     while (polygon.length > max_len) {
       polygon = getOddIndexedElements(polygon)
@@ -154,24 +152,13 @@ export default defineComponent({
               },
               z: 10,
               position: [100, 100],
-              // transition: 'shape',
-              onclick: (e) => {
-                console.log({ e })
-                var graphic = myChart.getModel().getComponent("graphic")
+              onmouseup: (e) => {
+                // console.log({ x: e.target.x, y: e.target.y })
 
-                console.log(graphic)
-
-                // 遍历 graphic 元素来找到具有指定 id 的元素
-                var rect = graphic.option.elements.find(function (element) {
-                  return element.id === "sel_rect"
-                })
-
-                if (rect) {
-                  // 直接访问 rect 的 shape 属性来获取 x 和 y 坐标
-                  console.log("Rect position:", rect.shape.x, rect.shape.y)
-                } else {
-                  console.log('Rect with id "sel_rect" not found.')
-                }
+                const coodrs = myChart?.convertFromPixel({ seriesId: "polygon_base" }, [
+                  e.target.x,
+                  e.target.y,
+                ])
               },
             },
           ],

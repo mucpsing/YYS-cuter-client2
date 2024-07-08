@@ -35,9 +35,7 @@
       </TransitionChild>
 
       <div class="fixed inset-0 z-50 overflow-y-auto">
-        <div
-          class="flex items-center justify-center min-h-full p-4 text-center"
-        >
+        <div class="flex items-center justify-center min-h-full p-4 text-center">
           <TransitionChild
             as="template"
             enter="duration-300 ease-out"
@@ -50,10 +48,7 @@
             <DialogPanel
               class="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
             >
-              <DialogTitle
-                as="h3"
-                class="text-lg font-medium leading-6 text-gray-900"
-              >
+              <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
                 <slot name="title">{{ title }}</slot>
               </DialogTitle>
 
@@ -67,10 +62,7 @@
                 <div v-else-if="dialogType == 'input'">
                   <p class="text-sm text-gray-500">
                     <slot name="context">
-                      <cps-input
-                        v-model:value="inputContext"
-                        :label="message"
-                      ></cps-input>
+                      <input type="text" v-model="inputContext" :placeholder="message" />
                     </slot>
                   </p>
                 </div>
@@ -112,33 +104,33 @@
 </template>
 
 <script setup lang="ts">
-import { TransitionRoot, TransitionChild } from "@headlessui/vue";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/vue";
+import { TransitionRoot, TransitionChild } from "@headlessui/vue"
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/vue"
 // import CpsInput from "@/components/global/cpsInput.vue";
-import type { DialogOpenOptions } from "@renderer/global";
+import type { DialogOpenOptions } from "@renderer/global"
 
 // export type DialogElement = Ref<HTMLElement & { open: (options: any) => void }>;
 
-const emit = defineEmits(["on-accept", "on-reject"]);
+const emit = defineEmits(["on-accept", "on-reject"])
 
 /* 默认不显示，外部通过ref.show=xxx 来控制是否显示*/
-const show = ref(false);
-const title = ref("弹出框标题");
-const message = ref("弹出框内容");
-const inputContext = ref("输入框内容");
+const show = ref(false)
+const title = ref("弹出框标题")
+const message = ref("弹出框内容")
+const inputContext = ref("输入框内容")
 
 /**
  * @description 弹出框的类型，当前支持: text|input
  */
-const dialogType = ref("text");
+const dialogType = ref("text")
 
-const acceptMsg = ref("确  认");
-const rejectMsg = ref("取  消");
+const acceptMsg = ref("确  认")
+const rejectMsg = ref("取  消")
 
-let ACCEPT_CALLBACK: Function | null;
-let REJECT_CALLBACK: Function | null;
+let ACCEPT_CALLBACK: Function | null
+let REJECT_CALLBACK: Function | null
 
-const close = () => (show.value = false);
+const close = () => (show.value = false)
 
 function open(options: DialogOpenOptions) {
   // 默认配置
@@ -152,47 +144,47 @@ function open(options: DialogOpenOptions) {
       acceptCallback: null,
       rejectCallback: null,
     } as DialogOpenOptions,
-    options
-  );
+    options,
+  )
 
   if (options) {
-    if (options.type) dialogType.value = options.type;
-    if (options.message) message.value = options.message;
-    if (options.title) title.value = options.title;
-    if (options.acceptMsg) acceptMsg.value = options.acceptMsg;
-    if (options.rejectMsg) rejectMsg.value = options.rejectMsg;
+    if (options.type) dialogType.value = options.type
+    if (options.message) message.value = options.message
+    if (options.title) title.value = options.title
+    if (options.acceptMsg) acceptMsg.value = options.acceptMsg
+    if (options.rejectMsg) rejectMsg.value = options.rejectMsg
 
     if (options.acceptCallback) {
-      ACCEPT_CALLBACK = options.acceptCallback;
+      ACCEPT_CALLBACK = options.acceptCallback
     } else {
       // 因为可能存在全局调用，所以确保该回调函数始终为最新
-      ACCEPT_CALLBACK = null;
+      ACCEPT_CALLBACK = null
     }
 
     if (options.rejectCallback) {
-      REJECT_CALLBACK = options.rejectCallback;
+      REJECT_CALLBACK = options.rejectCallback
     } else {
       // 因为可能存在全局调用，所以确保该回调函数始终为最新
-      REJECT_CALLBACK = null;
+      REJECT_CALLBACK = null
     }
   }
 
-  show.value = true;
+  show.value = true
 }
 
 async function accept() {
-  emit("on-accept");
+  emit("on-accept")
 
   /* 如果传入了回调，则执行回调函数 */
-  if (ACCEPT_CALLBACK) ACCEPT_CALLBACK();
-  close();
+  if (ACCEPT_CALLBACK) ACCEPT_CALLBACK()
+  close()
 }
 
 async function reject() {
-  emit("on-reject");
-  if (REJECT_CALLBACK) REJECT_CALLBACK();
-  close();
+  emit("on-reject")
+  if (REJECT_CALLBACK) REJECT_CALLBACK()
+  close()
 }
 
-defineExpose({ show, close, open, title, message });
+defineExpose({ show, close, open, title, message })
 </script>
