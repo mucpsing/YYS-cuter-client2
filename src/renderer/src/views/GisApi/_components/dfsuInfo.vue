@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-22 14:23:07
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-06-27 15:26:11
+ * @LastEditTime: 2024-07-11 16:13:21
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\dfsuInfo.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -15,7 +15,8 @@
         <!-- <p>文件路径：{{ props.fileInfo.path }}</p> -->
         <!-- <span>解析进度：{{ props.fileInfo.progress.toFixed(2) }}<strong>%</strong></span> -->
         <span>文件大小：{{ props.fileInfo.size.toFixed(2) }} MB</span>
-        <span>上传名称：{{ props.fileInfo.md5 }}.dfsu</span>
+        <span>唯一名称：{{ props.fileInfo.md5 }}</span>
+        <span>显示范围：{{ props.fileInfo.bounds }}</span>
       </div>
     </div>
     <div class="flex justify-center w-full pt-3">
@@ -32,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+import type { BoundsT } from "@gisapi/types"
 const emit = defineEmits(["onBtnClick"])
 
 interface DefaultPropsT {
@@ -43,6 +45,7 @@ interface DefaultPropsT {
     progress: number
     reading: boolean
     file?: File
+    bounds?: BoundsT
   }
   title?: string
 }
