@@ -112,17 +112,17 @@ export default { components: { SwiperSetp1, SwiperSetp2, SwiperSetp4, SwiperSetp
 </script>
 
 <script setup lang="ts">
-import { templateSetpOptions } from "../store/state"
+import { templateSetpOptions } from "@gisapi/store/state"
 import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
-import { formDataList, currtFormDataId, currtExtendId, showAddTapDialog } from "../store/state"
+import { formDataList, currtFormDataId, currtExtendId, showAddTapDialog } from "@gisapi/store/state"
 
-import { uploadFileApi, mxdToImgApi } from "../api"
-import type { MxdToImgFormT } from "../api"
-import type { FormDataItemT } from "../store/state"
+import { uploadFileApi, mxdToImgApi } from "@gisapi/api"
+import type { MxdToImgFormT } from "@gisapi/api"
+import type { FormDataItemT } from "@gisapi/store/state"
 import { NotifyPlugin } from "tdesign-vue-next"
 
-import GuideSetp from "../_components/guide.vue"
-import { isGisServerConnected } from "../store/state"
+import GuideSetp from "@gisapi/_components/guide.vue"
+import { isGisServerConnected } from "@gisapi/store/state"
 
 const GuideSetpRef = ref<InstanceType<typeof GuideSetp> | null>(null)
 const loading = ref(false)

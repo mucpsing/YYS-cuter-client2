@@ -16,30 +16,7 @@ export const defaultDataItem = { label: "未命名工况" }
 // 从后端获取mxd模板数据
 export const templateInfo: Ref<TemplateInfo[]> = ref([])
 
-// export const templateInfo: Ref<TemplateInfo[]> = ref([
-//   {
-//     template_id: 1,
-//     template_name: "采样点",
-//     mxd_name: "采样点_template.mxd",
-//     preview: "points_template.png",
-//     description:
-//       "默认的采样点mxd模板，支持自定义项目范围（shp面文件）、自定义显示范围（默认河道前后1.5km）、可选是否添加水文站点显示。",
-//   },
-//   {
-//     template_id: 2,
-//     template_name: "流速",
-//     mxd_name: "流速_template.mxd",
-//     preview: "speed_template.png",
-//     description: "默认的流速mxd模板，支持自定义项目范围（shp面文件）",
-//   },
-//   {
-//     template_id: 3,
-//     template_name: "流向",
-//     mxd_name: "流向_template.mxd",
-//     preview: "dir_template.png",
-//     description: "默认的流向（流场）mxd模板，支持自定义项目范围（shp面文件）",
-//   },
-// ])
+// export const dfsuInfo = reactive({})
 
 export const currtIndex = ref(0)
 export const data = ref([

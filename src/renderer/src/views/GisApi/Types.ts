@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 22:08:32
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-01 11:56:44
+ * @LastEditTime: 2024-07-09 17:12:35
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\Types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,3 +34,17 @@ export interface TemplateInfo {
   description: string
 }
 export type EMPTY_STRING = ""
+
+export interface BoundsT {
+  maxx: number // TypeScript中使用number代替Python的float
+  minx: number
+  maxy: number
+  miny: number
+}
+
+export interface FileInfoBase {
+  file_name: string
+  file_ext: string
+  md5: string
+  bounds: BoundsT
+}

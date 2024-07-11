@@ -230,13 +230,14 @@
 </template>
 
 <script setup lang="ts">
-import DfsuInfo from "../_components/dfsuInfo.vue"
+import DfsuInfo from "@gisapi/_components/dfsuInfo.vue"
 import { getMd5 } from "@renderer/utils/calculateMd5"
 import { useDropZone } from "@vueuse/core"
 import path from "path-browserify"
-import { UP_FILE_ACCEPT_TYPE } from "../store/config"
+import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
-import { formDataList, currtFormDataId } from "../store/state"
+import { formDataList, currtFormDataId } from "@gisapi/store/state"
+import { uploadFileApi } from "@gisapi/api"
 
 onMounted(() => {
   customFileUpInputElement = document.createElement("input")
@@ -308,11 +309,13 @@ async function onInputChange(e: any, target: "be" | "af" | "project") {
   if (target == "be") {
     infoList = [beInfo]
     if (files.length >= 2) infoList.push(afInfo)
-    await updateDfsuInfo(files, infoList)
+    const be_dfsu_info = await updateDfsuInfo(files, infoList)
+    console.log({ be_dfsu_info })
   } else if (target == "af") {
     infoList = [afInfo]
     if (files.length >= 2) infoList.push(beInfo)
-    await updateDfsuInfo(files, infoList)
+    const af_dfsu_info = await updateDfsuInfo(files, infoList)
+    console.log({ af_dfsu_info })
   } else if (target == "project") {
     await updateProjectRangeInfo(files)
     return
@@ -324,14 +327,18 @@ async function updateDfsuInfo(files: FileList, infoList: any[]) {
     const file = (files as FileList)[index]
 
     fileInfo.reading = true
+    setTimeout(() => (fileInfo.reading = false), 30000)
+
     fileInfo.size = file.size / 1024 / 1024
     fileInfo.name = file.name
     fileInfo.md5 = await getMd5(file)
     fileInfo.file = file
 
-    setTimeout(() => (fileInfo.reading = false), 600)
-
-    // await uploadFile(`${infoList[index].md5}.dfsu`, file)
+    const dfsu_info = await uploadFileApi(`${infoList[index].md5}.dfsu`, file)
+    if (dfsu_info) {
+      console.log({ dfsu_info })
+      setTimeout(() => (fileInfo.reading = false), 600)
+    }
   })
 }
 

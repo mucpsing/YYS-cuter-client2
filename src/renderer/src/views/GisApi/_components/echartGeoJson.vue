@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-08 12:17:42
+ * @LastEditTime: 2024-07-08 22:11:57
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -68,10 +68,12 @@ export default defineComponent({
       maxy: 2517030.60091383,
     }
 
+    const geoJsonData = geoJson
+
     // const Polygon = geoJson.features[0].geometry.coordinates[0]
 
     const max_len = 200
-    let polygon = getOddIndexedElements(geoJson.features[0].geometry.coordinates[0])
+    let polygon = getOddIndexedElements(geoJsonData.features[0].geometry.coordinates[0])
     polygon = getOddIndexedElements(polygon)
     const boundsW = (bounds.maxx - bounds.minx) / 2
     const boundsH = (bounds.maxy - bounds.miny) / 2
@@ -153,12 +155,14 @@ export default defineComponent({
               z: 10,
               position: [100, 100],
               onmouseup: (e) => {
-                // console.log({ x: e.target.x, y: e.target.y })
+                if (!myChart) return
 
-                const coodrs = myChart?.convertFromPixel({ seriesId: "polygon_base" }, [
+                const [x, y] = myChart.convertFromPixel({ seriesId: "polygon_base" }, [
                   e.target.x,
                   e.target.y,
                 ])
+
+                console.log({ x, y })
               },
             },
           ],

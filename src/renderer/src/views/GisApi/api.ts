@@ -2,16 +2,17 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-30 22:09:08
+ * @LastEditTime: 2024-07-10 18:45:11
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 import Axios from "axios"
 import config, { API } from "./store/config"
-import type { TemplateInfo } from "@gisapi/Types"
+import type { TemplateInfo, FileInfoBase } from "@gisapi/Types"
 
-const DEFAULT_AXIOS_TIMEOUT = 2000
+const DEFAULT_AXIOS_TIMEOUT = 6000
+const FILE_UPLOAD_TIMEOUT = 300000
 let BASE_URL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}`
 let SERVER = Axios.create({ baseURL: BASE_URL, timeout: DEFAULT_AXIOS_TIMEOUT })
 
@@ -64,7 +65,10 @@ export async function getTemplateList() {
   }
 }
 
-export async function uploadFileApi(filen_name_md5: string, file: File) {
+export async function uploadFileApi(
+  filen_name_md5: string,
+  file: File,
+): Promise<boolean | FileInfoBase> {
   const formData = new FormData()
   formData.append("filen_name_md5", filen_name_md5)
   formData.append("file", file)
@@ -72,11 +76,18 @@ export async function uploadFileApi(filen_name_md5: string, file: File) {
   try {
     const res = await server().post(API.upload, formData, {
       headers: { "content-type": "multipart/form-data" },
+      timeout: FILE_UPLOAD_TIMEOUT,
     })
 
+    console.log({ res })
+
     if (res.status == 200 && res.data.success) {
-      // return res.data.res
-      return true
+      if (file.name.endsWith(".dfsu") || file.name.endsWith(".shp")) {
+        console.log("上传dfsu或者shp文件")
+        return res.data.res.file_info as FileInfoBase
+      }
+      return res.data.res
+      // return true
     }
   } catch (err) {
     console.log("文件上传失败: ", { err, file, filen_name_md5 })
