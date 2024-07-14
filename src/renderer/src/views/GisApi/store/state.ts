@@ -8,6 +8,8 @@
  * @Description: 建议所有state变量使用currtXxxxXxxx来命名
  */
 /** 关联下面的options.value，用来控制当前组件的setp */
+
+import type { BoundsT } from "@gisapi/Types"
 export const currtSetp = ref(1)
 
 export const templateSetpOptions = [
@@ -17,13 +19,6 @@ export const templateSetpOptions = [
   // { title: "图片生成", value: 4 },
   { title: "图片生成", value: 4 },
 ]
-
-interface BoundsT {
-  xmin: number
-  ymin: number
-  xmax: number
-  ymax: number
-}
 
 export function createFormData(newTabId: number) {
   return {

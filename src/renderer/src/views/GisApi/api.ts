@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-10 18:45:11
+ * @LastEditTime: 2024-07-14 10:26:10
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -65,10 +65,7 @@ export async function getTemplateList() {
   }
 }
 
-export async function uploadFileApi(
-  filen_name_md5: string,
-  file: File,
-): Promise<boolean | FileInfoBase> {
+export async function uploadFileApi(filen_name_md5: string, file: File): Promise<FileInfoBase> {
   const formData = new FormData()
   formData.append("filen_name_md5", filen_name_md5)
   formData.append("file", file)
@@ -91,9 +88,9 @@ export async function uploadFileApi(
     }
   } catch (err) {
     console.log("文件上传失败: ", { err, file, filen_name_md5 })
-    return false
+    return {}
   }
-  return false
+  return {}
 }
 
 export async function mxdToImgApi(body: MxdToImgFormBase): Promise<boolean> {

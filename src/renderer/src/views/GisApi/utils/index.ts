@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-29 22:42:41
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-07 20:34:09
+ * @LastEditTime: 2024-07-14 21:45:46
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\utils\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  *
@@ -23,6 +23,11 @@ export function truncateText(text: string, maxLength: number = 30): string {
   return text.substring(0, maxLength - 3) + "..."
 }
 
+/**
+ * @description: 对多边形的折点进行稀释，减少折点数量
+ * @param {T} arr
+ * @return {*}
+ */
 export function getOddIndexedElements<T>(arr: T[]): T[] {
   // 创建一个空数组来存储结果
   let result = []

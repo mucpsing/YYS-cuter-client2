@@ -238,6 +238,7 @@ import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
 import { formDataList, currtFormDataId } from "@gisapi/store/state"
 import { uploadFileApi } from "@gisapi/api"
+import type { FileInfoBase } from "@gisapi/Types"
 
 onMounted(() => {
   customFileUpInputElement = document.createElement("input")
@@ -334,11 +335,17 @@ async function updateDfsuInfo(files: FileList, infoList: any[]) {
     fileInfo.md5 = await getMd5(file)
     fileInfo.file = file
 
-    const dfsu_info = await uploadFileApi(`${infoList[index].md5}.dfsu`, file)
+    const dfsu_info: FileInfoBase = await uploadFileApi(`${infoList[index].md5}.dfsu`, file)
+
+    setTimeout(() => (fileInfo.reading = false), 600)
+
     if (dfsu_info) {
-      console.log({ dfsu_info })
-      setTimeout(() => (fileInfo.reading = false), 600)
+      fileInfo.bounds = dfsu_info.bounds
+    } else {
+      console.log("dfsu文件上传失败")
     }
+
+    return dfsu_info
   })
 }
 
