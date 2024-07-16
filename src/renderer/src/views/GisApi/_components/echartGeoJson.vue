@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-14 22:13:01
+ * @LastEditTime: 2024-07-17 07:58:07
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -30,7 +30,17 @@ export default defineComponent({
     geoJson: { type: Object },
   },
 
+  created() {
+    console.log("created")
+  },
+
+  mounted() {
+    console.log("mounted")
+  },
+
   setup(props, { emit }) {
+    console.log("setup")
+
     const chartContainer = ref(null)
     let myChart: echarts.ECharts | null = null
 
@@ -164,10 +174,6 @@ export default defineComponent({
     // 在组件卸载时销毁 ECharts 实例
     onUnmounted(() => {
       if (myChart) myChart.dispose()
-    })
-
-    defineExpose({
-      draw,
     })
 
     return { chartContainer, draw }

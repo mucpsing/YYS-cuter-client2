@@ -14,6 +14,7 @@ declare module 'vue' {
     CpsButton: typeof import('./../renderer/src/components/global/cpsButton.vue')['default']
     CpsIconFont: typeof import('./../renderer/src/components/cpsIconFont.vue')['default']
     CropInput: typeof import('./../renderer/src/views/ImageCuter/footer/tabCropPanel/cropInput.vue')['default']
+    DataCharts: typeof import('./../renderer/src/views/DataCharts/index.vue')['default']
     DataSearch: typeof import('./../renderer/src/views/NsNpcManager/body/DataSearch.vue')['default']
     DataSearchManager: typeof import('./../renderer/src/components/dataSearchManager.vue')['default']
     DfsuInfo: typeof import('./../renderer/src/views/GisApi/_components/dfsuInfo.vue')['default']
@@ -112,5 +113,7 @@ declare module 'vue' {
     TTag: typeof import('tdesign-vue-next')['Tag']
     TTextarea: typeof import('tdesign-vue-next')['Textarea']
     TTooltip: typeof import('tdesign-vue-next')['Tooltip']
+    WarterLevelAndSiltDischarge: typeof import('./../renderer/src/views/DataCharts/_components/WarterLevelAndSiltDischarge.vue')['default']
+    Wellcome: typeof import('./../renderer/src/views/DataCharts/wellcome.vue')['default']
   }
 }
