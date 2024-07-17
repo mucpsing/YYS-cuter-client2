@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    _components: typeof import('./../renderer/src/views/GisApi/_components/index.vue')['default']
     Body: typeof import('./../renderer/src/views/GisApi/body/index.vue')['default']
     Config: typeof import('./../renderer/src/views/ImageCuter/config/index.vue')['default']
     Content: typeof import('./../renderer/src/views/GisApi/body/content.vue')['default']
@@ -22,7 +23,7 @@ declare module 'vue' {
     Div: typeof import("tdesign-vue-next")["Space"]
     DragResize: typeof import('./../renderer/src/views/ImageCuter/body/dragResize.vue')['default']
     DragResize_old: typeof import('./../renderer/src/views/ImageCuter/body/dragResize_old.vue')['default']
-    EchartGeoJson: typeof import('./../renderer/src/views/GisApi/_components/echartGeoJson.vue')['default']
+    EchartGeoJson: typeof import('./../renderer/src/views/GisApi/_components/echartGeoJson/index.vue')['default']
     Footer: typeof import('./../renderer/src/views/ImageCuter/footer/index.vue')['default']
     GeneralSetting: typeof import('./../renderer/src/views/GisApi/settings/generalSetting.vue')['default']
     GeneralSettingl: typeof import('./../renderer/src/views/GisApi/settings/generalSettingl.vue')['default']

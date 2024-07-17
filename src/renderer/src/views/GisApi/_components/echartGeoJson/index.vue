@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-17 07:58:07
+ * @LastEditTime: 2024-07-18 00:08:48
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,14 +10,14 @@
   <div
     ref="chartContainer"
     :style="{ width: `${width}px`, height: `${height}px` }"
-    class="bg-red-200"
+    :class="[show ? 'bg-red-200' : 'bg-gray-200']"
   ></div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue"
 import * as echarts from "echarts"
-import { getOddIndexedElements } from "@gisapi/utils/index"
+import { getOddIndexedElements } from "./utils"
 
 export default defineComponent({
   name: "PolygonChart",
@@ -25,9 +25,10 @@ export default defineComponent({
   emits: ["draw"],
 
   props: {
+    show: { type: Boolean, default: false },
     width: { type: Number, default: 600 },
     height: { type: Number, default: 400 },
-    geoJson: { type: Object },
+    geoJson: { type: Object, default: {} },
   },
 
   created() {

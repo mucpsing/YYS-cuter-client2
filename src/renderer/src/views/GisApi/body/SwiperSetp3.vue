@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-16 23:27:55
+ * @LastEditTime: 2024-07-18 00:11:28
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -12,15 +12,20 @@
   >
     <div>
       <t-card title="范围选择">
-        <EchartGeoJson />
-        <t-button>更新</t-button>
+        <EchartGeoJson :show="true" :geo-json="data" />
+        <t-button @click="test">更新</t-button>
       </t-card>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import EchartGeoJson from "@gisapi/_components/echartGeoJson.vue"
+import EchartGeoJson from "@gisapi/_components/echartGeoJson/index.vue"
+import data from "@gisapi/_components/echartGeoJson/testData"
 
 // const currtDfsu = ref<any>(null)
+
+function test(dfsu: any) {
+  console.log(data)
+}
 </script>
