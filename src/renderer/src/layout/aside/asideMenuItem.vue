@@ -10,7 +10,7 @@
 
 <template>
   <section>
-    <header class="py-2 mb-2 text-xs">{{ title }}</header>
+    <header class="py-2 mb-2 text-xs text-center">{{ title }}</header>
     <ul
       class="mx-1 rounded-md whitespace-nowrap border-gray-500/10"
       :style="{ 'background-color': props.bgColor }"
@@ -21,20 +21,20 @@
           @click="onMenuItemClick(item)"
         >
           <span class="flex items-center flex-nowrap">
-            <c-icon-font
-              class="mr-3 text-2xl"
-              color="#409eff"
-              :iconName="item.icon"
-            ></c-icon-font>
+            <c-icon-font class="mr-3 text-2xl" color="#409eff" :iconName="item.icon"></c-icon-font>
             <span
-              class="-translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
+              :class="[
+                props.autoHide
+                  ? '-translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100'
+                  : 'translate-x-0 opacity-100',
+              ]"
               >{{ item.name }}</span
             >
           </span>
 
           <c-icon-font
             v-if="item.iconSub"
-            class="opacity-0 text-md group-hover:opacity-100"
+            :class="[props.autoHide ? 'opacity-0 text-md group-hover:opacity-100' : 'opacity-100']"
             :iconName="item.iconSub"
             color="green"
           ></c-icon-font>
@@ -49,29 +49,31 @@
 </template>
 
 <script setup lang="ts">
-import { debounce } from "lodash";
+import { debounce } from "lodash"
 interface menuItemsType {
-  name: string;
-  icon: string;
-  iconSub?: string;
-  callback?: Function | null;
+  name: string
+  icon: string
+  iconSub?: string
+  callback?: Function | null
 }
 
 interface menuProps {
-  title: string; // 菜单栏的名称
-  menus?: menuItemsType[];
-  bgColor?: string;
+  title: string // 菜单栏的名称
+  menus?: menuItemsType[]
+  bgColor?: string
+  autoHide?: boolean // 自动隐藏
 }
 
 const props = withDefaults(defineProps<menuProps>(), {
   title: "插件库",
   bgColor: "",
+  autoHide: true,
   menus: () => [
     { name: "截图插件", icon: "crop", iconSub: "setting" },
     { name: "截图插件", icon: "crop", iconSub: "setting" },
     { name: "截图插件", icon: "crop", iconSub: "setting" },
   ],
-});
+})
 
 /**
  *  @Description 如果存在callback字段，在点击时进行调用
@@ -80,8 +82,8 @@ const props = withDefaults(defineProps<menuProps>(), {
  *
  */
 const onMenuItemClick = debounce((menuItem) => {
-  if (menuItem.callback) menuItem.callback();
-}, 100);
+  if (menuItem.callback) menuItem.callback()
+}, 100)
 </script>
 
 <style lang="stylus">

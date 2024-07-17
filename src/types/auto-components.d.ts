@@ -70,6 +70,7 @@ declare module 'vue' {
     Test: typeof import('./../renderer/src/views/NsSkillManager/body/test.vue')['default']
     TForm: typeof import('tdesign-vue-next')['Form']
     TFormItem: typeof import('tdesign-vue-next')['FormItem']
+    TGuide: typeof import('tdesign-vue-next')['Guide']
     TIcon: typeof import("tdesign-vue-next")["Icon"]
     TImage: typeof import('tdesign-vue-next')['Image']
     TInput: typeof import('tdesign-vue-next')['Input']

@@ -14,7 +14,8 @@
       'cps__layout-aside group',
       'h-screen w-24 px-4 py-3 opacity-9',
       'relative flex flex-col flex-shrink-0 ',
-      'hover:w-56 bg-black-50  text-gray-400',
+      autoHide ? 'hover:w-56' : 'w-56',
+      'bg-black-50  text-gray-400',
       'rounded-r-2xl overflow-x-hidden',
     ]"
   >
@@ -24,10 +25,13 @@
         <button class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-red-500"></button>
         <button class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-yellow-400"></button>
         <button class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-green-400"></button>
-        <button @click="test">
+        <button @click="test" class="px-2">
           <c-icon-font
-            iconName="zhankai"
-            class="flex-shrink-0 w-3 h-3 cursor-pointer ml-28 text-sky-800 hover:text-sky-300"
+            iconName="icon-yys-lock-"
+            :class="[
+              'flex-shrink-0 w-3 h-3 cursor-pointer ml-28  hover:text-sky-300',
+              autoHide ? 'text-gray-400' : 'text-red-400',
+            ]"
           ></c-icon-font>
         </button>
       </div>
@@ -50,14 +54,24 @@
     <menu-split-line height="10px"></menu-split-line>
 
     <!-- 主要菜单 -->
-    <menuItem class="flex-grow" title="Base Menu" :menus="mainMenus"></menuItem>
+    <menuItem
+      class="flex-grow"
+      title="Base Menu"
+      :autoHide="autoHide"
+      :menus="mainMenus"
+    ></menuItem>
 
     <!-- 分割线 -->
     <menu-split-line height="10px"></menu-split-line>
 
     <!-- 辅助菜单 -->
-    <menuItem title="Sub Menu" bgColor="rgba(0,0,0,.5)" :menus="subMenus"></menuItem>
-    <footer></footer>
+    <menuItem
+      title="Sub Menu"
+      bgColor="rgba(0,0,0,.5)"
+      :autoHide="autoHide"
+      :menus="subMenus"
+    ></menuItem>
+    <!-- <footer></footer> -->
   </aside>
 </template>
 
@@ -68,6 +82,8 @@ import { eventBus } from "@renderer/libs"
 import { SettingPageValue } from "@renderer/stores"
 
 import routerList from "@renderer/router/routerList"
+
+const autoHide = ref(true)
 
 const router = useRouter()
 
@@ -94,7 +110,8 @@ const subMenus = [
 ]
 
 async function test() {
-  console.log("test")
+  autoHide.value = !autoHide.value
+  console.log("aside test btn", autoHide.value)
 }
 </script>
 
