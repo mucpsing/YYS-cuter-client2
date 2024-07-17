@@ -10,6 +10,10 @@
         </div>
         <div></div>
         <div class="flex items-center justify-end gap-2 pb-2">
+          <t-button :loading="loading" :on-click="dataInit" size="medium" theme="success">
+            刷新
+          </t-button>
+          <t-input-number size="medium" :step="50" v-model="maxHeight" />
           <ColConfig
             size="medium"
             :groupColumns="groupColumns"
@@ -18,11 +22,7 @@
             @addCol="addColItem"
             @delCol="delColItem"
           ></ColConfig>
-          <t-input-number size="medium" :step="50" v-model="maxHeight" />
-          <t-button :loading="loading" :on-click="dataInit" size="medium" theme="success">
-            刷新
-          </t-button>
-          <t-button :on-click="() => (showDialogEdit = true)"> test </t-button>
+          <!-- <t-button :on-click="() => (showDialogEdit = true)"> test </t-button> -->
         </div>
       </div>
 
@@ -32,7 +32,6 @@
           class="ns__skill_table"
           size="small"
           hover
-          stripe
           bordered
           :data="data"
           rowKey="index"

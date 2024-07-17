@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-09-30 09:40:42
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2023-10-10 16:22:29
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2023-10-20 00:07:09
  * @FilePath: \YYS-cuter-client2\src\renderer\src\stores\ns\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -54,24 +54,39 @@ export const useNsSkillStore = defineStore("skill", {
       console.log("getSkillDataFromApi")
 
       const skillList = await getSkillList()
-      let index = 1
+
       if (skillList.length > 0) this.data.length = 0
-
-      skillList.forEach((item) => {
-        const keys = Object.keys(item)
-
-        keys.forEach((key, idx) => {
-          if (keys.length == 1) {
-            item[key]["index"] = index
-            this.data.push(item[key])
-            index += 1
-          } else if (key != "技能说明") {
-            item[key]["index"] = index
-            this.data.push(item[key])
-            index += 1
-          }
-        })
+      // this.data = skillList
+      skillList.forEach((item, index) => {
+        index += 1
+        this.data.push(Object.assign({ index }, item))
       })
+
+      let searchData = this.data.map((item) => {
+        return {
+          id: item.SkillId,
+          name: item["Skill Name"],
+        }
+      })
+
+      console.log(searchData)
+
+      // let index = 1
+      // skillList.forEach((item) => {
+      // const keys = Object.keys(item)
+
+      // keys.forEach((key, idx) => {
+      //   if (keys.length == 1) {
+      //     item[key]["index"] = index
+      //     this.data.push(item[key])
+      //     index += 1
+      //   } else if (key != "技能说明") {
+      //     item[key]["index"] = index
+      //     this.data.push(item[key])
+      //     index += 1
+      //   }
+      // })
+      // })
 
       printDataMap(this.data)
     },
