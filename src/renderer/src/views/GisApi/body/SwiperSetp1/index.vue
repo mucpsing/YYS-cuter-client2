@@ -108,11 +108,12 @@
 <script setup lang="tsx">
 import { SearchIcon } from "tdesign-icons-vue-next"
 
-import { templateInfo, keyWord, data } from "@renderer/views/GisApi/store/data"
-import { currtFormDataId, currtMxdName } from "@renderer/views/GisApi/store/state"
-import { formDataList as currtFormDataList } from "@renderer/views/GisApi/store/state"
+import { templateInfo, keyWord, data } from "@gisapi/store/data"
+import { currtFormDataId, currtMxdName } from "@gisapi/store/state"
+import { formDataList as currtFormDataList } from "@gisapi/store/state"
 
-import { isGisServerConnected } from "../../store/state"
+import { isGisServerConnected } from "@gisapi/store/state"
+
 import { swtichCommonTemplate } from "./event"
 
 import TemplateList from "./templateList.vue"
