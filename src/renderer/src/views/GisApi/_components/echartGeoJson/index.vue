@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-18 00:08:48
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-18 09:42:53
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -39,7 +39,9 @@ export default defineComponent({
     console.log("mounted")
   },
 
-  setup(props, { emit }) {
+  computed: {},
+
+  setup() {
     console.log("setup")
 
     const chartContainer = ref(null)
@@ -95,15 +97,6 @@ export default defineComponent({
           text: config.title,
           left: "center",
         },
-        series: [
-          {
-            id: "polygon_base",
-            type: "line",
-            data: polygon,
-            Symbol: false,
-            symbolSize: 0,
-          },
-        ],
         xAxis: {
           show: false,
           // min: bounds.minx,
@@ -129,6 +122,17 @@ export default defineComponent({
             return "X: " + params.data[0].toFixed(2) + "<br>Y: " + params.data[1].toFixed(2)
           },
         },
+
+        series: [
+          {
+            id: "polygon_base",
+            type: "line",
+            data: polygon,
+            Symbol: false,
+            symbolSize: 0,
+          },
+        ],
+
         graphic: [
           {
             id: "sel_rect",

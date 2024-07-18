@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:08
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-30 16:43:44
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-18 11:13:53
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -20,7 +20,9 @@
       <div :class="['flex flex-col gap-4 flex-1 h-full']">
         <t-card title="模板配置" :bordered="true" :style="{ flex: 1 }">
           <template #actions>
-            <a href="javascript:void(0)" @click="selectLocalTemplate">使用本地mxd</a>
+            <t-button @click="selectLocalTemplate" variant="text" theme="primary"
+              >使用本地mxd</t-button
+            >
           </template>
 
           <div :class="['flex-col flex-[111] flex gap-8 justify-around', 'h-full']">
@@ -97,7 +99,7 @@
       </div>
 
       <div :class="['flex-1 h-full', 'py-[16px] px-[16px] border-1 border rounded-md']">
-        <TemplateList/>
+        <TemplateList />
       </div>
     </section>
   </section>
@@ -113,7 +115,7 @@ import { formDataList as currtFormDataList } from "@renderer/views/GisApi/store/
 import { isGisServerConnected } from "../../store/state"
 import { swtichCommonTemplate } from "./event"
 
-import TemplateList from './templateList.vue'
+import TemplateList from "./templateList.vue"
 
 onMounted(() => {
   console.log("setp1 on mounted")
