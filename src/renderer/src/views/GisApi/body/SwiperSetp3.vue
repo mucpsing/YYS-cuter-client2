@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-18 15:55:47
+ * @LastEditTime: 2024-07-19 14:38:51
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,7 +13,7 @@
     <div class="flex flex-row gap-2">
       <div class="flex-col flex-1">
         <t-card title="范围选择">
-          <EchartGeoJson :show="true" :geo-json="currtRangeGeoJson" />
+          <EchartGeoJson :show="true" :geo-json="currtRangeGeoJson" :maxLinkPoint="maxLinkPoint" />
         </t-card>
       </div>
 
@@ -31,9 +31,40 @@
                 :options="rangeFileSelectOptions"
                 v-model="currtSelectDfsuName"
                 class="min-w-[120px]"
-                @change="(value) => onSelectRangeFile(value)"
+                :change="(value) => onSelectRangeFile(value)"
               >
               </t-select>
+            </t-form-item>
+
+            <t-form-item label="稀释折点" name="name" label-align="left" initial-data="TDesign">
+              <t-slider
+                :max="1000"
+                :min="10"
+                :step="10"
+                v-model="maxLinkPoint"
+                :show-tooltip="true"
+                :input-number-props="{
+                  theme: 'column',
+                }"
+              />
+            </t-form-item>
+
+            <t-form-item label=" " name="name" label-align="left" initial-data="TDesign">
+              <div class="flex flex-row gap-[10px]">
+                <template
+                  v-for="(theme, idx) in ['primary', 'danger', 'warning', 'success', 'default']"
+                  :key="theme"
+                >
+                  <t-button
+                    @click="() => (maxLinkPoint = 100 + 100 * (1 + idx))"
+                    variant="outline"
+                    size="small"
+                    :theme="theme"
+                  >
+                    {{ 100 + 100 * (1 + idx) }}
+                  </t-button>
+                </template>
+              </div>
             </t-form-item>
           </t-form>
 
@@ -51,20 +82,20 @@ import EchartGeoJson from "@gisapi/_components/echartGeoJson/index.vue"
 import { formDataList, currtFormDataId } from "@gisapi/store/state"
 
 const currtRangeGeoJson = ref<any[]>([])
-
+const maxLinkPoint = ref(100)
 const rangeFileSelectOptions = computed(() => {
   if (formDataList.value.length == 0) return []
 
+  console.log("触发: rangeFileSelectOptions")
+
   const beInfo = formDataList.value[currtFormDataId.value].beDfsuInfo
   const afInfo = formDataList.value[currtFormDataId.value].afDfsuInfo
+  const rangeFileInfoList: { value: string; label: string }[] = []
 
-  if (!beInfo || !beInfo.range_geojson) return []
-  if (!afInfo || !afInfo.range_geojson) return []
-
-  const rangeFileInfoList = [
-    { value: beInfo.md5, label: beInfo.name },
-    { value: afInfo.md5, label: afInfo.name },
-  ]
+  if (beInfo && beInfo.range_geojson)
+    rangeFileInfoList.push({ value: beInfo.md5, label: beInfo.name })
+  if (afInfo && afInfo.range_geojson)
+    rangeFileInfoList.push({ value: afInfo.md5, label: afInfo.name })
 
   return rangeFileInfoList
 })
@@ -75,10 +106,8 @@ function onSelectRangeFile(md5: string) {
 
   if (beInfo.md5 == md5) {
     currtRangeGeoJson.value[0] = beInfo.range_geojson
-    console.log(md5)
   } else if (afInfo.md5 == md5) {
     currtRangeGeoJson.value[0] = afInfo.range_geojson
-    console.log(md5)
   } else {
     console.log("geosjon不在上传的dfsu之列")
   }
@@ -91,6 +120,24 @@ function test(dfsu: any) {
   console.log(formDataList.value)
   console.log(rangeFileSelectOptions)
 }
+
+onMounted(() => {
+  // 初始化时，如果有文件信息，则默认绘制一个
+  if (rangeFileSelectOptions.value.length > 0 && currtSelectDfsuName.value == "") {
+    console.log("进行初始化")
+    let default_md5 = ""
+    if (formDataList.value[currtFormDataId.value].beDfsuInfo) {
+      default_md5 = formDataList.value[currtFormDataId.value].beDfsuInfo.md5
+    } else if (formDataList.value[currtFormDataId.value].afDfsuInfo) {
+      default_md5 = formDataList.value[currtFormDataId.value].afDfsuInfo.md5
+    }
+
+    if (default_md5) {
+      onSelectRangeFile(default_md5)
+      currtSelectDfsuName.value = default_md5
+    }
+  }
+})
 </script>
 
 <style lang="stylus">
