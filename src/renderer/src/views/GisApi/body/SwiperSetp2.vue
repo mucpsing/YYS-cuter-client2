@@ -341,6 +341,7 @@ async function updateDfsuInfo(files: FileList, infoList: any[]) {
 
     if (dfsu_info) {
       fileInfo.bounds = dfsu_info.bounds
+      fileInfo.range_geojson = dfsu_info.range_geojson
     } else {
       console.log("dfsu文件上传失败")
     }

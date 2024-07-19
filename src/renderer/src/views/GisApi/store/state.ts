@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-08 22:15:59
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-18 15:43:06
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\state.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @Description: 建议所有state变量使用currtXxxxXxxx来命名
@@ -16,7 +16,6 @@ export const templateSetpOptions = [
   { title: "选择模板", value: 1 },
   { title: "工程配置", value: 2 },
   { title: "处理范围", value: 3 },
-  // { title: "图片生成", value: 4 },
   { title: "图片生成", value: 4 },
 ]
 
@@ -35,6 +34,7 @@ export function createFormData(newTabId: number) {
       reading: false,
       file: {} as File,
       bounds: undefined as BoundsT | undefined,
+      range_geojson: undefined as object | undefined,
     },
     afDfsuInfo: {
       // dfsu 工程后文件信息
@@ -46,6 +46,7 @@ export function createFormData(newTabId: number) {
       reading: false,
       file: {} as File, // 文件实例，已缓存在浏览器
       bounds: undefined as BoundsT | undefined,
+      range_geojson: undefined as object | undefined,
     },
     projectRange: {
       // 项目范围 shp文件信息
