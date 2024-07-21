@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:08
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-21 22:48:48
+ * @LastEditTime: 2024-07-22 01:23:11
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -47,7 +47,7 @@
             <t-space direction="vertical" size="10px">
               <t-input-adornment prepend="1、输出名称：">
                 <t-select-input
-                  class="Gis-Api__template_input_mxd_name"
+                  :id="`Gis-Api__template_input_mxd_name_${currtFormDataList[currtFormDataId].id}`"
                   :value="currtFormDataList[currtFormDataId].title"
                   :popup-visible="tipWrodsPopupVisible"
                   :popup-props="{ overlayInnerStyle: { padding: '0px' } }"

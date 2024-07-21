@@ -83,16 +83,17 @@ const dataChange = ({ id, value }) => {
 /**
  * @description: 创建一个新的Tab，新的工况
  * @param {*} _context 事件实例
- * @param {*} extendId 继承，是否继承上一个tab的数据
+ * @param {*} extendDataId 继承id，是否继承指定id的tab数据
  */
-const addTab = (_context?: { e: MouseEvent }, extendId: number = -1) => {
-  console.log("addTab...", extendId)
+const addTab = (_context?: { e: MouseEvent }, extendDataId: number = -1) => {
+  console.log("extendDataId...", extendDataId)
 
   const newTabId = parseInt(data.value.length.toString())
   const newData = createFormData(newTabId)
+  console.log("newTabId...", newTabId)
 
-  if (extendId >= 0) {
-    Object.assign(newData, formDataList.value[extendId])
+  if (extendDataId >= 0) {
+    Object.assign(newData, formDataList.value[extendDataId])
 
     currtTab.value = currtTab.value + 1
   }
@@ -132,9 +133,11 @@ const removeTab = ({ index }) => {
   }
 }
 
-const changeTab = (newTabs: number | string) => {
-  currtTab.value = newTabs as number
-  console.log(formDataList.value)
+const changeTab = (tabId: number | string) => {
+  currtTab.value = tabId as number
+
+  console.log("changeTab: ", currtTab.value)
+  console.log("formDataList: ", formDataList.value)
 }
 
 /* 注册全局事件 */

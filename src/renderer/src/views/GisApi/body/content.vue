@@ -115,15 +115,16 @@ import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
 import { formDataList, currtFormDataId, currtExtendId, showAddTapDialog } from "@gisapi/store/state"
 
 import { uploadFileApi, mxdToImgApi } from "@gisapi/api"
+import { isGisServerConnected } from "@gisapi/store/state"
+
 import type { MxdToImgFormT } from "@gisapi/api"
 import type { FormDataItemT } from "@gisapi/store/state"
-import { NotifyPlugin } from "tdesign-vue-next"
-
-import { isGisServerConnected } from "@gisapi/store/state"
 
 import { eventBus } from "@renderer/libs"
 
+// import { NotifyPlugin } from "tdesign-vue-next"
 // const GuideSetpRef = ref<InstanceType<typeof GuideSetp> | null>(null)
+
 const loading = ref(false)
 
 const tabControler = inject("tabControler") as {
@@ -158,15 +159,6 @@ function nextCheck(currtSetp: number): boolean {
   if (!isGisServerConnected.value) {
     eventBus.emit("show-guide", ["header", 0])
 
-    // if (GuideSetpRef.value) {
-    //   GuideSetpRef.value.show("header", 0)
-    // } else {
-    //   NotifyPlugin("error", {
-    //     title: `合成服务端口未连接，请手动配置服务器重新连接`,
-    //     duration: 2000,
-    //   })
-    // }
-
     return false
   }
 
@@ -174,32 +166,14 @@ function nextCheck(currtSetp: number): boolean {
     case 1:
       // 【1】检查是否已设置输入名称
       if (data.title.length == 0 || data.title == "未命名工况") {
-        eventBus.emit("show-guide", ["setp1", 0])
-        // if (GuideSetpRef.value) {
-        //   GuideSetpRef.value.show("setp1", 0)
-        // } else {
-        //   NotifyPlugin("error", {
-        //     title: `未指定的输出名称（必须）`,
-        //     duration: 2000,
-        //   })
-        // }
+        eventBus.emit("show-guide", ["setp1", 0, data.id])
 
         return false
       }
 
       // 【2】检查是否已选择mxd模板
       else if (data.mxdId < 0) {
-        eventBus.emit("show-guide", ["setp1", 1])
-
-        // console.log(data.mxdId)
-        // if (GuideSetpRef.value) {
-        //   GuideSetpRef.value.show("setp1", 1)
-        // } else {
-        //   NotifyPlugin("error", {
-        //     title: `未选择mxd文件模板（输出类型：采样点、流速、流场）`,
-        //     duration: 2000,
-        //   })
-        // }
+        eventBus.emit("show-guide", ["setp1", 1, data.id])
 
         return false
       }
