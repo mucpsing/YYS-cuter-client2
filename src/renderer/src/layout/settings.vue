@@ -56,7 +56,6 @@
         </template>
         <gisApiSettingPage />
       </t-tab-panel>
-      
     </t-tabs>
     <div class="flex justify-center w-full p-2">
       <t-button size="large" theme="success">完 成 配 置</t-button>

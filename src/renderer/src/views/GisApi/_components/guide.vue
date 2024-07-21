@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 00:31:18
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-30 15:16:35
+ * @LastEditTime: 2024-07-21 23:38:28
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\guideSetp1.vue
  * @Description: 动态的引导组件
 -->
@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import { GuideProps } from "tdesign-vue-next"
+import eventBus from "@renderer/libs/eventBus"
 
 const guideCurrentId = ref(-1)
 const currtSetp: Ref<GuideProps["steps"]> = ref([])
@@ -26,7 +27,7 @@ const setp_object = {
   setp1: [
     [
       {
-        element: "#Gis-Api__template_input_mxd_name",
+        element: ".Gis-Api__template_input_mxd_name",
         title: "未指定输出名称",
         body: "输出名称指当前模板最终输出的图片名称",
         placement: "bottom-right",
@@ -36,7 +37,7 @@ const setp_object = {
 
     [
       {
-        element: "#Gis-Api__template_input_select",
+        element: ".Gis-Api__template_input_select",
         title: "未选择【mxd】模板",
         body: "可以选择公共模板或上传自定义模板，才能继续进行输出",
         placement: "bottom-right",
@@ -97,6 +98,14 @@ function show(setpKey: keyof typeof setp_object, setpIndex: number = 0) {
 }
 
 defineExpose({ show })
+eventBus.on("show-guide", (args: any[]) => {
+  console.log("show-guide: ", args)
+  show(...args)
+})
+
+onMounted(()=>{
+  console.log("guide onMounted")
+})
 </script>
 
 <style scoped></style>

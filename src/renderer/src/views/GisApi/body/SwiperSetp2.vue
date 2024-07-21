@@ -67,7 +67,7 @@
             </div>
           </div>
           <t-divider class="my-2"></t-divider>
-          <t-loading :loading="projectLoading" class="flex items-center justify-between mt-2">
+          <section :loading="projectLoading" class="flex items-center justify-between mt-2">
             <div class="flex flex-col items-start justify-between">
               <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
                 <strong>工程范围 </strong>
@@ -111,7 +111,7 @@
               </p>
             </div>
             <div class="flex gap-1">
-              <t-button
+              <t-tag
                 v-if="formDataList[currtFormDataId].projectRangeType == 'shp'"
                 :onClick="() => onUploadBtnClickHandler('project')"
                 theme="success"
@@ -122,7 +122,7 @@
                   <cps-icon-font iconName="icon-yys-folder-opened" class="mr-2" />
                 </template>
 
-                {{ formDataList[currtFormDataId].projectRange.name || "选择.shp文件" }}</t-button
+                {{ formDataList[currtFormDataId].projectRange.name || "选择.shp文件" }}</t-tag
               >
               <div v-if="formDataList[currtFormDataId].projectRangeType == 'point'">
                 <t-input-number
@@ -138,7 +138,7 @@
                 ></t-input-number>
               </div>
             </div>
-          </t-loading>
+          </section>
           <t-divider class="my-2"></t-divider>
           <div class="flex items-center justify-between mt-2">
             <div class="flex flex-col items-start justify-between">

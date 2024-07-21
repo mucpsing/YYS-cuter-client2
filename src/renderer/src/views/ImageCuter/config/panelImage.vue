@@ -21,9 +21,9 @@
     </template>
 
     <t-form-item label="文件大小" name="IMG_MAX_SIZE">
-      <div :style="{display:'block'}">
+      <div :style="{ display: 'block' }">
         <t-col :span="8" :class="['w-full']">
-          <t-input-number 
+          <t-input-number
             :value="fileMaxSize"
             :suffix="`(${config.IMG_MAX_SIZE})`"
             @onChange="onSizeUnitInputChange"
@@ -41,7 +41,7 @@
 
       <t-row :gutter="16">
         <t-col :span="8" :class="['w-full']">
-          <t-input-number 
+          <t-input-number
             :value="fileMaxSize"
             :suffix="`(${config.IMG_MAX_SIZE})`"
             @onChange="onSizeUnitInputChange"
@@ -55,8 +55,6 @@
           ></t-select>
         </t-col>
       </t-row>
-
-      
     </t-form-item>
 
     <t-form-item label="支持格式" name="IMG_SUPORT_TYPES">

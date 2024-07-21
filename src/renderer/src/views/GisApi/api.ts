@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-14 10:26:10
+ * @LastEditTime: 2024-07-21 22:46:28
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -20,12 +20,13 @@ let SERVER = Axios.create({ baseURL: BASE_URL, timeout: DEFAULT_AXIOS_TIMEOUT })
  * @description: 首先检查当前的url是否有被更改，如果更改了就重新创建axios，否则返回原始的axios
  * @return {*}
  */
-const server = () => {
+const server = (timeout = DEFAULT_AXIOS_TIMEOUT) => {
   let baseURL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}`
 
   if (baseURL != BASE_URL || !SERVER) {
     console.log("重新创建baseURL：", baseURL)
-    SERVER = Axios.create({ baseURL, timeout: DEFAULT_AXIOS_TIMEOUT })
+    SERVER = Axios.create({ baseURL, timeout })
+    BASE_URL = baseURL
   }
 
   return SERVER
@@ -109,9 +110,9 @@ export async function mxdToImgApi(body: MxdToImgFormBase): Promise<boolean> {
   }
 }
 
-export async function serverCheckApi(): Promise<boolean> {
+export async function serverCheckApi(timeout = DEFAULT_AXIOS_TIMEOUT): Promise<boolean> {
   try {
-    const res = await server().get(API.test)
+    const res = await server(timeout).get(API.test)
 
     if (res.status == 200 && res.data.success) {
       return true

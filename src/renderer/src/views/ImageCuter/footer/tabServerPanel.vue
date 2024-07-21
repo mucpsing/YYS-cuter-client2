@@ -90,7 +90,7 @@
               ></cps-icon-font>
             </template>
             <span class="ml-2"> API 列表 </span>
-            <t-loading size="small" :loading="serverStore.status == 'checking'"></t-loading>
+            <section size="small" :loading="serverStore.status == 'checking'"></section>
           </t-button>
         </t-dropdown>
       </div>

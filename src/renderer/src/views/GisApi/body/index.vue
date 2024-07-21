@@ -31,11 +31,46 @@
 
 <script setup lang="ts">
 import BodyContent from "./content.vue"
-import { data } from "../store/data"
-import { formDataList, createFormData } from "../store/state"
-import { currtFormDataId as currtTab } from "../store/state"
+import { serverCheckApi, getTemplateList } from "@gisapi/api"
+import { data, templateInfo } from "@gisapi/store/data"
+
+import { formDataList, createFormData } from "@gisapi/store/state"
+import { currtFormDataId as currtTab } from "@gisapi/store/state"
+import { isGisServerConnected, GlobalLoading } from "@gisapi/store/state"
+import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
+
+import eventBus from "@renderer/libs/eventBus"
 
 const bodyElementRef = ref<HTMLDivElement>()
+
+onMounted(() => {
+  eventBus.on("gis-api:reload", checkoutServerOnReady)
+
+  eventBus.emit("gis-api:reload")
+})
+
+onUnmounted(() => {
+  eventBus.off("gis-api:reload", checkoutServerOnReady)
+})
+
+async function checkoutServerOnReady() {
+  // 检查所有预设的服务器ip
+  GlobalLoading.value = true
+
+  for (let serverIp of DEFAULT_SERVER_IP_LIST) {
+    console.log("检查IP: ", serverIp)
+    config.SERVER_IP = serverIp
+    isGisServerConnected.value = await serverCheckApi(500)
+    if (isGisServerConnected.value) {
+      templateInfo.value = await getTemplateList()
+      GlobalLoading.value = false
+
+      break
+    }
+  }
+
+  GlobalLoading.value = false
+}
 
 const dataChange = ({ id, value }) => {
   data.value.forEach((item) => {

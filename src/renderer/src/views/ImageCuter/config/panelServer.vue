@@ -22,8 +22,7 @@
     </template>
 
     <t-form-item label="服务器路径" name="SERVER_EXE_PATH">
-      <t-input v-model="config.SERVER_EXE_PATH" status="warning">
-      </t-input>
+      <t-input v-model="config.SERVER_EXE_PATH" status="warning"> </t-input>
       <div class="px-2"></div>
       <t-button variant="outline" @click="serverSelectFilePath"> 更改路径 </t-button>
     </t-form-item>

@@ -1,10 +1,9 @@
 import { debounce } from "lodash"
-import { templateInfo } from "@renderer/views/GisApi/store/data"
 
 import { currtMxdName } from "@renderer/views/GisApi/store/state"
 import { currtFormDataId, currtTemplateId } from "@renderer/views/GisApi/store/state"
 import { formDataList as currtFormDataList } from "@renderer/views/GisApi/store/state"
-import type { TemplateInfo } from "@renderer/views/GisApi/store/data"
+import type { TemplateInfo } from "@gisapi/Types"
 
 /**
  * @description: 选择常用模板的触发函数

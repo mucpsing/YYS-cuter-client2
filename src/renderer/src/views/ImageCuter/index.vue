@@ -9,20 +9,13 @@
 -->
 
 <template>
-  <section
-    class="ImageReader__container"
-    :style="{ gap: `${config.UI_GAP_WIDTH}px` }"
-  >
+  <section class="ImageReader__container" :style="{ gap: `${config.UI_GAP_WIDTH}px` }">
     <header
       class="flex items-center content-center justify-center ImageReader__header"
       :style="{ 'flex-basis': `${config.UI_HEADER_HEIGHT}px` }"
     >
       <span>{{ localStore.currtMode }}</span>
-      <c-icon-font
-        class="mx-2 text-3xl"
-        iconName="picture-outline"
-        color="#31302d"
-      ></c-icon-font>
+      <c-icon-font class="mx-2 text-3xl" iconName="picture-outline" color="#31302d"></c-icon-font>
       <h2>{{ localStore.currtFileName }}</h2>
     </header>
     <section class="ImageReader__body">
@@ -38,21 +31,21 @@
 </template>
 
 <script lang="ts" setup>
-import { eventBus } from "@renderer/libs";
-import type { ImageCuterExportJsonOptions } from "@renderer/global";
+import { eventBus } from "@renderer/libs"
+import type { ImageCuterExportJsonOptions } from "@renderer/global"
 
-import localStore from "./store";
-import config from "./store/config";
-import imageCuterBody from "./body/index.vue";
-import imageCuterFooter from "./footer/index.vue";
-import imageCuterHeader from "./header/index.vue";
+import localStore from "./store"
+import config from "./store/config"
+import imageCuterBody from "./body/index.vue"
+import imageCuterFooter from "./footer/index.vue"
+// import imageCuterHeader from "./header/index.vue";
 
 async function exportFile(opts: ImageCuterExportJsonOptions<any>) {
-  window.electron.send("selectFolder", opts);
+  window.electron.send("selectFolder", opts)
 }
 
 async function exportData(opts?: any) {
-  window.electron.send("selectFolder", opts);
+  window.electron.send("selectFolder", opts)
 }
 
 onMounted(() => {
@@ -61,9 +54,9 @@ onMounted(() => {
      * ************************ 插件全局事件注册 ************************
      */
     /* 导出当前配置文件 */
-    eventBus.on("imageCuterExportFile", exportFile);
+    eventBus.on("imageCuterExportFile", exportFile)
 
-    eventBus.on("imc-save-data", exportData);
+    eventBus.on("imc-save-data", exportData)
 
     /**
      * ************************ 插件功能 ************************
@@ -72,40 +65,39 @@ onMounted(() => {
     document.addEventListener(
       "paste",
       async (event: ClipboardEvent) => {
-        event.preventDefault();
+        event.preventDefault()
 
-        const items = event.clipboardData && event.clipboardData.items;
-        let file: File | null;
+        const items = event.clipboardData && event.clipboardData.items
+        let file: File | null
         if (items && items.length) {
           // 检索剪切板items中类型带有image的
           for (let i = 0; i < items.length; i++) {
             if (config.IMG_SUPORT_TYPES.includes(items[i].type)) {
               // 读取为File格式
-              file = items[i].getAsFile();
+              file = items[i].getAsFile()
 
               if (file) {
                 // 弹出确认框
                 eventBus.emit("showDialog", {
                   title: "检测到来自剪贴板的图片，是否加载图片",
                   message: " - ",
-                  acceptCallback: async () =>
-                    localStore.setCurrtFile(file as File),
-                });
+                  acceptCallback: async () => localStore.setCurrtFile(file as File),
+                })
               }
 
-              break;
+              break
             }
           }
         }
       },
-      false
-    );
-  });
-});
+      false,
+    )
+  })
+})
 
 onUnmounted(() => {
-  eventBus.off("imageCuterExportFile", exportFile);
-});
+  eventBus.off("imageCuterExportFile", exportFile)
+})
 </script>
 
 <style lang="stylus">

@@ -103,7 +103,7 @@
 
     <!-- 【右边】 -->
     <div :class="['flex-grow-[2]']">
-      <t-loading :loading="loading">
+      <section :loading="loading">
         <t-tabs v-model="currtPannel" theme="normal" size="medium" :onChange="loadingWait">
           <t-tab-panel value="基础属性" label="基础属性">
             <NpcParams />
@@ -117,7 +117,7 @@
             <NpcScriptEditor />
           </t-tab-panel>
         </t-tabs>
-      </t-loading>
+      </section>
 
       <div class="flex gap-2 py-2">
         <t-button class="flex-grow-[1]" theme="success" @click="updateBtn">

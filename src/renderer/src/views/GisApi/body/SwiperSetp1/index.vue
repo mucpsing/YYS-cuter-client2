@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:08
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-18 11:13:53
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-07-21 22:48:48
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -47,7 +47,7 @@
             <t-space direction="vertical" size="10px">
               <t-input-adornment prepend="1、输出名称：">
                 <t-select-input
-                  id="Gis-Api__template_input_mxd_name"
+                  class="Gis-Api__template_input_mxd_name"
                   :value="currtFormDataList[currtFormDataId].title"
                   :popup-visible="tipWrodsPopupVisible"
                   :popup-props="{ overlayInnerStyle: { padding: '0px' } }"
@@ -72,9 +72,22 @@
                 </t-select-input>
               </t-input-adornment>
 
+              <div class="flex flex-wrap gap-2 mb-4 whitespace-nowrap">
+                <template v-for="(item, idx) of outNameTipWordsList" :key="idx">
+                  <t-tag
+                    @click="() => onTitleWithPopupChange(outNameTipWordsList[idx])"
+                    class="cursor-pointer"
+                    size="small"
+                    :theme="outputNameTagList[idx].theme"
+                    :variant="outputNameTagList[idx].variant"
+                    >{{ item }}</t-tag
+                  >
+                </template>
+              </div>
+
               <t-input-adornment prepend="2、选择模板：">
                 <t-auto-complete
-                  id="Gis-Api__template_input_select"
+                  class="Gis-Api__template_input_select"
                   v-model="currtFormDataList[currtFormDataId].mxdName"
                   :options="template_name_list"
                   placeholder="从右方【模板列表】中选择"
@@ -110,7 +123,7 @@ import { SearchIcon } from "tdesign-icons-vue-next"
 
 import { templateInfo, keyWord, data } from "@gisapi/store/data"
 import { currtFormDataId, currtMxdName } from "@gisapi/store/state"
-import { formDataList as currtFormDataList } from "@gisapi/store/state"
+import { formDataList as currtFormDataList, DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/state"
 
 import { isGisServerConnected } from "@gisapi/store/state"
 
@@ -132,6 +145,17 @@ const template_name_list = computed(() =>
 )
 
 const currtMxdDocs = ref("")
+
+const variantList = ["dark", "light", "outline", "light-outline"]
+const themeList = ["primary", "warning", "danger", "success"]
+function crossCombineThemesAndVariants(
+  themeList: string[],
+  variantList: string[],
+): { theme: string; variant: string }[] {
+  return variantList.flatMap((variant) => themeList.map((theme) => ({ theme, variant })))
+}
+
+const outputNameTagList = crossCombineThemesAndVariants(themeList, variantList)
 
 const selectLocalTemplate = () => {
   // 选择本地模板，弹出文件选择
@@ -176,7 +200,9 @@ async function onTitleChange(newTitle: string) {
  */
 async function onTitleWithPopupChange(new_popup: string) {
   let newTitle: string
-  if (currtFormDataList.value[currtFormDataId.value].title == "") {
+  if (
+    ["", DEFAULT_TEMPLATE_OUTNAME].includes(currtFormDataList.value[currtFormDataId.value].title)
+  ) {
     newTitle = new_popup
   } else {
     newTitle = `${currtFormDataList.value[currtFormDataId.value].title}_${new_popup}`

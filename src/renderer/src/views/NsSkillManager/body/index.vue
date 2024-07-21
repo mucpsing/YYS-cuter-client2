@@ -43,13 +43,13 @@
           @filter-change="onFilterChange"
         >
           <template #Job="{ row }">
-            <t-tag
+            <t-button
               shape="round"
               :theme="JobMap[row.Job] ? JobMap[row.Job].theme : 'default'"
               variant="light-outline"
             >
               {{ JobMap[row.Job] ? JobMap[row.Job].label : row.Job }}
-            </t-tag>
+            </t-button>
           </template>
 
           <template #SkillType1="{ row }">
