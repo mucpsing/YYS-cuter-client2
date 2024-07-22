@@ -1,14 +1,16 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 00:31:18
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-22 01:23:03
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-22 10:41:04
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\guideSetp1.vue
  * @Description: 动态的引导组件
+ * @BUG: 使用t-tab组件后，仅有第一页能正确生成引导，其他页面无法正常生成
 -->
 <template>
   <t-guide
     v-model="guideCurrentId"
+    :mode="mode"
     :steps="currtSetp"
     :finishButtonProps="{ content: '关闭', theme: 'success' }"
     :hideCounter="false"
@@ -21,6 +23,7 @@ import { GuideProps } from "tdesign-vue-next"
 import eventBus from "@renderer/libs/eventBus"
 
 const guideCurrentId = ref(-1)
+const mode = ref<"popup" | "dialog">("popup")
 const currtSetp: Ref<GuideProps["steps"]> = ref([])
 
 function createElementId(idName: string | number, baseName: string) {
@@ -31,7 +34,7 @@ const setpObject = {
   setp1: [
     [
       {
-        element: "#Gis-Api__template_input_mxd_name",
+        element: "Gis-Api__template_input_mxd_name",
         title: "未指定输出名称",
         body: "输出名称指当前模板最终输出的图片名称",
         placement: "bottom-right",
@@ -49,7 +52,7 @@ const setpObject = {
       },
     ],
   ] as GuideProps["steps"][],
-  
+
   setp2: [
     [
       {
@@ -79,6 +82,14 @@ function show(
   setpDataIndex: number = 0,
   tabId: string | number = -1,
 ) {
+  // BUG 2024-07-19 引导位置异常
+  // 1. 只有第一页的引导可以正常显示，其他页面引导元素的定位异常
+  // 2. 使用修改mode的方式暂时仅在第一页面进行引导，其他页面进行全局居中的引导弹窗提示
+  if (tabId == 0) {
+    mode.value = "popup"
+  } else {
+    mode.value = "dialog"
+  }
   // 检查 setpName 是否存在于 setpObject 的键中
   if (!(setpName in setpObject)) {
     console.error(`Invalid key: ${setpName}. It does not exist in setpObject.`)
@@ -109,7 +120,17 @@ function show(
   if (tabId != -1) {
     targetData = targetData.map((item) =>
       Object.assign({}, item, {
-        element: createElementId(tabId, item.element as string),
+        // element: createElementId(tabId, item.element as string),
+        element: () => {
+          const idName = createElementId(tabId, item.element as string)
+
+          const target = document.getElementById(idName)
+
+          console.log("我们的123: ", { tabId, item, idName })
+
+          console.log(target)
+          if (target) return target
+        },
       }),
     )
   }
@@ -121,14 +142,20 @@ function show(
   guideCurrentId.value = 0
 }
 
-defineExpose({ show })
-eventBus.on("show-guide", (args: any[]) => {
-  console.log("show-guide: ", args)
+// defineExpose({ show })
+
+const showOnce = (args: any[]) => {
   show(...args)
-})
+}
 
 onMounted(() => {
   console.log("guide onMounted")
+  eventBus.on("show-guide", showOnce)
+})
+
+onUnmounted(() => {
+  console.log("guide onUnmounted")
+  eventBus.off("show-guide", showOnce)
 })
 </script>
 

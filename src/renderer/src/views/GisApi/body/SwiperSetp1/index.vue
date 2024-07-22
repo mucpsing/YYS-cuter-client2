@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:08
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-22 01:23:11
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-22 10:23:31
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -114,12 +114,15 @@
       <div :class="['flex-1 h-full', 'py-[16px] px-[16px] border-1 border rounded-md']">
         <TemplateList />
       </div>
+
+      <!-- <GuideSetp></GuideSetp> -->
     </section>
   </section>
 </template>
 
 <script setup lang="tsx">
 import { SearchIcon } from "tdesign-icons-vue-next"
+// import GuideSetp from "@gisapi/_components/guide.vue"
 
 import { templateInfo, keyWord, data } from "@gisapi/store/data"
 import { currtFormDataId, currtMxdName } from "@gisapi/store/state"
