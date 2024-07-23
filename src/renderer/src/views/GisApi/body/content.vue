@@ -169,11 +169,8 @@ function nextCheck(currtSetp: number): boolean {
       if (data.title.length == 0 || data.title == "未命名工况") {
         eventBus.emit("show-guide", ["setp1", 0, data.id])
 
-        console.log("3333333333333333333")
         return false
       }
-
-      console.log("22222222222222222222")
 
       // 【2】检查是否已选择mxd模板
       if (data.mxdId < 0) {
@@ -184,6 +181,14 @@ function nextCheck(currtSetp: number): boolean {
 
       break
     case 2:
+      const hasBeDfsu = Boolean(data.beDfsuInfo.md5)
+      const hasAfDfsu = Boolean(data.afDfsuInfo.md5)
+      if (!hasBeDfsu || !hasAfDfsu) {
+        console.log("未指定dfsu")
+        eventBus.emit("show-guide", ["setp2", 0, data.id])
+
+        return false
+      }
       break
     case 3:
       break

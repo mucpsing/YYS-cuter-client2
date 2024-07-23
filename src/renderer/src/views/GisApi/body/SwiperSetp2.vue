@@ -6,6 +6,7 @@
     <header
       ref="headerRef"
       :class="['flex-grow-[0]', 'flex gap-1', 'min-h-[150px] flex-or relative']"
+      :id="`Gis-Api__dfsu_input_${formDataList[currtFormDataId].id}`"
     >
       <!-- 拖拽激活后的样式遮罩层 -->
       <div class="GisApi__drapMask" :class="{ 'GisApi__drapMask-show': isOverDropZone }">
@@ -27,6 +28,7 @@
         </strong>
       </div>
       <DfsuInfo
+        id="1111111111111111111111"
         title="DFSU文件(工程后)"
         :fileInfo="formDataList[currtFormDataId].afDfsuInfo"
         @onBtnClick="() => onUploadBtnClickHandler('af')"
