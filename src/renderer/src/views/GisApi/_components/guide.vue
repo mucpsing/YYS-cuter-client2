@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 00:31:18
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-23 11:03:07
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-07-23 23:21:00
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\guideSetp1.vue
  * @Description: 动态的引导组件
  * @BUG: 使用t-tab组件后，仅有第一页能正确生成引导，其他页面无法正常生成
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { GuideProps } from "tdesign-vue-next"
+import { GuideProps, GuideStep } from "tdesign-vue-next"
 import eventBus from "@renderer/libs/eventBus"
 
 const guideCurrentId = ref(-1)
@@ -147,6 +147,12 @@ function show(
   guideCurrentId.value = 0
 }
 
+function test(setpOption: GuideStep[]) {
+  console.log("guide test:::")
+  currtSetp.value = setpOption
+  guideCurrentId.value = 0
+}
+
 // defineExpose({ show })
 
 const showOnce = (args: any[]) => {
@@ -155,6 +161,7 @@ const showOnce = (args: any[]) => {
 
 onMounted(() => {
   eventBus.on("show-guide", showOnce)
+  eventBus.on("test-guide", test)
 })
 
 onUnmounted(() => {

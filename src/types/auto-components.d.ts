@@ -8,6 +8,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     _components: typeof import("./../renderer/src/views/GisApi/_components/index.vue")["default"]
+    '纯CSS的tabs组件DEMO': typeof import('./../renderer/src/views/Home/纯CSS的tabs组件DEMO.vue')['default']
+    '弹性父组件DEMO': typeof import('./../renderer/src/views/Home/弹性父组件DEMO.vue')['default']
     Body: typeof import('./../renderer/src/views/GisApi/body/index.vue')['default']
     Config: typeof import('./../renderer/src/views/ImageCuter/config/index.vue')['default']
     Content: typeof import('./../renderer/src/views/GisApi/body/content.vue')['default']

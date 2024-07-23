@@ -20,7 +20,7 @@
         :value="idx"
         :label="`${item.label} (${idx + 1}/${data.length})`"
         :removable="true"
-        :destroyOnHide="false"
+        :destroyOnHide="true"
       >
         <!-- 模板选择 -->
         <BodyContent />
@@ -41,16 +41,14 @@ import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
 
 import eventBus from "@renderer/libs/eventBus"
 
-const bodyElementRef = ref<HTMLDivElement>()
-
 onMounted(() => {
-  eventBus.on("gis-api:reload", checkoutServerOnReady)
+  eventBus.on("gis-api:checkServer", checkoutServerOnReady)
 
-  eventBus.emit("gis-api:reload")
+  checkoutServerOnReady()
 })
 
 onUnmounted(() => {
-  eventBus.off("gis-api:reload", checkoutServerOnReady)
+  eventBus.off("gis-api:checkServer", checkoutServerOnReady)
 })
 
 async function checkoutServerOnReady() {
@@ -61,9 +59,12 @@ async function checkoutServerOnReady() {
     console.log("检查IP: ", serverIp)
     config.SERVER_IP = serverIp
     isGisServerConnected.value = await serverCheckApi(500)
-    if (isGisServerConnected.value) {
-      templateInfo.value = await getTemplateList()
-      GlobalLoading.value = false
+
+    if (isGisServerConnected.value && templateInfo.value.length == 0) {
+      getTemplateList().then((res) => {
+        templateInfo.value = res
+        GlobalLoading.value = false
+      })
 
       break
     }

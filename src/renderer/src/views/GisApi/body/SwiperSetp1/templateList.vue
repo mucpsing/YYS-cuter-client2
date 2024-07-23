@@ -2,14 +2,14 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:17
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-21 20:13:56
+ * @LastEditTime: 2024-07-23 23:33:35
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\templateList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <t-loading
     text="获取列表中..."
-    :loading="loading"
+    :loading="loading || GlobalLoading"
     size="small"
     :class="['flex-col flex gap-2 flex-1 h-full']"
   >
@@ -77,6 +77,7 @@ import { templateInfo } from "@renderer/views/GisApi/store/data"
 import { swtichCommonTemplate } from "./event"
 import { getTemplateList } from "@gisapi/api"
 import { truncateText } from "@gisapi/utils/index"
+import { isGisServerConnected, GlobalLoading } from "@gisapi/store/state"
 
 const loading = ref(false)
 
@@ -88,8 +89,8 @@ async function updateTemplateList() {
   setTimeout(() => (loading.value = false), 1200)
 }
 
-onMounted(async () => {
-  await updateTemplateList()
+onMounted(() => {
+  // if (templateInfo.value.length == 0) updateTemplateList()
 })
 </script>
 

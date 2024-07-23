@@ -1,18 +1,93 @@
 <template>
-  <div class="w-full h-screen">
-    <!-- 父级元素可被撑开 -->
-    <section :class="['parent', 'h-screen', 'flex flex-col']">
-      <header class="w-full son h-[60px]">头部</header>
+  <div class="container p-4 mx-auto">
+    <div class="my-4 nav">
+      <button
+        v-for="(phone, index) in phones"
+        :key="index"
+        class="inline-block px-5 py-2 rounded-full"
+        :class="{ 'bg-blue-500 text-white': index === activeIndex }"
+        @click="setActiveTab(index)"
+      >
+        {{ phone.name }}
+      </button>
+      <button
+        class="inline-block px-5 py-2 ml-4 text-white bg-green-500 rounded-full"
+        @click="addNewTab"
+      >
+        Add New Tab
+      </button>
+    </div>
 
-      <div class="w-full h-0 bg-green-200 flex-grow-[2]">
-        <!-- 设置了height 0 的元素内部元素要设置可以滚动 -->
-        <div class="h-full overflow-auto">
-          <!-- 这里的子元素是动态获取，最终导致父级元素被撑开，无法完全使用合适的动态高度 -->
-          <p class="h-[200px]" v-for="(i, idex) of [1, 2, 3, 4, 56, 7, 89]" :key="idex">{{ i }}</p>
+    <!-- Tabs content -->
+    <div
+      v-for="(phone, index) in phones"
+      :key="index"
+      class="p-8 shadow-md rounded-xl"
+      :class="{ hidden: index !== activeIndex }"
+    >
+      <!-- Tab content here -->
+      <div class="flex flex-col justify-center w-full">
+        <div class="w-full">
+          <h2 class="text-2xl font-bold">{{ phone.name }}</h2>
+          <p :id="`guide-test__${index}`">{{ index }}</p>
+          <!-- Add more content here if needed -->
+          <t-button @click="() => test(index)">guide show</t-button>
         </div>
       </div>
+    </div>
 
-      <footer class="w-full bg-orange-200 h-[60px]">footer</footer>
-    </section>
+    <GuideSetp></GuideSetp>
   </div>
 </template>
+
+<script setup lang="ts">
+import GuideSetp from "@gisapi/_components/guide.vue"
+import eventBus from "@renderer/libs/eventBus"
+
+function test(idex: number) {
+  eventBus.emit("test-guide", [
+    {
+      element: `#guide-test__${idex}`,
+      title: "测试",
+      body: "测试11111111111111111111",
+      placement: "bottom-right",
+      highlightPadding: 5,
+    },
+  ])
+}
+interface Phone {
+  id: string
+  name: string
+  // Add other properties as needed
+}
+
+const props = defineProps<{
+  initialPhones?: Phone[] // Optional initial phones
+}>()
+
+const phones = ref<Phone[]>(props.initialPhones || []) // Use initial phones if provided, otherwise an empty array
+const activeIndex = ref(0)
+
+function setActiveTab(index: number) {
+  activeIndex.value = index
+}
+
+function addNewTab() {
+  // Generate a unique ID (simplified for demonstration)
+  const newId = `${new Date().getTime()}`
+  // Create a new phone object with a default name (can be modified by user)
+  const newPhone: Phone = {
+    id: newId,
+    name: `New Phone ${phones.value.length + 1}`,
+    // Add other default properties as needed
+  }
+  // Add the new phone to the phones array
+  phones.value.push(newPhone)
+  // Activate the new tab
+  setActiveTab(phones.value.length - 1)
+}
+</script>
+
+<style scoped>
+/* Your styles here */
+</style>
