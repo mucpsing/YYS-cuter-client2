@@ -155,6 +155,7 @@ async function onAddTap() {
 
 function nextCheck(currtSetp: number): boolean {
   const data = formDataList.value[currtFormDataId.value]
+  console.log("nextCheck...", { currtSetp, data })
 
   if (!isGisServerConnected.value) {
     eventBus.emit("show-guide", ["header", 0])
@@ -168,11 +169,14 @@ function nextCheck(currtSetp: number): boolean {
       if (data.title.length == 0 || data.title == "未命名工况") {
         eventBus.emit("show-guide", ["setp1", 0, data.id])
 
+        console.log("3333333333333333333")
         return false
       }
 
+      console.log("22222222222222222222")
+
       // 【2】检查是否已选择mxd模板
-      else if (data.mxdId < 0) {
+      if (data.mxdId < 0) {
         eventBus.emit("show-guide", ["setp1", 1, data.id])
 
         return false
