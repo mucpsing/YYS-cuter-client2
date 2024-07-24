@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-24 10:46:50
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-07-25 00:47:05
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,7 +13,12 @@
     <div class="flex flex-row gap-2">
       <div class="flex-col flex-1">
         <t-card title="范围选择">
-          <EchartGeoJson :show="true" :geo-json="currtRangeGeoJson" :maxLinkPoint="maxLinkPoint" />
+          <EchartGeoJson
+            :show="true"
+            :geo-json="currtRangeGeoJson"
+            :maxLinkPoint="maxLinkPoint"
+            :draw-rect-size="currtPaper"
+          />
         </t-card>
       </div>
 
@@ -30,7 +35,7 @@
               <t-select
                 :options="rangeFileSelectOptions"
                 v-model="currtSelectDfsuName"
-                class="min-w-[120px] w-full"
+                class="min-w-[100px] w-full"
                 :onChange="(value) => onSelectRangeFile(value)"
               >
               </t-select>
@@ -38,7 +43,7 @@
 
             <t-form-item label="稀释折点" name="name" label-align="left" initial-data="TDesign">
               <t-slider
-                :max="300"
+                :max="600"
                 :min="10"
                 :step="10"
                 v-model="maxLinkPoint"
@@ -50,20 +55,48 @@
             </t-form-item>
 
             <t-form-item label=" " name="name" label-align="left" initial-data="TDesign">
-              <div class="flex flex-row gap-[10px]">
+              <div class="flex flex-row gap-[5px]">
                 <template
-                  v-for="(theme, idx) in ['primary', 'danger', 'warning', 'success', 'default']"
+                  v-for="(theme, idx) in ['primary', 'danger', 'warning', 'success']"
                   :key="theme"
                 >
                   <t-button
-                    @click="() => (maxLinkPoint = 30 * (1 + idx))"
+                    @click="() => (maxLinkPoint = 100 * (1 + idx))"
                     variant="outline"
                     size="small"
                     :theme="theme"
                   >
-                    {{ 30 * (1 + idx) }}
+                    {{ 100 * (1 + idx) }}
                   </t-button>
                 </template>
+              </div>
+            </t-form-item>
+
+            <t-form-item label="输出尺寸" name="name" label-align="left" initial-data="TDesign">
+              <div class="flex flex-row justify-start w-full h-full gap-2 p-2">
+                <div
+                  :class="[
+                    'border-2 border-yellow-400 ',
+                    'w-[148.5px] h-[105px] bg-red-300',
+                    'text-center flex flex-col justify-center items-center',
+                  ]"
+                >
+                  <strong>{{ currtPaper }}</strong>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                  <template v-for="(item, idx) in paperSizeList" :key="idx">
+                    <t-button
+                      @click="() => (currtPaper = item.value)"
+                      variant="outline"
+                      size="small"
+                      :theme="themeList[idx]"
+                      class="w-12"
+                    >
+                      {{ item.label }}
+                    </t-button>
+                  </template>
+                </div>
               </div>
             </t-form-item>
           </t-form>
@@ -81,15 +114,33 @@
 import EchartGeoJson from "@gisapi/_components/echartGeoJson/index.vue"
 import { formDataList, currtFormDataId } from "@gisapi/store/state"
 
+const maxLinkPoint = ref(50)
 const currtSelectDfsuName = ref("")
 const currtRangeGeoJson = ref<any[]>([])
-const maxLinkPoint = ref(50)
+
+const currtPaper = ref("297x210")
+const paperSizeList = [
+  { label: "A4", value: "297x210" },
+  { label: "A3", value: "420x297" },
+  { label: "A2", value: "594x420" },
+  { label: "A1", value: "842x594" },
+]
+const themeList = [
+  "primary",
+  "danger",
+  "warning",
+  "success",
+  "primary",
+  "danger",
+  "warning",
+  "success",
+]
 
 // 动态计算范围文件列表
 const rangeFileSelectOptions = computed(() => {
   if (formDataList.value.length == 0) return []
 
-  console.log("触发: rangeFileSelectOptions")
+  // console.log("触发: rangeFileSelectOptions")
 
   const beInfo = formDataList.value[currtFormDataId.value].beDfsuInfo
   const afInfo = formDataList.value[currtFormDataId.value].afDfsuInfo
@@ -104,7 +155,7 @@ const rangeFileSelectOptions = computed(() => {
 })
 
 function onSelectRangeFile(md5: string) {
-  console.log("触发: onSelectRangeFile")
+  // console.log("触发: onSelectRangeFile")
 
   const beInfo = formDataList.value[currtFormDataId.value].beDfsuInfo
   const afInfo = formDataList.value[currtFormDataId.value].afDfsuInfo

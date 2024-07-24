@@ -2,15 +2,18 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-19 19:14:48
+ * @LastEditTime: 2024-07-25 01:03:31
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+    :class="[show ? '' : 'bg-gray-200']"
+
 -->
 <template>
   <div
     ref="chartContainer"
     :style="{ width: `${width}px`, height: `${height}px` }"
-    :class="[show ? 'bg-red-200' : 'bg-gray-200']"
+    :class="{ 'bg-gray-200': show }"
+    class="rounded-lg border-slate-500"
   ></div>
   <!-- <button type="button" @click="drawOnce">123</button> -->
 </template>
@@ -23,6 +26,12 @@ import { getOddIndexedElements } from "./utils"
 
 import { debounce } from "lodash"
 
+interface DrawPolygonConfig {
+  title?: string
+  max_len?: number
+  range?: number[]
+}
+
 export default defineComponent({
   name: "PolygonChart",
 
@@ -32,8 +41,11 @@ export default defineComponent({
     show: { type: Boolean, default: false },
     width: { type: Number, default: 600 },
     height: { type: Number, default: 400 },
+    drawRectSize: { type: String, default: "297x210" },
+    drawRectScale: { type: Number, default: 0.5 },
     geoJson: { type: Array, default: [] },
     maxLinkPoint: { type: Number, default: 50 },
+
     // bounds: { type: Array, default: [] },
   },
 
@@ -44,7 +56,8 @@ export default defineComponent({
     const centerCoords = ref([0, 0])
     const isDraw = ref(false)
     const watchList: WatchStopHandle[] = []
-    const drawPolygonCount = ref(0)
+    const drawPolygonCount = ref(0) // 记录绘制河道的次数
+    const drawRectCount = ref(0) // 用来记录绘制矩形的次数
     let myChart: echarts.ECharts | null = null
 
     // const test = () => {
@@ -73,17 +86,10 @@ export default defineComponent({
     //   })
     // }
 
-    function drawPolygon(
-      geojson: any,
-      customConfig: { title?: string; max_len?: number; range?: number[] },
-    ) {
-      console.log("drawPolygon", geojson)
-      console.log("drawPolygon", props.geoJson)
+    function drawPolygon(geojson: any, customConfig: DrawPolygonConfig) {
+      if (!geojson) return console.warn("have no geojsonData")
 
-      if (!myChart) {
-        console.warn("echarts not init")
-        return
-      }
+      if (!myChart) return console.warn("echarts not init")
 
       const defaultConfig = {
         title: "图片标题",
@@ -98,11 +104,16 @@ export default defineComponent({
 
       while (polygon.length > config.max_len) polygon = getOddIndexedElements(polygon)
 
+      const axisOffset = 0.05
       const bounds = {
         maxx: Math.max(...polygon.map((item) => item[0])),
         minx: Math.min(...polygon.map((item) => item[0])),
         maxy: Math.max(...polygon.map((item) => item[1])),
         miny: Math.min(...polygon.map((item) => item[1])),
+      }
+      const rect = {
+        w: bounds.maxx - bounds.minx,
+        y: bounds.maxy - bounds.miny,
       }
 
       centerCoords.value = [
@@ -111,35 +122,66 @@ export default defineComponent({
       ]
 
       const option = {
-        title: {
-          text: config.title,
-          left: "center",
-        },
+        // title: {
+        //   text: config.title,
+        //   left: "center",
+        // },
+
         xAxis: {
           show: false,
-          min: bounds.minx,
-          max: bounds.maxx,
+          min: bounds.minx - rect.w * axisOffset,
+          max: bounds.maxx + rect.w * axisOffset,
           type: "value",
           axisLine: { onZero: false },
         },
         yAxis: {
           show: false,
-          min: bounds.miny,
-          max: bounds.maxy,
+          min: bounds.miny - rect.y * axisOffset,
+          max: bounds.maxy + rect.y * axisOffset,
           type: "value",
           axisLine: { onZero: false },
         },
-        grid: {
-          show: true,
-          top: "10%",
-          bottom: "10%",
-        },
+
         tooltip: {
           triggerOn: "none",
           formatter: function (params) {
             return "X: " + params.data[0].toFixed(2) + "<br>Y: " + params.data[1].toFixed(2)
           },
         },
+
+        grid: {
+          show: false,
+          // 所有边距统一设置
+          left: "5%",
+          right: "5%",
+          top: "5%",
+          bottom: "5%",
+        },
+
+        dataZoom: [
+          // 拖动用的
+          // {
+          //   type: "slider",
+          //   xAxisIndex: 0,
+          //   filterMode: "none",
+          // },
+          // {
+          //   type: "slider",
+          //   yAxisIndex: 0,
+          //   filterMode: "none",
+          // },
+
+          {
+            type: "inside",
+            xAxisIndex: 0,
+            filterMode: "none",
+          },
+          {
+            type: "inside",
+            yAxisIndex: 0,
+            filterMode: "none",
+          },
+        ],
 
         series: [
           {
@@ -159,10 +201,10 @@ export default defineComponent({
     }
 
     function drawRect(
-      rectConfig: { w: number; h: number; x?: number; y?: number } = { w: 200, h: 100 },
+      rectConfig: { w: number; h: number; x?: number; y?: number } = { w: 297 / 2, h: 210 / 2 },
     ) {
       if (!myChart) return console.log("myChart is null")
-
+      console.log("drawRect", rectConfig)
       // 中心坐标在上一步绘制折线后已经提前生成
       const startXY = myChart.convertToPixel({ seriesId: "polygon_base" }, [...centerCoords.value])
 
@@ -182,8 +224,8 @@ export default defineComponent({
           shape: {
             x: 0,
             y: 0,
-            width: 200,
-            height: 100,
+            width,
+            height,
           },
           draggable: true,
           style: {
@@ -209,6 +251,7 @@ export default defineComponent({
       ]
 
       myChart.setOption({ graphic })
+      drawRectCount.value++
       isDraw.value = true
     }
     const drawOnce = debounce(() => {
@@ -217,20 +260,31 @@ export default defineComponent({
     }, 300)
 
     const drawRectOnce = debounce(() => {
-      console.log("drawRectOnce")
-      drawRect()
+      const [w, h] = props.drawRectSize.split("x")
+      const rect = { w, h }
+
+      // 获取当前绘制的矩形中心点坐标
+      if (drawRectCount.value > 0) {
+        rect.x = centerCoords.value[0] - parseInt(w) / 2
+        // rect.y
+      }
+      drawRect({ w: parseInt(w) * props.drawRectScale, h: parseInt(h) * props.drawRectScale })
     }, 300)
 
-    watchList.push(watch(props, () => drawOnce()))
+    watchList.push(watch(props.geoJson, () => drawOnce()))
     watchList.push(
       watch(drawPolygonCount, () => {
         if (!isDraw.value) drawRectOnce()
       }),
     )
+    watchList.push(
+      watch(
+        () => props.drawRectSize,
+        () => drawRectOnce(),
+      ),
+    )
 
     onMounted(() => {
-      console.log("props.geoJson: ", props.geoJson.length)
-      console.log("props.geoJson: ", props.geoJson)
       if (chartContainer.value) myChart = echarts.init(chartContainer.value)
 
       if (props.geoJson.length > 0) drawOnce()
