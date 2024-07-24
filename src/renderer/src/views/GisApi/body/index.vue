@@ -30,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+import { throttle } from "lodash"
+
 import BodyContent from "./content.vue"
 import { serverCheckApi, getTemplateList } from "@gisapi/api"
 import { data, templateInfo } from "@gisapi/store/data"
@@ -51,7 +53,7 @@ onUnmounted(() => {
   eventBus.off("gis-api:checkServer", checkoutServerOnReady)
 })
 
-async function checkoutServerOnReady() {
+const checkoutServerOnReady = throttle(async () => {
   // 检查所有预设的服务器ip
   GlobalLoading.value = true
 
@@ -71,7 +73,7 @@ async function checkoutServerOnReady() {
   }
 
   GlobalLoading.value = false
-}
+}, 300)
 
 const dataChange = ({ id, value }) => {
   data.value.forEach((item) => {

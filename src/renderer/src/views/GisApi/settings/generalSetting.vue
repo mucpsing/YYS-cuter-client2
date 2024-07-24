@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-27 22:05:24
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-20 21:41:34
+ * @LastEditTime: 2024-07-24 09:05:31
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\settings\generalSettingl.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -31,12 +31,12 @@
         :filterable="false"
         placeholder="请输入关键词搜索"
         clearable
-        @select="(s) => checkServer()"
+        @select="() => checkServer()"
       />
     </t-form-item>
 
     <t-form-item label="服务器端口" name="SERVER_PROT">
-      <t-input v-model="config.SERVER_PROT" @blur="(s) => checkServer()" type="number"></t-input>
+      <t-input v-model="config.SERVER_PROT" @blur="() => checkServer()" type="number"></t-input>
     </t-form-item>
 
     <t-form-item label="HTTP协议" name="SERVER_PROTOCOL">
@@ -62,7 +62,7 @@
     <t-button
       class="w-full my-4 text-sm"
       @click="checkServer"
-      :loading="btnLoading"
+      :loading="GlobalLoading"
       :theme="btnTheme"
       >{{ isGisServerConnected ? "测试连接" : "点击重连" }}
     </t-button>
@@ -71,12 +71,13 @@
 
 <script setup lang="ts">
 import config, { DEFAULT_SERVER_IP_LIST } from "../store/config"
-import { isGisServerConnected } from "../store/state"
-import { serverCheckApi } from "../api"
+import { isGisServerConnected, GlobalLoading } from "@gisapi/store/state"
 
-import { debounce } from "lodash"
-const btnLoading = ref(false)
+import eventBus from "@renderer/libs/eventBus"
+
+// const btnLoading = ref(false)
 const btnTheme = computed(() => (isGisServerConnected.value ? "success" : "danger"))
+const SERVER_KEYS = ["SERVER_IP", "SERVER_PROT"]
 
 const V = computed(
   () =>
@@ -85,13 +86,8 @@ const V = computed(
 const resetConfigData = (item) => {
   console.log("resetConfigData: ", item)
 }
-const SERVER_KEYS = ["SERVER_IP", "SERVER_PROT"]
 
-const checkServer = debounce(async () => {
-  btnLoading.value = true
-  isGisServerConnected.value = await serverCheckApi()
-
-  // 设置按钮状态
-  setTimeout(() => (btnLoading.value = false), 1500)
-}, 120)
+function checkServer() {
+  eventBus.emit("gis-api:checkServer")
+}
 </script>

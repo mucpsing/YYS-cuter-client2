@@ -2,14 +2,14 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:17
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-23 23:33:35
+ * @LastEditTime: 2024-07-24 09:10:58
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\templateList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <t-loading
     text="获取列表中..."
-    :loading="loading || GlobalLoading"
+    :loading="loading"
     size="small"
     :class="['flex-col flex gap-2 flex-1 h-full']"
   >
@@ -23,11 +23,14 @@
     </div>
     <div :class="['__scrollbar-bule', 'flex-col flex gap-4', 'h-full overflow-y-auto', 'pr-[8px]']">
       <template v-if="templateInfo.length > 0">
-        <t-card v-for="item in templateInfo" :key="item.template_id" theme="poster2">
-          <div
-            :class="['flex gap-4', 'cursor-pointer', 'hover:bg-red-100/10']"
-            @click="swtichCommonTemplate(item)"
-          >
+        <t-card
+          v-for="item in templateInfo"
+          :key="item.template_id"
+          theme="poster2"
+          class="cursor-pointer hover:bg-gray-300/10"
+          @click="swtichCommonTemplate(item)"
+        >
+          <div :class="['flex gap-4']">
             <t-image
               :key="item.template_name"
               :src="item.preview"
@@ -77,7 +80,7 @@ import { templateInfo } from "@renderer/views/GisApi/store/data"
 import { swtichCommonTemplate } from "./event"
 import { getTemplateList } from "@gisapi/api"
 import { truncateText } from "@gisapi/utils/index"
-import { isGisServerConnected, GlobalLoading } from "@gisapi/store/state"
+// import { isGisServerConnected, GlobalLoading } from "@gisapi/store/state"
 
 const loading = ref(false)
 
