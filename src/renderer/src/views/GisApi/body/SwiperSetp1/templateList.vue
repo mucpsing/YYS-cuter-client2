@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:17
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-24 09:10:58
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-24 10:07:16
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\templateList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -33,7 +33,7 @@
           <div :class="['flex gap-4']">
             <t-image
               :key="item.template_name"
-              :src="item.preview"
+              :src="`${currtPreviewUrl}${item.preview}`"
               :style="{ height: '80px', width: '200px' }"
               :lazy="true"
             />
@@ -75,6 +75,8 @@
 
 <script setup lang="ts">
 import { DownloadIcon, GestureClickIcon } from "tdesign-icons-vue-next"
+
+import { currtPreviewUrl } from "@gisapi/store/config"
 import { templateInfo } from "@renderer/views/GisApi/store/data"
 
 import { swtichCommonTemplate } from "./event"
@@ -88,6 +90,8 @@ async function updateTemplateList() {
   loading.value = true
 
   templateInfo.value = await getTemplateList()
+
+  console.log(templateInfo.value)
 
   setTimeout(() => (loading.value = false), 1200)
 }

@@ -155,7 +155,7 @@ async function onAddTap() {
 
 function nextCheck(currtSetp: number): boolean {
   const data = formDataList.value[currtFormDataId.value]
-  console.log("nextCheck...", { currtSetp, data })
+  // console.log("nextCheck...", { currtSetp, data })
 
   if (!isGisServerConnected.value) {
     eventBus.emit("show-guide", ["header", 0])
@@ -184,7 +184,7 @@ function nextCheck(currtSetp: number): boolean {
       const hasBeDfsu = Boolean(data.beDfsuInfo.md5)
       const hasAfDfsu = Boolean(data.afDfsuInfo.md5)
       if (!hasBeDfsu || !hasAfDfsu) {
-        console.log("未指定dfsu")
+        // console.log("未指定dfsu")
         eventBus.emit("show-guide", ["setp2", 0, data.id])
 
         return false

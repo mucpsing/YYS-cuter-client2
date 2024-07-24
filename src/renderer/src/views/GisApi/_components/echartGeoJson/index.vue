@@ -33,7 +33,7 @@ export default defineComponent({
     width: { type: Number, default: 600 },
     height: { type: Number, default: 400 },
     geoJson: { type: Array, default: [] },
-    maxLinkPoint: { type: Number, default: 200 },
+    maxLinkPoint: { type: Number, default: 50 },
     // bounds: { type: Array, default: [] },
   },
 

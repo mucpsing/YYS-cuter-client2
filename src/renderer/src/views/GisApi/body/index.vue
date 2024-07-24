@@ -30,8 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import { throttle } from "lodash"
-
 import BodyContent from "./content.vue"
 import { serverCheckApi, getTemplateList } from "@gisapi/api"
 import { data, templateInfo } from "@gisapi/store/data"
@@ -53,7 +51,7 @@ onUnmounted(() => {
   eventBus.off("gis-api:checkServer", checkoutServerOnReady)
 })
 
-const checkoutServerOnReady = throttle(async () => {
+const checkoutServerOnReady = async () => {
   // 检查所有预设的服务器ip
   GlobalLoading.value = true
 
@@ -63,17 +61,19 @@ const checkoutServerOnReady = throttle(async () => {
     isGisServerConnected.value = await serverCheckApi(500)
 
     if (isGisServerConnected.value && templateInfo.value.length == 0) {
-      getTemplateList().then((res) => {
-        templateInfo.value = res
-        GlobalLoading.value = false
-      })
+      const res = await getTemplateList()
 
-      break
+      if (res.length > 0) {
+        templateInfo.value = res
+
+        setTimeout(() => (GlobalLoading.value = false), 600)
+
+        break
+      }
     }
   }
-
-  GlobalLoading.value = false
-}, 300)
+  setTimeout(() => (GlobalLoading.value = false), 1200)
+}
 
 const dataChange = ({ id, value }) => {
   data.value.forEach((item) => {
@@ -89,7 +89,7 @@ const dataChange = ({ id, value }) => {
  * @param {*} extendDataId 继承id，是否继承指定id的tab数据
  */
 const addTab = (_context?: { e: MouseEvent }, extendDataId: number = -1) => {
-  console.log("extendDataId...", extendDataId)
+  // console.log("extendDataId...", extendDataId)
 
   const newTabId = parseInt(data.value.length.toString())
   const newData = createFormData(newTabId)
@@ -111,7 +111,7 @@ const addTab = (_context?: { e: MouseEvent }, extendDataId: number = -1) => {
 
   currtTab.value = newTabId
 
-  console.log(formDataList.value)
+  // console.log(formDataList.value)
 }
 
 const removeTab = ({ index }) => {
@@ -139,8 +139,8 @@ const removeTab = ({ index }) => {
 const changeTab = (tabId: number | string) => {
   currtTab.value = tabId as number
 
-  console.log("changeTab: ", currtTab.value)
-  console.log("formDataList: ", formDataList.value)
+  // console.log("changeTab: ", currtTab.value)
+  // console.log("formDataList: ", formDataList.value)
 }
 
 /* 注册全局事件 */

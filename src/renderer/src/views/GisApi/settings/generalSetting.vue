@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-27 22:05:24
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-24 09:05:31
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-24 10:32:30
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\settings\generalSettingl.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -59,10 +59,10 @@
 
     <div class="w-full mx-2 text-xs text-center text-gray-400">当前服务器： {{ V }}</div>
 
-    <t-button
+    <t-button 
       class="w-full my-4 text-sm"
       @click="checkServer"
-      :loading="GlobalLoading"
+      :loading="btnLoading"
       :theme="btnTheme"
       >{{ isGisServerConnected ? "测试连接" : "点击重连" }}
     </t-button>
@@ -71,11 +71,12 @@
 
 <script setup lang="ts">
 import config, { DEFAULT_SERVER_IP_LIST } from "../store/config"
-import { isGisServerConnected, GlobalLoading } from "@gisapi/store/state"
+import { isGisServerConnected } from "@gisapi/store/state"
+import { serverCheckApi } from "@gisapi/api"
 
-import eventBus from "@renderer/libs/eventBus"
+// import eventBus from "@renderer/libs/eventBus"
 
-// const btnLoading = ref(false)
+const btnLoading = ref(false)
 const btnTheme = computed(() => (isGisServerConnected.value ? "success" : "danger"))
 const SERVER_KEYS = ["SERVER_IP", "SERVER_PROT"]
 
@@ -87,7 +88,11 @@ const resetConfigData = (item) => {
   console.log("resetConfigData: ", item)
 }
 
-function checkServer() {
-  eventBus.emit("gis-api:checkServer")
+async function checkServer() {
+  btnLoading.value = true
+  isGisServerConnected.value = await serverCheckApi(500)
+  setTimeout(() => {
+    btnLoading.value = false
+  }, 500)
 }
 </script>

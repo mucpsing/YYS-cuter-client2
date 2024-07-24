@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:08
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-23 11:01:48
+ * @LastEditTime: 2024-07-24 10:11:19
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -126,6 +126,7 @@ import { currtFormDataId, currtMxdName } from "@gisapi/store/state"
 import { formDataList as currtFormDataList, DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/state"
 
 import { isGisServerConnected } from "@gisapi/store/state"
+import { crossCombineThemesAndVariants } from "@gisapi/utils/index"
 
 import { swtichCommonTemplate } from "./event"
 
@@ -145,16 +146,7 @@ const template_name_list = computed(() =>
 
 const currtMxdDocs = ref("")
 
-const variantList = ["dark", "light", "outline", "light-outline"]
-const themeList = ["primary", "warning", "danger", "success"]
-function crossCombineThemesAndVariants(
-  themeList: string[],
-  variantList: string[],
-): { theme: string; variant: string }[] {
-  return variantList.flatMap((variant) => themeList.map((theme) => ({ theme, variant })))
-}
-
-const outputNameTagList = crossCombineThemesAndVariants(themeList, variantList)
+const outputNameTagList = crossCombineThemesAndVariants()
 
 const selectLocalTemplate = () => {
   // 选择本地模板，弹出文件选择

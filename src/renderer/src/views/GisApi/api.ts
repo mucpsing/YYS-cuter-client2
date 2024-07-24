@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-21 22:46:28
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-24 09:41:10
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -119,7 +119,7 @@ export async function serverCheckApi(timeout = DEFAULT_AXIOS_TIMEOUT): Promise<b
     }
     return false
   } catch (err) {
-    console.log(err)
+    console.log("serverCheckApi err:", err)
     return false
   }
 }

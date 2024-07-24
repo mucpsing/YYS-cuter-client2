@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-07-17 23:58:43
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-18 00:04:01
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-24 10:12:02
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\utils\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -29,4 +29,15 @@ export function truncateText(text: string, maxLength: number = 30): string {
     return text
   }
   return text.substring(0, maxLength - 3) + "..."
+}
+
+/**
+ * @description: 创建TD按钮的彩虹色列表用到的数据对象,当前仅支持5*4的标签数量，既20个
+ * @return {*}
+ */
+export function crossCombineThemesAndVariants(
+  themeList: string[] = ["primary", "warning", "danger", "success"],
+  variantList: string[] = ["dark", "light", "outline", "light-outline"],
+): { theme: string; variant: string }[] {
+  return variantList.flatMap((variant) => themeList.map((theme) => ({ theme, variant })))
 }
