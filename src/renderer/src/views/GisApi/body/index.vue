@@ -14,11 +14,11 @@
       @remove="removeTab"
     >
       <t-tab-panel
-        v-for="(item, idx) in data"
+        v-for="(item, idx) in tabState.tabList"
         class="flex flex-col h-full"
         :key="idx"
         :value="idx"
-        :label="`${item.label} (${idx + 1}/${data.length})`"
+        :label="`${item.label} (${idx + 1}/${tabState.tabList.length})`"
         :removable="true"
         :destroyOnHide="false"
       >
@@ -34,12 +34,16 @@ import BodyContent from "./content.vue"
 import { serverCheckApi, getTemplateList } from "@gisapi/api"
 import { data, templateInfo } from "@gisapi/store/data"
 
+import { useGisApiTabStore } from "@gisapi/store/index"
+
 import { formDataList, createFormData } from "@gisapi/store/state"
 import { currtFormDataId as currtTab } from "@gisapi/store/state"
 import { isGisServerConnected, GlobalLoading } from "@gisapi/store/state"
 import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
 
 import eventBus from "@renderer/libs/eventBus"
+
+const tabState = useGisApiTabStore()
 
 onMounted(() => {
   eventBus.on("gis-api:checkServer", checkoutServerOnReady)
@@ -76,7 +80,7 @@ const checkoutServerOnReady = async () => {
 }
 
 const dataChange = ({ id, value }) => {
-  data.value.forEach((item) => {
+  tabState.tabList.forEach((item) => {
     if (item.id == id) {
       item.label = value
     }
@@ -104,14 +108,16 @@ const addTab = (_context?: { e: MouseEvent }, extendDataId: number = -1) => {
   formDataList.value.push(newData)
 
   // tab的标题
-  data.value.push({
+  tabState.addTab({
     id: newTabId,
     label: newData.title ? newData.title : `未命名${newTabId}`,
   })
+  // tabState.tabList.push({
+  //   id: newTabId,
+  //   label: newData.title ? newData.title : `未命名${newTabId}`,
+  // })
 
   currtTab.value = newTabId
-
-  // console.log(formDataList.value)
 }
 
 const removeTab = ({ index }) => {

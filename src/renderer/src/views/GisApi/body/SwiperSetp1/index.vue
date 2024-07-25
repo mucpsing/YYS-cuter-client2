@@ -1,19 +1,3 @@
-<!--
- * @Author: CPS holy.dandelion@139.com
- * @Date: 2024-06-30 16:27:08
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-24 10:11:19
- * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\index.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
-<!--
- * @Author: cpasion-office-win10 373704015@qq.com
- * @Date: 2023-09-26 14:23:33
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-30 16:38:36
- * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <template>
   <section :class="['flex flex-col w-full', 'flex-grow-[2]', 'overflow-hidden', ' rounded-md p-2']">
     <section :class="['parent', 'h-full', 'flex flex-row gap-4 ', 'bg-white']">
@@ -121,21 +105,19 @@
 <script setup lang="tsx">
 import { SearchIcon } from "tdesign-icons-vue-next"
 
-import { templateInfo, keyWord, data } from "@gisapi/store/data"
+import { keyWord } from "./baseData"
+import { templateInfo, data } from "@gisapi/store/data"
 import { currtFormDataId, currtMxdName } from "@gisapi/store/state"
 import { formDataList as currtFormDataList, DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/state"
 
-import { isGisServerConnected } from "@gisapi/store/state"
+// import { isGisServerConnected } from "@gisapi/store/state"
 import { crossCombineThemesAndVariants } from "@gisapi/utils/index"
 
-import { swtichCommonTemplate } from "./event"
+import { swtichCommonTemplate } from "./utils"
 
 import TemplateList from "./templateList.vue"
 
-onMounted(() => {
-  if (isGisServerConnected.value) {
-  }
-})
+const localState = reactive({})
 
 const outNameTipWordsList = ref(keyWord) // 提示词列表
 const tipWrodsPopupVisible = ref(false) // 是否显示提示列表的状态
@@ -145,7 +127,6 @@ const template_name_list = computed(() =>
 )
 
 const currtMxdDocs = ref("")
-
 const outputNameTagList = crossCombineThemesAndVariants()
 
 const selectLocalTemplate = () => {

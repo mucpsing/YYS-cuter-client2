@@ -13,7 +13,7 @@ import type { DialogOpenOptions } from "@renderer/global"
 import type { SaveDialogOptions, OpenDialogOptions } from "electron"
 
 import type { IMCEventBusTypes } from "@renderer/views/ImageCuter/events"
-import type { GisApiEventBusTypes } from "@renderer/views/GisApi/events"
+import type { GisApiEventBusTypes } from "@renderer/views/GisApi/eventRegister"
 
 export type EventBus = {
   bodyUpdateReiszeCoords: string
