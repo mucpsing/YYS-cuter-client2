@@ -20,7 +20,7 @@
         :value="idx"
         :label="`${item.label} (${idx + 1}/${data.length})`"
         :removable="true"
-        :destroyOnHide="true"
+        :destroyOnHide="false"
       >
         <!-- 模板选择 -->
         <BodyContent />

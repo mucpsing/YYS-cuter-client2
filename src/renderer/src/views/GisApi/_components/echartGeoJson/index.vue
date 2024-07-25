@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-25 01:03:31
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-25 09:35:06
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -271,7 +271,7 @@ export default defineComponent({
       drawRect({ w: parseInt(w) * props.drawRectScale, h: parseInt(h) * props.drawRectScale })
     }, 300)
 
-    watchList.push(watch(props.geoJson, () => drawOnce()))
+    watchList.push(watch([props.geoJson, () => props.maxLinkPoint], () => drawOnce()))
     watchList.push(
       watch(drawPolygonCount, () => {
         if (!isDraw.value) drawRectOnce()

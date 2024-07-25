@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 00:31:18
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-23 23:21:00
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-25 09:29:01
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\guideSetp1.vue
  * @Description: 动态的引导组件
  * @BUG: 使用t-tab组件后，仅有第一页能正确生成引导，其他页面无法正常生成
@@ -85,11 +85,11 @@ function show(
   // BUG 2024-07-19 引导位置异常
   // 1. 只有第一页的引导可以正常显示，其他页面引导元素的定位异常
   // 2. 使用修改mode的方式暂时仅在第一页面进行引导，其他页面进行全局居中的引导弹窗提示
-  // if (tabId == 0) {
-  //   mode.value = "popup"
-  // } else {
-  //   mode.value = "dialog"
-  // }
+  if (tabId == 0) {
+    mode.value = "popup"
+  } else {
+    mode.value = "dialog"
+  }
 
   // 检查 setpName 是否存在于 setpObject 的键中
   if (!(setpName in setpObject)) {
@@ -166,6 +166,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   eventBus.off("show-guide", showOnce)
+  eventBus.off("test-guide", test)
 })
 </script>
 
