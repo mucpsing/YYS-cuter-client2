@@ -4,9 +4,9 @@
   >
     <!-- --------------- 【 工程前后的数据文件上传 】 --------------- -->
     <header
-      ref="headerRef"
+      ref="dropElementRef"
       :class="['flex-grow-[0]', 'flex gap-1', 'min-h-[150px] flex-or relative']"
-      :id="`Gis-Api__dfsu_input_${formDataList[currtFormDataId].id}`"
+      :id="`Gis-Api__dfsu_input_${tabStore.currtFormData.id}`"
     >
       <!-- 拖拽激活后的样式遮罩层 -->
       <div class="GisApi__drapMask" :class="{ 'GisApi__drapMask-show': isOverDropZone }">
@@ -15,7 +15,7 @@
 
       <DfsuInfo
         title="DFSU文件(工程前)"
-        :fileInfo="formDataList[currtFormDataId].beDfsuInfo"
+        :fileInfo="tabStore.currtFormData.beDfsuInfo"
         @onBtnClick="() => onUploadBtnClickHandler('be')"
       />
       <!-- 切换按钮 -->
@@ -23,14 +23,16 @@
         class="flex items-center justify-center px-2 bg-blue-100 rounded-sm cursor-pointer hover:bg-blue-300"
         @click="switchAfAndBeDfsuFile"
       >
-        <strong class="transition-all" :style="{ transform: `rotate(${r}deg)` }">
+        <strong
+          class="transition-all"
+          :style="{ transform: `rotate(${localStore.switchIconRoate}deg)` }"
+        >
           <c-icon-font iconName="icon-yys-04zhuanhuan" class="text-xl text-white"></c-icon-font>
         </strong>
       </div>
       <DfsuInfo
-        id="1111111111111111111111"
         title="DFSU文件(工程后)"
-        :fileInfo="formDataList[currtFormDataId].afDfsuInfo"
+        :fileInfo="tabStore.currtFormData.afDfsuInfo"
         @onBtnClick="() => onUploadBtnClickHandler('af')"
       />
     </header>
@@ -54,58 +56,54 @@
                   { content: `弧度(rad)`, value: `弧度` },
                   { content: `角度(deg)`, value: `角度` },
                 ]"
-                @click="(item) => (formDataList[currtFormDataId].radian_or_angle = (item.value as `弧度`| `角度`))"
+                @click="(item) => (tabStore.currtFormData.radian_or_angle = (item.value as `弧度`| `角度`))"
               >
                 <t-button
                   variant="outline"
-                  :theme="
-                    formDataList[currtFormDataId].radian_or_angle == '弧度' ? 'danger' : 'warning'
-                  "
+                  :theme="tabStore.currtFormData.radian_or_angle == '弧度' ? 'danger' : 'warning'"
                   size="medium"
                 >
-                  {{ formDataList[currtFormDataId].radian_or_angle }}
+                  {{ tabStore.currtFormData.radian_or_angle }}
                 </t-button>
               </t-dropdown>
             </div>
           </div>
           <t-divider class="my-2"></t-divider>
-          <section :loading="projectLoading" class="flex items-center justify-between mt-2">
+          <section
+            :loading="localStore.projectLoading"
+            class="flex items-center justify-between mt-2"
+          >
             <div class="flex flex-col items-start justify-between">
               <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
                 <strong>工程范围 </strong>
 
-                <t-radio-group
-                  class="ml-2"
-                  v-model="formDataList[currtFormDataId].projectRangeType"
-                >
+                <t-radio-group class="ml-2" v-model="tabStore.currtFormData.projectRangeType">
                   <t-radio value="shp">shp面文件</t-radio>
                   <t-radio value="point">指定坐标</t-radio>
                 </t-radio-group>
               </h2>
-              <p v-if="formDataList[currtFormDataId].projectRangeType == 'shp'">
+              <p v-if="tabStore.currtFormData.projectRangeType == 'shp'">
                 <span
                   >上传文件<strong class="text-xs">(面SHP文件)</strong>：{{
-                    formDataList[currtFormDataId].projectRange.name
-                      ? formDataList[currtFormDataId].projectRange.name + ".shp"
+                    tabStore.currtFormData.projectRange.name
+                      ? tabStore.currtFormData.projectRange.name + ".shp"
                       : "未选择"
                   }}</span
                 >
               </p>
-              <p v-if="formDataList[currtFormDataId].projectRangeType == 'shp'">
+              <p v-if="tabStore.currtFormData.projectRangeType == 'shp'">
                 <strong
-                  >已选文件{{
-                    `(${formDataList[currtFormDataId].projectRange.fileCount})`
-                  }}：</strong
+                  >已选文件{{ `(${tabStore.currtFormData.projectRange.fileCount})` }}：</strong
                 >
               </p>
               <p
-                v-if="formDataList[currtFormDataId].projectRangeType == 'shp'"
+                v-if="tabStore.currtFormData.projectRangeType == 'shp'"
                 class="flex flex-wrap gap-2"
               >
                 <t-tag
                   variant="light-outline"
                   theme="success"
-                  v-for="(item, idx) of formDataList[currtFormDataId].projectRange.fileList"
+                  v-for="(item, idx) of tabStore.currtFormData.projectRange.fileList"
                   :key="idx"
                 >
                   {{ item.name }}
@@ -114,7 +112,7 @@
             </div>
             <div class="flex gap-1">
               <t-tag
-                v-if="formDataList[currtFormDataId].projectRangeType == 'shp'"
+                v-if="tabStore.currtFormData.projectRangeType == 'shp'"
                 :onClick="() => onUploadBtnClickHandler('project')"
                 theme="success"
                 variant="outline"
@@ -124,17 +122,17 @@
                   <cps-icon-font iconName="icon-yys-folder-opened" class="mr-2" />
                 </template>
 
-                {{ formDataList[currtFormDataId].projectRange.name || "选择.shp文件" }}</t-tag
+                {{ tabStore.currtFormData.projectRange.name || "选择.shp文件" }}</t-tag
               >
-              <div v-if="formDataList[currtFormDataId].projectRangeType == 'point'">
+              <div v-if="tabStore.currtFormData.projectRangeType == 'point'">
                 <t-input-number
-                  v-model="formDataList[currtFormDataId].projectPoints.x"
+                  v-model="tabStore.currtFormData.projectPoints.x"
                   theme="normal"
                   placeholder="X坐标"
                 ></t-input-number>
                 ，
                 <t-input-number
-                  v-model="formDataList[currtFormDataId].projectPoints.y"
+                  v-model="tabStore.currtFormData.projectPoints.y"
                   theme="normal"
                   placeholder="Y坐标"
                 ></t-input-number>
@@ -152,7 +150,7 @@
                   class="cursor-pointer"
                   variant="light-outline"
                   theme="primary"
-                  :onclick="() => (formDataList[currtFormDataId].riverRange = '工程前')"
+                  :onclick="() => (tabStore.currtFormData.riverRange = '工程前')"
                   >工程前</t-tag
                 >
                 、
@@ -161,7 +159,7 @@
                   class="cursor-pointer"
                   variant="light-outline"
                   theme="danger"
-                  :onclick="() => (formDataList[currtFormDataId].riverRange = '工程后')"
+                  :onclick="() => (tabStore.currtFormData.riverRange = '工程后')"
                   >工程后</t-tag
                 >
               </p>
@@ -173,16 +171,14 @@
                   { content: `工程前`, value: `工程前` },
                   { content: `工程后`, value: `工程后` },
                 ]"
-                @click="(item) => (formDataList[currtFormDataId].riverRange = (item.value as `工程前`| `工程后`))"
+                @click="(item) => (tabStore.currtFormData.riverRange = (item.value as `工程前`| `工程后`))"
               >
                 <t-button
                   variant="outline"
-                  :theme="
-                    formDataList[currtFormDataId].riverRange == '工程后' ? 'primary' : 'danger'
-                  "
+                  :theme="tabStore.currtFormData.riverRange == '工程后' ? 'primary' : 'danger'"
                   size="medium"
                 >
-                  {{ formDataList[currtFormDataId].riverRange }}
+                  {{ tabStore.currtFormData.riverRange }}
                 </t-button>
               </t-dropdown>
             </div>
@@ -199,7 +195,7 @@
               <t-input-number
                 theme="normal"
                 size="medium"
-                v-model="formDataList[currtFormDataId].mesh_size"
+                v-model="tabStore.currtFormData.mesh_size"
                 class="w-[100px]"
                 align="center"
               ></t-input-number>
@@ -217,7 +213,7 @@
             </div>
             <div class="flex gap-1">
               <t-input-number
-                v-model="formDataList[currtFormDataId].contour_range"
+                v-model="tabStore.currtFormData.contour_range"
                 theme="normal"
                 size="medium"
                 class="w-[100px]"
@@ -232,51 +228,57 @@
 </template>
 
 <script setup lang="ts">
-import DfsuInfo from "@gisapi/_components/dfsuInfo.vue"
-import { getMd5 } from "@renderer/utils/calculateMd5"
-import { useDropZone } from "@vueuse/core"
 import path from "path-browserify"
+import { storeToRefs } from "pinia"
+import { useDropZone } from "@vueuse/core"
+
+import { getMd5 } from "@renderer/utils/calculateMd5"
+
+import DfsuInfo from "@gisapi/_components/dfsuInfo.vue"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
-import { formDataList, currtFormDataId } from "@gisapi/store/state"
+// import { formDataList, currtFormDataId } from "@gisapi/store/state"
 import { uploadFileApi } from "@gisapi/api"
 import type { FileInfoBase } from "@gisapi/Types"
+import { useGisApiTabStore } from "@gisapi/store/index"
+const tabStore = useGisApiTabStore()
+const { formDataList, currtTabId } = storeToRefs(tabStore)
+let customFileUpInputElement: HTMLInputElement
+const localStore = reactive({
+  projectLoading: false,
+  switchIconRoate: 90,
+})
 
 onMounted(() => {
   customFileUpInputElement = document.createElement("input")
 })
 
 onUnmounted(() => {
+  // 挂载再卸载，用来清空这个全局的文件上传
   document.body.appendChild(customFileUpInputElement)
   document.body.removeChild(customFileUpInputElement)
 })
 
-const projectLoading = ref(false)
-let customFileUpInputElement: HTMLInputElement
-
 // 用来支持拖拽文件
-const headerRef = ref<HTMLElement>()
-const { isOverDropZone } = useDropZone(headerRef, onDrop)
+const dropElementRef = ref<HTMLElement>()
+const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
 async function onDrop(files: File[] | null) {
   if (isOverDropZone && files) {
     if (files.length == 1) {
+      // 文件读取
     }
   }
 }
 
-const r = ref(90)
 /**
  * @description: 交换工程前和工程后两个文件的信息
  */
 async function switchAfAndBeDfsuFile() {
-  const temp = Object.assign({}, formDataList.value[currtFormDataId.value].beDfsuInfo)
-  Object.assign(
-    formDataList.value[currtFormDataId.value].beDfsuInfo,
-    formDataList.value[currtFormDataId.value].afDfsuInfo,
-  )
-  Object.assign(formDataList.value[currtFormDataId.value].afDfsuInfo, temp)
+  // pinia 中交换工程前后两个数据
+  tabStore.exchaneDfsuInfo()
 
-  r.value = r.value >= 1800 ? 0 : r.value + 180 // 点击旋转按钮效果
+  if (localStore.switchIconRoate >= 1800) localStore.switchIconRoate = 0
+  localStore.switchIconRoate += 180 // 点击旋转按钮效果
 }
 
 /**
@@ -293,20 +295,20 @@ async function onUploadBtnClickHandler(fileType: "be" | "af" | "project") {
 
   // 调用点击事件
   customFileUpInputElement.accept = UP_FILE_ACCEPT_TYPE[target]
-  customFileUpInputElement.onchange = (e) => onInputChange(e, fileType)
+  customFileUpInputElement.onchange = (e) => upFileHandler(e, fileType)
   customFileUpInputElement.type = "file"
   customFileUpInputElement.multiple = true
   if (customFileUpInputElement.value) customFileUpInputElement.value = ""
   customFileUpInputElement.click()
 }
 
-async function onInputChange(e: any, target: "be" | "af" | "project") {
+async function upFileHandler(e: any, target: "be" | "af" | "project") {
   if (!e.target) return console.log("获取实例失败")
   if (!e.target.files) return console.log("没有选中文件")
 
   const files = e.target.files
-  const beInfo = formDataList.value[currtFormDataId.value].beDfsuInfo
-  const afInfo = formDataList.value[currtFormDataId.value].afDfsuInfo
+  const beInfo = formDataList.value[currtTabId.value].beDfsuInfo
+  const afInfo = formDataList.value[currtTabId.value].afDfsuInfo
 
   let infoList: any[]
   if (target == "be") {
@@ -356,10 +358,10 @@ async function updateProjectRangeInfo(files: FileList) {
   let basename = "" // 用来确保只会获取一个shp，其他不同名字的shp不会进行读取
 
   // const uploadBodyList: { file: File; ext: string }[] = []
-  const projectRangeInfo = formDataList.value[currtFormDataId.value].projectRange
-  // const shpList = formDataList.value[currtFormDataId.value].projectRange.shpList
+  const projectRangeInfo = formDataList.value[currtTabId.value].projectRange
+  // const shpList = formDataList.value[currtTabId.value].projectRange.shpList
 
-  projectLoading.value = true
+  localStore.projectLoading = true
   // shpList.length = 0
   projectRangeInfo.fileList.length = 0
 
@@ -372,7 +374,7 @@ async function updateProjectRangeInfo(files: FileList) {
     if (!basename) basename = file.name.toString().replace(ext, "")
 
     if (basename != file.name.toString().replace(ext, "")) {
-      setTimeout(() => (projectLoading.value = false), 600)
+      setTimeout(() => (localStore.projectLoading = false), 600)
       console.log("请确保每次仅选择一套shp文件")
       continue
     }
@@ -393,7 +395,7 @@ async function updateProjectRangeInfo(files: FileList) {
   // const md5 = projectRangeInfo.md5
   // console.log(uploadBodyList.map((item) => ({ filename: `${md5}${item.ext}`, file: item.file })))
 
-  setTimeout(() => (projectLoading.value = false), 600)
+  setTimeout(() => (localStore.projectLoading = false), 600)
 }
 </script>
 

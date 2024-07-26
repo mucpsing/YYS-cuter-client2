@@ -122,11 +122,6 @@ import { swtichCommonTemplate } from "./utils"
 import TemplateList from "./templateList.vue"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
-// const localStore = reactive({
-//   currtMxdName: "1",
-//   currtMxdDocs: "1",
-// })
-
 const tabStore = useGisApiTabStore()
 const glboalStore = useGisApiStateStore()
 const { formDataList, currtTabId } = storeToRefs(tabStore)

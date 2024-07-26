@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-26 11:05:08
+ * @LastEditTime: 2024-07-26 14:58:08
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -143,6 +143,15 @@ export const useGisApiTabStore = defineStore("formState", {
           this.formDataList[this.currtTabId].mxdId = tempalteInfo.template_id
         }
       }
+    },
+
+    async exchaneDfsuInfo() {
+      const temp = Object.assign({}, this.formDataList[this.currtTabId].beDfsuInfo)
+      Object.assign(
+        this.formDataList[this.currtTabId].beDfsuInfo,
+        this.formDataList[this.currtTabId].afDfsuInfo,
+      )
+      Object.assign(this.formDataList[this.currtTabId].afDfsuInfo, temp)
     },
 
     async getTemplateList() {
