@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:17
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-26 10:22:03
+ * @LastEditTime: 2024-07-26 15:56:03
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\templateList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -37,7 +37,12 @@
               :style="{ height: '80px', width: '200px' }"
               :lazy="true"
               class="hover:opacity-75"
-              @click="() => globalStore.showPreview(`${currtPreviewUrl}${item.preview}`)"
+              @click="
+                (e) => {
+                  e.stopPropagation()
+                  globalStore.showPreview(`${currtPreviewUrl}${item.preview}`)
+                }
+              "
             />
 
             <t-comment

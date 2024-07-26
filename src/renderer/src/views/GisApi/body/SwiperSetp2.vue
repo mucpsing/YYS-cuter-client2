@@ -69,6 +69,7 @@
             </div>
           </div>
           <t-divider class="my-2"></t-divider>
+
           <section
             :loading="localStore.projectLoading"
             class="flex items-center justify-between mt-2"
@@ -357,12 +358,10 @@ async function updateDfsuInfo(files: FileList, infoList: any[]) {
 async function updateProjectRangeInfo(files: FileList) {
   let basename = "" // 用来确保只会获取一个shp，其他不同名字的shp不会进行读取
 
-  // const uploadBodyList: { file: File; ext: string }[] = []
   const projectRangeInfo = formDataList.value[currtTabId.value].projectRange
-  // const shpList = formDataList.value[currtTabId.value].projectRange.shpList
 
   localStore.projectLoading = true
-  // shpList.length = 0
+
   projectRangeInfo.fileList.length = 0
 
   for (let file of files) {
@@ -386,14 +385,9 @@ async function updateProjectRangeInfo(files: FileList) {
     }
 
     projectRangeInfo.fileList.push({ file, ext, name: file.name })
-    // uploadBodyList.push({ file, ext })
-    // shpList.push(file.name)
   }
 
   projectRangeInfo.fileCount = projectRangeInfo.fileList.length
-
-  // const md5 = projectRangeInfo.md5
-  // console.log(uploadBodyList.map((item) => ({ filename: `${md5}${item.ext}`, file: item.file })))
 
   setTimeout(() => (localStore.projectLoading = false), 600)
 }

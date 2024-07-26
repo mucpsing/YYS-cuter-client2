@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-26 10:30:43
+ * @LastEditTime: 2024-07-26 15:46:51
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\index.vue
  * @Description: 这个gisapi页面的入口文件，这里用来引入全局组件和核心组件，全局事件的注册
 -->
@@ -43,14 +43,29 @@ export default {
 
   setup() {
     const globalStore = useGisApiStateStore()
+    function handlePlusKeyPressed(event: KeyboardEvent) {
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement)
+        return
 
-    return { globalStore }
+      if (event.key === "+") {
+        console.log("+ 键被按下了！")
+        // 在这里添加你希望执行的代码
+      } else if (event.key === "-") {
+        console.log("- 键被按下了！")
+      }
+    }
+
+    return { globalStore, handlePlusKeyPressed }
   },
 
   mounted() {
     eventBus.on("gis-api:init", () => console.log("gis-api init event"))
+
+    document.addEventListener("keydown", this.handlePlusKeyPressed)
   },
 
-  unmounted() {},
+  unmounted() {
+    document.removeEventListener("keydown", this.handlePlusKeyPressed)
+  },
 }
 </script>

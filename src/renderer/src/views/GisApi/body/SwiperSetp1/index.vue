@@ -117,7 +117,6 @@ import { currtPreviewUrl } from "@gisapi/store/config"
 import { DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/state"
 
 import { crossCombineThemesAndVariants } from "@gisapi/utils/index"
-import { swtichCommonTemplate } from "./utils"
 
 import TemplateList from "./templateList.vue"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
@@ -154,7 +153,6 @@ const selectLocalTemplate = () => {
 }
 
 const onSelectInputHandler = (s: string) => {
-  console.log(s)
   if (!s) return
 
   // 假设模板ID和模板名称之间只有一个中文字符的顿号
@@ -172,11 +170,12 @@ const onSelectInputHandler = (s: string) => {
   }
 
   // 名称部分直接作为字符串使用
-  const template_name = parts[1]
+  // const template_name = parts[1]
   tabStore.formDataList[tabStore.currtTabId].mxdName = s
 
   // 构造并返回对象
-  swtichCommonTemplate({ template_id, template_name })
+  // swtichCommonTemplate({ template_id, template_name })
+  tabStore.setTemplateInfoToFormDataById(template_id)
 }
 
 /**
@@ -186,7 +185,6 @@ const onTitleChange = debounce(async (newTitle: string) => {
   if (newTitle === "") {
     newTitle = DEFAULT_TEMPLATE_OUTNAME
   }
-  console.log(newTitle)
 
   tabStore.formDataList[tabStore.currtTabId].title = newTitle
   tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
