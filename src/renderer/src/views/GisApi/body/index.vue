@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-07-25 12:44:26
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-26 11:30:27
+ * @LastEditTime: 2024-07-26 14:36:45
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -62,7 +62,7 @@ onUnmounted(() => {
 })
 
 /**
- * @description: 中键触发的删除tab事件，但是当前无法识别点击下去的是哪个tab
+ * @description: 中键触发的删除tab事件，根据标题"未命名工况 (1/1)"中的(x/n) 获取当前tab的index，使用正则匹配x
  * @param {*} event
  * @return {*}
  */
@@ -70,19 +70,12 @@ function handleMiddleClick(event) {
   if (event.button !== 1) return
 
   if (event.target.className.split(" ").includes("t-tabs__nav-item-text-wrapper")) {
-    // BUG 无法识别TabId
-    console.log({ target: event.target })
-    console.log("当前标签内容： ", event.target.innerText)
-
     const regex = /(\([^)]*?)(\d+)\/(\d+)\)$/
     const match = event.target.innerText.match(regex)
-    console.log({ match })
-    console.log(match[2])
 
     if (match && match.length > 2) {
-      // tabStore.removeTab(tabStore.currtTabId)
-      tabStore.removeTab(parseInt(match[2]))
-      // return match[2] // match[2] 是第二个捕获组，即分数的分子
+      // -1 进行修正
+      tabStore.removeTab(parseInt(match[2]) - 1)
     }
   }
 }
