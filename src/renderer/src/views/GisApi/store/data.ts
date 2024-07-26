@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { reactive, Ref } from "vue"
-import type { TabValue } from "tdesign-vue-next"
+// import type { TabValue } from "tdesign-vue-next"
 
 import type { TemplateInfo } from "@gisapi/Types"
 
@@ -19,13 +19,11 @@ export const templateInfo: Ref<TemplateInfo[]> = ref([])
 // export const dfsuInfo = reactive({})
 
 export const currtIndex = ref(0)
-export const data = ref([
-  {
-    id: 0 as TabValue,
-    label: "未命名工况",
-  },
-])
-
-
+// export const data = ref([
+//   {
+//     id: 0 as TabValue,
+//     label: "未命名工况",
+//   },
+// ])
 
 export default reactive({})

@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:17
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-25 10:36:49
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-07-25 23:16:23
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\templateList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -15,20 +15,20 @@
   >
     <div :class="['mb-[16px] flex flex-row items-center justify-between']">
       <h3 :class="['text-base']">
-        <strong>{{ `模板选择(${templateInfo.length})` }}</strong>
+        <strong>{{ `模板选择(${tabStore.templateInfoList.length})` }}</strong>
       </h3>
       <span>
         <t-button @click="updateTemplateList" variant="text" theme="primary">刷新列表</t-button>
       </span>
     </div>
     <div :class="['__scrollbar-bule', 'flex-col flex gap-4', 'h-full overflow-y-auto', 'pr-[8px]']">
-      <template v-if="templateInfo.length > 0">
+      <template v-if="tabStore.templateInfoList.length > 0">
         <t-card
-          v-for="item in templateInfo"
+          v-for="item in tabStore.templateInfoList"
           :key="item.template_id"
           theme="poster2"
           class="cursor-pointer hover:bg-gray-300/10"
-          @click="swtichCommonTemplate(item)"
+          @click="() => onClickTemplate(item)"
         >
           <div :class="['flex gap-4']">
             <t-image
@@ -41,7 +41,7 @@
             <t-comment
               :author="`${item.template_id}-${item.template_name}`"
               :content="truncateText(item.description, 25)"
-              @click="swtichCommonTemplate(item)"
+              @click="() => onClickTemplate(item)"
             />
 
             <div :class="['flex flex-col gap-2 items-center justify-center']">
@@ -49,7 +49,7 @@
                 :style="{ width: '100%', height: '40px' }"
                 theme="default"
                 size="small"
-                @click="swtichCommonTemplate(item)"
+                @click="() => onClickTemplate(item)"
               >
                 点击选择
                 <template #icon><GestureClickIcon :style="{ fontSize: '16px' }" /> </template>
@@ -58,7 +58,7 @@
                 :style="{ width: '100%' }"
                 theme="success"
                 disabled
-                @click="swtichCommonTemplate(item)"
+                @click="() => console.log('下载mxd文件: ', item)"
                 >下 载
                 <template #icon><DownloadIcon :style="{ fontSize: '16px' }" /> </template>
               </t-button>
@@ -74,32 +74,29 @@
 </template>
 
 <script setup lang="ts">
+import { debounce } from "lodash"
 import { DownloadIcon, GestureClickIcon } from "tdesign-icons-vue-next"
 
 import { currtPreviewUrl } from "@gisapi/store/config"
-import { templateInfo } from "@renderer/views/GisApi/store/data"
 
-import { swtichCommonTemplate } from "./utils"
-import { getTemplateList } from "@gisapi/api"
 import { truncateText } from "@gisapi/utils/index"
-// import { isGisServerConnected, GlobalLoading } from "@gisapi/store/state"
+import { useGisApiTabStore } from "@gisapi/store/index"
+
+const tabStore = useGisApiTabStore()
 
 const loading = ref(false)
 
 async function updateTemplateList() {
   loading.value = true
 
-  templateInfo.value = await getTemplateList()
-
-  console.log(templateInfo.value)
-  console.log(currtPreviewUrl.value)
+  await tabStore.getTemplateList()
 
   setTimeout(() => (loading.value = false), 1200)
 }
 
-onMounted(() => {
-  // if (templateInfo.value.length == 0) updateTemplateList()
-})
+const onClickTemplate = debounce((item) => {
+  tabStore.setTemplateInfoToFormDataById(item.template_id)
+}, 200)
 </script>
 
 <style scoped></style>

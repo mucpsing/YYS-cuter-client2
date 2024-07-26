@@ -1,3 +1,11 @@
+<!--
+ * @Author: CPS holy.dandelion@139.com
+ * @Date: 2024-07-25 12:44:26
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-07-25 21:33:02
+ * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\index.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
   <section
     :class="['__gis-api__tabs', 'mb-2 p-2', 'rounded-xl', 'w-full h-full']"
@@ -5,7 +13,7 @@
   >
     <t-tabs
       class="h-full"
-      :value="currtTab"
+      :value="tabStore.currtTabId"
       size="medium"
       theme="card"
       default-value="0"
@@ -14,11 +22,11 @@
       @remove="removeTab"
     >
       <t-tab-panel
-        v-for="(item, idx) in tabState.tabList"
+        v-for="(item, idx) in tabStore.tabList"
         class="flex flex-col h-full"
         :key="idx"
         :value="idx"
-        :label="`${item.label} (${idx + 1}/${tabState.tabList.length})`"
+        :label="`${item.label} (${idx + 1}/${tabStore.tabList.length})`"
         :removable="true"
         :destroyOnHide="false"
       >
@@ -31,61 +39,22 @@
 
 <script setup lang="ts">
 import BodyContent from "./content.vue"
-import { serverCheckApi, getTemplateList } from "@gisapi/api"
-import { data, templateInfo } from "@gisapi/store/data"
-
-import { useGisApiTabStore } from "@gisapi/store/index"
-
-import { formDataList, createFormData } from "@gisapi/store/state"
-import { currtFormDataId as currtTab } from "@gisapi/store/state"
-import { isGisServerConnected, GlobalLoading } from "@gisapi/store/state"
-import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
+import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
 import eventBus from "@renderer/libs/eventBus"
 
-const tabState = useGisApiTabStore()
+const tabStore = useGisApiTabStore()
+const globalStore = useGisApiStateStore()
 
 onMounted(() => {
-  eventBus.on("gis-api:checkServer", checkoutServerOnReady)
+  eventBus.on("gis-api:checkServer", globalStore.checkoutServerOnReady)
 
-  checkoutServerOnReady()
+  globalStore.checkoutServerOnReady()
 })
 
 onUnmounted(() => {
-  eventBus.off("gis-api:checkServer", checkoutServerOnReady)
+  eventBus.off("gis-api:checkServer", globalStore.checkoutServerOnReady)
 })
-
-const checkoutServerOnReady = async () => {
-  // 检查所有预设的服务器ip
-  GlobalLoading.value = true
-
-  for (let serverIp of DEFAULT_SERVER_IP_LIST) {
-    console.log("检查IP: ", serverIp)
-    config.SERVER_IP = serverIp
-    isGisServerConnected.value = await serverCheckApi(500)
-
-    if (isGisServerConnected.value && templateInfo.value.length == 0) {
-      const res = await getTemplateList()
-
-      if (res.length > 0) {
-        templateInfo.value = res
-
-        setTimeout(() => (GlobalLoading.value = false), 600)
-
-        break
-      }
-    }
-  }
-  setTimeout(() => (GlobalLoading.value = false), 1200)
-}
-
-const dataChange = ({ id, value }) => {
-  tabState.tabList.forEach((item) => {
-    if (item.id == id) {
-      item.label = value
-    }
-  })
-}
 
 /**
  * @description: 创建一个新的Tab，新的工况
@@ -93,69 +62,18 @@ const dataChange = ({ id, value }) => {
  * @param {*} extendDataId 继承id，是否继承指定id的tab数据
  */
 const addTab = (_context?: { e: MouseEvent }, extendDataId: number = -1) => {
-  // console.log("extendDataId...", extendDataId)
-
-  const newTabId = parseInt(data.value.length.toString())
-  const newData = createFormData(newTabId)
-  console.log("newTabId...", newTabId)
-
-  if (extendDataId >= 0) {
-    Object.assign(newData, formDataList.value[extendDataId])
-
-    currtTab.value = currtTab.value + 1
-  }
-
-  formDataList.value.push(newData)
-
-  // tab的标题
-  tabState.addTab({
-    id: newTabId,
-    label: newData.title ? newData.title : `未命名${newTabId}`,
-  })
-  // tabState.tabList.push({
-  //   id: newTabId,
-  //   label: newData.title ? newData.title : `未命名${newTabId}`,
-  // })
-
-  currtTab.value = newTabId
+  tabStore.addTab(extendDataId)
 }
 
 const removeTab = ({ index }) => {
-  formDataList.value.splice(index, 1)
-
-  data.value.splice(index, 1)
-
-  if (data.value.length == 0) {
-    addTab()
-    currtTab.value = 0
-    return
-  }
-
-  if (index == currtTab.value) {
-    // 删除第一个tab
-    if (index > 0) currtTab.value = currtTab.value - 1
-  } else if (index <= currtTab.value) {
-    // 删除当前的tab
-    currtTab.value = currtTab.value - 1
-  } else {
-    console.log("dadadadadaaaaaaaaaaaa")
-  }
+  tabStore.removeTab(index)
 }
 
 const changeTab = (tabId: number | string) => {
-  currtTab.value = tabId as number
+  // currtTab.value = tabId as number
 
-  // console.log("changeTab: ", currtTab.value)
-  // console.log("formDataList: ", formDataList.value)
+  tabStore.changeTab(tabId)
 }
-
-/* 注册全局事件 */
-provide("tabControler", {
-  addTab,
-  dataChange,
-  removeTab,
-  changeTab,
-})
 </script>
 
 <style lang="stylus">

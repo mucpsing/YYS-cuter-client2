@@ -2,7 +2,7 @@
   <div :class="['flex flex-col h-full px-2 gap-4']">
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
       <t-tooltip content="添加工况">
-        <t-button :onClick="() => (showAddTapDialog = true)"
+        <t-button :onClick="() => (localStore.showAddTapDialog = true)"
           ><template #icon><AddIcon /></template
         ></t-button>
       </t-tooltip>
@@ -10,8 +10,8 @@
       <t-dialog
         header="创建工况配置"
         body="对话框内容"
-        :visible="showAddTapDialog"
-        :on-close="() => (showAddTapDialog = false)"
+        :visible="localStore.showAddTapDialog"
+        :on-close="() => (localStore.showAddTapDialog = false)"
         :on-confirm="onAddTap"
       >
         <ul class="p-1">
@@ -20,7 +20,7 @@
             <t-dropdown
               :options="selectTemplateExtendIdOptions"
               @click="(data) => {
-                currtExtendId = data.value as number
+                tabStore.currtExtendId = data.value as number
                 currtExtendValue = data.content as string
               }"
             >
@@ -35,7 +35,7 @@
 
       <t-steps
         size="small"
-        v-model="formDataList[currtFormDataId].setp"
+        v-model="formDataList[currtTabId].setp"
         layout="horizontal"
         :readonly="false"
         :options="Sopts"
@@ -44,14 +44,14 @@
 
     <transition name="GisApi__body-fade">
       <KeepAlive>
-        <component :is="SwiperComponentList[formDataList[currtFormDataId].setp]"></component>
+        <component :is="SwiperComponentList[formDataList[currtTabId].setp]"></component>
       </KeepAlive>
     </transition>
 
     <footer :class="['flex gap-1', 'mt-4', 'flex-grow-0']">
       <t-button
         class="flex-[1]"
-        :disabled="formDataList[currtFormDataId].setp == 1"
+        :disabled="formDataList[currtTabId].setp == 1"
         @click="swtichSetp('back')"
         size="medium"
         >上一步<template #icon>
@@ -63,12 +63,12 @@
           ></c-icon-font> </template
       ></t-button>
       <t-button
-        :on-click="() => mxdToImg(formDataList[currtFormDataId])"
+        :on-click="() => mxdToImg(formDataList[currtTabId])"
         class="flex-[1]"
-        :disabled="formDataList[currtFormDataId].setp != 3"
+        :disabled="formDataList[currtTabId].setp != 3"
         theme="success"
         size="medium"
-        :loading="loading"
+        :loading="localStore.loading"
         >生成图片 (1/4)
         <template #icon>
           <c-icon-font
@@ -80,7 +80,7 @@
       </t-button>
       <t-button
         class="flex-[1]"
-        :disabled="formDataList[currtFormDataId].setp == Sopts.length"
+        :disabled="formDataList[currtTabId].setp == Sopts.length"
         @click="swtichSetp('next')"
         size="medium"
         >下一步<template #suffix>
@@ -110,27 +110,31 @@ export default { components: { SwiperSetp1, SwiperSetp2, SwiperSetp4, SwiperSetp
 </script>
 
 <script setup lang="ts">
-import { templateSetpOptions } from "@gisapi/store/state"
+import { storeToRefs } from "pinia"
 import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
-import { formDataList, currtFormDataId, currtExtendId, showAddTapDialog } from "@gisapi/store/state"
 
+import { eventBus } from "@renderer/libs"
 import { uploadFileApi, mxdToImgApi } from "@gisapi/api"
-import { isGisServerConnected } from "@gisapi/store/state"
+import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
 import type { MxdToImgFormT } from "@gisapi/api"
 import type { FormDataItemT } from "@gisapi/store/state"
 
-import { eventBus } from "@renderer/libs"
+const globalStore = useGisApiStateStore()
+const tabStore = useGisApiTabStore()
+const { formDataList, currtTabId, currtExtendId } = storeToRefs(tabStore)
 
-// import { NotifyPlugin } from "tdesign-vue-next"
-// const GuideSetpRef = ref<InstanceType<typeof GuideSetp> | null>(null)
+const templateSetpOptions = [
+  { title: "选择模板", value: 1 },
+  { title: "工程配置", value: 2 },
+  { title: "处理范围", value: 3 },
+  { title: "图片生成", value: 4 },
+]
 
-const loading = ref(false)
-
-const tabControler = inject("tabControler") as {
-  addTab: (e: any, extendId: number) => void
-  removeTab: () => void
-}
+const localStore = reactive({
+  loading: false,
+  showAddTapDialog: false,
+})
 
 const Sopts = computed(() => templateSetpOptions)
 
@@ -148,16 +152,22 @@ const selectTemplateExtendIdOptions = computed(() => {
 async function onAddTap() {
   console.log("onAddTap...", { extendId: currtExtendId.value })
 
-  tabControler.addTab({}, currtExtendId.value)
+  tabStore.addTab(currtExtendId.value)
 
-  showAddTapDialog.value = false
+  localStore.showAddTapDialog = false
 }
 
-function nextCheck(currtSetp: number): boolean {
-  const data = formDataList.value[currtFormDataId.value]
-  // console.log("nextCheck...", { currtSetp, data })
+/**
+ * @description: 点击下一步时触发的检查器，检查是否满足进入下一setp的必要条件
+ * @param {*} currtSetp 当前step
+ * @return {*}
+ */
+function nextSetpCheck(currtSetp: number): boolean {
+  // const data = formDataList.value[currtTabId.value]
+  const data = tabStore.currtFormData
+  // console.log("nextSetpCheck...", { currtSetp, data })
 
-  if (!isGisServerConnected.value) {
+  if (!globalStore.isGisServerConnected) {
     eventBus.emit("show-guide", ["header", 0])
 
     return false
@@ -174,6 +184,7 @@ function nextCheck(currtSetp: number): boolean {
 
       // 【2】检查是否已选择mxd模板
       if (data.mxdId < 0) {
+        console.log({ data })
         eventBus.emit("show-guide", ["setp1", 1, data.id])
 
         return false
@@ -201,19 +212,21 @@ function nextCheck(currtSetp: number): boolean {
  * @description: 点击下一步，上一步按钮的中转函数
  */
 function swtichSetp(setp: "next" | "back") {
+  const currtdata = tabStore.currtFormData
+
   switch (setp) {
     case "next":
-      if (formDataList.value[currtFormDataId.value].setp == Sopts.value.length) return
+      if (currtdata.setp == Sopts.value.length) return
 
-      if (!nextCheck(formDataList.value[currtFormDataId.value].setp)) return
+      if (!nextSetpCheck(currtdata.setp)) return
 
-      formDataList.value[currtFormDataId.value].setp += 1
+      currtdata.setp += 1
 
       break
 
     case "back":
-      if (formDataList.value[currtFormDataId.value].setp == 0) return
-      formDataList.value[currtFormDataId.value].setp -= 1
+      if (currtdata.setp == 0) return
+      currtdata.setp -= 1
   }
 }
 
@@ -223,7 +236,7 @@ function swtichSetp(setp: "next" | "back") {
  * @return {*}
  */
 async function mxdToImg(data: FormDataItemT) {
-  loading.value = true
+  localStore.loading = true
   console.log({ data })
 
   // 创建上传列表
@@ -274,7 +287,7 @@ async function mxdToImg(data: FormDataItemT) {
   const res = await mxdToImgApi(body)
   console.log({ res })
 
-  loading.value = false
+  localStore.loading = false
 
   // return res
 }

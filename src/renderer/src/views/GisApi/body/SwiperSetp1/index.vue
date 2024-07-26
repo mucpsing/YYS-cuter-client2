@@ -9,30 +9,29 @@
             >
           </template>
 
-          <div :class="['flex-col flex-[111] flex gap-8 justify-around', 'h-full']">
+          <div :class="['flex-col flex-[111] flex gap-4 justify-around', 'h-full']">
             <div :class="['flex flex-col', 'flex-1  flex-grow-[11]']">
-              <div
-                :class="[
-                  'border-2 border-sky-400',
-                  'h-full w-full',
-                  'flex-[111] flex-grow-[11] p-4',
-                ]"
-              >
+              <div :class="['flex items-center justify-center']">
                 <t-image
-                  :class="['min-w-[200px] min-h-[200px]']"
+                  :class="['min-w-[160px] min-h-[160px]', 'max-w-[450px]']"
                   :error="'未选择任何模板'"
+                  :src="`${currtPreviewUrl}${tabStore.currtFormData.templateInfo.preview}`"
                 ></t-image>
               </div>
 
-              <h3>{{ currtMxdName }}</h3>
-              <p>{{ currtMxdDocs }}</p>
+              <h3 class="my-2 text-base">
+                <strong>{{ tabStore.currtFormData.templateInfo.template_name }}</strong>
+              </h3>
+              <p class="min-h-[60px]">
+                {{ tabStore.currtFormData.templateInfo.description }}
+              </p>
             </div>
 
             <t-space direction="vertical" size="10px">
               <t-input-adornment prepend="1、输出名称：">
                 <t-select-input
-                  :id="`Gis-Api__template_input_mxd_name_${currtFormDataList[currtFormDataId].id}`"
-                  :value="currtFormDataList[currtFormDataId].title"
+                  :id="`Gis-Api__template_input_mxd_name_${tabStore.currtFormData.id}`"
+                  :value="tabStore.currtFormData.outputName"
                   :popup-visible="tipWrodsPopupVisible"
                   :popup-props="{ overlayInnerStyle: { padding: '0px' } }"
                   placeholder="点击列出常用命名推荐"
@@ -71,8 +70,8 @@
 
               <t-input-adornment prepend="2、选择模板：">
                 <t-auto-complete
-                  :id="`Gis-Api__template_input_select_${currtFormDataList[currtFormDataId].id}`"
-                  v-model="currtFormDataList[currtFormDataId].mxdName"
+                  :id="`Gis-Api__template_input_select_${formDataList[currtTabId].id}`"
+                  :value="formDataList[currtTabId].mxdName"
                   :options="template_name_list"
                   placeholder="从右方【模板列表】中选择"
                   clearable
@@ -82,8 +81,8 @@
                   @clear="
                     () => {
                       console.log('clear')
-                      currtFormDataList[currtFormDataId].mxdId = -1
-                      currtFormDataList[currtFormDataId].mxdName = ''
+                      formDataList[currtTabId].mxdId = -1
+                      formDataList[currtTabId].mxdName = ''
                     }
                   "
                 >
@@ -103,30 +102,47 @@
 </template>
 
 <script setup lang="tsx">
+import { storeToRefs } from "pinia"
 import { SearchIcon } from "tdesign-icons-vue-next"
 
-import { keyWord } from "./baseData"
-import { templateInfo, data } from "@gisapi/store/data"
-import { currtFormDataId, currtMxdName } from "@gisapi/store/state"
-import { formDataList as currtFormDataList, DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/state"
+import { currtPreviewUrl } from "@gisapi/store/config"
+import { DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/state"
 
-// import { isGisServerConnected } from "@gisapi/store/state"
 import { crossCombineThemesAndVariants } from "@gisapi/utils/index"
-
 import { swtichCommonTemplate } from "./utils"
 
 import TemplateList from "./templateList.vue"
+import { useGisApiTabStore } from "@gisapi/store/index"
 
-const localState = reactive({})
+const localState = reactive({
+  currtMxdName: "1",
+  currtMxdDocs: "1",
+  currtMxdPrivewUrl: "",
+})
 
-const outNameTipWordsList = ref(keyWord) // 提示词列表
+const tabStore = useGisApiTabStore()
+const { formDataList, currtTabId } = storeToRefs(tabStore)
+
+// 提示词列表
+const outNameTipWordsList = [
+  "工程前",
+  "工程后",
+  "枯水",
+  "洪水",
+  "以洪为主",
+  "以潮为主",
+  "10年一遇",
+  "20年一遇",
+  "50年一遇",
+  "100年一遇",
+  "200年一遇",
+]
 const tipWrodsPopupVisible = ref(false) // 是否显示提示列表的状态
 
 const template_name_list = computed(() =>
-  templateInfo.value.map((item) => `${item.template_id}-${item.template_name}`),
+  tabStore.templateInfoList.map((item) => `${item.template_id}-${item.template_name}`),
 )
 
-const currtMxdDocs = ref("")
 const outputNameTagList = crossCombineThemesAndVariants()
 
 const selectLocalTemplate = () => {
@@ -135,7 +151,7 @@ const selectLocalTemplate = () => {
 }
 
 const onSelectInputHandler = (s: string) => {
-  // console.log(s)
+  console.log(s)
   if (!s) return
 
   // 假设模板ID和模板名称之间只有一个中文字符的顿号
@@ -154,6 +170,7 @@ const onSelectInputHandler = (s: string) => {
 
   // 名称部分直接作为字符串使用
   const template_name = parts[1]
+  tabStore.formDataList[tabStore.currtTabId].mxdName = s
 
   // 构造并返回对象
   swtichCommonTemplate({ template_id, template_name })
@@ -163,8 +180,9 @@ const onSelectInputHandler = (s: string) => {
  * @description: 输入新标题时，同步tab标题显示的函数
  */
 async function onTitleChange(newTitle: string) {
-  currtFormDataList.value[currtFormDataId.value].title = newTitle
-  data.value[currtFormDataId.value].label = newTitle
+  tabStore.formDataList[tabStore.currtTabId].title = newTitle
+  tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
+  tabStore.tabList[tabStore.currtTabId].label = newTitle
 }
 
 /**
@@ -172,16 +190,15 @@ async function onTitleChange(newTitle: string) {
  */
 async function onTitleWithPopupChange(new_popup: string) {
   let newTitle: string
-  if (
-    ["", DEFAULT_TEMPLATE_OUTNAME].includes(currtFormDataList.value[currtFormDataId.value].title)
-  ) {
+  if (["", DEFAULT_TEMPLATE_OUTNAME].includes(tabStore.formDataList[tabStore.currtTabId].title)) {
     newTitle = new_popup
   } else {
-    newTitle = `${currtFormDataList.value[currtFormDataId.value].title}_${new_popup}`
+    newTitle = `${tabStore.formDataList[tabStore.currtTabId].title}_${new_popup}`
   }
 
-  currtFormDataList.value[currtFormDataId.value].title = newTitle
-  data.value[currtFormDataId.value].label = newTitle
+  tabStore.formDataList[tabStore.currtTabId].title = newTitle
+  tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
+  tabStore.tabList[tabStore.currtTabId].label = newTitle
   tipWrodsPopupVisible.value = false
 }
 </script>
