@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-07-25 12:44:26
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-25 21:33:02
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-26 11:15:10
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,6 +10,7 @@
   <section
     :class="['__gis-api__tabs', 'mb-2 p-2', 'rounded-xl', 'w-full h-full']"
     ref="bodyElementRef"
+    @click="handleMiddleClick"
   >
     <t-tabs
       class="h-full"
@@ -17,9 +18,9 @@
       size="medium"
       theme="card"
       default-value="0"
-      @add="addTab"
-      @change="changeTab"
-      @remove="removeTab"
+      @add="(_e:any) => tabStore.addTab()"
+      @change="(tabId) => tabStore.changeTab(tabId)"
+      @remove="({ index }) => tabStore.removeTab(index)"
     >
       <t-tab-panel
         v-for="(item, idx) in tabStore.tabList"
@@ -45,34 +46,29 @@ import eventBus from "@renderer/libs/eventBus"
 
 const tabStore = useGisApiTabStore()
 const globalStore = useGisApiStateStore()
+const bodyElementRef = ref<HTMLElement | null>(null)
 
 onMounted(() => {
   eventBus.on("gis-api:checkServer", globalStore.checkoutServerOnReady)
 
   globalStore.checkoutServerOnReady()
+
+  if (bodyElementRef.value) {
+    bodyElementRef.value.addEventListener("mousedown", handleMiddleClick, false)
+  }
 })
 
 onUnmounted(() => {
   eventBus.off("gis-api:checkServer", globalStore.checkoutServerOnReady)
+  bodyElementRef.value?.removeEventListener("mousedown", handleMiddleClick)
 })
 
-/**
- * @description: 创建一个新的Tab，新的工况
- * @param {*} _context 事件实例
- * @param {*} extendDataId 继承id，是否继承指定id的tab数据
- */
-const addTab = (_context?: { e: MouseEvent }, extendDataId: number = -1) => {
-  tabStore.addTab(extendDataId)
-}
+function handleMiddleClick(event) {
+  if (event.button !== 1) return
 
-const removeTab = ({ index }) => {
-  tabStore.removeTab(index)
-}
-
-const changeTab = (tabId: number | string) => {
-  // currtTab.value = tabId as number
-
-  tabStore.changeTab(tabId)
+  if (event.target.className.split(" ").includes("t-tabs__nav-item-text-wrapper")) {
+    tabStore.removeTab(tabStore.currtTabId)
+  }
 }
 </script>
 

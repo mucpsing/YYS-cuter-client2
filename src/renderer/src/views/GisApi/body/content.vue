@@ -12,7 +12,8 @@
         body="对话框内容"
         :visible="localStore.showAddTapDialog"
         :on-close="() => (localStore.showAddTapDialog = false)"
-        :on-confirm="onAddTap"
+        confirmOnEnter
+        @confirm="onAddTap"
       >
         <ul class="p-1">
           <li class="flex gap-2 py-1">
@@ -150,8 +151,6 @@ const selectTemplateExtendIdOptions = computed(() => {
 })
 
 async function onAddTap() {
-  console.log("onAddTap...", { extendId: currtExtendId.value })
-
   tabStore.addTab(currtExtendId.value)
 
   localStore.showAddTapDialog = false

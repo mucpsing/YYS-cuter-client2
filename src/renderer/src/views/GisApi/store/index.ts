@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-26 10:14:45
+ * @LastEditTime: 2024-07-26 11:05:08
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -48,6 +48,7 @@ export const useGisApiStateStore = defineStore("globalState", {
     },
 
     async showPreview(url: string) {
+      if (!url) return
       this.showImgPreview = true
       this.showImgPreviewUrl = url
     },
@@ -87,7 +88,6 @@ export const useGisApiTabStore = defineStore("formState", {
       if (extendTabId >= 0) {
         Object.assign(newFormData, this.formDataList[extendTabId])
 
-        // this.currtTab++
         this.currtTabId++
       }
 
@@ -100,8 +100,8 @@ export const useGisApiTabStore = defineStore("formState", {
 
       this.tabList.push(newTab)
 
-      // 未知是否需要
-      // formStore.currtTabId = newTabId
+      // 切换到新增的页面
+      this.currtTabId = newTabId
     },
 
     removeTab(tabId: string | number) {

@@ -2,9 +2,9 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-26 10:21:28
+ * @LastEditTime: 2024-07-26 10:30:43
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\index.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 这个gisapi页面的入口文件，这里用来引入全局组件和核心组件，全局事件的注册
 -->
 <template>
   <section :class="['text-xs md:text-md xl:text-xl', 'h-full bg-gray-100']">
@@ -17,7 +17,7 @@
     <!-- guid引导全局组件，使用eventBus.emit(guid-xxx)来调用，事件注册在event.ts -->
     <GuideSetp></GuideSetp>
 
-    <!-- 全局声明一次图片预览 -->
+    <!-- 图片预览弹窗 -->
     <t-image-viewer
       v-model:visible="globalStore.showImgPreview"
       draggable
@@ -43,11 +43,14 @@ export default {
 
   setup() {
     const globalStore = useGisApiStateStore()
+
     return { globalStore }
   },
 
   mounted() {
     eventBus.on("gis-api:init", () => console.log("gis-api init event"))
   },
+
+  unmounted() {},
 }
 </script>

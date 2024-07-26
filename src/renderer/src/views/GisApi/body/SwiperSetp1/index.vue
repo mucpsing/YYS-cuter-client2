@@ -110,6 +110,7 @@
 
 <script setup lang="tsx">
 import { storeToRefs } from "pinia"
+import { debounce } from "lodash-es"
 import { SearchIcon, PrintIcon } from "tdesign-icons-vue-next"
 
 import { currtPreviewUrl } from "@gisapi/store/config"
@@ -121,10 +122,10 @@ import { swtichCommonTemplate } from "./utils"
 import TemplateList from "./templateList.vue"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
-const localStore = reactive({
-  currtMxdName: "1",
-  currtMxdDocs: "1",
-})
+// const localStore = reactive({
+//   currtMxdName: "1",
+//   currtMxdDocs: "1",
+// })
 
 const tabStore = useGisApiTabStore()
 const glboalStore = useGisApiStateStore()
@@ -184,13 +185,18 @@ const onSelectInputHandler = (s: string) => {
 }
 
 /**
- * @description: 输入新标题时，同步tab标题显示的函数
+ * @description: 输入新标题时，同步tab标题显示的函数，有多次触发的BUG，这里使用debounce进行消除
  */
-async function onTitleChange(newTitle: string) {
+const onTitleChange = debounce(async (newTitle: string) => {
+  if (newTitle === "") {
+    newTitle = DEFAULT_TEMPLATE_OUTNAME
+  }
+  console.log(newTitle)
+
   tabStore.formDataList[tabStore.currtTabId].title = newTitle
   tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
   tabStore.tabList[tabStore.currtTabId].label = newTitle
-}
+}, 100)
 
 /**
  * @description: 选择了常用后缀的触发函数
