@@ -13,10 +13,17 @@
             <div :class="['flex flex-col', 'flex-1  flex-grow-[11]']">
               <div :class="['flex items-center justify-center']">
                 <t-image
-                  :class="['min-w-[160px] min-h-[160px]', 'max-w-[450px]']"
+                  :class="['min-w-[160px] min-h-[160px]', 'max-w-[300px]']"
                   :error="'未选择任何模板'"
                   :src="`${currtPreviewUrl}${tabStore.currtFormData.templateInfo.preview}`"
-                ></t-image>
+                  class="cursor-pointer hover:opacity-75"
+                  @click="
+                    glboalStore.showPreview(
+                      `${currtPreviewUrl}${tabStore.currtFormData.templateInfo.preview}`,
+                    )
+                  "
+                >
+                </t-image>
               </div>
 
               <h3 class="my-2 text-base">
@@ -103,7 +110,7 @@
 
 <script setup lang="tsx">
 import { storeToRefs } from "pinia"
-import { SearchIcon } from "tdesign-icons-vue-next"
+import { SearchIcon, PrintIcon } from "tdesign-icons-vue-next"
 
 import { currtPreviewUrl } from "@gisapi/store/config"
 import { DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/state"
@@ -112,15 +119,15 @@ import { crossCombineThemesAndVariants } from "@gisapi/utils/index"
 import { swtichCommonTemplate } from "./utils"
 
 import TemplateList from "./templateList.vue"
-import { useGisApiTabStore } from "@gisapi/store/index"
+import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
-const localState = reactive({
+const localStore = reactive({
   currtMxdName: "1",
   currtMxdDocs: "1",
-  currtMxdPrivewUrl: "",
 })
 
 const tabStore = useGisApiTabStore()
+const glboalStore = useGisApiStateStore()
 const { formDataList, currtTabId } = storeToRefs(tabStore)
 
 // 提示词列表

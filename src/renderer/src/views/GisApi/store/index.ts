@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-25 23:47:46
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-26 10:14:45
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -21,6 +21,9 @@ export const useGisApiStateStore = defineStore("globalState", {
     GlobalLoading: false,
 
     currtOpenSettingsPageNames: [] as string[],
+
+    showImgPreview: false,
+    showImgPreviewUrl: "",
   }),
 
   actions: {
@@ -37,9 +40,16 @@ export const useGisApiStateStore = defineStore("globalState", {
           await formStore.getTemplateList()
 
           setTimeout(() => (this.GlobalLoading = false), 600)
+
+          break
         }
       }
       setTimeout(() => (this.GlobalLoading = false), 1200)
+    },
+
+    async showPreview(url: string) {
+      this.showImgPreview = true
+      this.showImgPreviewUrl = url
     },
   },
 })

@@ -10,6 +10,7 @@
 export type GisApiEventBusTypes = {
   "gis-api:init": any // @gisapi/index.vue
   "gis-api:checkServer": any // @gisapi/body/index.vue
+  "gis-api:show-preview": (url: string) => void // @gisapi/body/index.vue
   "show-guide": (paramList: (number | string)[]) => void // @gisapi/_components/guide.vue
   "test-guide": (setpOptions: any) => void // @gisapi/_components/guide.vue
 }

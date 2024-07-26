@@ -1,15 +1,15 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:17
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-25 23:16:23
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-26 10:22:03
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\templateList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <t-loading
     text="获取列表中..."
-    :loading="loading"
+    :loading="localStore.loading"
     size="small"
     :class="['flex-col flex gap-2 flex-1 h-full']"
   >
@@ -36,6 +36,8 @@
               :src="`${currtPreviewUrl}${item.preview}`"
               :style="{ height: '80px', width: '200px' }"
               :lazy="true"
+              class="hover:opacity-75"
+              @click="() => globalStore.showPreview(`${currtPreviewUrl}${item.preview}`)"
             />
 
             <t-comment
@@ -51,7 +53,7 @@
                 size="small"
                 @click="() => onClickTemplate(item)"
               >
-                点击选择
+                选择模板
                 <template #icon><GestureClickIcon :style="{ fontSize: '16px' }" /> </template>
               </t-button>
               <t-button
@@ -80,18 +82,21 @@ import { DownloadIcon, GestureClickIcon } from "tdesign-icons-vue-next"
 import { currtPreviewUrl } from "@gisapi/store/config"
 
 import { truncateText } from "@gisapi/utils/index"
-import { useGisApiTabStore } from "@gisapi/store/index"
+import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
+
+const localStore = reactive({
+  loading: false,
+})
 
 const tabStore = useGisApiTabStore()
-
-const loading = ref(false)
+const globalStore = useGisApiStateStore()
 
 async function updateTemplateList() {
-  loading.value = true
+  localStore.loading = true
 
   await tabStore.getTemplateList()
 
-  setTimeout(() => (loading.value = false), 1200)
+  setTimeout(() => (localStore.loading = false), 1200)
 }
 
 const onClickTemplate = debounce((item) => {
