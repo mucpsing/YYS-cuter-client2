@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-25 00:47:05
+ * @LastEditTime: 2024-07-26 21:54:08
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -112,8 +112,9 @@
 
 <script setup lang="ts">
 import EchartGeoJson from "@gisapi/_components/echartGeoJson/index.vue"
-import { formDataList, currtFormDataId } from "@gisapi/store/state"
+import { useGisApiTabStore } from "@gisapi/store/index"
 
+const tabStore = useGisApiTabStore()
 const maxLinkPoint = ref(50)
 const currtSelectDfsuName = ref("")
 const currtRangeGeoJson = ref<any[]>([])
@@ -138,12 +139,12 @@ const themeList = [
 
 // 动态计算范围文件列表
 const rangeFileSelectOptions = computed(() => {
-  if (formDataList.value.length == 0) return []
+  if (tabStore.formDataList.length == 0) return []
 
   // console.log("触发: rangeFileSelectOptions")
 
-  const beInfo = formDataList.value[currtFormDataId.value].beDfsuInfo
-  const afInfo = formDataList.value[currtFormDataId.value].afDfsuInfo
+  const beInfo = tabStore.currtFormData.beDfsuInfo
+  const afInfo = tabStore.currtFormData.afDfsuInfo
   const rangeFileInfoList: { value: string; label: string }[] = []
 
   if (beInfo && beInfo.range_geojson)
@@ -157,8 +158,8 @@ const rangeFileSelectOptions = computed(() => {
 function onSelectRangeFile(md5: string) {
   // console.log("触发: onSelectRangeFile")
 
-  const beInfo = formDataList.value[currtFormDataId.value].beDfsuInfo
-  const afInfo = formDataList.value[currtFormDataId.value].afDfsuInfo
+  const beInfo = tabStore.currtFormData.beDfsuInfo
+  const afInfo = tabStore.currtFormData.afDfsuInfo
 
   if (beInfo.md5 == md5) {
     currtRangeGeoJson.value[0] = beInfo.range_geojson
@@ -170,7 +171,7 @@ function onSelectRangeFile(md5: string) {
 }
 
 function test() {
-  console.log(formDataList.value)
+  console.log(tabStore.formDataList)
   console.log(rangeFileSelectOptions)
 }
 
@@ -179,10 +180,10 @@ onMounted(() => {
   if (rangeFileSelectOptions.value.length > 0 && currtSelectDfsuName.value == "") {
     console.log("进行初始化")
     let md5 = ""
-    if (formDataList.value[currtFormDataId.value].beDfsuInfo) {
-      md5 = formDataList.value[currtFormDataId.value].beDfsuInfo.md5
-    } else if (formDataList.value[currtFormDataId.value].afDfsuInfo) {
-      md5 = formDataList.value[currtFormDataId.value].afDfsuInfo.md5
+    if (tabStore.currtFormData.beDfsuInfo) {
+      md5 = tabStore.currtFormData.beDfsuInfo.md5
+    } else if (tabStore.currtFormData.afDfsuInfo) {
+      md5 = tabStore.currtFormData.afDfsuInfo.md5
     }
 
     if (md5) {

@@ -110,7 +110,7 @@
 
 <script setup lang="tsx">
 import { storeToRefs } from "pinia"
-import { debounce } from "lodash-es"
+import { debounce } from "lodash"
 import { SearchIcon, PrintIcon } from "tdesign-icons-vue-next"
 
 import { currtPreviewUrl } from "@gisapi/store/config"

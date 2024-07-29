@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-22 14:23:07
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-14 20:42:51
+ * @LastEditTime: 2024-07-26 21:48:36
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\dfsuInfo.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -16,7 +16,6 @@
         <!-- <span>解析进度：{{ props.fileInfo.progress.toFixed(2) }}<strong>%</strong></span> -->
         <span>文件大小：{{ props.fileInfo.size.toFixed(2) }} MB</span>
         <span>唯一名称：{{ props.fileInfo.md5 }}</span>
-        <span>显示范围：{{ props.fileInfo.bounds }}</span>
       </div>
     </div>
     <div class="flex justify-center w-full pt-3">
