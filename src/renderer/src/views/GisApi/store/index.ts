@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-26 14:58:08
+ * @LastEditTime: 2024-07-29 10:34:11
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,7 +11,6 @@ import { createFormData } from "./state"
 import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
 import { serverCheckApi, getTemplateList } from "@gisapi/api"
 
-// import type { FormDataItemT } from "./state"
 import type { TemplateInfo } from "@gisapi/Types"
 import type { TabValue } from "tdesign-vue-next"
 
@@ -164,5 +163,14 @@ export const useGisApiTabStore = defineStore("formState", {
 export const useGisApiChartStroe = defineStore("chartsState", {
   state: () => ({
     chartList: [],
+  }),
+})
+
+// 存放文件数据的store
+export const useGisDataStroe = defineStore("fileStore", {
+  state: () => ({
+    dfsuList: [],
+    shpList: [],
+    geoJsonList: [],
   }),
 })

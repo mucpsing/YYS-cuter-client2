@@ -1,93 +1,54 @@
-<template>
-  <div class="container p-4 mx-auto">
-    <div class="my-4 nav">
-      <button
-        v-for="(phone, index) in phones"
-        :key="index"
-        class="inline-block px-5 py-2 rounded-full"
-        :class="{ 'bg-blue-500 text-white': index === activeIndex }"
-        @click="setActiveTab(index)"
-      >
-        {{ phone.name }}
-      </button>
-      <button
-        class="inline-block px-5 py-2 ml-4 text-white bg-green-500 rounded-full"
-        @click="addNewTab"
-      >
-        Add New Tab
-      </button>
-    </div>
-
-    <!-- Tabs content -->
-    <div
-      v-for="(phone, index) in phones"
-      :key="index"
-      class="p-8 shadow-md rounded-xl"
-      :class="{ hidden: index !== activeIndex }"
-    >
-      <!-- Tab content here -->
-      <div class="flex flex-col justify-center w-full">
-        <div class="w-full">
-          <h2 class="text-2xl font-bold">{{ phone.name }}</h2>
-          <p :id="`guide-test__${index}`">{{ index }}</p>
-          <!-- Add more content here if needed -->
-          <t-button @click="() => test(index)">guide show</t-button>
-        </div>
-      </div>
-    </div>
-
-    <GuideSetp></GuideSetp>
-  </div>
-</template>
-
-<script setup lang="ts">
-import GuideSetp from "@gisapi/_components/guide.vue"
-import eventBus from "@renderer/libs/eventBus"
-
-function test(idex: number) {
-  eventBus.emit("test-guide", [
-    {
-      element: `#guide-test__${idex}`,
-      title: "测试",
-      body: "测试11111111111111111111",
-      placement: "bottom-right",
-      highlightPadding: 5,
-    },
-  ])
-}
-interface Phone {
-  id: string
-  name: string
-  // Add other properties as needed
-}
-
-const props = defineProps<{
-  initialPhones?: Phone[] // Optional initial phones
-}>()
-
-const phones = ref<Phone[]>(props.initialPhones || []) // Use initial phones if provided, otherwise an empty array
-const activeIndex = ref(0)
-
-function setActiveTab(index: number) {
-  activeIndex.value = index
-}
-
-function addNewTab() {
-  // Generate a unique ID (simplified for demonstration)
-  const newId = `${new Date().getTime()}`
-  // Create a new phone object with a default name (can be modified by user)
-  const newPhone: Phone = {
-    id: newId,
-    name: `New Phone ${phones.value.length + 1}`,
-    // Add other default properties as needed
-  }
-  // Add the new phone to the phones array
-  phones.value.push(newPhone)
-  // Activate the new tab
-  setActiveTab(phones.value.length - 1)
-}
-</script>
-
-<style scoped>
-/* Your styles here */
+<template>  
+  <div class="paper" :style="{ width: paperWidth + 'px', height: paperHeight + 'px' }">  
+    <div class="fold" :style="{ bottom: foldBottom + 'px', right: foldRight + 'px' }"></div>  
+  </div>  
+</template>  
+  
+<script lang="ts">  
+import { ref } from 'vue';  
+  
+export default {  
+  setup() {  
+    // A4纸张尺寸（转换为像素，假设1mm = 3.78px）  
+    const paperWidth = ref(1118); // 297mm * 3.78px/mm  
+    const paperHeight = ref(804); // 210mm * 3.78px/mm  
+  
+    // 折叠角的尺寸和位置  
+    const foldSize = ref(100); // 折叠角的大小  
+    const foldBottom = ref(-50); // 折叠角底部偏移  
+    const foldRight = ref(-50); // 折叠角右侧偏移  
+  
+    // 如果需要，你可以在这里添加逻辑来动态改变这些值  
+  
+    return {  
+      paperWidth,  
+      paperHeight,  
+      foldSize, // 注意：虽然foldSize在样式中未直接使用，但可以在其他地方使用  
+      foldBottom,  
+      foldRight,  
+    };  
+  },  
+};  
+</script>  
+  
+<style scoped>  
+.paper {  
+  position: relative;  
+  background-color: white;  
+  border: 1px solid #ccc;  
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);  
+}  
+  
+.fold {  
+  position: absolute;  
+  width: 100px; /* 或者使用 foldSize.value，但这里为了简单直接写死了 */  
+  height: 100px;  
+  background-color: white;  
+  border-left: 1px solid #ccc;  
+  border-top: 1px solid #ccc;  
+  transform: rotate(45deg);  
+  transform-origin: 100% 100%;  
+  box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.2);  
+  z-index: -1;  
+}  
 </style>

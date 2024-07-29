@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-08-29 10:39:32
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-21 22:44:05
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-29 10:30:58
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\header.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -25,7 +25,7 @@
         variant="text"
         :icon="stateIcon"
         :theme="btnTheme"
-        :loading="GlobalLoading"
+        :loading="glboalStore.GlobalLoading"
         @click="onCheckServerBtnClick"
       >
         {{ btnMsg }}
@@ -38,42 +38,44 @@
 
 <script setup lang="tsx">
 import { Link1Icon, LinkUnlinkIcon, SettingIcon } from "tdesign-icons-vue-next"
-import { isGisServerConnected } from "./store/state"
+
 import { eventBus } from "@renderer/libs"
 import { SettingPageValue as SettingsPageId } from "@renderer/stores"
 
-import { currtOpenSettingsPageNames, GlobalLoading } from "./store/state"
 import { serverCheckApi } from "./api"
 
+import { useGisApiStateStore } from "@gisapi/store/index"
+const glboalStore = useGisApiStateStore()
+
 // 按钮的状态
-const btnTheme = computed(() => (isGisServerConnected.value ? "success" : "danger"))
-const btnMsg = computed(() => (isGisServerConnected.value ? "已连接" : "未连接"))
+const btnTheme = computed(() => (glboalStore.isGisServerConnected ? "success" : "danger"))
+const btnMsg = computed(() => (glboalStore.isGisServerConnected ? "已连接" : "未连接"))
 // const serverConnecting = ref(false)
-const stateIcon = () => (isGisServerConnected.value ? <Link1Icon /> : <LinkUnlinkIcon />)
+const stateIcon = () => (glboalStore.isGisServerConnected ? <Link1Icon /> : <LinkUnlinkIcon />)
 const settingIcon = () => <SettingIcon />
 
 onMounted(async () => {
   // 检查服务器状态
-  isGisServerConnected.value = await serverCheckApi()
+  glboalStore.isGisServerConnected = await serverCheckApi()
 })
 
 const showSettingsPage = () => eventBus.emit("showSettingsPage", SettingsPageId.GIS_API)
 
 async function onCheckServerBtnClick() {
-  if (!isGisServerConnected.value) {
-    GlobalLoading.value = true
+  if (!glboalStore.isGisServerConnected) {
+    glboalStore.GlobalLoading = true
 
     // 全局事件，调用总线来打开配置页
     showSettingsPage()
 
     // 【UI过度】打开配置页后，延迟450ms，再打开对应项
     setTimeout(() => {
-      if (!currtOpenSettingsPageNames.value.includes("服务器配置")) {
-        currtOpenSettingsPageNames.value.push("服务器配置")
+      if (!glboalStore.currtOpenSettingsPageNames.includes("服务器配置")) {
+        glboalStore.currtOpenSettingsPageNames.push("服务器配置")
       }
     }, 450)
 
-    setTimeout(() => (GlobalLoading.value = false), 300)
+    setTimeout(() => (glboalStore.GlobalLoading = false), 300)
   }
 }
 </script>

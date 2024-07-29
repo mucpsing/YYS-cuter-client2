@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-25 22:39:45
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-07-29 10:22:54
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\state.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @Description: 建议所有state变量使用currtXxxxXxxx来命名
@@ -11,9 +11,6 @@
 
 import type { BoundsT, TemplateInfo } from "@gisapi/Types"
 export const DEFAULT_TEMPLATE_OUTNAME = "未命名工况"
-
-export const currtSetp = ref(1)
-export const GlobalLoading = ref(false)
 
 export function createFormData(newTabId: number) {
   return {
@@ -66,22 +63,12 @@ export function createFormData(newTabId: number) {
     mesh_size: 25,
     contour_range: 200, // 大于这个长度的流速等值线才会被显示
     contour_setp: [] as number[], // 等值线要显示哪些值
+
     templateInfo: {} as TemplateInfo,
   }
 }
 const defaultFormData = createFormData(0)
 
 export type FormDataItemT = typeof defaultFormData
-export const currtFormDataId = ref(0)
-export const formDataList = ref([defaultFormData])
 
-export const formCount = ref(1)
-export const currtExtendId = ref(-1) // 记录要继承哪个模板的下标
-
-export const showAddTapDialog = ref(false)
-
-export const isGisServerConnected = ref(false)
-
-export const currtTemplateId = ref(0)
-export const currtOpenSettingsPageNames = ref<string[]>([])
-export const currtMxdName = ref("未选择任何mxd模板")
+export default defaultFormData

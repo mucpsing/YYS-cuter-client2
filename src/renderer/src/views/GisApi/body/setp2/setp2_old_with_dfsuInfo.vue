@@ -13,11 +13,13 @@
         <div class="GisApi__drapMaskTip">最多支持读取前两个dfsu文件</div>
       </div>
 
-      <DfsuInfo
+      <!-- <DfsuInfo
         title="DFSU文件(工程前)"
         :fileInfo="tabStore.currtFormData.beDfsuInfo"
         @onBtnClick="() => onUploadBtnClickHandler('be')"
-      />
+      /> -->
+      <FileTransfer />
+
       <!-- 切换按钮 -->
       <div
         class="flex items-center justify-center px-2 bg-blue-100 rounded-sm cursor-pointer hover:bg-blue-300"
@@ -30,11 +32,13 @@
           <c-icon-font iconName="icon-yys-04zhuanhuan" class="text-xl text-white"></c-icon-font>
         </strong>
       </div>
-      <DfsuInfo
+
+      <FileTransfer />
+      <!-- <DfsuInfo
         title="DFSU文件(工程后)"
         :fileInfo="tabStore.currtFormData.afDfsuInfo"
         @onBtnClick="() => onUploadBtnClickHandler('af')"
-      />
+      /> -->
     </header>
 
     <div :class="['flex-grow-[1] overflow-auto __scrollbar-bule']">
@@ -111,8 +115,8 @@
                 </t-tag>
               </p>
             </div>
-            <div class="flex gap-1">
-              <t-tag
+            <div class="flex gap-1 transition-all">
+              <t-button
                 v-if="tabStore.currtFormData.projectRangeType == 'shp'"
                 :onClick="() => onUploadBtnClickHandler('project')"
                 theme="success"
@@ -123,7 +127,7 @@
                   <cps-icon-font iconName="icon-yys-folder-opened" class="mr-2" />
                 </template>
 
-                {{ tabStore.currtFormData.projectRange.name || "选择.shp文件" }}</t-tag
+                {{ tabStore.currtFormData.projectRange.name || "选择.shp文件" }}</t-button
               >
               <div v-if="tabStore.currtFormData.projectRangeType == 'point'">
                 <t-input-number
@@ -235,13 +239,14 @@ import { useDropZone } from "@vueuse/core"
 
 import { getMd5 } from "@renderer/utils/calculateMd5"
 
-import DfsuInfo from "@gisapi/_components/dfsuInfo.vue"
+import DfsuInfo from "./dfsuInfo.vue"
+import FileTransfer from "./fileTransfer/index.vue"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
-// import { formDataList, currtFormDataId } from "@gisapi/store/state"
 import { uploadFileApi } from "@gisapi/api"
 import type { FileInfoBase } from "@gisapi/Types"
 import { useGisApiTabStore } from "@gisapi/store/index"
+
 const tabStore = useGisApiTabStore()
 const { formDataList, currtTabId } = storeToRefs(tabStore)
 let customFileUpInputElement: HTMLInputElement

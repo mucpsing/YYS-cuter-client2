@@ -96,10 +96,10 @@
   </div>
 </template>
 <script lang="ts">
-import SwiperSetp1 from "./SwiperSetp1/index.vue"
-import SwiperSetp2 from "./SwiperSetp2.vue"
-import SwiperSetp3 from "./SwiperSetp3.vue"
-import SwiperSetp4 from "./SwiperSetp4.vue"
+import SwiperSetp1 from "./setp1/setp1.vue"
+import SwiperSetp2 from "./setp2/setp2.vue"
+import SwiperSetp3 from "./setp3/setp3.vue"
+import SwiperSetp4 from "./setp4/setp4.vue"
 
 const SwiperComponentList = {
   "1": "SwiperSetp1",

@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-26 16:11:19
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-26 16:30:59
+ * @LastEditTime: 2024-07-29 08:45:34
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\utils\fileHandler.ts
  * @Description: 处理上文件
  */
@@ -70,7 +70,7 @@ export class FileReaderHelper {
     inputElement.type = "file"
 
     inputElement.addEventListener("change", (event) => {
-      const file = event.target.files?.[0]
+      const file = event.target?.files?.[0]
       if (file) {
         new FileReaderHelper()
           .withFile(file)
