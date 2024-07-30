@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-07-29 22:52:35
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-30 12:24:10
+ * @LastEditTime: 2024-07-30 21:55:59
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\setp2\fileTransfer\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -20,6 +20,7 @@
     />
   </div>
   <t-button @click="test">test</t-button>
+  
 </template>
 
 <script setup lang="ts">
