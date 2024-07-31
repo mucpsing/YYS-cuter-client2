@@ -429,6 +429,7 @@ async function updateProjectRangeInfo(files: FileList) {
 
 .GisApi__SwiperSetp2-title{
   opacity 1
-  @apply text-lg
+  font-size: 1.125rem /* 18px */;
+  line-height: 1.75rem /* 28px */;
 }
 </style>
