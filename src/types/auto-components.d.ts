@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     _components: typeof import("./../renderer/src/views/GisApi/_components/index.vue")["default"]
+    '穿梭框': typeof import('./../renderer/src/views/Home/穿梭框.vue')['default']
     '纯CSS的tabs组件DEMO': typeof import('./../renderer/src/views/Home/纯CSS的tabs组件DEMO.vue')['default']
     '弹性父组件DEMO': typeof import('./../renderer/src/views/Home/弹性父组件DEMO.vue')['default']
     Body: typeof import('./../renderer/src/views/GisApi/body/index.vue')['default']
@@ -83,7 +84,7 @@ declare module 'vue' {
     TAutoComplete: typeof import('tdesign-vue-next')['AutoComplete']
     TButton: typeof import('tdesign-vue-next')['Button']
     TCard: typeof import('tdesign-vue-next')['Card']
-    TCheckbox: typeof import("tdesign-vue-next")["Checkbox"]
+    TCheckbox: typeof import('tdesign-vue-next')['Checkbox']
     TCol: typeof import('tdesign-vue-next')['Col']
     TCollapse: typeof import('tdesign-vue-next')['Collapse']
     TCollapsePanel: typeof import('tdesign-vue-next')['CollapsePanel']

@@ -83,6 +83,9 @@ importers:
       pug:
         specifier: ^3.0.2
         version: https://registry.npmmirror.com/pug/-/pug-3.0.2.tgz
+      sortablejs:
+        specifier: ^1.15.2
+        version: 1.15.2
       spark-md5:
         specifier: ^3.0.2
         version: https://registry.npmmirror.com/spark-md5/-/spark-md5-3.0.2.tgz
@@ -1607,7 +1610,7 @@ packages:
     version: 2.0.6
 
   core-util-is@1.0.2:
-    resolution: {integrity: sha512-3lqz5YjWTYnW6dlDa5TLaTCcShfar1e40rmcJVwCBJC6mWlFuj0eCHIElmG1g5kyuJ/GD+8Wn4FFCcz4gJPfaQ==}
+    resolution: {integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=}
 
   core-util-is@https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.3.tgz:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==, tarball: https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.3.tgz}
