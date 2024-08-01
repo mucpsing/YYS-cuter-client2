@@ -2,14 +2,14 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-01 09:55:04
+ * @LastEditTime: 2024-08-01 11:09:38
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div
     ref="dropElementRef"
-    :class="['flex justify-between', 'w-full min-h-[200px]', 'gap-2 ', 'relative']"
+    :class="['flex justify-between', 'w-full min-h-[160px] max-h-[240px]', 'gap-2 ', 'relative']"
   >
     <!-- 拖拽激活后的样式遮罩层 -->
     <div class="GisApi__drapMask" :class="{ 'GisApi__drapMask-show': showDropMask }">
@@ -22,13 +22,19 @@
           class="flex flex-row items-center justify-between pb-2 mb-2 text-lg font-medium border-b"
         >
           <strong>{{ baseItem.title }}</strong>
-          <t-button theme="success" size="small">选择文件</t-button>
+          <t-button
+            :on-click="() => fileStore.onUploadBtnClick('dfsu')"
+            theme="success"
+            size="small"
+            >选择文件</t-button
+          >
         </h3>
 
         <ul
           :id="baseItem.id"
           :class="[
-            'relative flex-col flex-1 p-0',
+            '__scrollbar-bule',
+            'relative flex-col flex-1 pr-1',
             'overflow-y-auto overflow-x-hidden',
             'list-none',
           ]"
@@ -36,14 +42,15 @@
           <template v-if="dataList[baseItem.id].length == 0">
             <div
               :class="[
-                'transition-all duration-500 ease-in-out pointer-events-none',
+                'transition-all duration-500 ease-in-out',
                 'absolute w-full  h-full text-center',
-                'text-base',
+                'text-base cursor-pointer border-2 border-dashed border-gray-200',
                 dataList[baseItem.id].length == 0 ? 'text-gray-300' : 'opacity-0',
               ]"
+              @click="() => test(baseItem.id)"
             >
               <div :class="['w-full h-full', 'flex flex-col flex-1 justify-center items-center']">
-                <p>未添加工程文件</p>
+                <p>拖拽或点击上传dfsu文件</p>
                 <p>（将文件拖放到此处或者点击下方选择按钮）</p>
               </div>
             </div>
@@ -59,14 +66,7 @@
               >
                 <template #content>
                   <div class="flex justify-between flex-1 w-full">
-                    <input
-                      v-model="item.checked"
-                      type="checkbox"
-                      id="scales"
-                      name="scales"
-                      checked
-                      :disabled="item.disabled"
-                    />
+                    <input v-model="item.checked" type="checkbox" :disabled="item.disabled" />
 
                     <span>{{ item.name }}</span>
                   </div>
@@ -84,23 +84,18 @@
 import Sortable from "sortablejs"
 import { useDropZone } from "@vueuse/core"
 
+import { useFileStroe } from "@gisapi/store/index"
+
+const fileStore = useFileStroe()
+
 const dropElementRef = ref<HTMLElement>()
 const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
-const showDropMask = computed(() => {
-  const t = Boolean(isOverDropZone.value && !localStore.dragging)
-
-  console.log(t)
-
-  return t
-})
+const showDropMask = computed(() => Boolean(isOverDropZone.value && !localStore.dragging))
 
 async function onDrop(files: File[] | null) {
-  console.log("onDrop1")
-
   if (files && files.length >= 1) {
     // 文件读取
     console.log(files[0])
-    console.log("onDrop3")
   }
 }
 
@@ -152,10 +147,7 @@ function initSortable() {
     Sortable.create(element, {
       group: "items",
       animation: 150,
-      onStart: () => {
-        localStore.dragging = true
-        console.log("onStart:", localStore.dragging)
-      },
+      onStart: () => (localStore.dragging = true),
 
       onEnd: (e) => {
         const { id } = item
@@ -182,9 +174,9 @@ function initSortable() {
           }
           // dataList[e.to.id].splice(e.newIndex, 0, dataList[e.from.id].splice(e.oldIndex, 1)[0])
 
-          console.log({ target })
-          console.log({ from: fromList })
-          console.log({ from: fromList.length })
+          //   console.log({ target })
+          //   console.log({ from: fromList })
+          //   console.log({ from: fromList.length })
           // console.log("改变容器")
           // console.log(dataList[e.to.id].forEach((item) => console.log(item.id)))
           // console.log(dataList[e.from.id])
@@ -192,7 +184,7 @@ function initSortable() {
         }
 
         localStore.dragging = false
-        console.log("onEnd", localStore.dragging)
+        // console.log("onEnd", localStore.dragging)
       },
     })
   })
@@ -205,6 +197,7 @@ function onChecked(dataListKey: string, item: ItemT) {
       if (item.id != eachData.id) eachData.checked = false
     })
   }
+
   // 其他元素锁定
   // if (item.checked) {
   //   dataList[dataListKey].forEach((eachData) => {
@@ -221,8 +214,15 @@ function onChecked(dataListKey: string, item: ItemT) {
   // }
 }
 
-function test() {
-  dataList.be.push({ id: 99, name: "test", checked: false, disabled: false })
+function test(dataListKey: string) {
+  const target = dataList[dataListKey]
+
+  target.push({
+    id: new Date().getTime().toString(36),
+    name: "test",
+    checked: false,
+    disabled: false,
+  })
 }
 </script>
 

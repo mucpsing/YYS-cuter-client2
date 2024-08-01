@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-25 10:11:55
+ * @LastEditTime: 2024-08-01 17:20:36
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -25,6 +25,7 @@ export const DEFAULT_SERVER_IP_LIST = [
 export const API = {
   getTemplateList: "/mxd_template_list",
   upload: "/upload_file",
+  uploadCheck: "/check_file_exists",
   mxdToImg: "/mxd_to_img",
   test: "/serverCheck",
 }

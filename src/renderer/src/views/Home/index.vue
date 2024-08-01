@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-31 17:20:24
+ * @LastEditTime: 2024-08-01 09:48:29
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -15,7 +15,7 @@
       </div>
 
       <template v-for="baseItem of baseStore">
-        <div :class="['flex flex-col flex-1', 'p-4 rounded-lg', 'border border-gray-200 relative']">
+        <div :class="['flex flex-col flex-1', 'p-4 rounded-lg', 'border border-gray-200']">
           <h3
             class="flex flex-row items-center justify-between pb-2 mb-2 text-lg font-medium border-b"
           >
@@ -145,11 +145,9 @@ function initSortable() {
     Sortable.create(element, {
       group: "items",
       animation: 150,
-      onStart: (e) => {
+      onStart: () => {
         localStore.dragging = true
         console.log("onStart:", localStore.dragging)
-
-        console.log(e)
       },
 
       onEnd: (e) => {
@@ -157,9 +155,6 @@ function initSortable() {
 
         // 修改排序
         if (e.from.id === e.to.id) {
-          const target = dataList[id][e.oldIndex]
-          console.log({ target })
-
           const item = dataList[id].splice(e.oldIndex, 1)[0]
           dataList[id].splice(e.newIndex, 0, item)
 
@@ -167,10 +162,22 @@ function initSortable() {
           // console.log(dataList[id].forEach((item) => console.log(item.id)))
           // console.log(dataList[id])
         } else {
-          dataList[e.to.id].splice(e.newIndex, 0, dataList[e.from.id].splice(e.oldIndex, 1)[0])
-          const target = dataList[e.to.id][e.oldIndex]
+          const target = dataList[e.from.id].splice(e.oldIndex, 1)[0]
+          if (target.checked) target.checked = false
+          if (target.disabled) target.disabled = false
+
+          dataList[e.to.id].splice(e.newIndex, 0, target)
+
+          const fromList = dataList[e.from.id]
+          if (fromList.length == 1) {
+            fromList[0].checked = false
+            fromList[0].disabled = false
+          }
+          // dataList[e.to.id].splice(e.newIndex, 0, dataList[e.from.id].splice(e.oldIndex, 1)[0])
 
           console.log({ target })
+          console.log({ from: fromList })
+          console.log({ from: fromList.length })
           // console.log("改变容器")
           // console.log(dataList[e.to.id].forEach((item) => console.log(item.id)))
           // console.log(dataList[e.from.id])
@@ -186,23 +193,25 @@ function initSortable() {
 
 function onChecked(dataListKey: string, item: ItemT) {
   item.checked = !item.checked
-  console.log({ dataListKey })
-  console.log({ item })
-
-  // 其他元素锁定
   if (item.checked) {
     dataList[dataListKey].forEach((eachData) => {
-      if (item.id != eachData.id) {
-        eachData.disabled = true
-      } else {
-        eachData.disabled = false
-      }
-    })
-  } else {
-    dataList[dataListKey].forEach((eachData) => {
-      eachData.disabled = false
+      if (item.id != eachData.id) eachData.checked = false
     })
   }
+  // 其他元素锁定
+  // if (item.checked) {
+  //   dataList[dataListKey].forEach((eachData) => {
+  //     if (item.id != eachData.id) {
+  //       eachData.disabled = true
+  //     } else {
+  //       eachData.disabled = false
+  //     }
+  //   })
+  // } else {
+  //   dataList[dataListKey].forEach((eachData) => {
+  //     eachData.disabled = false
+  //   })
+  // }
 }
 
 function test() {

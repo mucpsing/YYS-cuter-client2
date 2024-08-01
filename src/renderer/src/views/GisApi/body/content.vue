@@ -1,5 +1,5 @@
 <template>
-  <div :class="['flex flex-col h-full px-2 gap-4']">
+  <div :class="['flex flex-col h-full px-2 gap-1']">
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
       <t-tooltip content="添加工况">
         <t-button :onClick="() => (localStore.showAddTapDialog = true)"

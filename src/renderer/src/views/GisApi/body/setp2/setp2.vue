@@ -1,6 +1,6 @@
 <template>
   <section
-    :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2 text-xs xl:text-md']"
+    :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'rounded-xl text-xs xl:text-md']"
   >
     <!-- --------------- 【 工程前后的数据文件上传 】 --------------- -->
     <header
@@ -8,11 +8,6 @@
       :class="['flex-grow-[0]', 'flex flex-col gap-1 justify-center', 'min-h-[200px] relative']"
       :id="`Gis-Api__dfsu_input_${tabStore.currtFormData.id}`"
     >
-      <!-- 拖拽激活后的样式遮罩层 -->
-      <div class="GisApi__drapMask" :class="{ 'GisApi__drapMask-show': isOverDropZone }">
-        <div class="GisApi__drapMaskTip">最多支持读取前两个dfsu文件</div>
-      </div>
-
       <FileTransfer />
     </header>
 
@@ -143,8 +138,9 @@ import { useDropZone } from "@vueuse/core"
 
 import { getMd5 } from "@renderer/utils/calculateMd5"
 
-import DfsuInfo from "./dfsuInfo.vue"
-import FileTransfer from "./fileTransfer/index.vue"
+// import DfsuInfo from "./dfsuInfo.vue"
+// import FileTransfer from "./fileTransfer/index.vue"
+import FileTransfer from "./fileTransfer.vue"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
 import { uploadFileApi } from "@gisapi/api"
@@ -302,37 +298,4 @@ async function updateProjectRangeInfo(files: FileList) {
 }
 </script>
 
-<style lang="stylus">
-/* 遮罩具体样式 */
-.GisApi__drapMask{
-  position absolute
-  width 100%
-  height 100%
-  text-align center
-  display flex
-  align-items center
-  justify-content center
-  pointer-events none
-  color rgba(0, 0, 0,1)
-  background-color rgba(255, 255, 255, 0.1)
-  opacity 0
-  box-sizing border-box
-  border-radius 5px
-  backdrop-filter blur(5px)
-  transition all 0.6s cubic-bezier(0.25, 1, 0.5, 1)
-
-  .GisApi__drapMaskTip{
-    font-size clamp(1rem, 4vh, 2rem)
-  }
-}
-
-.GisApi__drapMask-show{
-  opacity 1
-  z-index 50
-}
-
-.GisApi__SwiperSetp2-title{
-  opacity 1
-  @apply text-lg
-}
-</style>
+<style lang="stylus"></style>
