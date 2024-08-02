@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-01 20:16:06
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-02 17:01:57
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,13 +11,9 @@ import { createFormData } from "./state"
 import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
 import { getTemplateList, serverCheckApi } from "@gisapi/api"
 import * as API from "@gisapi/api"
-import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
-import { getMd5 } from "@renderer/utils/calculateMd5"
 
-import type { TemplateInfo, FileInfoItemT } from "@gisapi/Types"
 import type { TabValue } from "tdesign-vue-next"
-
-const DEFAULT_INPUT_ELEMENT_REF = document.createElement("input")
+import type { TemplateInfo, FileInfoItemT } from "@gisapi/Types"
 
 export const useGisApiStateStore = defineStore("globalState", {
   state: () => ({
@@ -175,71 +171,38 @@ export const useGisApiChartStroe = defineStore("chartsState", {
 export const useFileStroe = defineStore("fileStore", {
   state: () => ({
     fileReading: false,
-    dfsuList: [] as any[],
-    shpList: [],
-    geoJsonList: [],
+    dfsuObj: {} as { [md5: string]: FileInfoItemT },
+    shpList: {} as { [md5: string]: FileInfoItemT },
+    geoJsonObj: {} as { [md5: string]: any },
   }),
 
-  actions: {
-    async onUploadBtnClick(target) {
-      // 调用点击事件
-      DEFAULT_INPUT_ELEMENT_REF.accept = UP_FILE_ACCEPT_TYPE[target]
-      DEFAULT_INPUT_ELEMENT_REF.accept = ""
+  getters: {
+    geoJsonOptions(state) {
+      const options: { value: string; label: string }[] = []
+      for (const [geoMd5, geoData] of Object.entries(state.dfsuObj)) {
+        if (!Object.keys(state.dfsuObj).includes(geoMd5)) continue
 
-      DEFAULT_INPUT_ELEMENT_REF.onchange = (e) => this.upFileHandler(e, target)
-
-      DEFAULT_INPUT_ELEMENT_REF.type = "file"
-      DEFAULT_INPUT_ELEMENT_REF.multiple = true
-      if (DEFAULT_INPUT_ELEMENT_REF.value) DEFAULT_INPUT_ELEMENT_REF.value = ""
-      DEFAULT_INPUT_ELEMENT_REF.click()
-    },
-
-    async upFileHandler(e, target) {
-      if (!e.target) return console.log("获取实例失败")
-      if (!e.target.files) return console.log("没有选中文件")
-
-      if (target == "dfsu") {
-        this.dfsuHandler(e.target.files)
-      } else if (target == "shp") {
-        this.shpfileHandler(e.target.files)
-      } else if (target == "geoJson") {
-        this.geoJsonHandler(e.target.files)
-      }
-
-      console.log(e.target.files)
-    },
-
-    async shpfileHandler(files: FileList) {},
-
-    async geoJsonHandler(files: FileList) {},
-    async dfsuHandler(files: FileList) {
-      console.log("dfsuHandler:", { files })
-      if (files.length == 0) return
-
-      for (let file of files) {
-        const md5 = await getMd5(file)
-        const eachFileInfo = {
-          size: file.size / 1024 / 1024,
-          name: `${md5}.dfsu`, // nameWithMd5
-          md5,
-          file,
-          uploadProgress: -1,
-          geoJson: [],
-        }
-
-        // 判断文件是否已经存在
-        let hasFile = this.dfsuList.some((each) => each.md5 == eachFileInfo.md5)
-        if (hasFile) return console.log("再重复上传: ", this.dfsuList)
-
-        // 添加到列表
-        this.dfsuList.push(eachFileInfo)
-
-        const upload_res = await API.uploadFile(eachFileInfo, (uploadPress: number) => {
-          eachFileInfo.uploadProgress = uploadPress
+        options.push({
+          label: state.dfsuObj[geoMd5].name,
+          value: geoMd5,
         })
-
-        console.log({ upload_res })
       }
+
+      return options
+    },
+  },
+
+  actions: {
+    async addDfsuItem(item: FileInfoItemT) {
+      this.dfsuObj[item.md5] = item
+
+      if (item.geoJson) {
+        this.geoJsonObj[item.md5] = item.geoJson
+      }
+    },
+
+    async addGelJsonItem(item) {
+      this.geoJsonObj[item.md5] = item
     },
   },
 })

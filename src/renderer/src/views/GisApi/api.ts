@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-01 20:26:53
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-02 17:11:02
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,6 +10,7 @@
 import Axios from "axios"
 import config, { API } from "./store/config"
 import type { TemplateInfo, FileInfoBase } from "@gisapi/Types"
+import type { FileInfoItemT } from "@gisapi/Types"
 
 const DEFAULT_AXIOS_TIMEOUT = 6000
 const FILE_UPLOAD_TIMEOUT = 300000
@@ -66,12 +67,12 @@ export async function getTemplateList() {
   }
 }
 
-export async function uploadCheck(fileInfo: any): Promise<FileInfoBase | boolean> {
+export async function uploadCheck(fineMd5WithExtName: any): Promise<FileInfoBase | boolean> {
   try {
-    const res = await server().get(`${API.uploadCheck}/${fileInfo.name}`)
+    const res = await server().get(`${API.uploadCheck}/${fineMd5WithExtName}`)
 
     if (res.status == 200 && res.data.success) {
-      if (fileInfo.name.endsWith(".dfsu") || fileInfo.name.endsWith(".shp")) {
+      if (fineMd5WithExtName.endsWith(".dfsu") || fineMd5WithExtName.endsWith(".shp")) {
         console.log("文件已经存在，返回服务器缓存", res.data.res)
         return res.data.res.file_info as FileInfoBase
       }
@@ -85,43 +86,51 @@ export async function uploadCheck(fileInfo: any): Promise<FileInfoBase | boolean
 }
 
 export async function uploadFile(
-  fileInfo: any,
+  fileInfo: FileInfoItemT,
   updateProgressCallback: ((progress: number) => void) | undefined = undefined,
 ): Promise<FileInfoBase | boolean> {
-  const upload_check_res = await uploadCheck(fileInfo)
-  if (upload_check_res) {
-    console.log("文件已存在")
-    return upload_check_res
-  }
-
-  const formData = new FormData()
-  formData.append("file_name_md5", fileInfo.name)
-  formData.append("file", fileInfo.file)
-
   try {
-    const res = await server().post(API.upload, formData, {
-      headers: { "content-type": "multipart/form-data" },
-      timeout: FILE_UPLOAD_TIMEOUT,
-
-      // 通过回调函数来将上传进度传出去
-      onUploadProgress: (progressEvent) => {
-        let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-        if (updateProgressCallback) updateProgressCallback(percentCompleted)
-      },
-    })
-
-    if (res.status == 200 && res.data.success) {
-      if (fileInfo.name.endsWith(".dfsu") || fileInfo.name.endsWith(".shp")) {
-        console.log("上传文件成功：", res.data.res)
-        return res.data.res.file_info as FileInfoBase
-      }
-      return res.data.res
+    const upload_check_res = await uploadCheck(fileInfo.md5Name)
+    if (upload_check_res) {
+      console.log("文件已存在")
+      return upload_check_res
     }
-  } catch (err) {
-    console.log("文件上传失败: ", { err, fileInfo })
-  }
 
-  return false
+    const formData = new FormData()
+    formData.append("file_name_md5", fileInfo.md5Name)
+    formData.append("file", fileInfo.file)
+
+    console.log("文件不存在，进行上传", formData)
+
+    try {
+      const res = await server().post(API.upload, formData, {
+        headers: { "content-type": "multipart/form-data" },
+        timeout: FILE_UPLOAD_TIMEOUT,
+
+        // 通过回调函数来将上传进度传出去
+        onUploadProgress: (progressEvent) => {
+          let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          if (updateProgressCallback) updateProgressCallback(percentCompleted)
+        },
+      })
+
+      if (res.status == 200 && res.data.success) {
+        if (fileInfo.name.endsWith(".dfsu") || fileInfo.name.endsWith(".shp")) {
+          console.log("上传文件成功：", res.data.res)
+          return res.data.res.file_info as FileInfoBase
+        }
+        return false
+      }
+    } catch (err) {
+      console.log("文件上传失败: ", { err, fileInfo })
+      return false
+    }
+
+    return false
+  } catch (error) {
+    console.log("uploadFile: ", { error })
+    return false
+  }
 }
 
 export async function uploadFileApi(

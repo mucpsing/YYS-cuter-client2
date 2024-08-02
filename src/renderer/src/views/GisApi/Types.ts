@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 22:08:32
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-01 20:42:23
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-02 16:19:23
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\Types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -51,13 +51,16 @@ export interface FileInfoBase {
 }
 
 export interface FileInfoItemT {
-  id: number
+  id: string
   name: string
   checked: boolean
   disabled: boolean
-  size: number
+  md5Name?: string
+  loading?: boolean
+  size?: number
   md5: string
-  file: File
-  uploadProgerss: number
-  geoJson: any[]
+  file?: File
+  uploadProgress?: number
+  uploadStatus?: string
+  geoJson?: any[]
 }

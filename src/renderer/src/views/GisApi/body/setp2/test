@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-02 17:14:08
+ * @LastEditTime: 2024-08-02 09:09:44
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -16,31 +16,19 @@
       <div class="GisApi__drapMaskTip">最多支持读取前两个dfsu文件</div>
     </div>
 
-    <template v-for="baseItem of baseStore">
+    <template v-for="(baseItem, idx) of baseStore">
       <div :class="['flex flex-col flex-1', 'p-4 rounded-lg', 'border border-gray-200']">
         <h3
           class="flex flex-row items-center justify-between pb-2 mb-2 text-lg font-medium border-b"
         >
           <strong>{{ baseItem.title }}</strong>
-
-          <div class="flex gap-2">
-            <t-button
-              :on-click="() => uploadFileDialog(baseItem)"
-              theme="success"
-              size="small"
-              :loading="baseItem.loading"
-              >选择文件</t-button
-            >
-            <t-button
-              size="small"
-              theme="danger"
-              :on-click="() => removeItemByChecked(baseItem.id)"
-            >
-              <template #icon>
-                <Delete1Icon />
-              </template>
-            </t-button>
-          </div>
+          <t-button
+            :on-click="() => uploadFileDialog(baseItem.id as keyof typeof dataList)"
+            theme="success"
+            size="small"
+            :loading="localStore.loading[idx]"
+            >选择文件</t-button
+          >
         </h3>
 
         <ul
@@ -58,14 +46,12 @@
               :class="[
                 'transition-all duration-500 ease-in-out',
                 'absolute w-full  h-full text-center',
-                'hover:bg-blue-100 rounded-md',
                 'text-base cursor-pointer border-2 border-dashed border-gray-200',
                 dataList[baseItem.id].length == 0 ? 'text-gray-300' : 'opacity-0',
               ]"
+              @click="() => test(baseItem.id)"
             >
-              <div
-                :class="['w-full h-full', '', 'flex flex-col flex-1 justify-center items-center']"
-              >
+              <div :class="['w-full h-full', 'flex flex-col flex-1 justify-center items-center']">
                 <p>拖拽或点击上传dfsu文件</p>
                 <p>（将文件拖放到此处或者点击下方选择按钮）</p>
               </div>
@@ -73,36 +59,22 @@
           </template>
 
           <!-- item -->
-          <!-- :theme="item.checked ? 'primary' : 'default'" -->
           <template v-for="item in dataList[baseItem.id]" :key="item.id">
             <li class="flex items-center w-full my-1" :data-id="item.id">
               <t-button
                 block
                 theme="default"
-                :class="['fix__t-button-content-w-full relative', 'flex flex-row flex-1']"
-                :on-click="() => onItemChecked(baseItem.id, item)"
+                :class="['fix__t-button-content-w-full', 'flex flex-row flex-1']"
+                :on-click="() => onChecked(baseItem.id, item)"
                 :disabled="item.disabled"
-                :loading="item.loading"
               >
                 <template #content>
                   <div class="flex justify-between flex-1 w-full">
                     <input v-model="item.checked" type="checkbox" :disabled="item.disabled" />
 
                     <span>{{ item.name }}</span>
-
-                    <div>
-                      <div v-if="item.uploadProgress == 0">文件解析中...</div>
-
-                      <div v-else class="min-w-[150px]">
-                        <t-progress
-                          :color="{ from: '#0052D9', to: '#00A870' }"
-                          :percentage="item.uploadProgress"
-                          status="active"
-                          theme="line"
-                        />
-                      </div>
-                    </div>
                   </div>
+                  <t-progress :percentage="item.uploadProgerss" />
                 </template>
               </t-button>
             </li>
@@ -119,8 +91,6 @@ import { useDropZone } from "@vueuse/core"
 import { useFileStroe } from "@gisapi/store/index"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 import { getMd5 } from "@renderer/utils/calculateMd5"
-import * as API from "@gisapi/api"
-import { Delete1Icon } from "tdesign-icons-vue-next"
 
 import type { FileInfoItemT } from "@gisapi/Types"
 
@@ -141,30 +111,37 @@ async function onDrop(files: File[] | null) {
 
 // 初始化Sortable
 onMounted(() => {
-  console.log("onMounted...")
   nextTick(() => initSortable())
 })
 
 const localStore = reactive({
   switchIconRoate: 0,
   dragging: false,
+  loading: [false, false],
 })
 
-interface BaseItemT {
-  title: string
-  id: string
-  loading: boolean
-}
+const baseStore = [
+  { title: "工程前", id: "be" },
+  { title: "工程后", id: "af" },
+]
 
-const baseStore = reactive<BaseItemT[]>([
-  { title: "工程前", id: "be", loading: false },
-  { title: "工程后", id: "af", loading: false },
-])
+const dataList = reactive([])
+// const dataList = reactive({
+//   be: [
+//     { id: 1, name: "Item 1", checked: false, disabled: false },
+//     { id: 2, name: "Item 2", checked: false, disabled: false },
+//     { id: 3, name: "Item 3", checked: false, disabled: false },
+//   ],
+//   af: [
+//     { id: 4, name: "Item 4", checked: false, disabled: false },
+//     { id: 5, name: "Item 5", checked: false, disabled: false },
+//   ],
+// })
 
-const dataList = reactive({
-  be: [] as FileInfoItemT[],
-  af: [] as FileInfoItemT[],
-})
+// const dataList = reactive({
+//   be: [] as FileInfoItemT[],
+//   af: [] as FileInfoItemT[],
+// })
 
 // 初始化Sortable的逻辑
 async function initSortable() {
@@ -206,7 +183,7 @@ async function initSortable() {
   })
 }
 
-async function onItemChecked(dataListKey: string, item: FileInfoItemT) {
+async function onChecked(dataListKey: string, item: FileInfoItemT) {
   item.checked = !item.checked
   if (item.checked) {
     dataList[dataListKey].forEach((eachData) => {
@@ -215,12 +192,12 @@ async function onItemChecked(dataListKey: string, item: FileInfoItemT) {
   }
 }
 
-async function uploadFileDialog(item: BaseItemT) {
+async function uploadFileDialog(targetKey: keyof typeof dataList) {
   const target = "dfsu"
   // 调用点击事件
   DEFAULT_INPUT_ELEMENT_REF.accept = UP_FILE_ACCEPT_TYPE[target]
 
-  DEFAULT_INPUT_ELEMENT_REF.onchange = (e) => addItem(e, item)
+  DEFAULT_INPUT_ELEMENT_REF.onchange = (e) => onUpFileClick(e, targetKey)
 
   DEFAULT_INPUT_ELEMENT_REF.type = "file"
   DEFAULT_INPUT_ELEMENT_REF.multiple = true
@@ -228,100 +205,50 @@ async function uploadFileDialog(item: BaseItemT) {
   DEFAULT_INPUT_ELEMENT_REF.click()
 }
 
-async function updateItemById(id: string, newData: any) {
-  try {
-    for (const [_key, value] of Object.entries(dataList)) {
-      value.forEach((eachData) => {
-        if (eachData.id == id) Object.assign(eachData, newData)
-      })
-    }
-  } catch (error) {
-    console.log("updateItemById:", { error })
-  }
-}
-
-async function removeItemByChecked(dataKey: string) {
-  const target = dataList[dataKey]
-  target.forEach((eachData, idx) => {
-    if (eachData.checked) target.splice(idx, 1)
-  })
-}
-
-async function removeItemById(id: string) {
-  for (const [_key, value] of Object.entries(dataList)) {
-    value.forEach((eachData, idx) => {
-      if (eachData.id == id) {
-        eachData.disabled = true
-        value.splice(idx, 1)
-      }
-    })
-  }
-}
-
-async function addItem(e, item: BaseItemT) {
+async function onUpFileClick(e, targetKey: keyof typeof dataList) {
   if (!e.target) return console.log("获取实例失败")
   if (!e.target.files) return console.log("没有选中文件")
   if (e.target.files.length == 0) return console.log("没有文件")
-  item.loading = true
 
-  const data = dataList[item.id]
+  const data = dataList[targetKey]
 
-  // 添加一个空item进行展示
-  // 为了支持多个文件上传，这里使用了遍历
+  // 添加一个空item
   for (let file of e.target.files) {
-    const newItem: FileInfoItemT = {
+    const md5 = await getMd5(file)
+
+    data.push({
       id: new Date().getTime().toString(36),
       name: file.name,
-      md5: "",
+      size: file.size / 1024 / 1024,
+      md5,
       checked: false,
       disabled: false,
       uploadProgress: 0,
-      uploadStatus: "",
-      loading: true,
-    }
-
-    data.push(newItem)
-    const md5 = await getMd5(file)
-    newItem.md5 = md5
-    newItem.md5Name = `${md5}.dfsu`
-    newItem.size = file.size / 1024 / 1024
-    newItem.file = file
-
-    // 尝试进行上传，并传递上传进度的变量
-    API.uploadFile(newItem, (uploadPress: number) => {
-      // 如果不动态获取真实实例，在上传中移动可能丢失进度条
-      if (uploadPress != 100) {
-        updateItemById(newItem.id, { uploadProgress: uploadPress })
-      } else {
-        updateItemById(newItem.id, { uploadProgress: uploadPress, loading: false })
-      }
     })
-      .then((upload_res) => {
-        // 上传成功后，添加带store
-        console.log({ upload_res })
-        if (upload_res && upload_res.range_geojson) {
-          fileStore.geoJsonObj[md5] = upload_res.range_geojson
-          console.log({ newItem })
-        } else {
-          removeItemById(newItem.id)
-        }
-      })
-      .catch((err) => {
-        console.log({ err })
-        removeItemById(newItem.id)
-      })
   }
 
-  item.loading = false
+  // 尝试进行上传，并传递上传进度的变量
+  // 上传成功后，添加带store
+}
+
+function test(dataListKey: string) {
+  const target = dataList[dataListKey]
+
+  target.push({
+    id: new Date().getTime().toString(36),
+    name: "test",
+    checked: false,
+    disabled: false,
+  })
 }
 </script>
 
 <style lang="stylus">
-.fix__t-button-content-w-full{
-  &>.t-button__text{
-    width: 100%
+  .fix__t-button-content-w-full{
+    &>.t-button__text{
+      width: 100%
+    }
   }
-}
 
   /* 遮罩具体样式 */
 .GisApi__drapMask{

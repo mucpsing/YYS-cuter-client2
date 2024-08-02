@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-29 10:17:47
+ * @LastEditTime: 2024-08-02 17:13:36
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -33,7 +33,7 @@
           <t-form labelWidth="70px" class="h-full">
             <t-form-item label="选择范围" name="name" label-align="left" initial-data="TDesign">
               <t-select
-                :options="rangeFileSelectOptions"
+                :options="fileStore.geoJsonOptions"
                 v-model="currtSelectDfsuName"
                 class="min-w-[100px] w-full"
                 :onChange="(value) => onSelectRangeFile(value)"
@@ -112,8 +112,9 @@
 
 <script setup lang="ts">
 import EchartGeoJson from "./echartGeoJson.vue"
-import { useGisApiTabStore } from "@gisapi/store/index"
+import { useGisApiTabStore, useFileStroe } from "@gisapi/store/index"
 
+const fileStore = useFileStroe()
 const tabStore = useGisApiTabStore()
 const maxLinkPoint = ref(50)
 const currtSelectDfsuName = ref("")
@@ -138,9 +139,24 @@ const themeList = [
 ]
 
 // 动态计算范围文件列表
-const rangeFileSelectOptions = computed(() => {
-  if (tabStore.formDataList.length == 0) return []
+// const rangeFileSelectOptions = computed(() => {
+//   if (tabStore.formDataList.length == 0) return []
 
+//   // console.log("触发: rangeFileSelectOptions")
+
+//   const beInfo = tabStore.currtFormData.beDfsuInfo
+//   const afInfo = tabStore.currtFormData.afDfsuInfo
+//   const rangeFileInfoList: { value: string; label: string }[] = []
+
+//   if (beInfo && beInfo.range_geojson)
+//     rangeFileInfoList.push({ value: beInfo.md5, label: beInfo.name })
+//   if (afInfo && afInfo.range_geojson)
+//     rangeFileInfoList.push({ value: afInfo.md5, label: afInfo.name })
+
+//   return rangeFileInfoList
+// })
+
+const rangeFileSelectOptions = computed(() => {
   // console.log("触发: rangeFileSelectOptions")
 
   const beInfo = tabStore.currtFormData.beDfsuInfo
@@ -176,9 +192,9 @@ function test() {
 }
 
 onMounted(() => {
+  console.log("11111111111111: ", fileStore.geoJsonOptions)
   // 初始化时，如果有文件信息，则默认绘制一个
-  if (rangeFileSelectOptions.value.length > 0 && currtSelectDfsuName.value == "") {
-    console.log("进行初始化")
+  if (fileStore.geoJsonOptions.length > 0 && currtSelectDfsuName.value == "") {
     let md5 = ""
     if (tabStore.currtFormData.beDfsuInfo) {
       md5 = tabStore.currtFormData.beDfsuInfo.md5
