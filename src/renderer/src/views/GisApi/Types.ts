@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 22:08:32
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-18 15:29:42
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-01 20:42:23
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\Types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -42,12 +42,22 @@ export interface BoundsT {
   miny: number
 }
 
-interface GeoJsonT {}
-
 export interface FileInfoBase {
   file_name: string
   file_ext: string
   md5: string
   bounds: BoundsT
   range_geojson: any
+}
+
+export interface FileInfoItemT {
+  id: number
+  name: string
+  checked: boolean
+  disabled: boolean
+  size: number
+  md5: string
+  file: File
+  uploadProgerss: number
+  geoJson: any[]
 }

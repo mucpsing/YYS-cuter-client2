@@ -1,21 +1,21 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-01 17:27:23
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-01 20:16:06
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { defineStore } from "pinia"
 import { createFormData } from "./state"
 import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
-import { uploadFile, getTemplateList, serverCheckApi } from "@gisapi/api"
+import { getTemplateList, serverCheckApi } from "@gisapi/api"
 import * as API from "@gisapi/api"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
-
-import type { TemplateInfo } from "@gisapi/Types"
-import type { TabValue } from "tdesign-vue-next"
 import { getMd5 } from "@renderer/utils/calculateMd5"
+
+import type { TemplateInfo, FileInfoItemT } from "@gisapi/Types"
+import type { TabValue } from "tdesign-vue-next"
 
 const DEFAULT_INPUT_ELEMENT_REF = document.createElement("input")
 
@@ -184,6 +184,7 @@ export const useFileStroe = defineStore("fileStore", {
     async onUploadBtnClick(target) {
       // 调用点击事件
       DEFAULT_INPUT_ELEMENT_REF.accept = UP_FILE_ACCEPT_TYPE[target]
+      DEFAULT_INPUT_ELEMENT_REF.accept = ""
 
       DEFAULT_INPUT_ELEMENT_REF.onchange = (e) => this.upFileHandler(e, target)
 
@@ -223,19 +224,17 @@ export const useFileStroe = defineStore("fileStore", {
           md5,
           file,
           uploadProgress: -1,
-          status: "uploading",
           geoJson: [],
         }
 
         // 判断文件是否已经存在
         let hasFile = this.dfsuList.some((each) => each.md5 == eachFileInfo.md5)
-        if (hasFile) return console.log("再重复上传")
+        if (hasFile) return console.log("再重复上传: ", this.dfsuList)
 
         // 添加到列表
         this.dfsuList.push(eachFileInfo)
 
         const upload_res = await API.uploadFile(eachFileInfo, (uploadPress: number) => {
-          console.log({ uploadPress })
           eachFileInfo.uploadProgress = uploadPress
         })
 

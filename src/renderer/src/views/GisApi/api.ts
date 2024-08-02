@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-01 17:40:51
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-01 20:26:53
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -66,32 +66,31 @@ export async function getTemplateList() {
   }
 }
 
-export async function uploadCheck(fileInfo: any): Promise<FileInfoBase | {}> {
+export async function uploadCheck(fileInfo: any): Promise<FileInfoBase | boolean> {
   try {
     const res = await server().get(`${API.uploadCheck}/${fileInfo.name}`)
-
-    console.log("文件已经存在，返回服务器缓存", { res })
 
     if (res.status == 200 && res.data.success) {
       if (fileInfo.name.endsWith(".dfsu") || fileInfo.name.endsWith(".shp")) {
         console.log("文件已经存在，返回服务器缓存", res.data.res)
         return res.data.res.file_info as FileInfoBase
       }
-      return {}
+      return false
     }
-    return {}
+    return false
   } catch (err) {
     console.log("文件上传失败: ", { err })
-    return {}
+    return false
   }
 }
 
 export async function uploadFile(
   fileInfo: any,
   updateProgressCallback: ((progress: number) => void) | undefined = undefined,
-): Promise<FileInfoBase | {}> {
+): Promise<FileInfoBase | boolean> {
   const upload_check_res = await uploadCheck(fileInfo)
   if (upload_check_res) {
+    console.log("文件已存在")
     return upload_check_res
   }
 
@@ -103,10 +102,10 @@ export async function uploadFile(
     const res = await server().post(API.upload, formData, {
       headers: { "content-type": "multipart/form-data" },
       timeout: FILE_UPLOAD_TIMEOUT,
+
+      // 通过回调函数来将上传进度传出去
       onUploadProgress: (progressEvent) => {
         let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-
-        console.log({ percentCompleted })
         if (updateProgressCallback) updateProgressCallback(percentCompleted)
       },
     })
@@ -122,10 +121,13 @@ export async function uploadFile(
     console.log("文件上传失败: ", { err, fileInfo })
   }
 
-  return {}
+  return false
 }
 
-export async function uploadFileApi(filen_name_md5: string, file: File): Promise<FileInfoBase> {
+export async function uploadFileApi(
+  filen_name_md5: string,
+  file: File,
+): Promise<FileInfoBase | boolean> {
   const formData = new FormData()
   formData.append("filen_name_md5", filen_name_md5)
   formData.append("file", file)
@@ -144,13 +146,12 @@ export async function uploadFileApi(filen_name_md5: string, file: File): Promise
         return res.data.res.file_info as FileInfoBase
       }
       return res.data.res
-      // return true
     }
   } catch (err) {
     console.log("文件上传失败: ", { err, file, filen_name_md5 })
-    return {}
+    return false
   }
-  return {}
+  return false
 }
 
 export async function mxdToImgApi(body: MxdToImgFormBase): Promise<boolean> {

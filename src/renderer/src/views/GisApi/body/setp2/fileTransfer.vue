@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-01 11:09:38
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-01 20:42:41
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -39,6 +39,7 @@
             'list-none',
           ]"
         >
+          <!-- 上传题词模板 -->
           <template v-if="dataList[baseItem.id].length == 0">
             <div
               :class="[
@@ -55,6 +56,8 @@
               </div>
             </div>
           </template>
+
+          <!-- item -->
           <template v-for="item in dataList[baseItem.id]" :key="item.id">
             <li class="flex items-center w-full my-1" :data-id="item.id">
               <t-button
@@ -70,6 +73,7 @@
 
                     <span>{{ item.name }}</span>
                   </div>
+                  <t-progress :percentage="item.uploadProgerss" />
                 </template>
               </t-button>
             </li>
@@ -83,8 +87,9 @@
 <script setup lang="ts">
 import Sortable from "sortablejs"
 import { useDropZone } from "@vueuse/core"
-
 import { useFileStroe } from "@gisapi/store/index"
+
+import type { FileInfoItemT } from "@gisapi/Types"
 
 const fileStore = useFileStroe()
 
@@ -127,15 +132,9 @@ const baseStore = [
 // })
 
 const dataList = reactive({
-  be: [],
-  af: [],
+  be: [] as FileInfoItemT[],
+  af: [] as FileInfoItemT[],
 })
-
-interface ItemT {
-  id: number
-  name: string
-  checked: boolean
-}
 
 // 初始化Sortable的逻辑
 function initSortable() {
@@ -156,10 +155,6 @@ function initSortable() {
         if (e.from.id === e.to.id) {
           const item = dataList[id].splice(e.oldIndex, 1)[0]
           dataList[id].splice(e.newIndex, 0, item)
-
-          // console.log("排序修改")
-          // console.log(dataList[id].forEach((item) => console.log(item.id)))
-          // console.log(dataList[id])
         } else {
           const target = dataList[e.from.id].splice(e.oldIndex, 1)[0]
           if (target.checked) target.checked = false
@@ -167,30 +162,21 @@ function initSortable() {
 
           dataList[e.to.id].splice(e.newIndex, 0, target)
 
+          // 修复
           const fromList = dataList[e.from.id]
           if (fromList.length == 1) {
             fromList[0].checked = false
             fromList[0].disabled = false
           }
-          // dataList[e.to.id].splice(e.newIndex, 0, dataList[e.from.id].splice(e.oldIndex, 1)[0])
-
-          //   console.log({ target })
-          //   console.log({ from: fromList })
-          //   console.log({ from: fromList.length })
-          // console.log("改变容器")
-          // console.log(dataList[e.to.id].forEach((item) => console.log(item.id)))
-          // console.log(dataList[e.from.id])
-          // console.log(dataList[e.to.id])
         }
 
         localStore.dragging = false
-        // console.log("onEnd", localStore.dragging)
       },
     })
   })
 }
 
-function onChecked(dataListKey: string, item: ItemT) {
+function onChecked(dataListKey: string, item: FileInfoItemT) {
   item.checked = !item.checked
   if (item.checked) {
     dataList[dataListKey].forEach((eachData) => {
