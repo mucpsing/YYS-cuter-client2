@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-02 17:13:36
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-04 10:59:36
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -171,28 +171,30 @@ const rangeFileSelectOptions = computed(() => {
   return rangeFileInfoList
 })
 
-function onSelectRangeFile(md5: string) {
-  // console.log("触发: onSelectRangeFile")
+// function onSelectRangeFile(md5: string) {
+//   // console.log("触发: onSelectRangeFile")
 
-  const beInfo = tabStore.currtFormData.beDfsuInfo
-  const afInfo = tabStore.currtFormData.afDfsuInfo
+//   const beInfo = tabStore.currtFormData.beDfsuInfo
+//   const afInfo = tabStore.currtFormData.afDfsuInfo
 
-  if (beInfo.md5 == md5) {
-    currtRangeGeoJson.value[0] = beInfo.range_geojson
-  } else if (afInfo.md5 == md5) {
-    currtRangeGeoJson.value[0] = afInfo.range_geojson
-  } else {
-    console.log("geosjon不在上传的dfsu之列")
-  }
+//   if (beInfo.md5 == md5) {
+//     currtRangeGeoJson.value[0] = beInfo.range_geojson
+//   } else if (afInfo.md5 == md5) {
+//     currtRangeGeoJson.value[0] = afInfo.range_geojson
+//   } else {
+//     console.log("geosjon不在上传的dfsu之列")
+//   }
+// }
+
+async function onSelectRangeFile(md5: string) {
+  currtRangeGeoJson.value[0] = await fileStore.getGeoJsonByMd5(md5)
 }
-
 function test() {
   console.log(tabStore.formDataList)
   console.log(rangeFileSelectOptions)
 }
 
 onMounted(() => {
-  console.log("11111111111111: ", fileStore.geoJsonOptions)
   // 初始化时，如果有文件信息，则默认绘制一个
   if (fileStore.geoJsonOptions.length > 0 && currtSelectDfsuName.value == "") {
     let md5 = ""

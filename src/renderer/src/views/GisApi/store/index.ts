@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-02 17:01:57
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-04 10:17:31
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -179,7 +179,7 @@ export const useFileStroe = defineStore("fileStore", {
   getters: {
     geoJsonOptions(state) {
       const options: { value: string; label: string }[] = []
-      for (const [geoMd5, geoData] of Object.entries(state.dfsuObj)) {
+      for (const [geoMd5, _geoData] of Object.entries(state.dfsuObj)) {
         if (!Object.keys(state.dfsuObj).includes(geoMd5)) continue
 
         options.push({
@@ -193,6 +193,11 @@ export const useFileStroe = defineStore("fileStore", {
   },
 
   actions: {
+    async removeDataFromMd5(md5: string) {
+      delete this.dfsuObj[md5]
+      delete this.geoJsonObj[md5]
+    },
+
     async addDfsuItem(item: FileInfoItemT) {
       this.dfsuObj[item.md5] = item
 
@@ -203,6 +208,13 @@ export const useFileStroe = defineStore("fileStore", {
 
     async addGelJsonItem(item) {
       this.geoJsonObj[item.md5] = item
+    },
+
+    async getGeoJsonByMd5(md5: string) {
+      if (this.geoJsonObj[md5]) {
+        return this.geoJsonObj[md5]
+      }
+      return []
     },
   },
 })

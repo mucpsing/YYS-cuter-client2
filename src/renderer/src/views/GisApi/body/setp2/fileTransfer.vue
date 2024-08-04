@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-02 17:14:08
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-04 11:01:58
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -55,6 +55,7 @@
           <!-- 上传题词模板 -->
           <template v-if="dataList[baseItem.id].length == 0">
             <div
+              @click="() => uploadFileDialog(baseItem)"
               :class="[
                 'transition-all duration-500 ease-in-out',
                 'absolute w-full  h-full text-center',
@@ -88,7 +89,7 @@
                   <div class="flex justify-between flex-1 w-full">
                     <input v-model="item.checked" type="checkbox" :disabled="item.disabled" />
 
-                    <span>{{ item.name }}</span>
+                    <span>{{ truncateText(item.name, 16) }} ({{ item.size.toFixed(2) }}MB)</span>
 
                     <div>
                       <div v-if="item.uploadProgress == 0">文件解析中...</div>
@@ -121,6 +122,7 @@ import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 import { getMd5 } from "@renderer/utils/calculateMd5"
 import * as API from "@gisapi/api"
 import { Delete1Icon } from "tdesign-icons-vue-next"
+import { truncateText } from "@gisapi/utils/index"
 
 import type { FileInfoItemT } from "@gisapi/Types"
 
@@ -243,7 +245,10 @@ async function updateItemById(id: string, newData: any) {
 async function removeItemByChecked(dataKey: string) {
   const target = dataList[dataKey]
   target.forEach((eachData, idx) => {
-    if (eachData.checked) target.splice(idx, 1)
+    if (eachData.checked) {
+      fileStore.removeDataFromMd5(eachData.md5)
+      target.splice(idx, 1)
+    }
   })
 }
 
@@ -252,6 +257,7 @@ async function removeItemById(id: string) {
     value.forEach((eachData, idx) => {
       if (eachData.id == id) {
         eachData.disabled = true
+        fileStore.removeDataFromMd5(eachData.md5)
         value.splice(idx, 1)
       }
     })
@@ -259,9 +265,9 @@ async function removeItemById(id: string) {
 }
 
 async function addItem(e, item: BaseItemT) {
-  if (!e.target) return console.log("获取实例失败")
-  if (!e.target.files) return console.log("没有选中文件")
-  if (e.target.files.length == 0) return console.log("没有文件")
+  if (!e.target) return console.warn("获取实例失败")
+  if (!e.target.files) return console.warn("没有选中文件")
+  if (e.target.files.length == 0) return console.warn("没有文件")
   item.loading = true
 
   const data = dataList[item.id]
@@ -278,6 +284,7 @@ async function addItem(e, item: BaseItemT) {
       uploadProgress: 0,
       uploadStatus: "",
       loading: true,
+      size: 0,
     }
 
     data.push(newItem)
@@ -298,16 +305,16 @@ async function addItem(e, item: BaseItemT) {
     })
       .then((upload_res) => {
         // 上传成功后，添加带store
-        console.log({ upload_res })
         if (upload_res && upload_res.range_geojson) {
           fileStore.geoJsonObj[md5] = upload_res.range_geojson
-          console.log({ newItem })
+          fileStore.dfsuObj[md5] = newItem
+          updateItemById(newItem.id, { uploadProgress: 100, loading: false })
         } else {
           removeItemById(newItem.id)
         }
       })
       .catch((err) => {
-        console.log({ err })
+        console.warn("API.uploadFile: ", { err })
         removeItemById(newItem.id)
       })
   }

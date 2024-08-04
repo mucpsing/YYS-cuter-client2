@@ -49,22 +49,20 @@
               <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>河道选择</strong></h2>
               <p>
                 使用哪个工况的河道作用到图片中（一般建议采用工程前）：
-                <t-tag
+                <t-button
                   size="small"
-                  class="cursor-pointer"
-                  variant="light-outline"
+                  variant="outline"
                   theme="primary"
                   :onclick="() => (tabStore.currtFormData.riverRange = '工程前')"
-                  >工程前</t-tag
+                  >工程前</t-button
                 >
                 、
-                <t-tag
+                <t-button
                   size="small"
-                  class="cursor-pointer"
-                  variant="light-outline"
+                  variant="outline"
                   theme="danger"
                   :onclick="() => (tabStore.currtFormData.riverRange = '工程后')"
-                  >工程后</t-tag
+                  >工程后</t-button
                 >
               </p>
             </div>
