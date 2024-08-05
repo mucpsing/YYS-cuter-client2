@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-05 17:27:19
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-06 00:07:36
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -16,7 +16,7 @@
       :class="{ 'bg-gray-200': show }"
       class="rounded-lg border-slate-500"
     ></div>
-    <div>{{ projectPoints }}</div>
+    <div>{{ rect }}</div>
   </div>
 </template>
 
@@ -46,7 +46,9 @@ export default defineComponent({
     rect: { type: Array, default: () => [0, 0, 0, 0] },
   },
 
-  setup(props) {
+  emit: ["update:rect"],
+
+  setup(props, { emit }) {
     const chartContainer = ref(null)
     const centerCoords = ref([0, 0])
     const isDraw = ref(false)
@@ -55,14 +57,18 @@ export default defineComponent({
     const drawRectCount = ref(0) // 用来记录绘制矩形的次数
     let myChart: echarts.ECharts | null = null
 
-    // const emits = defineEmits(["update:rect"])
+    const emits = emit
 
-    const rect = reactive({
-      x: 0,
-      y: 0,
-      w: 0,
-      h: 0,
-    })
+    // const emits = defineEmits<{
+    //   (e: "update:rect", newRect: number[]): void
+    // }>()
+
+    // const rect = reactive({
+    //   x: 0,
+    //   y: 0,
+    //   w: 0,
+    //   h: 0,
+    // })
 
     // const rect = defineModel<number[]>("rect", { default: () => [0, 0, 0, 0] })
 
@@ -193,10 +199,10 @@ export default defineComponent({
         console.log("没有提供坐标，使用中心坐标: ", position)
       }
 
-      rect.w = w
-      rect.h = h
+      // rect.w = w
+      // rect.h = h
 
-      // emits("update:rect", [props.rect[0], props.rect[1], w, h])
+      emits("update:rect", [props.rect[0] as number, props.rect[1] as number, w, h])
 
       const graphic = [
         {
@@ -227,17 +233,17 @@ export default defineComponent({
             ])
 
             // rect.value = [e.target.x, e.target.y, e.target.shape.width, e.target.shape.height]
-            // emits("update:rect", [
-            //   e.target.x,
-            //   e.target.y,
-            //   e.target.shape.width,
-            //   e.target.shape.height,
-            // ])
+            emits("update:rect", [
+              e.target.x,
+              e.target.y,
+              e.target.shape.width,
+              e.target.shape.height,
+            ])
 
-            rect.x = e.target.x
-            rect.y = e.target.y
-            rect.w = e.target.shape.width
-            rect.h = e.target.shape.height
+            // rect.x = e.target.x
+            // rect.y = e.target.y
+            // rect.w = e.target.shape.width
+            // rect.h = e.target.shape.height
 
             console.log("更新坐标: ", e.target)
             console.log("更新坐标: ", { x, y })
@@ -272,9 +278,10 @@ export default defineComponent({
         console.log("oldPosition: ", oldPosition)
         // const x = rect.value[0]
         // const y = rect.value[1]
-        const x = rect.x
-        const y = rect.y
-
+        // const x = rect.x
+        // const y = rect.y
+        const x = rect[0]
+        const y = rect[1]
         drawRect(w, h, x, y)
       } else {
         drawRect(w, h)
