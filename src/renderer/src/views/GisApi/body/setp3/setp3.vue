@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-04 10:59:36
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-05 17:19:42
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,8 +13,10 @@
     <div class="flex flex-row gap-2">
       <div class="flex-col flex-1">
         <t-card title="范围选择">
+          <p>{{}}</p>
           <EchartGeoJson
             :show="true"
+            v-model:rect="currtRect"
             :geo-json="currtRangeGeoJson"
             :maxLinkPoint="maxLinkPoint"
             :draw-rect-size="currtPaper"
@@ -119,6 +121,11 @@ const tabStore = useGisApiTabStore()
 const maxLinkPoint = ref(50)
 const currtSelectDfsuName = ref("")
 const currtRangeGeoJson = ref<any[]>([])
+const currtRect = ref([])
+
+watch(currtRect, (n, o) => {
+  console.log({ n, o })
+})
 
 const currtPaper = ref("297x210")
 const paperSizeList = [
@@ -138,70 +145,35 @@ const themeList = [
   "success",
 ]
 
-// 动态计算范围文件列表
-// const rangeFileSelectOptions = computed(() => {
-//   if (tabStore.formDataList.length == 0) return []
-
-//   // console.log("触发: rangeFileSelectOptions")
-
-//   const beInfo = tabStore.currtFormData.beDfsuInfo
-//   const afInfo = tabStore.currtFormData.afDfsuInfo
-//   const rangeFileInfoList: { value: string; label: string }[] = []
-
-//   if (beInfo && beInfo.range_geojson)
-//     rangeFileInfoList.push({ value: beInfo.md5, label: beInfo.name })
-//   if (afInfo && afInfo.range_geojson)
-//     rangeFileInfoList.push({ value: afInfo.md5, label: afInfo.name })
-
-//   return rangeFileInfoList
-// })
-
-const rangeFileSelectOptions = computed(() => {
-  // console.log("触发: rangeFileSelectOptions")
-
-  const beInfo = tabStore.currtFormData.beDfsuInfo
-  const afInfo = tabStore.currtFormData.afDfsuInfo
-  const rangeFileInfoList: { value: string; label: string }[] = []
-
-  if (beInfo && beInfo.range_geojson)
-    rangeFileInfoList.push({ value: beInfo.md5, label: beInfo.name })
-  if (afInfo && afInfo.range_geojson)
-    rangeFileInfoList.push({ value: afInfo.md5, label: afInfo.name })
-
-  return rangeFileInfoList
-})
-
-// function onSelectRangeFile(md5: string) {
-//   // console.log("触发: onSelectRangeFile")
-
-//   const beInfo = tabStore.currtFormData.beDfsuInfo
-//   const afInfo = tabStore.currtFormData.afDfsuInfo
-
-//   if (beInfo.md5 == md5) {
-//     currtRangeGeoJson.value[0] = beInfo.range_geojson
-//   } else if (afInfo.md5 == md5) {
-//     currtRangeGeoJson.value[0] = afInfo.range_geojson
-//   } else {
-//     console.log("geosjon不在上传的dfsu之列")
-//   }
-// }
-
 async function onSelectRangeFile(md5: string) {
   currtRangeGeoJson.value[0] = await fileStore.getGeoJsonByMd5(md5)
 }
 function test() {
   console.log(tabStore.formDataList)
-  console.log(rangeFileSelectOptions)
 }
 
 onMounted(() => {
+  console.log(0)
+
   // 初始化时，如果有文件信息，则默认绘制一个
   if (fileStore.geoJsonOptions.length > 0 && currtSelectDfsuName.value == "") {
+    console.log(1)
     let md5 = ""
     if (tabStore.currtFormData.beDfsuInfo) {
+      console.log(12)
+
       md5 = tabStore.currtFormData.beDfsuInfo.md5
     } else if (tabStore.currtFormData.afDfsuInfo) {
+      console.log(13)
+
       md5 = tabStore.currtFormData.afDfsuInfo.md5
+    } else {
+      // 当前所有都为空
+      console.log(14)
+
+      if (Object.keys(fileStore.geoJsonObj).length > 0) {
+        md5 = fileStore.geoJsonObj.keys()[0]
+      }
     }
 
     if (md5) {

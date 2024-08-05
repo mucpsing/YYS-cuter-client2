@@ -1,3 +1,4 @@
+b
 <template>
   <section
     :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'rounded-xl text-xs xl:text-md']"
@@ -174,38 +175,6 @@ async function onDrop(files: File[] | null) {
   }
 }
 
-/**
- * @description: 交换工程前和工程后两个文件的信息
- */
-async function switchAfAndBeDfsuFile() {
-  // pinia 中交换工程前后两个数据
-  tabStore.exchaneDfsuInfo()
-
-  if (localStore.switchIconRoate >= 1800) localStore.switchIconRoate = 0
-  localStore.switchIconRoate += 180 // 点击旋转按钮效果
-}
-
-/**
- * @description: 实时修改accept来控制文件上传
- * @param {*} fileType be和AF用来标识dfsu，其他文件认作shp
- */
-async function onUploadBtnClickHandler(fileType: "be" | "af" | "project") {
-  let target: keyof typeof UP_FILE_ACCEPT_TYPE
-  if (["be", "af"].includes(fileType)) {
-    target = "dfsu"
-  } else {
-    target = "shp"
-  }
-
-  // 调用点击事件
-  customFileUpInputElement.accept = UP_FILE_ACCEPT_TYPE[target]
-  customFileUpInputElement.onchange = (e) => upFileHandler(e, fileType)
-  customFileUpInputElement.type = "file"
-  customFileUpInputElement.multiple = true
-  if (customFileUpInputElement.value) customFileUpInputElement.value = ""
-  customFileUpInputElement.click()
-}
-
 async function upFileHandler(e: any, target: "be" | "af" | "project") {
   if (!e.target) return console.log("获取实例失败")
   if (!e.target.files) return console.log("没有选中文件")
@@ -243,7 +212,7 @@ async function updateDfsuInfo(files: FileList, infoList: any[]) {
     fileInfo.md5 = await getMd5(file)
     fileInfo.file = file
 
-    const dfsu_info: FileInfoBase = await uploadFileApi(`${infoList[index].md5}.dfsu`, file)
+    const dfsu_info = await uploadFileApi(`${infoList[index].md5}.dfsu`, file)
 
     setTimeout(() => (fileInfo.reading = false), 600)
 

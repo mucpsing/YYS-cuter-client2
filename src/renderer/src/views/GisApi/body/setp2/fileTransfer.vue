@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-04 11:01:58
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-05 15:21:48
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -12,9 +12,9 @@
     :class="['flex justify-between', 'w-full min-h-[160px] max-h-[240px]', 'gap-2 ', 'relative']"
   >
     <!-- 拖拽激活后的样式遮罩层 -->
-    <div class="GisApi__drapMask" :class="{ 'GisApi__drapMask-show': showDropMask }">
+    <!-- <div class="GisApi__drapMask" :class="{ 'GisApi__drapMask-show': showDropMask }">
       <div class="GisApi__drapMaskTip">最多支持读取前两个dfsu文件</div>
-    </div>
+    </div> -->
 
     <template v-for="baseItem of baseStore">
       <div :class="['flex flex-col flex-1', 'p-4 rounded-lg', 'border border-gray-200']">
@@ -83,7 +83,7 @@
                 :class="['fix__t-button-content-w-full relative', 'flex flex-row flex-1']"
                 :on-click="() => onItemChecked(baseItem.id, item)"
                 :disabled="item.disabled"
-                :loading="item.loading"
+                :loading="item.uploadProgress != 100"
               >
                 <template #content>
                   <div class="flex justify-between flex-1 w-full">
@@ -98,7 +98,7 @@
                         <t-progress
                           :color="{ from: '#0052D9', to: '#00A870' }"
                           :percentage="item.uploadProgress"
-                          status="active"
+                          :status="item.uploadProgress == 100 ? 'success' : 'active'"
                           theme="line"
                         />
                       </div>
@@ -116,8 +116,8 @@
 
 <script setup lang="ts">
 import Sortable from "sortablejs"
-import { useDropZone } from "@vueuse/core"
-import { useFileStroe } from "@gisapi/store/index"
+// import { useDropZone } from "@vueuse/core"
+import { useFileStroe, useGisApiTabStore } from "@gisapi/store/index"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 import { getMd5 } from "@renderer/utils/calculateMd5"
 import * as API from "@gisapi/api"
@@ -127,23 +127,21 @@ import { truncateText } from "@gisapi/utils/index"
 import type { FileInfoItemT } from "@gisapi/Types"
 
 const fileStore = useFileStroe()
-
+const tabStore = useGisApiTabStore()
 const dropElementRef = ref<HTMLElement>()
-const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
-const showDropMask = computed(() => Boolean(isOverDropZone.value && !localStore.dragging))
-
 const DEFAULT_INPUT_ELEMENT_REF = document.createElement("input")
 
-async function onDrop(files: File[] | null) {
-  if (files && files.length >= 1) {
-    // 文件读取
-    console.log(files[0])
-  }
-}
+// const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
+// const showDropMask = computed(() => Boolean(isOverDropZone.value && !localStore.dragging))
+// async function onDrop(files: File[] | null) {
+//   if (files && files.length >= 1) {
+//     // 文件读取
+//     console.log(files[0])
+//   }
+// }
 
 // 初始化Sortable
 onMounted(() => {
-  console.log("onMounted...")
   nextTick(() => initSortable())
 })
 
@@ -193,12 +191,14 @@ async function initSortable() {
           if (target.disabled) target.disabled = false
 
           dataList[e.to.id].splice(e.newIndex, 0, target)
+          tabStore.removeDfsu(e.to.id, target.md5)
 
           // 修复
           const fromList = dataList[e.from.id]
           if (fromList.length == 1) {
             fromList[0].checked = false
             fromList[0].disabled = false
+            tabStore.clreanDfsu(e.from.id)
           }
         }
 
@@ -209,12 +209,23 @@ async function initSortable() {
 }
 
 async function onItemChecked(dataListKey: string, item: FileInfoItemT) {
+  // 临时处理上传失败的文件
+  // TODO 应该建立一个check函数，通过md5对存在pinia中的数据进行检查
+  if (item.uploadProgress != 100) {
+    item.name = `${item.name} 文件上传失败，进行移除...`
+    setTimeout(() => fileStore.removeDataByMd5(item.md5), 3000)
+    return
+  }
+
   item.checked = !item.checked
   if (item.checked) {
     dataList[dataListKey].forEach((eachData) => {
       if (item.id != eachData.id) eachData.checked = false
     })
   }
+
+  // 工程前后数据存放
+  tabStore.selectDfsu(dataListKey, item.md5)
 }
 
 async function uploadFileDialog(item: BaseItemT) {
@@ -246,7 +257,7 @@ async function removeItemByChecked(dataKey: string) {
   const target = dataList[dataKey]
   target.forEach((eachData, idx) => {
     if (eachData.checked) {
-      fileStore.removeDataFromMd5(eachData.md5)
+      fileStore.removeDataByMd5(eachData.md5)
       target.splice(idx, 1)
     }
   })
@@ -257,7 +268,7 @@ async function removeItemById(id: string) {
     value.forEach((eachData, idx) => {
       if (eachData.id == id) {
         eachData.disabled = true
-        fileStore.removeDataFromMd5(eachData.md5)
+        fileStore.removeDataByMd5(eachData.md5)
         value.splice(idx, 1)
       }
     })
@@ -279,12 +290,10 @@ async function addItem(e, item: BaseItemT) {
       id: new Date().getTime().toString(36),
       name: file.name,
       md5: "",
+      size: 0,
       checked: false,
       disabled: false,
       uploadProgress: 0,
-      uploadStatus: "",
-      loading: true,
-      size: 0,
     }
 
     data.push(newItem)
@@ -297,18 +306,14 @@ async function addItem(e, item: BaseItemT) {
     // 尝试进行上传，并传递上传进度的变量
     API.uploadFile(newItem, (uploadPress: number) => {
       // 如果不动态获取真实实例，在上传中移动可能丢失进度条
-      if (uploadPress != 100) {
-        updateItemById(newItem.id, { uploadProgress: uploadPress })
-      } else {
-        updateItemById(newItem.id, { uploadProgress: uploadPress, loading: false })
-      }
+      updateItemById(newItem.id, { uploadProgress: uploadPress })
     })
       .then((upload_res) => {
         // 上传成功后，添加带store
         if (upload_res && upload_res.range_geojson) {
           fileStore.geoJsonObj[md5] = upload_res.range_geojson
           fileStore.dfsuObj[md5] = newItem
-          updateItemById(newItem.id, { uploadProgress: 100, loading: false })
+          updateItemById(newItem.id, { uploadProgress: 100 })
         } else {
           removeItemById(newItem.id)
         }

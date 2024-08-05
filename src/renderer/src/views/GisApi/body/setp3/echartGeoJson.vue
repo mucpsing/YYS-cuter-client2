@@ -1,29 +1,31 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-04 21:58:17
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-05 17:27:19
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
 
 -->
 <template>
-  <div
-    ref="chartContainer"
-    :style="{ width: `${width}px`, height: `${height}px` }"
-    :class="{ 'bg-gray-200': show }"
-    class="rounded-lg border-slate-500"
-  ></div>
+  <div>
+    <div
+      ref="chartContainer"
+      :style="{ width: `${width}px`, height: `${height}px` }"
+      :class="{ 'bg-gray-200': show }"
+      class="rounded-lg border-slate-500"
+    ></div>
+    <div>{{ projectPoints }}</div>
+  </div>
 </template>
 
 <script lang="ts">
-import { debounce, throttle } from "lodash"
+import { debounce } from "lodash"
 import * as echarts from "echarts"
-import { WatchStopHandle } from "vue"
+import { WatchStopHandle, defineEmits } from "vue"
 
 import { getOddIndexedElements } from "./utils"
-
 interface DrawPolygonConfig {
   title?: string
   max_len?: number
@@ -32,9 +34,6 @@ interface DrawPolygonConfig {
 
 export default defineComponent({
   name: "PolygonChart",
-
-  emits: ["draw"],
-
   props: {
     show: { type: Boolean, default: false },
     width: { type: Number, default: 550 },
@@ -44,9 +43,8 @@ export default defineComponent({
     geoJson: { type: Array, default: [] },
     maxLinkPoint: { type: Number, default: 50 },
     dataZoom: { type: Array, default: [] },
+    rect: { type: Array, default: () => [0, 0, 0, 0] },
   },
-
-  computed: {},
 
   setup(props) {
     const chartContainer = ref(null)
@@ -57,10 +55,18 @@ export default defineComponent({
     const drawRectCount = ref(0) // 用来记录绘制矩形的次数
     let myChart: echarts.ECharts | null = null
 
+    // const emits = defineEmits(["update:rect"])
+
     const rect = reactive({
       x: 0,
       y: 0,
+      w: 0,
+      h: 0,
     })
+
+    // const rect = defineModel<number[]>("rect", { default: () => [0, 0, 0, 0] })
+
+    const projectPoints = reactive([])
 
     function drawPolygon(geojson: any, customConfig: DrawPolygonConfig) {
       if (!geojson) return console.warn("have no geojsonData")
@@ -80,6 +86,7 @@ export default defineComponent({
 
       while (polygon.length > config.max_len) polygon = getOddIndexedElements(polygon)
 
+      // xy坐标轴的余量
       const axisOffset = 0.05
       const bounds = {
         maxx: Math.max(...polygon.map((item) => item[0])),
@@ -87,11 +94,12 @@ export default defineComponent({
         maxy: Math.max(...polygon.map((item) => item[1])),
         miny: Math.min(...polygon.map((item) => item[1])),
       }
-      const rect = {
+      const shap = {
         w: bounds.maxx - bounds.minx,
-        y: bounds.maxy - bounds.miny,
+        h: bounds.maxy - bounds.miny,
       }
 
+      // 计算中心点
       centerCoords.value = [
         bounds.minx + (bounds.maxx - bounds.minx) / 2,
         bounds.miny + (bounds.maxy - bounds.miny) / 2,
@@ -105,15 +113,15 @@ export default defineComponent({
 
         xAxis: {
           show: false,
-          min: bounds.minx - rect.w * axisOffset,
-          max: bounds.maxx + rect.w * axisOffset,
+          min: bounds.minx - shap.w * axisOffset,
+          max: bounds.maxx + shap.w * axisOffset,
           type: "value",
           axisLine: { onZero: false },
         },
         yAxis: {
           show: false,
-          min: bounds.miny - rect.y * axisOffset,
-          max: bounds.maxy + rect.y * axisOffset,
+          min: bounds.miny - shap.h * axisOffset,
+          max: bounds.maxy + shap.h * axisOffset,
           type: "value",
           axisLine: { onZero: false },
         },
@@ -164,9 +172,9 @@ export default defineComponent({
       })
     }
 
-    function dataZoom(newDataZoom: any) {
-      myChart?.setOption({ dataZoom: newDataZoom })
-    }
+    // function dataZoom(newDataZoom: any) {
+    //   myChart?.setOption({ dataZoom: newDataZoom })
+    // }
 
     function drawRect(w: number = 297 / 2, h: number = 210 / 2, x?: number, y?: number) {
       if (!myChart) return console.log("myChart is null")
@@ -184,6 +192,11 @@ export default defineComponent({
         position = [centerXY[0] - w / 2, centerXY[1] - h / 2]
         console.log("没有提供坐标，使用中心坐标: ", position)
       }
+
+      rect.w = w
+      rect.h = h
+
+      // emits("update:rect", [props.rect[0], props.rect[1], w, h])
 
       const graphic = [
         {
@@ -204,6 +217,7 @@ export default defineComponent({
             stroke: "#ff0000", // 设置边框颜色为红色
             lineWidth: 2, // 设置边框宽度为2
           },
+
           onmouseup: (e) => {
             if (!myChart) return console.log("myChart is null")
 
@@ -212,11 +226,21 @@ export default defineComponent({
               e.target.y,
             ])
 
+            // rect.value = [e.target.x, e.target.y, e.target.shape.width, e.target.shape.height]
+            // emits("update:rect", [
+            //   e.target.x,
+            //   e.target.y,
+            //   e.target.shape.width,
+            //   e.target.shape.height,
+            // ])
+
             rect.x = e.target.x
             rect.y = e.target.y
+            rect.w = e.target.shape.width
+            rect.h = e.target.shape.height
 
-            console.log("更新坐标: ", { x: e.target.x, y: e.target.y })
-            // console.log("更新坐标: ", { x, y })
+            console.log("更新坐标: ", e.target)
+            console.log("更新坐标: ", { x, y })
 
             const currentOption: any = myChart.getOption()
             const oldPosition = currentOption.graphic[0].elements[0].position
@@ -246,9 +270,12 @@ export default defineComponent({
         const currentOption: any = myChart.getOption()
         const oldPosition = currentOption.graphic[0].elements[0].position
         console.log("oldPosition: ", oldPosition)
-        const x = rect.x - w / 2
-        const y = rect.y - h / 2
-        drawRect(w, h, rect.x, rect.y)
+        // const x = rect.value[0]
+        // const y = rect.value[1]
+        const x = rect.x
+        const y = rect.y
+
+        drawRect(w, h, x, y)
       } else {
         drawRect(w, h)
       }
@@ -282,7 +309,7 @@ export default defineComponent({
       if (watchList.length > 0) watchList.forEach((w) => w())
     })
 
-    return { chartContainer, drawOnce, drawRect, isDraw }
+    return { chartContainer, drawOnce, drawRect, isDraw, projectPoints }
   },
 })
 </script>

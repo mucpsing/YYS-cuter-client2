@@ -191,8 +191,9 @@ function nextSetpCheck(currtSetp: number): boolean {
 
       break
     case 2:
-      const hasBeDfsu = Boolean(data.beDfsuInfo.md5)
-      const hasAfDfsu = Boolean(data.afDfsuInfo.md5)
+      const hasBeDfsu = Boolean(data.beDfsuMd5.length > 0)
+      const hasAfDfsu = Boolean(data.afDfsuMd5.length > 0)
+      console.log([data.beDfsuMd5, data.afDfsuMd5])
       if (!hasBeDfsu || !hasAfDfsu) {
         // console.log("未指定dfsu")
         eventBus.emit("show-guide", ["setp2", 0, data.id])

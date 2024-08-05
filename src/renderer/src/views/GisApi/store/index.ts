@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-04 10:17:31
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-05 15:24:40
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,7 +10,6 @@ import { defineStore } from "pinia"
 import { createFormData } from "./state"
 import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
 import { getTemplateList, serverCheckApi } from "@gisapi/api"
-import * as API from "@gisapi/api"
 
 import type { TabValue } from "tdesign-vue-next"
 import type { TemplateInfo, FileInfoItemT } from "@gisapi/Types"
@@ -79,6 +78,26 @@ export const useGisApiTabStore = defineStore("formState", {
   },
 
   actions: {
+    clreanDfsu(dataKey: string){
+      const targetKey = dataKey == "be" ? "beDfsuMd5" : "afDfsuMd5"
+      this.formDataList[this.currtTabId][targetKey]=[]
+    },
+
+    // TODO 当前仅实现了单选，后续实现多选
+    selectDfsu(dataKey: string, md5: string) {
+      const targetKey = dataKey == "be" ? "beDfsuMd5" : "afDfsuMd5"
+
+      if (!this.formDataList[this.currtTabId][targetKey].includes(md5))
+        this.formDataList[this.currtTabId][targetKey] = [md5]
+    },
+
+    removeDfsu(dataKey: string, md5: string) {
+      const targetKey = dataKey == "be" ? "beDfsuMd5" : "afDfsuMd5"
+
+      const index = this.formDataList[this.currtTabId][targetKey].indexOf(md5)
+
+      if (index >= 0) this.formDataList[this.currtTabId][targetKey].splice(index, 1)
+    },
     addTab(extendTabId: string | number = -1) {
       extendTabId = parseInt(extendTabId.toString())
 
@@ -193,7 +212,14 @@ export const useFileStroe = defineStore("fileStore", {
   },
 
   actions: {
-    async removeDataFromMd5(md5: string) {
+    // async selectItemByMd5(md5: string) {
+    //   const tabStore = useGisApiTabStore()
+    //   if (tabStore.currtFormData.dfsu_md5.length < 2) {
+    //     tabStore.currtFormData.dfsu_md5.push(md5)
+    //   }
+    // },
+
+    async removeDataByMd5(md5: string) {
       delete this.dfsuObj[md5]
       delete this.geoJsonObj[md5]
     },
@@ -204,6 +230,11 @@ export const useFileStroe = defineStore("fileStore", {
       if (item.geoJson) {
         this.geoJsonObj[item.md5] = item.geoJson
       }
+
+      // const tabStore = useGisApiTabStore()
+      // if(tabStore.currtFormData.dfsu_md5.length < 2) {
+      //   tabStore.currtFormData.dfsu_md5.push(item.md5)
+      // }
     },
 
     async addGelJsonItem(item) {

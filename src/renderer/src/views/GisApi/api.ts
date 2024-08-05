@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-04 11:03:00
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-05 10:00:44
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -83,10 +83,12 @@ export async function uploadCheck(fineMd5WithExtName: any): Promise<FileInfoBase
   }
 }
 
+type UploadResT = FileInfoBase | false
+
 export async function uploadFile(
   fileInfo: FileInfoItemT,
   updateProgressCallback: ((progress: number) => void) | undefined = undefined,
-): Promise<FileInfoBase | boolean> {
+): Promise<UploadResT> {
   try {
     const upload_check_res = await uploadCheck(fileInfo.md5Name)
 
