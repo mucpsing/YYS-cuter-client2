@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-06 00:07:36
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-06 10:59:53
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -23,9 +23,10 @@
 <script lang="ts">
 import { debounce } from "lodash"
 import * as echarts from "echarts"
-import { WatchStopHandle, defineEmits } from "vue"
 
+import { WatchStopHandle } from "vue"
 import { getOddIndexedElements } from "./utils"
+
 interface DrawPolygonConfig {
   title?: string
   max_len?: number
@@ -37,7 +38,7 @@ export default defineComponent({
   props: {
     show: { type: Boolean, default: false },
     width: { type: Number, default: 550 },
-    height: { type: Number, default: 400 },
+    height: { type: Number, default: 280 },
     drawRectSize: { type: String, default: "297x210" },
     drawRectScale: { type: Number, default: 0.5 },
     geoJson: { type: Array, default: [] },
@@ -57,22 +58,21 @@ export default defineComponent({
     const drawRectCount = ref(0) // 用来记录绘制矩形的次数
     let myChart: echarts.ECharts | null = null
 
-    const emits = emit
+    function recodePostiton(newPostiton: number[]) {
+      if (!myChart) return console.warn("echarts not init")
 
-    // const emits = defineEmits<{
-    //   (e: "update:rect", newRect: number[]): void
-    // }>()
+      const startXY = [newPostiton[0], newPostiton[1]]
+      const endXY = [newPostiton[0] + newPostiton[2], newPostiton[3] + newPostiton[0]]
 
-    // const rect = reactive({
-    //   x: 0,
-    //   y: 0,
-    //   w: 0,
-    //   h: 0,
-    // })
+      const startHorizontalCoords = myChart.convertFromPixel({ seriesId: "polygon_base" }, startXY)
+      const endHorizontalCoords = myChart.convertFromPixel({ seriesId: "polygon_base" }, endXY)
 
-    // const rect = defineModel<number[]>("rect", { default: () => [0, 0, 0, 0] })
+      const horizontalCoords = [...startHorizontalCoords, ...endHorizontalCoords]
 
-    const projectPoints = reactive([])
+      emit("update:rect", horizontalCoords)
+
+      return horizontalCoords
+    }
 
     function drawPolygon(geojson: any, customConfig: DrawPolygonConfig) {
       if (!geojson) return console.warn("have no geojsonData")
@@ -112,11 +112,6 @@ export default defineComponent({
       ]
 
       const option = {
-        // title: {
-        //   text: config.title,
-        //   left: "center",
-        // },
-
         xAxis: {
           show: false,
           min: bounds.minx - shap.w * axisOffset,
@@ -189,20 +184,16 @@ export default defineComponent({
       let position
       if (x && y) {
         position = [x, y]
-        console.log("更新坐标: ", { x, y })
       } else {
         const centerXY = myChart.convertToPixel({ seriesId: "polygon_base" }, [
           ...centerCoords.value,
         ])
 
         position = [centerXY[0] - w / 2, centerXY[1] - h / 2]
-        console.log("没有提供坐标，使用中心坐标: ", position)
       }
 
-      // rect.w = w
-      // rect.h = h
-
-      emits("update:rect", [props.rect[0] as number, props.rect[1] as number, w, h])
+      // emit("update:rect", [position[0], position[1], w, h])
+      recodePostiton([position[0], position[1], w, h])
 
       const graphic = [
         {
@@ -225,32 +216,7 @@ export default defineComponent({
           },
 
           onmouseup: (e) => {
-            if (!myChart) return console.log("myChart is null")
-
-            const [x, y] = myChart.convertFromPixel({ seriesId: "polygon_base" }, [
-              e.target.x,
-              e.target.y,
-            ])
-
-            // rect.value = [e.target.x, e.target.y, e.target.shape.width, e.target.shape.height]
-            emits("update:rect", [
-              e.target.x,
-              e.target.y,
-              e.target.shape.width,
-              e.target.shape.height,
-            ])
-
-            // rect.x = e.target.x
-            // rect.y = e.target.y
-            // rect.w = e.target.shape.width
-            // rect.h = e.target.shape.height
-
-            console.log("更新坐标: ", e.target)
-            console.log("更新坐标: ", { x, y })
-
-            const currentOption: any = myChart.getOption()
-            const oldPosition = currentOption.graphic[0].elements[0].position
-            console.log("oldPosition: ", oldPosition)
+            recodePostiton([e.target.x, e.target.y, e.target.shape.width, e.target.shape.height])
           },
         },
       ]
@@ -261,12 +227,12 @@ export default defineComponent({
     }
 
     const drawOnce = debounce(() => {
-      console.log("drawOnce")
       drawPolygon(props.geoJson[0], { max_len: props.maxLinkPoint })
     }, 300)
 
     const drawRectOnce = debounce(() => {
-      if (!myChart) return
+      if (!myChart) return console.warn("echarts not init")
+
       const size = props.drawRectSize.split("x")
       const w = parseInt(size[0]) * props.drawRectScale
       const h = parseInt(size[1]) * props.drawRectScale
@@ -275,13 +241,8 @@ export default defineComponent({
       if (drawRectCount.value > 0) {
         const currentOption: any = myChart.getOption()
         const oldPosition = currentOption.graphic[0].elements[0].position
-        console.log("oldPosition: ", oldPosition)
-        // const x = rect.value[0]
-        // const y = rect.value[1]
-        // const x = rect.x
-        // const y = rect.y
-        const x = rect[0]
-        const y = rect[1]
+        const x = oldPosition[0]
+        const y = oldPosition[1]
         drawRect(w, h, x, y)
       } else {
         drawRect(w, h)
@@ -304,7 +265,8 @@ export default defineComponent({
     )
 
     onMounted(() => {
-      if (chartContainer.value) myChart = echarts.init(chartContainer.value)
+      if (chartContainer.value)
+        myChart = echarts.init(chartContainer.value, null, { renderer: "canvas" })
 
       if (props.geoJson.length > 0) drawOnce()
     })
@@ -316,7 +278,7 @@ export default defineComponent({
       if (watchList.length > 0) watchList.forEach((w) => w())
     })
 
-    return { chartContainer, drawOnce, drawRect, isDraw, projectPoints }
+    return { chartContainer, drawOnce, drawRect, isDraw }
   },
 })
 </script>
