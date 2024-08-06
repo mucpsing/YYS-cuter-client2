@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-06 17:24:12
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-06 23:15:31
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -32,6 +32,7 @@ export function retainFirstLastAndOddIndexed<T>(arr: T[]): T[] {
 
   return result
 }
+
 export interface DrawPolygonConfig {
   title?: string
   max_len?: number
@@ -54,9 +55,18 @@ class ChartGeoJson {
   public isDraw = false
   public chart: echarts.ECharts
 
+  public events: {
+    onRectDraw?: (this: ChartGeoJson) => void
+    onRectMove?: (this: ChartGeoJson) => void
+    onRectResize?: (this: ChartGeoJson) => void
+  } = {}
+
   constructor(el: HTMLElement, config: any) {
     this.el = el
     this.chart = echarts.init(this.el, null, config)
+    if (config.events) {
+      Object.assign(this.events, config.events)
+    }
   }
 
   public interactInit(element: HTMLElement, outerId: string = "#interactInitId") {
@@ -65,7 +75,7 @@ class ChartGeoJson {
     } else {
       console.error("需要指定一个parentID")
     }
-    const that = this
+    const that: ChartGeoJson = this
 
     interact(element)
       .resizable({
@@ -90,8 +100,11 @@ class ChartGeoJson {
             target.setAttribute("data-x", x)
             target.setAttribute("data-y", y)
 
-            const bounds = [x, y, Math.trunc(event.rect.width), Math.trunc(event.rect.height)]
+            const bounds = [x, y, event.rect.width, event.rect.height].map((item) =>
+              Math.trunc(item),
+            )
             that.recordBounds(bounds)
+            that.eventBus.emit("onRectMove", bounds)
             // console.log(bounds)
           },
         },
@@ -110,9 +123,12 @@ class ChartGeoJson {
             // update the posiion attributes
             target.setAttribute("data-x", x)
             target.setAttribute("data-y", y)
-            const bounds = [x, y, Math.trunc(event.rect.width), Math.trunc(event.rect.height)]
+            const bounds = [x, y, event.rect.width, event.rect.height].map((item) =>
+              Math.trunc(item),
+            )
             that.recordBounds(bounds)
             // console.log(bounds)
+            that.eventBus.emit("onRectResize", bounds)
           },
         },
         inertia: true,
@@ -274,12 +290,12 @@ class ChartGeoJson {
   public recordBounds(position: number[]) {
     if (!this.chart) return
     const startXY = [position[0], position[1]]
-    const endXY = [position[0] + position[2], position[3] + position[0]]
+    const endXY = [position[0] + position[2], position[1] + position[3]]
     const leftTopXY = this.chart.convertFromPixel({ seriesId: "polygon_base" }, startXY)
     const rightbottomXY = this.chart.convertFromPixel({ seriesId: "polygon_base" }, endXY)
 
     this.rectBounds = [...leftTopXY, ...rightbottomXY]
-
+    console.log(position)
     console.log(this.rectBounds)
   }
 
