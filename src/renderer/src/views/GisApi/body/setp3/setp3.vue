@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-05 23:52:47
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-06 16:14:05
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -20,6 +20,8 @@
             :geo-json="currtRangeGeoJson"
             :maxLinkPoint="maxLinkPoint"
             :draw-rect-size="currtPaper"
+            :width="localStore.width"
+            :height="localStore.height"
           />
         </t-card>
       </div>
@@ -104,7 +106,13 @@
           </t-form>
 
           <template #footer>
-            <t-button @click="test" theme="success" class="w-full"> 保存范围到本地</t-button>
+            <div>
+              <t-input-number :setp="20" v-model="localStore.width"></t-input-number>
+              <t-input-number :setp="20" v-model="localStore.height"></t-input-number>
+            </div>
+            <div>
+              <t-button @click="test" theme="success" class="w-full"> 保存范围到本地</t-button>
+            </div>
           </template>
         </t-card>
       </div>
@@ -122,6 +130,11 @@ const maxLinkPoint = ref(50)
 const currtSelectDfsuName = ref("")
 const currtRangeGeoJson = ref<any[]>([])
 const currtRect = ref([])
+
+const localStore = reactive({
+  width: 520,
+  height: 380,
+})
 
 watch(currtRect, (n, o) => {
   console.log("触发更新")
@@ -154,23 +167,15 @@ function test() {
 }
 
 onMounted(() => {
-  console.log(0)
-
   // 初始化时，如果有文件信息，则默认绘制一个
   if (fileStore.geoJsonOptions.length > 0 && currtSelectDfsuName.value == "") {
-    console.log(1)
     let md5 = ""
     if (tabStore.currtFormData.beDfsuInfo) {
-      console.log(12)
-
       md5 = tabStore.currtFormData.beDfsuInfo.md5
     } else if (tabStore.currtFormData.afDfsuInfo) {
-      console.log(13)
-
       md5 = tabStore.currtFormData.afDfsuInfo.md5
     } else {
       // 当前所有都为空
-      console.log(14)
 
       if (Object.keys(fileStore.geoJsonObj).length > 0) {
         md5 = fileStore.geoJsonObj.keys()[0]

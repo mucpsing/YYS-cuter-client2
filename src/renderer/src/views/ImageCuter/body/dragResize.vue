@@ -46,46 +46,46 @@
 </template>
 
 <script setup lang="ts">
-import interact from "interactjs";
-import localStore, { startX, startY, endX, endY } from "../store";
-import type { Coords } from "../imageCuter";
+import interact from "interactjs"
+import localStore, { startX, startY, endX, endY } from "../store"
+import type { Coords } from "../imageCuter"
 
-const currtW = ref(0);
-const currtH = ref(0);
+const currtW = ref(0)
+const currtH = ref(0)
 
 const emit = defineEmits<{
   // (e: "update:width", coordValue: number): void;
   // (e: "update:height", coordValue: number): void;
   // (e: "update:top", coordValue: number): void;
   // (e: "update:left", coordValue: number): void;
-  (e: "onResize", event: Event, coords: Coords): void;
-  (e: "onDrag", event: Event, coords: Coords): void;
-}>();
+  (e: "onResize", event: Event, coords: Coords): void
+  (e: "onDrag", event: Event, coords: Coords): void
+}>()
 
 const props = withDefaults(
   defineProps<{
-    id: string; // 唯一ID
-    class?: string; // 自定义样式
+    id: string // 唯一ID
+    class?: string // 自定义样式
     // width: number; // 以下四个属性提供一个响应式对象 ref/reactive 用来绑定对应属性
     // height: number;
     // top: number;
     // left: number;
-    showInfo?: boolean;
+    showInfo?: boolean
   }>(),
   {
     id: "",
     class: "",
     showInfo: false,
-  }
-);
+  },
+)
 
 // const transform = computed(() => `translate(${props.left}px, ${props.top}px`);
 // function updateCoords(key: keyof typeof localStore.crop) {}
 
 function init(_id: string): void {
-  const element = document.getElementById(props.id);
+  const element = document.getElementById(props.id)
 
-  if (!element) return;
+  if (!element) return
 
   interact(element)
     .resizable({
@@ -113,25 +113,25 @@ function init(_id: string): void {
           // emit("update:height", height);
           // emit("onResize", event, { width, height, top, left });
 
-          const target = event.target;
-          let x = parseFloat(target.getAttribute("data-x")) || 0;
-          let y = parseFloat(target.getAttribute("data-y")) || 0;
+          const target = event.target
+          let x = parseFloat(target.getAttribute("data-x")) || 0
+          let y = parseFloat(target.getAttribute("data-y")) || 0
 
           // update the element's style
-          target.style.width = event.rect.width + "px";
-          target.style.height = event.rect.height + "px";
+          target.style.width = event.rect.width + "px"
+          target.style.height = event.rect.height + "px"
 
           // translate when resizing from top or left edges
-          x += event.deltaRect.left;
-          y += event.deltaRect.top;
+          x += event.deltaRect.left
+          y += event.deltaRect.top
 
-          target.style.transform = "translate(" + x + "px," + y + "px)";
+          target.style.transform = "translate(" + x + "px," + y + "px)"
 
-          target.setAttribute("data-x", x);
-          target.setAttribute("data-y", y);
+          target.setAttribute("data-x", x)
+          target.setAttribute("data-y", y)
 
-          currtW.value = Math.trunc(event.rect.width);
-          currtH.value = Math.trunc(event.rect.height);
+          currtW.value = Math.trunc(event.rect.width)
+          currtH.value = Math.trunc(event.rect.height)
 
           // emit("update:top", y);
           // emit("update:left", x);
@@ -142,7 +142,7 @@ function init(_id: string): void {
             height: event.rect.height,
             top: y,
             left: x,
-          });
+          })
         },
       },
     })
@@ -162,23 +162,23 @@ function init(_id: string): void {
           // emit("update:left", left);
           // emit("onDrag", event, { width, height, top, left });
 
-          const target = event.target;
+          const target = event.target
           // keep the dragged position in the data-x/data-y attributes
-          const x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-          const y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+          const x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx
+          const y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy
 
           // translate the element
-          target.style.transform = "translate(" + x + "px, " + y + "px)";
+          target.style.transform = "translate(" + x + "px, " + y + "px)"
 
           // update the posiion attributes
-          target.setAttribute("data-x", x);
-          target.setAttribute("data-y", y);
+          target.setAttribute("data-x", x)
+          target.setAttribute("data-y", y)
           emit("onResize", event, {
             width: event.rect.width,
             height: event.rect.height,
             top: y,
             left: x,
-          });
+          })
         },
       },
       inertia: true,
@@ -188,8 +188,8 @@ function init(_id: string): void {
           endOnly: true,
         }),
       ],
-    });
+    })
 }
 
-onMounted(() => init(props.id));
+onMounted(() => init(props.id))
 </script>
