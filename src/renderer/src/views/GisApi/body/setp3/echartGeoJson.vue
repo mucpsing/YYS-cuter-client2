@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-07 10:44:34
+ * @LastEditTime: 2024-08-07 16:28:44
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -13,11 +13,22 @@
     <div
       ref="chartContainerRef"
       :style="{ width: `${width}px`, height: `${height}px` }"
-      :class="{ 'bg-gray-200': show }"
-      class="rounded-lg border-slate-500"
+      :class="['bg-gray-200', 'flex flex-col items-center justify-center']"
+      class="relative rounded-lg border-slate-500"
     ></div>
-    <div class="absolute bottom-0">{{ rect }}</div>
-    <div ref="rectElementRef" class="absolute top-0 w-20 h-20 border-2 border-red-600"></div>
+    <div
+      ref="rectElementRef"
+      v-show="geoJson.length > 0 && showRect"
+      class="absolute top-0 w-20 h-20 border-2 border-red-600"
+    ></div>
+    <div
+      v-show="geoJson.length > 0 && showRect"
+      class="absolute bottom-0 left-0 pointer-events-none"
+    >
+      <ul>
+        <li v-for="(item, idx) of rect" :key="idx">{{ item }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -31,6 +42,7 @@ export default defineComponent({
   name: "PolygonChart",
   props: {
     show: { type: Boolean, default: false },
+    showRect: { type: Boolean, default: false },
     width: { type: Number, default: 550 },
     height: { type: Number, default: 280 },
     drawRectSize: { type: String, default: "297x210" },
@@ -63,6 +75,7 @@ export default defineComponent({
     watchList.push(watch([props.geoJson, () => props.maxLinkPoint], () => drawOnce()))
 
     onMounted(() => {
+      console.log("process:", process.env.NODE_ENV)
       if (chartContainerRef.value) {
         myChart = new ChartGenJson(chartContainerRef.value, { renderer: "canvas" })
       }
@@ -70,16 +83,9 @@ export default defineComponent({
       if (rectElementRef.value) {
         myChart
           .interactInit(rectElementRef.value)
-          .on("onRectMove", (e) => {
-            console.log("onRectMove", e.rectBounds)
-            console.log("onRectMove", e.rectCoords)
-            emit("update:rect", e.rectCoords)
-          })
-          .on("onRectResize", (e) => {
-            console.log("onRectResize", e.rectBounds)
-            console.log("onRectResize", e.rectCoords)
-            emit("update:rect", e.rectCoords)
-          })
+          .on("onRectMove", (e) => emit("update:rect", e.rectCoords))
+          .on("onRectResize", (e) => emit("update:rect", e.rectCoords))
+          .on("onDataZoom", (e) => emit("update:rect", e.rectCoords))
       }
 
       if (props.geoJson.length > 0) drawOnce()

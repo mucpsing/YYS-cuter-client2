@@ -2,13 +2,13 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-07 10:42:11
+ * @LastEditTime: 2024-08-07 16:41:03
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import * as echarts from "echarts"
 import interact from "interactjs"
-import { debounce, throttle } from "lodash"
+import { throttle } from "lodash"
 
 /**
  * 保留数组的第一个元素、最后一个元素以及所有奇数索引（从0开始计数）的元素。
@@ -63,18 +63,36 @@ class ChartGeoJson {
     onRectDraw?: (this: ChartGeoJson) => void
     onRectMove?: (this: ChartGeoJson) => void
     onRectResize?: (this: ChartGeoJson) => void
+    onDataZoom?: (this: ChartGeoJson) => void
   } = {}
 
   constructor(el: HTMLElement, config: any) {
     this.el = el
+    // const width = this.el.clientWidth
+    // const height = this.el.clientHeight
+
     this.chart = echarts.init(this.el, null, config)
 
     if (config.events) {
       Object.assign(this.events, config.events)
     }
+
+    this.chartEventRegister()
   }
 
-  public on(event: keyof typeof this.events, callback: (this: ChartGeoJson) => void) {
+  private chartEventRegister() {
+    const that = this
+    this.chart
+      .on("dataZoom", () => {
+        console.log("dataZoom")
+        that.emit("onDataZoom")
+      })
+      .on("click", function (params) {
+        console.log(params)
+      })
+  }
+
+  public on(event: keyof typeof this.events, callback: (...any: any[]) => any) {
     if (!this.events[event]) {
       this.events[event] = throttle(callback, 100)
     }
@@ -99,10 +117,10 @@ class ChartGeoJson {
     that.interact = interact(element)
       .resizable({
         edges: { left: true, right: true, bottom: true, top: true },
-        modifiers: [
-          // interact.modifiers.restrictEdges({ outer: outerId }),
-          interact.modifiers.restrictSize({ min: { width: 10, height: 10 } }),
-        ],
+        // modifiers: [
+        //   // interact.modifiers.restrictEdges({ outer: outerId }),
+        //   interact.modifiers.restrictSize({ min: { width: 10, height: 10 } }),
+        // ],
         listeners: {
           move: (event) => {
             const target = event.target
@@ -163,7 +181,6 @@ class ChartGeoJson {
 
   public drawPolygon(geojson: any, config: DrawPolygonConfig) {
     if (!geojson) return console.warn("have no geojsonData")
-
     if (!this.chart) return console.warn("echarts not init")
 
     config = Object.assign(this.DEFAULT_RENDER_CONFIG, config)
@@ -192,18 +209,41 @@ class ChartGeoJson {
       bounds.miny + (bounds.maxy - bounds.miny) / 2,
     ]
 
+    const renderW = this.el.clientWidth
+    const renderH = (renderW * shap.h) / shap.w
+    console.log({ width: renderW, height: renderH })
+    // this.chart.resize({ width: renderW, height: renderH })
+    // this.chart.resize({ width: realW, height: realH })
+
+    // console.log(maxW, maxH)
+
+    const offset = Math.max(shap.w, shap.h)
+    console.log({ offset })
+    const xAxisMin = bounds.minx + shap.w / 2 - offset / 2
+    const xAxisMax = bounds.maxx - shap.w / 2 + offset / 2
+
+    const yAxisMin = bounds.miny + shap.h / 2 - offset / 2
+    const yAxisMax = bounds.maxy - shap.h / 2 + offset / 2
+    console.log({ xAxisMin, xAxisMax, yAxisMin, yAxisMax })
+    console.log(xAxisMax - xAxisMin)
+    console.log(yAxisMax - yAxisMin)
+
     const option = {
       xAxis: {
         show: false,
-        min: bounds.minx - shap.w * axisOffset,
-        max: bounds.maxx + shap.w * axisOffset,
+        min: xAxisMin,
+        max: xAxisMax,
+        // min: bounds.minx - shap.w * axisOffset,
+        // max: bounds.maxx + shap.w * axisOffset,
         type: "value",
         axisLine: { onZero: false },
       },
       yAxis: {
         show: false,
-        min: bounds.miny - shap.h * axisOffset,
-        max: bounds.maxy + shap.h * axisOffset,
+        // min: bounds.miny - shap.h * axisOffset,
+        // max: bounds.maxy + shap.h * axisOffset,
+        min: yAxisMin,
+        max: yAxisMax,
         type: "value",
         axisLine: { onZero: false },
       },

@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-06 22:20:20
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-07 15:22:28
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,15 +13,15 @@
     <div class="flex flex-row gap-2">
       <div class="flex-col flex-1">
         <t-card title="范围选择">
-          <p>{{}}</p>
           <EchartGeoJson
             :show="true"
-            v-model:rect="currtRect"
+            v-model:rect="tabStore.currtFormData.projectPoints"
             :geo-json="currtRangeGeoJson"
             :maxLinkPoint="maxLinkPoint"
             :draw-rect-size="currtPaper"
             :width="localStore.width"
             :height="localStore.height"
+            :showRect="showRect"
           />
         </t-card>
       </div>
@@ -107,8 +107,7 @@
 
           <template #footer>
             <div>
-              <t-input-number :setp="20" v-model="localStore.width"></t-input-number>
-              <t-input-number :setp="20" v-model="localStore.height"></t-input-number>
+              <t-switch v-model="showRect"></t-switch>
             </div>
             <div>
               <t-button @click="test" theme="success" class="w-full"> 保存范围到本地</t-button>
@@ -125,6 +124,8 @@
 import EchartGeoJson from "./echartGeoJson.vue"
 import { useGisApiTabStore, useFileStroe } from "@gisapi/store/index"
 
+const showRect = ref(true)
+
 const fileStore = useFileStroe()
 const tabStore = useGisApiTabStore()
 const maxLinkPoint = ref(50)
@@ -136,11 +137,6 @@ const localStore = reactive({
   width: 520,
   height: 380,
 })
-
-// watch(currtRect, (n, o) => {
-//   console.log("触发更新")
-//   console.log({ n, o })
-// })
 
 const currtPaper = ref("297x210")
 const paperSizeList = [
