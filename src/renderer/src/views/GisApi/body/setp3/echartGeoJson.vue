@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-07 16:28:44
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-07 21:50:21
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -85,7 +85,7 @@ export default defineComponent({
           .interactInit(rectElementRef.value)
           .on("onRectMove", (e) => emit("update:rect", e.rectCoords))
           .on("onRectResize", (e) => emit("update:rect", e.rectCoords))
-          .on("onDataZoom", (e) => emit("update:rect", e.rectCoords))
+        // .on("onDataZoom", (e) => emit("update:rect", e.rectCoords))
       }
 
       if (props.geoJson.length > 0) drawOnce()

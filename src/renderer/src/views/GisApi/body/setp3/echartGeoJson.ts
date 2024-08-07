@@ -1,14 +1,24 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-07 16:41:03
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-07 22:53:18
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
+ * @example:
+ * myChart = new ChartGenJson(chartContainerRef.value, { renderer: "canvas" })
+ * if (rectElementRef.value) {
+      myChart
+        .interactInit(rectElementRef.value)
+        .on("onRectMove", (e) => emit("update:rect", e.rectCoords))
+        .on("onRectResize", (e) => emit("update:rect", e.rectCoords))
+      // .on("onDataZoom", (e) => emit("update:rect", e.rectCoords))
+    }
  */
 import * as echarts from "echarts"
 import interact from "interactjs"
 import { throttle } from "lodash"
+import type { FeatureCollection } from "./geoJson.d"
 
 /**
  * 保留数组的第一个元素、最后一个元素以及所有奇数索引（从0开始计数）的元素。
@@ -37,6 +47,7 @@ export function retainFirstLastAndOddIndexed<T>(arr: T[]): T[] {
 export interface DrawPolygonConfig {
   title?: string
   max_len?: number
+  axis_offset?: number
   range?: number[]
 }
 
@@ -47,6 +58,7 @@ class ChartGeoJson {
     title: "图片标题",
     max_len: 200,
     range: [],
+    axis_offset: 0.05,
   }
 
   public centerCoords = [] as number[]
@@ -68,16 +80,13 @@ class ChartGeoJson {
 
   constructor(el: HTMLElement, config: any) {
     this.el = el
-    // const width = this.el.clientWidth
-    // const height = this.el.clientHeight
-
     this.chart = echarts.init(this.el, null, config)
 
     if (config.events) {
       Object.assign(this.events, config.events)
     }
 
-    this.chartEventRegister()
+    // this.chartEventRegister()
   }
 
   private chartEventRegister() {
@@ -89,6 +98,10 @@ class ChartGeoJson {
       })
       .on("click", function (params) {
         console.log(params)
+      })
+      .on("finished", () => {
+        this.drawPolygonCount++
+        this.emit("onRectDraw")
       })
   }
 
@@ -117,10 +130,6 @@ class ChartGeoJson {
     that.interact = interact(element)
       .resizable({
         edges: { left: true, right: true, bottom: true, top: true },
-        // modifiers: [
-        //   // interact.modifiers.restrictEdges({ outer: outerId }),
-        //   interact.modifiers.restrictSize({ min: { width: 10, height: 10 } }),
-        // ],
         listeners: {
           move: (event) => {
             const target = event.target
@@ -179,71 +188,73 @@ class ChartGeoJson {
     return that
   }
 
-  public drawPolygon(geojson: any, config: DrawPolygonConfig) {
-    if (!geojson) return console.warn("have no geojsonData")
-    if (!this.chart) return console.warn("echarts not init")
-
-    config = Object.assign(this.DEFAULT_RENDER_CONFIG, config)
-
-    // 对折现的折点进行稀释
-    let polygon = retainFirstLastAndOddIndexed<number>(geojson.features[0].geometry.coordinates[0])
-
-    while (polygon.length > config.max_len) polygon = retainFirstLastAndOddIndexed(polygon)
-
-    // xy坐标轴的余量
-    const axisOffset = 0.05
-    const bounds = {
+  private calculateBounds(polygon: any[]) {
+    // 计算边界的逻辑...
+    return {
       maxx: Math.max(...polygon.map((item) => item[0])),
       minx: Math.min(...polygon.map((item) => item[0])),
       maxy: Math.max(...polygon.map((item) => item[1])),
       miny: Math.min(...polygon.map((item) => item[1])),
     }
-    const shap = {
-      w: bounds.maxx - bounds.minx,
-      h: bounds.maxy - bounds.miny,
+  }
+
+  private calculateCenterAndShape(bounds) {
+    const centerX = bounds.minX + (bounds.maxX - bounds.minX) / 2
+    const centerY = bounds.minY + (bounds.maxY - bounds.minY) / 2
+    const width = bounds.maxX - bounds.minX
+    const height = bounds.maxY - bounds.minY
+
+    this.centerCoords = [centerX, centerY]
+    return { centerX, centerY, width, height }
+  }
+
+  private diluteThePolygon(polygon: number[], maxLength: number): number[] {
+    // 实现 retainFirstLastAndOddIndexed 函数或类似的逻辑
+    // 这里仅作示例，未实际实现
+    let result = polygon
+    while (result.length > maxLength) {
+      result = retainFirstLastAndOddIndexed<number>(result)
     }
+    return result
+  }
 
-    // 计算中心点
-    this.centerCoords = [
-      bounds.minx + (bounds.maxx - bounds.minx) / 2,
-      bounds.miny + (bounds.maxy - bounds.miny) / 2,
-    ]
+  private calculateAxisRange(bounds, shape, axisOffset: number) {
+    const xAxisMin = bounds.minX - shape.width / 2 - shape.width * axisOffset
+    const xAxisMax = bounds.maxX + shape.width / 2 + shape.width * axisOffset
+    const yAxisMin = bounds.minY - shape.height / 2 - shape.height * axisOffset
+    const yAxisMax = bounds.maxY + shape.height / 2 + shape.height * axisOffset
+    return { xAxisMin, xAxisMax, yAxisMin, yAxisMax }
+  }
 
-    const renderW = this.el.clientWidth
-    const renderH = (renderW * shap.h) / shap.w
-    console.log({ width: renderW, height: renderH })
-    // this.chart.resize({ width: renderW, height: renderH })
-    // this.chart.resize({ width: realW, height: realH })
+  public drawPolygon(geojson: FeatureCollection, config: DrawPolygonConfig) {
+    if (!geojson) return console.warn("have no geojsonData")
+    if (!this.chart) return console.warn("echarts not init")
 
-    // console.log(maxW, maxH)
+    config = Object.assign(this.DEFAULT_RENDER_CONFIG, config)
 
-    const offset = Math.max(shap.w, shap.h)
-    console.log({ offset })
-    const xAxisMin = bounds.minx + shap.w / 2 - offset / 2
-    const xAxisMax = bounds.maxx - shap.w / 2 + offset / 2
-
-    const yAxisMin = bounds.miny + shap.h / 2 - offset / 2
-    const yAxisMax = bounds.maxy - shap.h / 2 + offset / 2
-    console.log({ xAxisMin, xAxisMax, yAxisMin, yAxisMax })
-    console.log(xAxisMax - xAxisMin)
-    console.log(yAxisMax - yAxisMin)
+    // 稀释多边形，防止卡顿
+    // 根据config.max_len，保留第一个和最后一个点，并且每隔一个点保留一个点
+    const polygon = this.diluteThePolygon(
+      geojson.features[0].geometry.coordinates[0],
+      config.max_len as number,
+    )
+    const bounds = this.calculateBounds(polygon) // 计算边界
+    const shape = this.calculateCenterAndShape(bounds) // 计算宽高
+    const axis = this.calculateAxisRange(bounds, shape, config.axis_offset as number) // xy坐标轴的余量
 
     const option = {
       xAxis: {
         show: false,
-        min: xAxisMin,
-        max: xAxisMax,
-        // min: bounds.minx - shap.w * axisOffset,
-        // max: bounds.maxx + shap.w * axisOffset,
+        min: axis.xAxisMin,
+        max: axis.xAxisMax,
         type: "value",
         axisLine: { onZero: false },
       },
       yAxis: {
         show: false,
-        // min: bounds.miny - shap.h * axisOffset,
-        // max: bounds.maxy + shap.h * axisOffset,
-        min: yAxisMin,
-        max: yAxisMax,
+        min: axis.yAxisMin,
+        max: axis.yAxisMax,
+
         type: "value",
         axisLine: { onZero: false },
       },
@@ -257,14 +268,10 @@ class ChartGeoJson {
 
       grid: {
         show: false, // 所有边距统一设置
-        left: "0%",
-        right: "0%",
-        top: "0%",
-        bottom: "0%",
-        // left: "5%",
-        // right: "5%",
-        // top: "5%",
-        // bottom: "5%",
+        left: "5%",
+        right: "5%",
+        top: "5%",
+        bottom: "5%",
       },
 
       dataZoom: [
@@ -292,61 +299,9 @@ class ChartGeoJson {
     }
 
     this.chart.setOption(option)
-    this.chart.on("finished", () => {
-      this.drawPolygonCount++
-      this.emit("onRectDraw")
-    })
   }
 
-  //   public drawRect(w: number = 297 / 2, h: number = 210 / 2, x?: number, y?: number) {
-  //     if (!this.chart) return console.log("this.chart is null")
-
-  //     // 中心坐标在上一步绘制折线后已经提前生成
-  //     let position
-  //     if (x && y) {
-  //       position = [x, y]
-  //     } else {
-  //       const centerXY = this.chart.convertToPixel({ seriesId: "polygon_base" }, [
-  //         ...this.centerCoords,
-  //       ])
-
-  //       position = [centerXY[0] - w / 2, centerXY[1] - h / 2]
-  //     }
-
-  //     this.recordBounds([position[0], position[1], w, h])
-
-  //     const graphic = [
-  //       {
-  //         id: "sel_rect",
-  //         z: 10,
-  //         type: "rect",
-  //         draggable: true,
-  //         position,
-
-  //         shape: {
-  //           x: 0,
-  //           y: 0,
-  //           width: w,
-  //           height: h,
-  //         },
-  //         style: {
-  //           fill: "transparent", // 设置为透明填充
-  //           stroke: "#ff0000", // 设置边框颜色为红色
-  //           lineWidth: 2, // 设置边框宽度为2
-  //         },
-
-  //         onmouseup: (e) => {
-  //           this.recordBounds([e.target.x, e.target.y, e.target.shape.width, e.target.shape.height])
-  //         },
-  //       },
-  //     ]
-
-  //     this.chart.setOption({ graphic })
-  //     this.drawRectCount++
-  //     this.isDraw = true
-  //   }
   private _recordBounds = throttle((position: number[]) => {
-    // console.log(position)
     if (!this.chart) return
 
     const startXY = [position[0], position[1]]
@@ -359,6 +314,10 @@ class ChartGeoJson {
     this.rectCoords = [...leftTopXY, ...rightbottomXY]
   }, 100)
 
+  /**
+   * @description: 裁剪框坐标转换成图像上的投影坐标
+   * @param {number} coords [x, y]
+   */
   public cover2Coord(coords: number[]) {
     if (this.drawPolygonCount == 0) return coords
 
