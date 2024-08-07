@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-07 21:51:44
+ * @LastEditTime: 2024-08-07 23:26:46
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -40,7 +40,7 @@
                 :options="fileStore.geoJsonOptions"
                 v-model="currtSelectDfsuName"
                 class="min-w-[100px] w-full"
-                :onChange="(value) => onSelectRangeFile(value)"
+                :onChange="(value) => onSelectRangeFile(value as string)"
               >
               </t-select>
             </t-form-item>
@@ -68,7 +68,7 @@
                     @click="() => (localStore.maxLinkPoint = 100 * (1 + idx))"
                     variant="outline"
                     size="small"
-                    :theme="theme"
+                    :theme="(theme as TBtnThemeT)"
                   >
                     {{ 100 * (1 + idx) }}
                   </t-button>
@@ -94,7 +94,7 @@
                       @click="() => (currtPaper = item.value)"
                       variant="outline"
                       size="small"
-                      :theme="themeList[idx]"
+                      :theme="(themeList[idx] as TBtnThemeT)"
                       class="w-12"
                     >
                       {{ item.label }}
@@ -123,7 +123,7 @@
 // import EchartGeoJson from "./echartGeoJson_bk.vue"
 import EchartGeoJson from "./echartGeoJson.vue"
 import { useGisApiTabStore, useFileStroe } from "@gisapi/store/index"
-
+import type { TBtnThemeT } from "@gisapi/Types"
 const fileStore = useFileStroe()
 const tabStore = useGisApiTabStore()
 

@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-07 22:53:18
+ * @LastEditTime: 2024-08-07 23:23:35
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -18,7 +18,7 @@
 import * as echarts from "echarts"
 import interact from "interactjs"
 import { throttle } from "lodash"
-import type { FeatureCollection } from "./geoJson.d"
+import type { FeatureCollection, Position } from "./geoJson.d"
 
 /**
  * 保留数组的第一个元素、最后一个元素以及所有奇数索引（从0开始计数）的元素。
@@ -86,21 +86,17 @@ class ChartGeoJson {
       Object.assign(this.events, config.events)
     }
 
-    // this.chartEventRegister()
+    this.chartEventRegister()
   }
 
   private chartEventRegister() {
-    const that = this
     this.chart
       .on("dataZoom", () => {
         console.log("dataZoom")
-        that.emit("onDataZoom")
-      })
-      .on("click", function (params) {
-        console.log(params)
+        this.emit("onDataZoom")
       })
       .on("finished", () => {
-        this.drawPolygonCount++
+        // 如果未绘制一些数据会获取失败
         this.emit("onRectDraw")
       })
   }
@@ -191,10 +187,10 @@ class ChartGeoJson {
   private calculateBounds(polygon: any[]) {
     // 计算边界的逻辑...
     return {
-      maxx: Math.max(...polygon.map((item) => item[0])),
-      minx: Math.min(...polygon.map((item) => item[0])),
-      maxy: Math.max(...polygon.map((item) => item[1])),
-      miny: Math.min(...polygon.map((item) => item[1])),
+      maxX: Math.max(...polygon.map((item) => item[0])),
+      minX: Math.min(...polygon.map((item) => item[0])),
+      maxY: Math.max(...polygon.map((item) => item[1])),
+      minY: Math.min(...polygon.map((item) => item[1])),
     }
   }
 
@@ -208,21 +204,24 @@ class ChartGeoJson {
     return { centerX, centerY, width, height }
   }
 
-  private diluteThePolygon(polygon: number[], maxLength: number): number[] {
+  private diluteThePolygon(polygon: Position[], maxLength: number): Position[] {
     // 实现 retainFirstLastAndOddIndexed 函数或类似的逻辑
     // 这里仅作示例，未实际实现
     let result = polygon
     while (result.length > maxLength) {
-      result = retainFirstLastAndOddIndexed<number>(result)
+      result = retainFirstLastAndOddIndexed<Position>(result)
     }
     return result
   }
 
-  private calculateAxisRange(bounds, shape, axisOffset: number) {
-    const xAxisMin = bounds.minX - shape.width / 2 - shape.width * axisOffset
-    const xAxisMax = bounds.maxX + shape.width / 2 + shape.width * axisOffset
-    const yAxisMin = bounds.minY - shape.height / 2 - shape.height * axisOffset
-    const yAxisMax = bounds.maxY + shape.height / 2 + shape.height * axisOffset
+  private calculateAxisRange(bounds, shape) {
+    const offset = Math.max(shape.width, shape.height) / 2
+
+    const xAxisMin = bounds.minX + shape.width / 2 - offset
+    const xAxisMax = bounds.maxX - shape.width / 2 + offset
+
+    const yAxisMin = bounds.minY + shape.height / 2 - offset
+    const yAxisMax = bounds.maxY - shape.height / 2 + offset
     return { xAxisMin, xAxisMax, yAxisMin, yAxisMax }
   }
 
@@ -234,13 +233,14 @@ class ChartGeoJson {
 
     // 稀释多边形，防止卡顿
     // 根据config.max_len，保留第一个和最后一个点，并且每隔一个点保留一个点
-    const polygon = this.diluteThePolygon(
-      geojson.features[0].geometry.coordinates[0],
-      config.max_len as number,
-    )
-    const bounds = this.calculateBounds(polygon) // 计算边界
-    const shape = this.calculateCenterAndShape(bounds) // 计算宽高
-    const axis = this.calculateAxisRange(bounds, shape, config.axis_offset as number) // xy坐标轴的余量
+    const polygonRaw = geojson.features[0].geometry.coordinates[0]
+    const polygon = this.diluteThePolygon(polygonRaw, config.max_len)
+    // 计算边界
+    const bounds = this.calculateBounds(polygon)
+    // 计算宽高
+    const shape = this.calculateCenterAndShape(bounds)
+    // xy坐标轴的余量
+    const axis = this.calculateAxisRange(bounds, shape)
 
     const option = {
       xAxis: {
@@ -254,7 +254,6 @@ class ChartGeoJson {
         show: false,
         min: axis.yAxisMin,
         max: axis.yAxisMax,
-
         type: "value",
         axisLine: { onZero: false },
       },
@@ -299,6 +298,7 @@ class ChartGeoJson {
     }
 
     this.chart.setOption(option)
+    this.drawPolygonCount++
   }
 
   private _recordBounds = throttle((position: number[]) => {
