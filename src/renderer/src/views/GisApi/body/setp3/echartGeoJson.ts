@@ -1,13 +1,14 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-06 23:15:31
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-07 10:42:11
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import * as echarts from "echarts"
 import interact from "interactjs"
+import { debounce, throttle } from "lodash"
 
 /**
  * 保留数组的第一个元素、最后一个元素以及所有奇数索引（从0开始计数）的元素。
@@ -52,8 +53,11 @@ class ChartGeoJson {
   public drawPolygonCount = 0
   public drawRectCount = 0
   public rectBounds = [] as number[]
-  public isDraw = false
+  public rectCoords = [] as number[]
+
+  public rectPoints = [] as number[]
   public chart: echarts.ECharts
+  private interact: any
 
   public events: {
     onRectDraw?: (this: ChartGeoJson) => void
@@ -64,8 +68,23 @@ class ChartGeoJson {
   constructor(el: HTMLElement, config: any) {
     this.el = el
     this.chart = echarts.init(this.el, null, config)
+
     if (config.events) {
       Object.assign(this.events, config.events)
+    }
+  }
+
+  public on(event: keyof typeof this.events, callback: (this: ChartGeoJson) => void) {
+    if (!this.events[event]) {
+      this.events[event] = throttle(callback, 100)
+    }
+
+    return this
+  }
+
+  private emit(event: keyof typeof this.events): void {
+    if (this.events && this.events[event]) {
+      this.events[event](this)
     }
   }
 
@@ -77,11 +96,11 @@ class ChartGeoJson {
     }
     const that: ChartGeoJson = this
 
-    interact(element)
+    that.interact = interact(element)
       .resizable({
         edges: { left: true, right: true, bottom: true, top: true },
         modifiers: [
-          interact.modifiers.restrictEdges({ outer: outerId }),
+          // interact.modifiers.restrictEdges({ outer: outerId }),
           interact.modifiers.restrictSize({ min: { width: 10, height: 10 } }),
         ],
         listeners: {
@@ -104,8 +123,7 @@ class ChartGeoJson {
               Math.trunc(item),
             )
             that.recordBounds(bounds)
-            that.eventBus.emit("onRectMove", bounds)
-            // console.log(bounds)
+            that.emit("onRectResize")
           },
         },
       })
@@ -123,12 +141,12 @@ class ChartGeoJson {
             // update the posiion attributes
             target.setAttribute("data-x", x)
             target.setAttribute("data-y", y)
+
             const bounds = [x, y, event.rect.width, event.rect.height].map((item) =>
               Math.trunc(item),
             )
             that.recordBounds(bounds)
-            // console.log(bounds)
-            that.eventBus.emit("onRectResize", bounds)
+            that.emit("onRectMove")
           },
         },
         inertia: true,
@@ -139,6 +157,8 @@ class ChartGeoJson {
           }),
         ],
       })
+
+    return that
   }
 
   public drawPolygon(geojson: any, config: DrawPolygonConfig) {
@@ -232,10 +252,9 @@ class ChartGeoJson {
     }
 
     this.chart.setOption(option)
-    // this.drawRect(300, 150)
     this.chart.on("finished", () => {
-      console.log("finished")
       this.drawPolygonCount++
+      this.emit("onRectDraw")
     })
   }
 
@@ -286,17 +305,28 @@ class ChartGeoJson {
   //     this.drawRectCount++
   //     this.isDraw = true
   //   }
-
-  public recordBounds(position: number[]) {
+  private _recordBounds = throttle((position: number[]) => {
+    // console.log(position)
     if (!this.chart) return
+
     const startXY = [position[0], position[1]]
     const endXY = [position[0] + position[2], position[1] + position[3]]
+    this.rectBounds = [...startXY, ...endXY]
+
+    if (this.drawPolygonCount == 0) return
     const leftTopXY = this.chart.convertFromPixel({ seriesId: "polygon_base" }, startXY)
     const rightbottomXY = this.chart.convertFromPixel({ seriesId: "polygon_base" }, endXY)
+    this.rectCoords = [...leftTopXY, ...rightbottomXY]
+  }, 100)
 
-    this.rectBounds = [...leftTopXY, ...rightbottomXY]
-    console.log(position)
-    console.log(this.rectBounds)
+  public cover2Coord(coords: number[]) {
+    if (this.drawPolygonCount == 0) return coords
+
+    return this.chart.convertFromPixel({ seriesId: "polygon_base" }, coords)
+  }
+
+  public recordBounds(position: number[]) {
+    this._recordBounds(position)
   }
 
   public dispose() {

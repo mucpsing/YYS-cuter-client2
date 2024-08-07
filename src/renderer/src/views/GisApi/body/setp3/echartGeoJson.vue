@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-06 22:33:29
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-07 10:44:34
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -16,6 +16,7 @@
       :class="{ 'bg-gray-200': show }"
       class="rounded-lg border-slate-500"
     ></div>
+    <div class="absolute bottom-0">{{ rect }}</div>
     <div ref="rectElementRef" class="absolute top-0 w-20 h-20 border-2 border-red-600"></div>
   </div>
 </template>
@@ -66,7 +67,20 @@ export default defineComponent({
         myChart = new ChartGenJson(chartContainerRef.value, { renderer: "canvas" })
       }
 
-      if (rectElementRef.value) myChart.interactInit(rectElementRef.value)
+      if (rectElementRef.value) {
+        myChart
+          .interactInit(rectElementRef.value)
+          .on("onRectMove", (e) => {
+            console.log("onRectMove", e.rectBounds)
+            console.log("onRectMove", e.rectCoords)
+            emit("update:rect", e.rectCoords)
+          })
+          .on("onRectResize", (e) => {
+            console.log("onRectResize", e.rectBounds)
+            console.log("onRectResize", e.rectCoords)
+            emit("update:rect", e.rectCoords)
+          })
+      }
 
       if (props.geoJson.length > 0) drawOnce()
     })

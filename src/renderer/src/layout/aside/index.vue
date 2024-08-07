@@ -38,10 +38,11 @@
     </header>
 
     <!-- 头像部分 -->
+    <!--         src="mimi.png" -->
     <section class="flex w-16 py-3 profile-picture border-b-gray-400">
       <img
         class="mx-1 mr-5 rounded-50% w-14 border-4 border-solid border-gray-400/30"
-        src="mimi.png"
+        src="/mimi.png"
         alt="用户头像"
       />
       <article class="flex flex-col items-center justify-center">
