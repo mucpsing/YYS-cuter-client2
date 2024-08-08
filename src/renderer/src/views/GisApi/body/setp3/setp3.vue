@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-08 11:20:56
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-08 21:09:14
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -105,8 +105,11 @@
 
             <!-- 输出尺寸 -->
             <t-form-item label="其他操作" name="name" label-align="left" initial-data="TDesign">
-              <div class="flex flex-row gap-2">
-                <t-button @click="echartGeoJsonRef?.resize">重置</t-button>
+              <div class="flex flex-row items-center justify-center gap-2">
+                <div class="flex items-center justify-center gap-2">
+                  <strong>视图框</strong>
+                  <t-switch v-model="localStore.showRect">选择框</t-switch>
+                </div>
               </div>
             </t-form-item>
           </t-form>

@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-08 11:20:31
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-08 22:30:39
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -68,13 +68,17 @@ class ChartGeoJson {
   private chartEventRegister() {
     this.chart
       .on("dataZoom", () => {
-        console.log("dataZoom")
         this.emit("onDataZoom")
       })
       .on("finished", () => {
         // 如果未绘制一些数据会获取失败
-        console.log()
         this.emit("onPolygonDraw")
+      })
+      .on("click", (params) => {
+        console.log(params)
+      })
+      .on("mousedown", (params) => {
+        console.log(params)
       })
   }
 
@@ -92,19 +96,15 @@ class ChartGeoJson {
     }
   }
 
-  public interactInit(element: HTMLElement, outerId: string = "#interactInitId") {
-    if (element.parentElement) {
-      element.parentElement.id = "interactInitId"
-    } else {
-      console.error("需要指定一个parentID")
-    }
-    const that: ChartGeoJson = this
+  /**
+   * @description: 滑轮滚动事件进行穿透传递
+   */
+  private onWheelEventInit(element) {
     const canvas = this.chart.getDom()
 
     element.addEventListener("wheel", function (event) {
       // 阻止 div 的默认滚动行为
       event.preventDefault()
-
       // 触发 canvas 上的 wheel 事件
       const wheelEvent = new WheelEvent("wheel", {
         deltaX: event.deltaX,
@@ -119,6 +119,17 @@ class ChartGeoJson {
       console.log("触发: wheel", canvas)
       canvas.dispatchEvent(wheelEvent)
     })
+  }
+
+  public interactInit(element: HTMLElement, outerId: string = "#interactInitId") {
+    if (element.parentElement) {
+      element.parentElement.id = "interactInitId"
+    } else {
+      console.error("需要指定一个parentID")
+    }
+    const that: ChartGeoJson = this
+
+    // this.onWheelEventInit(element)
 
     that.interact = interact(element)
       .resizable({
@@ -306,6 +317,16 @@ class ChartGeoJson {
           data: polygon,
           Symbol: false,
           symbolSize: 0,
+        },
+      ],
+
+      graphic: [
+        {
+          id: "test",
+          type: "polygon",
+          shape: {
+            points: polygon,
+          },
         },
       ],
     }

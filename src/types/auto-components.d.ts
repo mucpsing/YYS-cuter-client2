@@ -13,6 +13,7 @@ declare module 'vue' {
     '弹性父组件DEMO': typeof import('./../renderer/src/views/Home/弹性父组件DEMO.vue')['default']
     '副本': typeof import('./../renderer/src/views/GisApi/body/setp3/echartGeoJson - 副本.vue')['default']
     Body: typeof import('./../renderer/src/views/GisApi/body/index.vue')['default']
+    ChartTest: typeof import('./../renderer/src/views/Home/chartTest.vue')['default']
     Config: typeof import('./../renderer/src/views/ImageCuter/config/index.vue')['default']
     Content: typeof import('./../renderer/src/views/GisApi/body/content.vue')['default']
     copy: typeof import('./../renderer/src/views/GisApi/body/setp2/setp2 copy.vue')['default']

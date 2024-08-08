@@ -17,7 +17,5 @@ const rect = reactive({
       :model-value="count"
       @update:modelValue="count = $event"
     ></son>
-
-    <son v-model:model-value="count" v-model:rect="rect"></son>
   </div>
 </template>

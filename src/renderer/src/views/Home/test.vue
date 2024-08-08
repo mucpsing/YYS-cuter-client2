@@ -1,32 +1,135 @@
-<script setup lang="ts">
-// 计数器
-// 通过 v-model 解析成 modelValue @update:modelValue
-const props = defineProps<{
-  modelValue: number
-  rect: {
-    x: number
-    y: number
-  }
-}>()
-
-const emits = defineEmits<{
-  (e: "update:modelValue", count: number): void
-  (e: "update:rect", coords: { x: number; y: number }): void
-}>()
-
-function test() {
-  emits("update:modelValue", props.modelValue + 1)
-  emits("update:rect", { x: props.modelValue + 1, y: props.modelValue + 1 })
-}
-</script>
-
 <template>
-  <div class="cp-radio-btn">
-    计数器：{{ modelValue }} ----
-    <button @click="test">点击加1</button>
-
-    <div>
-      {{ rect }}
-    </div>
+  <div class="" style="width: 800px; height: 600px">
+    <div ref="testRef" class="w-full h-full"></div>
   </div>
 </template>
+
+<script setup lang="ts">
+import * as echarts from "echarts"
+const testRef = ref()
+
+onMounted(() => {
+  const myChart = echarts.init(testRef.value)
+
+  const symbolSize = 20
+  const data = [
+    [40, -10],
+    [-30, -5],
+    [-76.5, 20],
+    [-63.5, 40],
+    [-22.1, 50],
+  ]
+
+  const option = {
+    tooltip: {
+      triggerOn: "none",
+      formatter: function (params) {
+        return "X: " + params.data[0].toFixed(2) + "<br>Y: " + params.data[1].toFixed(2)
+      },
+    },
+
+    xAxis: {
+      min: -100,
+      max: 70,
+      type: "value",
+      axisLine: { onZero: false },
+    },
+    yAxis: {
+      min: -30,
+      max: 60,
+      type: "value",
+      axisLine: { onZero: false },
+    },
+    dataZoom: [
+      {
+        type: "inside",
+        xAxisIndex: 0,
+        filterMode: "none",
+      },
+      {
+        type: "inside",
+        yAxisIndex: 0,
+        filterMode: "none",
+      },
+    ],
+    series: [
+      {
+        id: "a",
+        type: "line",
+        smooth: true,
+        symbolSize: symbolSize,
+        data: data,
+      },
+    ],
+  }
+  setTimeout(function () {
+    // Add shadow circles (which is not visible) to enable drag.
+    myChart.setOption({
+      graphic: data.map(function (item, dataIndex) {
+        return {
+          type: "circle",
+          position: myChart.convertToPixel("grid", item),
+          shape: {
+            cx: 0,
+            cy: 0,
+            r: symbolSize / 2,
+          },
+          invisible: true,
+          draggable: true,
+          ondrag: function (dx, dy) {
+            onPointDragging(dataIndex, [this.x, this.y])
+          },
+          onmousemove: function () {
+            showTooltip(dataIndex)
+          },
+          onmouseout: function () {
+            hideTooltip(dataIndex)
+          },
+          z: 100,
+        }
+      }),
+    })
+  }, 0)
+  window.addEventListener("resize", updatePosition)
+  myChart.on("dataZoom", updatePosition)
+  function updatePosition() {
+    myChart.setOption({
+      graphic: data.map(function (item, dataIndex) {
+        return {
+          position: myChart.convertToPixel("grid", item),
+        }
+      }),
+    })
+  }
+  function showTooltip(dataIndex) {
+    myChart.dispatchAction({
+      type: "showTip",
+      seriesIndex: 0,
+      dataIndex: dataIndex,
+    })
+  }
+  function hideTooltip(dataIndex) {
+    myChart.dispatchAction({
+      type: "hideTip",
+    })
+  }
+  function onPointDragging(dataIndex, pos) {
+    data[dataIndex] = myChart.convertFromPixel("grid", pos)
+    // Update data
+    myChart.setOption({
+      series: [
+        {
+          id: "a",
+          data: data,
+        },
+      ],
+    })
+  }
+
+  myChart.setOption(option)
+
+  myChart.on("click", function (params) {
+    console.log(params)
+  })
+})
+</script>

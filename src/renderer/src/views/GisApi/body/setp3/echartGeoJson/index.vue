@@ -1,26 +1,30 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-08 11:08:25
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-08 21:18:32
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
 -->
 <template>
   <div class="relative">
-    <!-- 确保chartContainerRef与父容器的尺寸一致，否则转换出来的坐标会错误 -->
+    <!-- echarts绘制元素 -->
     <div
       ref="chartContainerRef"
       :style="{ width: `${props.width}px`, height: `${props.height}px` }"
       :class="['bg-gray-200', 'flex flex-col items-center justify-center']"
       class="relative rounded-lg border-slate-500"
     ></div>
+
+    <!-- 裁剪框 -->
     <div
       ref="rectElementRef"
       v-show="props.geoJson.length > 0 && props.showRect"
       class="absolute top-0 w-20 h-20 border-2 border-red-600"
     ></div>
+
+    <!-- 左下角信息框，展示最终坐标 -->
     <div
       v-show="props.geoJson.length > 0 && props.showRect"
       class="absolute bottom-0 left-0 pointer-events-none"
@@ -46,20 +50,20 @@ const chartContainerRef = ref(null)
 const rectElementRef = ref<HTMLDivElement | null>(null)
 let myChart: ChartGenJson
 
-const watchList: WatchStopHandle[] = []
-
-const localStore = reactive({
-  rectShow: false,
-  rectOpacity: 0,
-})
+// 存放watch事件，在组件卸载时销毁
+const watchList: WatchStopHandle[] = [
+  // 监听河道数据变化，用来重新绘制
+  watch([props.geoJson, () => props.maxLinkPoint], () => drawOnce()),
+]
 
 const drawOnce = debounce(() => {
   myChart.drawPolygon(props.geoJson[0], { max_len: props.maxLinkPoint })
 }, 300)
 
-// 监听河道数据变化，用来重新绘制
-watchList.push(watch([props.geoJson, () => props.maxLinkPoint], () => drawOnce()))
-
+function updateRectCoordsToData(coords) {
+  if (!props.showRect) return
+  emit("update:rect", coords)
+}
 onMounted(() => {
   // console.log("process:", process.env.NODE_ENV)
   if (chartContainerRef.value) {
@@ -69,8 +73,8 @@ onMounted(() => {
   if (rectElementRef.value) {
     myChart
       .interactInit(rectElementRef.value)
-      .on("onRectMove", (e) => emit("update:rect", e.rectCoords))
-      .on("onRectResize", (e) => emit("update:rect", e.rectCoords))
+      .on("onRectMove", (e) => updateRectCoordsToData(e.rectCoords))
+      .on("onRectResize", (e) => updateRectCoordsToData(e.rectCoords))
     // .on("onDataZoom", (e) => emit("update:rect", e.rectCoords))
   }
 
