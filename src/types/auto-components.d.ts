@@ -27,7 +27,7 @@ declare module 'vue' {
     Div: typeof import("tdesign-vue-next")["Space"]
     DragResize: typeof import('./../renderer/src/views/ImageCuter/body/dragResize.vue')['default']
     DragResize_old: typeof import('./../renderer/src/views/ImageCuter/body/dragResize_old.vue')['default']
-    EchartGeoJson: typeof import('./../renderer/src/views/GisApi/body/setp3/echartGeoJson.vue')['default']
+    EchartGeoJson: typeof import('./../renderer/src/views/GisApi/body/setp3/echartGeoJson/index.vue')['default']
     EchartGeoJson_bk: typeof import('./../renderer/src/views/GisApi/body/setp3/echartGeoJson_bk.vue')['default']
     FileTransfer: typeof import('./../renderer/src/views/GisApi/body/setp2/fileTransfer.vue')['default']
     FileTransfer_old: typeof import('./../renderer/src/views/GisApi/body/setp2/fileTransfer_old/index.vue')['default']

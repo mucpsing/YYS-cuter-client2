@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-07 23:23:35
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-08 11:20:31
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -18,31 +18,7 @@
 import * as echarts from "echarts"
 import interact from "interactjs"
 import { throttle } from "lodash"
-import type { FeatureCollection, Position } from "./geoJson.d"
-
-/**
- * 保留数组的第一个元素、最后一个元素以及所有奇数索引（从0开始计数）的元素。
- * @param {T[]} arr 输入的数组。
- * @return {T[]} 包含指定元素的数组。
- */
-export function retainFirstLastAndOddIndexed<T>(arr: T[]): T[] {
-  if (arr.length === 0) return []
-
-  let result = [arr[0]] // 始终包含第一个元素
-
-  // 遍历原数组（从索引1开始，因为第一个元素已经添加到结果中）
-  for (let i = 1; i < arr.length - 1; i++) {
-    if (i % 2 !== 0) {
-      // 如果是奇数索引，则将当前元素添加到结果数组中
-      result.push(arr[i])
-    }
-  }
-
-  // 添加最后一个元素
-  result.push(arr[arr.length - 1])
-
-  return result
-}
+import type { FeatureCollection } from "./geoJson"
 
 export interface DrawPolygonConfig {
   title?: string
@@ -72,7 +48,7 @@ class ChartGeoJson {
   private interact: any
 
   public events: {
-    onRectDraw?: (this: ChartGeoJson) => void
+    onPolygonDraw?: (this: ChartGeoJson) => void
     onRectMove?: (this: ChartGeoJson) => void
     onRectResize?: (this: ChartGeoJson) => void
     onDataZoom?: (this: ChartGeoJson) => void
@@ -97,7 +73,8 @@ class ChartGeoJson {
       })
       .on("finished", () => {
         // 如果未绘制一些数据会获取失败
-        this.emit("onRectDraw")
+        console.log()
+        this.emit("onPolygonDraw")
       })
   }
 
@@ -122,6 +99,26 @@ class ChartGeoJson {
       console.error("需要指定一个parentID")
     }
     const that: ChartGeoJson = this
+    const canvas = this.chart.getDom()
+
+    element.addEventListener("wheel", function (event) {
+      // 阻止 div 的默认滚动行为
+      event.preventDefault()
+
+      // 触发 canvas 上的 wheel 事件
+      const wheelEvent = new WheelEvent("wheel", {
+        deltaX: event.deltaX,
+        deltaY: event.deltaY,
+        deltaZ: event.deltaZ,
+        // 其他可能的属性，根据需要设置
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      })
+
+      console.log("触发: wheel", canvas)
+      canvas.dispatchEvent(wheelEvent)
+    })
 
     that.interact = interact(element)
       .resizable({
@@ -204,12 +201,35 @@ class ChartGeoJson {
     return { centerX, centerY, width, height }
   }
 
-  private diluteThePolygon(polygon: Position[], maxLength: number): Position[] {
-    // 实现 retainFirstLastAndOddIndexed 函数或类似的逻辑
+  /**
+   * 保留数组的第一个元素、最后一个元素以及所有奇数索引（从0开始计数）的元素。
+   * @param {T[]} arr 输入的数组。
+   * @return {T[]} 包含指定元素的数组。
+   */
+  private retainFirstLastAndOddIndexed<T>(arr: T[]): T[] {
+    if (arr.length === 0) return []
+
+    let result = [arr[0]] // 始终包含第一个元素
+
+    // 遍历原数组（从索引1开始，因为第一个元素已经添加到结果中）
+    for (let i = 1; i < arr.length - 1; i++) {
+      if (i % 2 !== 0) {
+        // 如果是奇数索引，则将当前元素添加到结果数组中
+        result.push(arr[i])
+      }
+    }
+
+    // 添加最后一个元素
+    result.push(arr[arr.length - 1])
+
+    return result
+  }
+
+  private diluteThePolygon<T>(polygon: T[], maxLength: number): T[] {
     // 这里仅作示例，未实际实现
     let result = polygon
     while (result.length > maxLength) {
-      result = retainFirstLastAndOddIndexed<Position>(result)
+      result = this.retainFirstLastAndOddIndexed<T>(result)
     }
     return result
   }
@@ -256,13 +276,6 @@ class ChartGeoJson {
         max: axis.yAxisMax,
         type: "value",
         axisLine: { onZero: false },
-      },
-
-      tooltip: {
-        triggerOn: "none",
-        formatter: function (params) {
-          return "X: " + params.data[0].toFixed(2) + "<br>Y: " + params.data[1].toFixed(2)
-        },
       },
 
       grid: {
@@ -330,6 +343,14 @@ class ChartGeoJson {
 
   public dispose() {
     if (this.chart) this.chart.dispose()
+  }
+
+  public resize() {
+    this.chart.dispatchAction({
+      type: "dataZoom",
+      start: 0,
+      end: 100,
+    })
   }
 }
 

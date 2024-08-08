@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-07 23:26:46
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-08-08 11:20:56
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,9 +11,16 @@
     :class="['flex flex-col w-full gap-2', 'flex-grow-[2]', 'rounded-xl p-2 whitespace-nowrap']"
   >
     <div class="flex flex-row gap-2">
+      <!-- echart 范围截取组件 -->
       <div class="flex-col flex-1">
         <t-card title="范围选择">
+          <template #actions>
+            <t-button @click="echartGeoJsonRef?.resize" variant="text" theme="primary"
+              >重置视图</t-button
+            >
+          </template>
           <EchartGeoJson
+            ref="echartGeoJsonRef"
             :show="true"
             v-model:rect="tabStore.currtFormData.projectPoints"
             :geo-json="currtRangeGeoJson"
@@ -26,6 +33,7 @@
         </t-card>
       </div>
 
+      <!-- 配置项 -->
       <div class="flex-col flex-grow-[111] flex-1 h-full">
         <t-card
           title="基础配置"
@@ -35,6 +43,7 @@
             <t-button @click="" variant="text" theme="primary">本地上传</t-button>
           </template>
           <t-form labelWidth="70px" class="h-full">
+            <!-- 范围选择 -->
             <t-form-item label="选择范围" name="name" label-align="left" initial-data="TDesign">
               <t-select
                 :options="fileStore.geoJsonOptions"
@@ -45,6 +54,7 @@
               </t-select>
             </t-form-item>
 
+            <!-- 稀释折点 -->
             <t-form-item label="稀释折点" name="name" label-align="left" initial-data="TDesign">
               <t-slider
                 :max="600"
@@ -58,6 +68,7 @@
               />
             </t-form-item>
 
+            <!-- 稀释折点的快捷标签 -->
             <t-form-item label=" " name="name" label-align="left" initial-data="TDesign">
               <div class="flex flex-row gap-[5px]">
                 <template
@@ -76,39 +87,31 @@
               </div>
             </t-form-item>
 
+            <!-- 输出尺寸 -->
             <t-form-item label="输出尺寸" name="name" label-align="left" initial-data="TDesign">
-              <div class="flex flex-row justify-start w-full h-full gap-2 p-2">
-                <div
-                  :class="[
-                    'border-2 border-yellow-400 ',
-                    'w-[148.5px] h-[105px] bg-red-300',
-                    'text-center flex flex-col justify-center items-center',
-                  ]"
-                >
-                  <strong>{{ currtPaper }}</strong>
-                </div>
+              <div class="flex flex-wrap flex-row gap-2 max-w-[200px]">
+                <template v-for="(item, idx) in paperSizeList" :key="idx">
+                  <t-button
+                    @click="() => (currtPaper = item.value)"
+                    variant="outline"
+                    size="small"
+                    :theme="(themeList[idx] as TBtnThemeT)"
+                  >
+                    {{ `${item.label} (${item.value})` }}
+                  </t-button>
+                </template>
+              </div>
+            </t-form-item>
 
-                <div class="flex flex-col gap-1">
-                  <template v-for="(item, idx) in paperSizeList" :key="idx">
-                    <t-button
-                      @click="() => (currtPaper = item.value)"
-                      variant="outline"
-                      size="small"
-                      :theme="(themeList[idx] as TBtnThemeT)"
-                      class="w-12"
-                    >
-                      {{ item.label }}
-                    </t-button>
-                  </template>
-                </div>
+            <!-- 输出尺寸 -->
+            <t-form-item label="其他操作" name="name" label-align="left" initial-data="TDesign">
+              <div class="flex flex-row gap-2">
+                <t-button @click="echartGeoJsonRef?.resize">重置</t-button>
               </div>
             </t-form-item>
           </t-form>
 
           <template #footer>
-            <div>
-              <t-switch v-model="localStore.showRect"></t-switch>
-            </div>
             <div>
               <t-button @click="test" theme="success" class="w-full"> 保存范围到本地</t-button>
             </div>
@@ -120,8 +123,7 @@
 </template>
 
 <script setup lang="ts">
-// import EchartGeoJson from "./echartGeoJson_bk.vue"
-import EchartGeoJson from "./echartGeoJson.vue"
+import EchartGeoJson from "./echartGeoJson/index.vue"
 import { useGisApiTabStore, useFileStroe } from "@gisapi/store/index"
 import type { TBtnThemeT } from "@gisapi/Types"
 const fileStore = useFileStroe()
@@ -129,7 +131,10 @@ const tabStore = useGisApiTabStore()
 
 const currtSelectDfsuName = ref("")
 const currtRangeGeoJson = ref<any[]>([])
-
+const echartGeoJsonRef = ref<HTMLElement & { resize: () => void }>()
+function test() {
+  console.log(echartGeoJsonRef)
+}
 const localStore = reactive({
   width: 520,
   height: 380,
@@ -157,9 +162,6 @@ const themeList = [
 
 async function onSelectRangeFile(md5: string) {
   currtRangeGeoJson.value[0] = await fileStore.getGeoJsonByMd5(md5)
-}
-function test() {
-  console.log(tabStore.formDataList)
 }
 
 onMounted(() => {
