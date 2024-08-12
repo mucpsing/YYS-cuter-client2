@@ -31,7 +31,9 @@ import { lastRouterPath } from "@renderer/router/routerList"
 const router = useRouter()
 
 onMounted(() => {
-  router.push(lastRouterPath)
+  console.log("布局加载完成，加载路由")
+  router.push("/home")
+  // router.push(lastRouterPath)
 })
 </script>
 
