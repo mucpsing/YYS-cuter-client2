@@ -14,13 +14,7 @@ const testRef = ref()
 const symbolSize = 20
 
 let myChart
-const data: [number, number][] = [
-  [40, -10],
-  [-30, -5],
-  [-76.5, 20],
-  [-63.5, 40],
-  [-22.1, 50],
-]
+const data: [number, number][] = []
 
 const poloyDataList: number[][] = []
 
@@ -119,9 +113,6 @@ function onPointClick(params: any) {
     }
     return false
   })
-
-  // 没有找到临近的点
-  if (~dataNearIndex) return
 
   // 没有临近点，则直接添加
   if (!isPointNearExisting) {
