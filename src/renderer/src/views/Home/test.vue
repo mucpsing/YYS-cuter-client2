@@ -24,31 +24,31 @@ function draggable() {
   setTimeout(function () {
     // Add shadow circles (which is not visible) to enable drag.
     // 视图绘制完成后再绘制拖拽点
-    myChart.setOption({
-      graphic: data.map(function (item, dataIndex) {
-        return {
-          type: "circle",
-          position: myChart.convertToPixel("grid", item),
-          shape: {
-            cx: 0,
-            cy: 0,
-            r: symbolSize / 2,
-          },
-          invisible: true,
-          draggable: true,
-          ondrag: function (event) {
-            onPointDragging(dataIndex, [event.offsetX, event.offsetY])
-          },
-          onmousemove: function () {
-            showTooltip(dataIndex)
-          },
-          onmouseout: function () {
-            hideTooltip(dataIndex)
-          },
-          z: 100,
-        }
-      }),
+    const graphic = data.map(function (item, dataIndex) {
+      return {
+        type: "circle",
+        position: myChart.convertToPixel("grid", item),
+        shape: {
+          cx: 0,
+          cy: 0,
+          r: symbolSize / 2,
+        },
+        invisible: true,
+        draggable: true,
+        ondrag: function (event) {
+          onPointDragging(dataIndex, [event.offsetX, event.offsetY])
+        },
+        onmousemove: function () {
+          showTooltip(dataIndex)
+        },
+        onmouseout: function () {
+          hideTooltip(dataIndex)
+        },
+        z: 100,
+      }
     })
+
+    myChart.setOption({ graphic })
   }, 100)
 }
 
@@ -59,6 +59,7 @@ function updatePosition() {
         position: myChart.convertToPixel("grid", item),
       }
     }),
+    series: [{ id: "a", data: data }],
   })
 }
 
@@ -84,46 +85,6 @@ function onPointDragging(dataIndex: number, pos: [number, number]) {
       },
     ],
   })
-}
-
-function drawPolygon(poloyData: number[]) {
-  // 绘制多边形
-  poloyDataList.push(poloyData)
-
-  const position = getPosition(poloyDataList)
-
-  const graphic = [
-    {
-      id: "sel_rect",
-      z: 10,
-      type: "rect",
-      draggable: true,
-      position,
-
-      shape: {
-        x: 0,
-        y: 0,
-        width: w,
-        height: h,
-      },
-      style: {
-        fill: "transparent", // 设置为透明填充
-        stroke: "#ff0000", // 设置边框颜色为红色
-        lineWidth: 2, // 设置边框宽度为2
-      },
-
-      onmouseup: (e) => {
-        console.log("当前coords: ", [
-          e.target.x,
-          e.target.y,
-          e.target.shape.width,
-          e.target.shape.height,
-        ])
-      },
-    },
-  ]
-
-  myChart.setOption({ graphic })
 }
 
 function onPointClick(params: any) {
@@ -200,13 +161,31 @@ onMounted(() => {
         data: data,
       },
       {
-        id: "b",
-        type: "area",
-        data: data, // 闭合数据
-        areaStyle: {},
-        lineStyle: {
-          opacity: 0, // 隐藏线条
+        type: "custom",
+        renderItem: function (params, api) {
+          if (params.context.rendered) {
+            return
+          }
+          params.context.rendered = true
+          let points = []
+          for (let i = 0; i < data.length; i++) {
+            points.push(api.coord(data[i]))
+          }
+          let color = api.visual("color")
+          return {
+            type: "polygon",
+            transition: ["shape"],
+            shape: {
+              points: points,
+            },
+            style: api.style({
+              fill: color,
+              stroke: echarts.color.lift(color, 0.1),
+            }),
+          }
         },
+        clip: true,
+        data: data,
       },
     ],
   }
@@ -218,5 +197,14 @@ onMounted(() => {
   myChart.getZr().on("click", onPointClick)
 
   window.addEventListener("resize", updatePosition)
+  window.addEventListener("keydown", function (event) {
+    // 检查是否同时按下了Ctrl键和Z键
+    if (event.ctrlKey && event.key === "z") {
+      // 阻止默认行为（可选，取决于你的需求）
+      // event.preventDefault();
+      data.splice(data.length - 1, 1)
+      updatePosition()
+    }
+  })
 })
 </script>
