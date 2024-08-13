@@ -97,12 +97,13 @@ function onPointClick(params: any) {
     const existingPoints = data.map((item) => myChart.convertToPixel("grid", item))
     const pointDistanceSquared = (p1, p2) => (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2
 
+    // BUG 当点击的位置是最后一个时，应该不执行任何动作
     let isPointNearExisting
     existingPoints.some((existingPoint, idx) => {
       const distanceSquared = pointDistanceSquared(pointInPixel, existingPoint)
       // symbolSize 是半径，所以需要比较距离的平方和 symbolSize^2
       if (distanceSquared <= symbolSize ** 2) {
-        isPointNearExisting = data[idx]
+        if (idx != data.length - 1) isPointNearExisting = data[idx]
       }
       return distanceSquared <= (symbolSize / 2) ** 2
     })
@@ -163,15 +164,14 @@ onMounted(() => {
       {
         type: "custom",
         renderItem: function (params, api) {
-          if (params.context.rendered) {
-            return
-          }
+          if (params.context.rendered) return
           params.context.rendered = true
           let points = []
           for (let i = 0; i < data.length; i++) {
             points.push(api.coord(data[i]))
           }
           let color = api.visual("color")
+          console.log({ color })
           return {
             type: "polygon",
             transition: ["shape"],
