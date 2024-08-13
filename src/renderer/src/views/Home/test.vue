@@ -1,16 +1,20 @@
 <template>
   <div class="" style="width: 800px; height: 600px">
     <div ref="testRef" class="w-full h-full"></div>
+    <t-button @click="test">ttttt</t-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import * as echarts from "echarts"
+
+const hasSetOption = (tar) => typeof tar.setOption === "function"
+
 const testRef = ref()
 const symbolSize = 20
 
 let myChart
-const data = [
+const data: [number, number][] = [
   [40, -10],
   [-30, -5],
   [-76.5, 20],
@@ -20,6 +24,11 @@ const data = [
 
 const poloyDataList: number[][] = []
 
+function test() {
+  // console.log(myChart instanceof echarts.ECharts)
+  console.log(myChart instanceof HTMLElement)
+  console.log(hasSetOption(myChart))
+}
 function draggable() {
   setTimeout(function () {
     // Add shadow circles (which is not visible) to enable drag.
@@ -92,43 +101,52 @@ function onPointClick(params: any) {
   const pointInGrid = myChart.convertFromPixel("grid", pointInPixel)
 
   // 检查新点是否在图表区域内
-  if (myChart.containPixel("grid", pointInPixel)) {
-    // 检查新点附近是否已有点
-    const existingPoints = data.map((item) => myChart.convertToPixel("grid", item))
-    const pointDistanceSquared = (p1, p2) => (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2
+  if (!myChart.containPixel("grid", pointInPixel)) return
 
-    // BUG 当点击的位置是最后一个时，应该不执行任何动作
-    let isPointNearExisting
-    existingPoints.some((existingPoint, idx) => {
-      const distanceSquared = pointDistanceSquared(pointInPixel, existingPoint)
-      // symbolSize 是半径，所以需要比较距离的平方和 symbolSize^2
-      if (distanceSquared <= symbolSize ** 2) {
-        if (idx != data.length - 1) isPointNearExisting = data[idx]
-      }
-      return distanceSquared <= (symbolSize / 2) ** 2
-    })
+  // 检查新点附近是否已有点
+  const existingPoints = data.map((item) => myChart.convertToPixel("grid", item))
+  const pointDistanceSquared = (p1, p2) => (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2
 
-    if (isPointNearExisting) {
-      // 使用临近的点
-      data.push(isPointNearExisting)
-
-      // 绘制多边形
-    } else {
-      // 创建新点
-      data.push(pointInGrid)
+  // BUG 当点击的位置是最后一个时，应该不执行任何动作
+  let dataNearIndex: number = -1
+  const isPointNearExisting = existingPoints.some((existingPoint, idx) => {
+    const distanceSquared = pointDistanceSquared(pointInPixel, existingPoint)
+    // 获取临近点的下标
+    // symbolSize 是半径，所以需要比较距离的平方和 symbolSize^2
+    if (distanceSquared <= (symbolSize / 2) ** 2) {
+      dataNearIndex = idx
+      return true
     }
+    return false
+  })
 
-    myChart.setOption({
-      series: [
-        {
-          id: "a",
-          data: data,
-        },
-      ],
-    })
-    draggable() // 重新添加拖拽功能（如果需要）
+  // 没有找到临近的点
+  if (~dataNearIndex) return
+
+  // 没有临近点，则直接添加
+  if (!isPointNearExisting) {
+    data.push(pointInGrid)
+  } else {
+    if (dataNearIndex == data.length - 1) {
+      data.splice(dataNearIndex, 1)
+    } else if (dataNearIndex == 0) {
+      // 两种情况，当已经是闭合路径时，则表示需要删除
+      if (data[0] == data[data.length - 1]) {
+        data.splice(data.length - 1, 1)
+      } else {
+        // 否则，则表示需要闭合路径
+        data.push(data[0])
+      }
+    } else {
+      data.push(data[dataNearIndex])
+    }
   }
+
+  myChart.setOption({ series: [{ id: "a", data: data }] })
+
+  draggable() // 重新添加拖拽功能（如果需要）
 }
+
 onMounted(() => {
   myChart = echarts.init(testRef.value)
 
@@ -170,8 +188,8 @@ onMounted(() => {
           for (let i = 0; i < data.length; i++) {
             points.push(api.coord(data[i]))
           }
-          let color = api.visual("color")
-          console.log({ color })
+          // let color = api.visual("color")
+          let color = "rgba(255, 205, 205, .5 )"
           return {
             type: "polygon",
             transition: ["shape"],
