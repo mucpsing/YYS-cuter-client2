@@ -25,7 +25,7 @@
         <button class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-red-500"></button>
         <button class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-yellow-400"></button>
         <button class="rounded-50% flex-shrink-0 mr-2 w-3 h-3 bg-green-400"></button>
-        <button @click="test" class="px-2">
+        <button @click="() => (autoHide = !autoHide)" class="px-2">
           <c-icon-font
             iconName="icon-yys-lock-"
             :class="[
@@ -38,7 +38,6 @@
     </header>
 
     <!-- 头像部分 -->
-    <!--         src="mimi.png" -->
     <section class="flex w-16 py-3 profile-picture border-b-gray-400">
       <img
         class="mx-1 mr-5 rounded-50% w-14 border-4 border-solid border-gray-400/30"
@@ -111,8 +110,7 @@ const subMenus = [
 ]
 
 async function test() {
-  autoHide.value = !autoHide.value
-  console.log("aside test btn", autoHide.value)
+  console.log("test")
 }
 </script>
 

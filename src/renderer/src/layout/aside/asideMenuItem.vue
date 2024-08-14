@@ -10,7 +10,9 @@
 
 <template>
   <section>
-    <header class="py-2 mb-2 text-xs text-center">{{ title }}</header>
+    <header :class="['py-2 mb-2 text-xs text-center']">
+      {{ title }}
+    </header>
     <ul
       class="mx-1 rounded-md whitespace-nowrap border-gray-500/10"
       :style="{ 'background-color': props.bgColor }"

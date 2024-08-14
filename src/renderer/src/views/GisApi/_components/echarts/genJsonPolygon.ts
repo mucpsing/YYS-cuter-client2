@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-14 14:46:05
+ * @LastEditTime: 2024-08-14 17:19:02
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -19,6 +19,7 @@ import * as echarts from "echarts"
 import interact from "interactjs"
 import { throttle } from "lodash"
 import type { FeatureCollection } from "./geoJson"
+import * as utils from "./utils"
 
 export interface DrawPolygonConfig {
   title?: string
@@ -104,8 +105,6 @@ class ChartGeoJson {
     }
     const that: ChartGeoJson = this
 
-    // this.onWheelEventInit(element)
-
     that.interact = interact(element)
       .resizable({
         edges: { left: true, right: true, bottom: true, top: true },
@@ -167,70 +166,6 @@ class ChartGeoJson {
     return that
   }
 
-  private calculateBounds(polygon: any[]) {
-    // 计算边界的逻辑...
-    return {
-      maxX: Math.max(...polygon.map((item) => item[0])),
-      minX: Math.min(...polygon.map((item) => item[0])),
-      maxY: Math.max(...polygon.map((item) => item[1])),
-      minY: Math.min(...polygon.map((item) => item[1])),
-    }
-  }
-
-  private calculateCenterAndShape(bounds) {
-    const centerX = bounds.minX + (bounds.maxX - bounds.minX) / 2
-    const centerY = bounds.minY + (bounds.maxY - bounds.minY) / 2
-    const width = bounds.maxX - bounds.minX
-    const height = bounds.maxY - bounds.minY
-
-    this.centerCoords = [centerX, centerY]
-    return { centerX, centerY, width, height }
-  }
-
-  /**
-   * 保留数组的第一个元素、最后一个元素以及所有奇数索引（从0开始计数）的元素。
-   * @param {T[]} arr 输入的数组。
-   * @return {T[]} 包含指定元素的数组。
-   */
-  private retainFirstLastAndOddIndexed<T>(arr: T[]): T[] {
-    if (arr.length === 0) return []
-
-    let result = [arr[0]] // 始终包含第一个元素
-
-    // 遍历原数组（从索引1开始，因为第一个元素已经添加到结果中）
-    for (let i = 1; i < arr.length - 1; i++) {
-      if (i % 2 !== 0) {
-        // 如果是奇数索引，则将当前元素添加到结果数组中
-        result.push(arr[i])
-      }
-    }
-
-    // 添加最后一个元素
-    result.push(arr[arr.length - 1])
-
-    return result
-  }
-
-  private diluteThePolygon<T>(polygon: T[], maxLength: number): T[] {
-    // 这里仅作示例，未实际实现
-    let result = polygon
-    while (result.length > maxLength) {
-      result = this.retainFirstLastAndOddIndexed<T>(result)
-    }
-    return result
-  }
-
-  private calculateAxisRange(bounds, shape) {
-    const offset = Math.max(shape.width, shape.height) / 2
-
-    const xAxisMin = bounds.minX + shape.width / 2 - offset
-    const xAxisMax = bounds.maxX - shape.width / 2 + offset
-
-    const yAxisMin = bounds.minY + shape.height / 2 - offset
-    const yAxisMax = bounds.maxY - shape.height / 2 + offset
-    return { xAxisMin, xAxisMax, yAxisMin, yAxisMax }
-  }
-
   public drawPolygon(geojson: FeatureCollection, config: DrawPolygonConfig) {
     if (!geojson) return console.warn("have no geojsonData")
     if (!this.chart) return console.warn("echarts not init")
@@ -240,13 +175,19 @@ class ChartGeoJson {
     // 稀释多边形，防止卡顿
     // 根据config.max_len，保留第一个和最后一个点，并且每隔一个点保留一个点
     const polygonRaw = geojson.features[0].geometry.coordinates[0]
-    const polygon = this.diluteThePolygon(polygonRaw, config.max_len)
+    const polygon = utils.diluteThePolygon(polygonRaw, config.max_len as number)
+
     // 计算边界
-    const bounds = this.calculateBounds(polygon)
+    const bounds = utils.calculateBounds(polygon)
+
     // 计算宽高
-    const shape = this.calculateCenterAndShape(bounds)
-    // xy坐标轴的余量
-    const axis = this.calculateAxisRange(bounds, shape)
+    const shape = utils.calculateCenterAndShape(bounds)
+
+    // 记录中心坐标用于初始化
+    this.centerCoords = [shape.centerX, shape.centerY]
+
+    // 桔色成人xy坐标轴和余量
+    const axis = utils.calculateAxisRange(bounds, shape)
 
     const option = {
       xAxis: {
@@ -256,7 +197,7 @@ class ChartGeoJson {
         type: "value",
         axisLine: { onZero: false },
       },
-      
+
       yAxis: {
         show: false,
         min: axis.yAxisMin,

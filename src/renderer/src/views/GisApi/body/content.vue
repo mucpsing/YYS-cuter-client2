@@ -128,7 +128,7 @@ const { formDataList, currtTabId, currtExtendId } = storeToRefs(tabStore)
 const templateSetpOptions = [
   { title: "选择模板", value: 1 },
   { title: "工程配置", value: 2 },
-  { title: "处理范围", value: 3 },
+  { title: "视图配置", value: 3 },
   { title: "图片生成", value: 4 },
 ]
 
