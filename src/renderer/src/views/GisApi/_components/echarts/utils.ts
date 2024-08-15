@@ -128,8 +128,8 @@ export function retainFirstLastAndOddIndexed<T>(arr: T[]): T[] {
     }
   }
 
-  // 添加最后一个元素
-  result.push(arr[arr.length - 1])
+  // 添加最后一个元素，闭合作用
+  if (result[0] !== arr[arr.length - 1]) result.push(arr[arr.length - 1])
 
   return result
 }

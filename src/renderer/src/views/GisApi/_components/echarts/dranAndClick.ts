@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-08-13 21:13:19
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-14 16:40:18
+ * @LastEditTime: 2024-08-15 14:47:08
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\echartsComponemt\dragRect.ts
  * @Description: 对已存在的echarts实例添加点击绘制的功能
  */
@@ -178,7 +178,7 @@ export default class ChartDragLine {
     )
 
     const isClosed = isClosedPath(data)
-    const isLastPoint = dataNearIndex === data.length - 1
+    const isLastPoint = dataNearIndex === data.length - 1 && data.length > 0
 
     // 路径未闭合，没有临近点：新增
     if (dataNearIndex === -1 && !isClosed) {
@@ -198,6 +198,10 @@ export default class ChartDragLine {
     // 路径未闭合，点击起点：闭合
     if (dataNearIndex === 0 && !isClosed) {
       data.push(data[0])
+    }
+
+    if (isLastPoint && !isClosed) {
+      data.pop()
     }
 
     // 数据已动，更新视图
