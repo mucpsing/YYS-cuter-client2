@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-14 14:46:05
+ * @LastEditTime: 2024-08-16 11:00:51
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -23,8 +23,6 @@ import type { FeatureCollection } from "./geoJson"
 export interface DrawPolygonConfig {
   title?: string
   max_len?: number
-  axis_offset?: number
-  range?: number[]
 }
 
 class ChartGeoJson {
@@ -33,8 +31,6 @@ class ChartGeoJson {
   readonly DEFAULT_RENDER_CONFIG = {
     title: "图片标题",
     max_len: 200,
-    range: [],
-    axis_offset: 0.05,
   }
 
   public centerCoords = [] as number[]
@@ -256,7 +252,7 @@ class ChartGeoJson {
         type: "value",
         axisLine: { onZero: false },
       },
-      
+
       yAxis: {
         show: false,
         min: axis.yAxisMin,

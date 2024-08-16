@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-08-13 21:13:19
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-15 14:47:08
+ * @LastEditTime: 2024-08-16 17:33:39
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\echartsComponemt\dragRect.ts
  * @Description: 对已存在的echarts实例添加点击绘制的功能
  */
@@ -12,9 +12,10 @@ import { isPointEqual, isClosedPath } from "./utils"
 import { isNearExistingPoint, isEchartsInstance } from "./utils"
 
 export default class ChartDragLine {
-  private chart: echarts.ECharts
-  private dataId: string
-  private dataObj: { [dataId: string]: number[][] }
+  public chart: echarts.ECharts
+
+  private _dataId: string
+  private _dataObj: { [dataId: string]: number[][] }
   private config: { symbolSize: number; rectFillColor: string }
 
   constructor(inputTar: echarts.ECharts) {
@@ -24,23 +25,60 @@ export default class ChartDragLine {
       throw new Error("inputTar is not a valid echarts instance")
     }
 
-    this.dataObj = { "0": [] }
-    this.dataId = "0"
+    this._dataObj = { "0": this._createData([]) }
+    this._dataId = "0"
     this.config = { symbolSize: 20, rectFillColor: "rgba(255, 205, 205, .5 )" }
 
     this.initTooltip()
     this.registEvent() // 注册事件
-    this.updateSeries() // 绘制视图
   }
 
-  private initTooltip() {
-    this.chart.setOption({
-      tooltip: {
-        triggerOn: "none",
-        formatter: (params) =>
-          "X: " + params.data[0].toFixed(2) + "<br>Y: " + params.data[1].toFixed(2),
+  public getPolyData(key?: string) {
+    return this._dataObj[key || this._dataId]
+  }
+
+  private _createData(data: any): number[][] {
+    const that = this
+    return new Proxy(data, {
+      set(target, key, value) {
+        const oldValue = target[key]
+        if (oldValue !== value) {
+          target[key] = value
+          that.updateSeries()
+        }
+        return true
       },
     })
+  }
+
+  public addPolygon(): [string, number[][]] {
+    const allKeys = Object.keys(this._dataObj).map((strKey) => parseInt(strKey))
+
+    const newKey = (Math.max(...allKeys) + 1).toString() // 生成一个最大的key
+
+    const newData = this._createData([])
+
+    this._dataObj[newKey] = newData
+    // this._dataId = newKey
+
+    return [newKey, newData]
+  }
+
+  public switchPoly(key) {
+    if (!this._dataObj[key]) return
+    this._dataId = key
+  }
+
+  public getPolygon(key?: string) {
+    if (!key) key = Object.keys(this._dataObj)[0]
+
+    if (this._dataObj[key]) return this._dataObj[key]
+
+    return
+  }
+
+  public getPolyList() {
+    return Object.keys(this._dataObj)
   }
 
   private registEvent() {
@@ -60,85 +98,108 @@ export default class ChartDragLine {
         // 阻止默认行为（可选，取决于你的需求）
         // event.preventDefault();
 
-        this.dataObj[this.dataId].splice(this.dataObj[this.dataId].length - 1, 1)
-
-        this.updateSeries()
+        this._dataObj[this._dataId].splice(this._dataObj[this._dataId].length - 1, 1)
       }
     })
   }
 
-  private showTooltip = (dataIndex: number) => {
-    this.chart.dispatchAction({ type: "showTip", seriesIndex: 0, dataIndex })
+  private initTooltip() {
+    this.chart.setOption({
+      tooltip: {
+        triggerOn: "none",
+        formatter: (params) =>
+          "X: " + params.data[0].toFixed(2) + "<br>Y: " + params.data[1].toFixed(2),
+      },
+    })
   }
 
-  private hideTooltip = (dataIndex: number) => {
-    this.chart.dispatchAction({ type: "hideTip", seriesIndex: 0, dataIndex })
+  private showTooltip = (seriesId: string, dataIndex: number) => {
+    const series = this.chart.getOption().series as any[]
+    const seriesIndex = series.findIndex((it) => it.id === seriesId)
+
+    if (dataIndex === -1) return
+
+    this.chart.dispatchAction({ type: "showTip", dataIndex, seriesIndex })
+  }
+
+  private hideTooltip = (seriesId: string, dataIndex: number) => {
+    const series = this.chart.getOption().series as any[]
+    const seriesIndex = series.findIndex((it) => it.id === seriesId)
+
+    if (dataIndex === -1) return
+    this.chart.dispatchAction({ type: "hideTip", seriesIndex, dataIndex })
   }
 
   private updateSeries() {
     const series: echarts.SeriesOption[] = []
-    Object.keys(this.dataObj).forEach((key) => {
-      let color = this.config.rectFillColor
+    const key = this._dataId
 
-      const data = this.dataObj[key]
+    // Object.keys(this._dataObj).forEach((key) => {
+    let color = this.config.rectFillColor
 
-      series.push({
-        id: `line_${key}`,
-        type: "line",
-        smooth: false,
-        symbolSize: this.config.symbolSize,
-        data,
-      })
+    const data = this._dataObj[key]
 
-      series.push({
-        id: `custom_polygon_${key}`,
-        type: "custom",
-        renderItem: (params, api) => {
-          if (params.context.rendered) return
-          params.context.rendered = true
-
-          return {
-            type: "polygon",
-            transition: ["shape"],
-            shape: { points: data.map((it) => api.coord(it)) },
-            style: {
-              fill: color,
-              stroke: color,
-            },
-          }
-        },
-        clip: true,
-        data,
-      })
+    series.push({
+      id: `line_${key}`,
+      type: "line",
+      name: `line_${key}`,
+      smooth: false,
+      symbolSize: this.config.symbolSize,
+      data,
     })
+
+    series.push({
+      id: `custom_polygon_${key}`,
+      type: "custom",
+      renderItem: (params, api) => {
+        if (params.context.rendered) return
+        params.context.rendered = true
+
+        return {
+          type: "polygon",
+          transition: ["shape"],
+          shape: { points: data.map((it) => api.coord(it)) },
+          style: {
+            fill: color,
+            stroke: color,
+          },
+        }
+      },
+      clip: true,
+      data,
+    })
+    // })
 
     this.chart.setOption({ series })
     this.renderDragPoints() // 绘制拖动点（注册拖动事件）
   }
 
   private renderDragPoints() {
+    const that = this
+
     setTimeout(() => {
       // Add shadow circles (which is not visible) to enable drag.
       // 视图绘制完成后再绘制拖拽点
-      const graphic = this.dataObj[this.dataId].map((item, dataIndex) => {
-        return {
-          type: "circle",
-          position: this.chart.convertToPixel("grid", item),
-          shape: {
-            cx: 0,
-            cy: 0,
-            r: this.config.symbolSize / 2,
-          },
-          invisible: true,
-          draggable: true,
+      if (that._dataObj[that._dataId].length === 0) return
 
-          ondrag: (event) => this.onPointDragging(dataIndex, [event.offsetX, event.offsetY]),
-          onmousemove: () => this.showTooltip(dataIndex),
-          onmouseout: () => this.hideTooltip(dataIndex),
+      const graphic = that._dataObj[that._dataId].map((item, idx) => ({
+        id: `drag_point_${that._dataId}_${idx}`,
+        type: "circle",
+        position: that.chart.convertToPixel("grid", item),
+        shape: {
+          cx: 0,
+          cy: 0,
+          r: that.config.symbolSize / 2,
+        },
+        invisible: true,
+        draggable: true,
 
-          z: 100,
-        }
-      })
+        ondrag: (event) => that.onPointDragging(idx, [event.offsetX, event.offsetY]),
+        onmousemove: () => that.showTooltip(`line_${that._dataId}`, idx),
+        onmouseout: () => that.hideTooltip(`line_${that._dataId}`, idx),
+
+        z: 100,
+      }))
 
       this.chart.setOption({ graphic })
     }, 100)
@@ -146,7 +207,7 @@ export default class ChartDragLine {
 
   private onPointDragging(dataIndex: number, pos: [number, number]) {
     const newPos = this.chart.convertFromPixel("grid", pos)
-    const data = this.dataObj[this.dataId]
+    const data = this._dataObj[this._dataId]
     const _isPointEqual = isPointEqual(data[0], data[data.length - 1])
 
     if ((dataIndex == 0 || dataIndex == data.length - 1) && _isPointEqual) {
@@ -155,16 +216,13 @@ export default class ChartDragLine {
     } else {
       data[dataIndex] = newPos
     }
-
-    this.updateSeries()
   }
 
   private onPointClick(params: { offsetX: number; offsetY: number }) {
     const { offsetX, offsetY } = params
-    const data = this.dataObj[this.dataId]
+    const data = this._dataObj[this._dataId]
     const pointInPixel = [offsetX, offsetY]
     const pointInGrid = this.chart.convertFromPixel("grid", pointInPixel)
-    const oldLen = data.length
 
     // 检查新点是否在图表区域内
     if (!this.chart.containPixel("grid", pointInPixel)) return
@@ -203,8 +261,5 @@ export default class ChartDragLine {
     if (isLastPoint && !isClosed) {
       data.pop()
     }
-
-    // 数据已动，更新视图
-    if (oldLen !== data.length) this.updateSeries()
   }
 }
