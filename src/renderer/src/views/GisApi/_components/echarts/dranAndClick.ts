@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-08-13 21:13:19
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-19 11:18:21
+ * @LastEditTime: 2024-08-19 11:26:35
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\echartsComponemt\dragRect.ts
  * @Description: 对已存在的echarts实例添加点击绘制的功能
  */
@@ -226,16 +226,25 @@ export default class ChartDragLine {
     }, 50)
   }
 
-  private onPointDragging(dataId, dataIndex: number, pos: [number, number]) {
+  /**
+   * @description:
+   * @param {string} dataId
+   * @param {number} dataIndex
+   * @param {array} pos
+   * @return {*}
+   */
+  private onPointDragging(dataId: string, dataIndex: number, pos: [number, number]) {
     if (this.dragging) return
 
     const newPos = this.chart.convertFromPixel("grid", pos)
     const data = this._dataObj[dataId]
-    const _isPointEqual = isPointEqual(data[0], data[data.length - 1])
+    const lastIndex = data.length - 1
+    const _isPointEqual = isPointEqual(data[0], data[lastIndex])
+    // const isClosedPath = isClosedPath(data)
 
-    if ((dataIndex == 0 || dataIndex == data.length - 1) && _isPointEqual) {
+    if ((dataIndex === 0 || dataIndex === lastIndex) && _isPointEqual) {
       data[0] = newPos
-      data[data.length - 1] = newPos
+      data[lastIndex] = newPos
     } else {
       data[dataIndex] = newPos
     }
