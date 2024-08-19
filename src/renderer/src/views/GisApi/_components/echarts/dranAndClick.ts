@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-08-13 21:13:19
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-16 17:33:39
+ * @LastEditTime: 2024-08-19 11:18:21
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\echartsComponemt\dragRect.ts
  * @Description: 对已存在的echarts实例添加点击绘制的功能
  */
@@ -18,6 +18,8 @@ export default class ChartDragLine {
   private _dataObj: { [dataId: string]: number[][] }
   private config: { symbolSize: number; rectFillColor: string }
 
+  private dragging: boolean
+
   constructor(inputTar: echarts.ECharts) {
     if (isEchartsInstance(inputTar)) {
       this.chart = inputTar as echarts.ECharts
@@ -28,6 +30,7 @@ export default class ChartDragLine {
     this._dataObj = { "0": this._createData([]) }
     this._dataId = "0"
     this.config = { symbolSize: 20, rectFillColor: "rgba(255, 205, 205, .5 )" }
+    this.dragging = false
 
     this.initTooltip()
     this.registEvent() // 注册事件
@@ -41,6 +44,9 @@ export default class ChartDragLine {
     const that = this
     return new Proxy(data, {
       set(target, key, value) {
+        // 判断当前是否正在拖拽
+        if (that.dragging) return true
+
         const oldValue = target[key]
         if (oldValue !== value) {
           target[key] = value
@@ -113,7 +119,14 @@ export default class ChartDragLine {
     })
   }
 
-  private showTooltip = (seriesId: string, dataIndex: number) => {
+  private showTooltip = (dataId: string, dataIndex: number) => {
+    const seriesId = `line_${dataId}`
+
+    if (this._dataId !== dataId) {
+      console.log("切换id")
+      this.switchPoly(dataId)
+    }
+
     const series = this.chart.getOption().series as any[]
     const seriesIndex = series.findIndex((it) => it.id === seriesId)
 
@@ -122,7 +135,9 @@ export default class ChartDragLine {
     this.chart.dispatchAction({ type: "showTip", dataIndex, seriesIndex })
   }
 
-  private hideTooltip = (seriesId: string, dataIndex: number) => {
+  private hideTooltip = (dataId: string, dataIndex: number) => {
+    const seriesId = `line_${dataId}`
+
     const series = this.chart.getOption().series as any[]
     const seriesIndex = series.findIndex((it) => it.id === seriesId)
 
@@ -131,12 +146,12 @@ export default class ChartDragLine {
   }
 
   private updateSeries() {
+    if (this.dragging) return
+
     const series: echarts.SeriesOption[] = []
     const key = this._dataId
 
-    // Object.keys(this._dataObj).forEach((key) => {
-    let color = this.config.rectFillColor
-
+    const color = this.config.rectFillColor
     const data = this._dataObj[key]
 
     series.push({
@@ -168,7 +183,6 @@ export default class ChartDragLine {
       clip: true,
       data,
     })
-    // })
 
     this.chart.setOption({ series })
     this.renderDragPoints() // 绘制拖动点（注册拖动事件）
@@ -178,9 +192,15 @@ export default class ChartDragLine {
     const that = this
 
     setTimeout(() => {
+      // 判断当前是否正在拖拽
+      if (that.dragging) return
+      that.dragging = true
+
       // Add shadow circles (which is not visible) to enable drag.
       // 视图绘制完成后再绘制拖拽点
       if (that._dataObj[that._dataId].length === 0) return
+
+      const id = that._dataId
 
       const graphic = that._dataObj[that._dataId].map((item, idx) => ({
         id: `drag_point_${that._dataId}_${idx}`,
@@ -194,20 +214,23 @@ export default class ChartDragLine {
         invisible: true,
         draggable: true,
 
-        ondrag: (event) => that.onPointDragging(idx, [event.offsetX, event.offsetY]),
-        onmousemove: () => that.showTooltip(`line_${that._dataId}`, idx),
-        onmouseout: () => that.hideTooltip(`line_${that._dataId}`, idx),
+        ondrag: (event) => that.onPointDragging(id, idx, [event.offsetX, event.offsetY]),
+        onmousemove: () => that.showTooltip(id, idx),
+        onmouseout: () => that.hideTooltip(id, idx),
 
         z: 100,
       }))
 
       this.chart.setOption({ graphic })
-    }, 100)
+      that.dragging = false
+    }, 50)
   }
 
-  private onPointDragging(dataIndex: number, pos: [number, number]) {
+  private onPointDragging(dataId, dataIndex: number, pos: [number, number]) {
+    if (this.dragging) return
+
     const newPos = this.chart.convertFromPixel("grid", pos)
-    const data = this._dataObj[this._dataId]
+    const data = this._dataObj[dataId]
     const _isPointEqual = isPointEqual(data[0], data[data.length - 1])
 
     if ((dataIndex == 0 || dataIndex == data.length - 1) && _isPointEqual) {
