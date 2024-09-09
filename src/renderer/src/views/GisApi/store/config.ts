@@ -4,7 +4,7 @@
  * @LastEditors: cpasion-office-win10 373704015@qq.com
  * @LastEditTime: 2024-08-01 17:20:36
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 这里存放页面所有静态配置
  */
 import { ref } from "vue"
 
@@ -20,6 +20,13 @@ export const DEFAULT_SERVER_IP_LIST = [
   "127.0.0.1",
   "192.168.100.37",
   "DESKTOP-0ROH1ER",
+]
+
+export const SETP_OPTIONS_LIST = [
+  { title: "选择模板", value: 1 },
+  { title: "工程配置", value: 2 },
+  { title: "视图配置", value: 3 },
+  { title: "图片生成", value: 4 },
 ]
 
 export const API = {

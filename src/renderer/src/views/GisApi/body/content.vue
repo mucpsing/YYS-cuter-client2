@@ -95,20 +95,6 @@
     </footer>
   </div>
 </template>
-<script lang="ts">
-import SwiperSetp1 from "./setp1/setp1.vue"
-import SwiperSetp2 from "./setp2/setp2.vue"
-import SwiperSetp3 from "./setp3/setp3.vue"
-import SwiperSetp4 from "./setp4/setp4.vue"
-
-const SwiperComponentList = {
-  "1": "SwiperSetp1",
-  "2": "SwiperSetp2",
-  "3": "SwiperSetp3",
-  "4": "SwiperSetp4",
-}
-export default { components: { SwiperSetp1, SwiperSetp2, SwiperSetp4, SwiperSetp3 } }
-</script>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia"
@@ -116,28 +102,30 @@ import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
 
 import { eventBus } from "@renderer/libs"
 import { uploadFileApi, mxdToImgApi } from "@gisapi/api"
+
+import { SETP_OPTIONS_LIST } from "@gisapi/store/config"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
 import type { MxdToImgFormT } from "@gisapi/api"
-import type { FormDataItemT } from "@gisapi/store/state"
+import type { FormDataItemT } from "@gisapi/store/formDataState"
+
+const SwiperComponentList = {
+  "1": defineAsyncComponent(() => import("./setp1/setp1.vue")),
+  "2": defineAsyncComponent(() => import("./setp2/setp2.vue")),
+  "3": defineAsyncComponent(() => import("./setp3/setp3.vue")),
+  "4": defineAsyncComponent(() => import("./setp4/setp4.vue")),
+}
 
 const globalStore = useGisApiStateStore()
 const tabStore = useGisApiTabStore()
 const { formDataList, currtTabId, currtExtendId } = storeToRefs(tabStore)
-
-const templateSetpOptions = [
-  { title: "选择模板", value: 1 },
-  { title: "工程配置", value: 2 },
-  { title: "视图配置", value: 3 },
-  { title: "图片生成", value: 4 },
-]
 
 const localStore = reactive({
   loading: false,
   showAddTapDialog: false,
 })
 
-const Sopts = computed(() => templateSetpOptions)
+const Sopts = computed(() => SETP_OPTIONS_LIST)
 
 const currtExtendValue = ref("不继承")
 const selectTemplateExtendIdOptions = computed(() => {

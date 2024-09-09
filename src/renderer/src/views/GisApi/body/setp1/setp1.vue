@@ -114,7 +114,7 @@ import { debounce } from "lodash"
 import { SearchIcon, PrintIcon } from "tdesign-icons-vue-next"
 
 import { currtPreviewUrl } from "@gisapi/store/config"
-import { DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/state"
+import { DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/formDataState"
 
 import { crossCombineThemesAndVariants } from "@gisapi/utils/index"
 
