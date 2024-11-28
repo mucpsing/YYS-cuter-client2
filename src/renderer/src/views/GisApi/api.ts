@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-05 10:00:44
+ * @LastEditTime: 2024-11-19 09:05:18
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -136,6 +136,8 @@ export async function uploadFileApi(
   const formData = new FormData()
   formData.append("filen_name_md5", filen_name_md5)
   formData.append("file", file)
+
+  console.log({ formData })
 
   try {
     const res = await server().post(API.upload, formData, {

@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-01 17:20:36
+ * @LastEditTime: 2024-11-27 09:30:04
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
  * @Description: 这里存放页面所有静态配置
  */
@@ -60,7 +60,7 @@ export const config = reactive({
   DEFAULT_TEST_API: API.test,
 })
 
-export const currtPreviewUrl = computed(
+export const currtPreviewUrlHost = computed(
   () => `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}`,
 )
 export default config

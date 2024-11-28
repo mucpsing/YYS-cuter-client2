@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-05 17:03:29
+ * @LastEditTime: 2024-11-19 09:50:08
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\state.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @Description: 建议所有state变量使用currtXxxxXxxx来命名
@@ -17,8 +17,8 @@ export function createFormData(newTabId: number) {
     id: newTabId,
     setp: 1,
     title: DEFAULT_TEMPLATE_OUTNAME,
-    beDfsuMd5: [] as string[],
-    afDfsuMd5: [] as string[],
+    beDfsuMd5List: [] as string[], // 使用列表形式存储md5，后续添加批量导出功能
+    afDfsuMd5List: [] as string[], // 使用列表形式存储md5，后续添加批量导出功能
     beDfsuInfo: {
       // dfsu 工程前文件信息
       md5: "",

@@ -15,11 +15,11 @@
                 <t-image
                   :class="['min-w-[160px] min-h-[160px]', 'max-w-[300px]']"
                   :error="'未选择任何模板'"
-                  :src="`${currtPreviewUrl}${tabStore.currtFormData.templateInfo.preview}`"
+                  :src="`${currtPreviewUrlHost}${tabStore.currtFormData.templateInfo.preview}`"
                   class="cursor-pointer hover:opacity-75"
                   @click="
                     glboalStore.showPreview(
-                      `${currtPreviewUrl}${tabStore.currtFormData.templateInfo.preview}`,
+                      `${currtPreviewUrlHost}${tabStore.currtFormData.templateInfo.preview}`,
                     )
                   "
                 >
@@ -113,7 +113,7 @@ import { storeToRefs } from "pinia"
 import { debounce } from "lodash"
 import { SearchIcon, PrintIcon } from "tdesign-icons-vue-next"
 
-import { currtPreviewUrl } from "@gisapi/store/config"
+import { currtPreviewUrlHost } from "@gisapi/store/config"
 import { DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/formDataState"
 
 import { crossCombineThemesAndVariants } from "@gisapi/utils/index"

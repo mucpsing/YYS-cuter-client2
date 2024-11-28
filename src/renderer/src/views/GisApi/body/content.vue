@@ -63,10 +63,11 @@
             :class="['text-white mr-2']"
           ></c-icon-font> </template
       ></t-button>
+
+      <!-- :disabled="formDataList[currtTabId].setp != 3" -->
       <t-button
         :on-click="() => mxdToImg(formDataList[currtTabId])"
         class="flex-[1]"
-        :disabled="formDataList[currtTabId].setp != 3"
         theme="success"
         size="medium"
         :loading="localStore.loading"
@@ -99,6 +100,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia"
 import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
+import { GUIDE_EVENTS } from "@gisapi/_components/guideEvents"
 
 import { eventBus } from "@renderer/libs"
 import { uploadFileApi, mxdToImgApi } from "@gisapi/api"
@@ -152,10 +154,10 @@ async function onAddTap() {
 function nextSetpCheck(currtSetp: number): boolean {
   // const data = formDataList.value[currtTabId.value]
   const data = tabStore.currtFormData
-  // console.log("nextSetpCheck...", { currtSetp, data })
+  console.log("nextSetpCheck...", { currtSetp, data })
 
   if (!globalStore.isGisServerConnected) {
-    eventBus.emit("show-guide", ["header", 0])
+    eventBus.emit(GUIDE_EVENTS.SHOW, ["header", 0])
 
     return false
   }
@@ -164,7 +166,7 @@ function nextSetpCheck(currtSetp: number): boolean {
     case 1:
       // 【1】检查是否已设置输入名称
       if (data.title.length == 0 || data.title == "未命名工况") {
-        eventBus.emit("show-guide", ["setp1", 0, data.id])
+        eventBus.emit(GUIDE_EVENTS.SHOW, ["setp1", 0, data.id])
 
         return false
       }
@@ -172,19 +174,19 @@ function nextSetpCheck(currtSetp: number): boolean {
       // 【2】检查是否已选择mxd模板
       if (data.mxdId < 0) {
         console.log({ data })
-        eventBus.emit("show-guide", ["setp1", 1, data.id])
+        eventBus.emit(GUIDE_EVENTS.SHOW, ["setp1", 1, data.id])
 
         return false
       }
 
       break
     case 2:
-      const hasBeDfsu = Boolean(data.beDfsuMd5.length > 0)
-      const hasAfDfsu = Boolean(data.afDfsuMd5.length > 0)
-      console.log([data.beDfsuMd5, data.afDfsuMd5])
-      if (!hasBeDfsu || !hasAfDfsu) {
-        // console.log("未指定dfsu")
-        eventBus.emit("show-guide", ["setp2", 0, data.id])
+      const hasBeDfsu = Boolean(data.beDfsuMd5List.length == 0)
+      const hasAfDfsu = Boolean(data.afDfsuMd5List.length == 0)
+      console.log({ hasBeDfsu, hasAfDfsu, data })
+      if (hasBeDfsu || hasAfDfsu) {
+        console.warn("多个dfsu文件的情况下需要指定")
+        eventBus.emit(GUIDE_EVENTS.SHOW, ["setp2", 0, data.id])
 
         return false
       }
@@ -224,33 +226,33 @@ function swtichSetp(setp: "next" | "back") {
  * @return {*}
  */
 async function mxdToImg(data: FormDataItemT) {
-  localStore.loading = true
+  // localStore.loading = true
   console.log({ data })
+  console.log(tabStore.currtFormData)
+  return
 
   // 创建上传列表
-  const upload_list = [
-    uploadFileApi(`${data.beDfsuInfo.md5}.dfsu`, data.beDfsuInfo.file), // 上传工程前 dfsu
-    uploadFileApi(`${data.afDfsuInfo.md5}.dfsu`, data.afDfsuInfo.file), // 上传工程后 dfsu
-  ]
-
-  // 如果存在
-  if (data.projectRange.fileList.length > 0) {
-    data.projectRange.fileList.map((eachFile) => {
-      upload_list.push(uploadFileApi(`${data.projectRange.md5}${eachFile.ext}`, eachFile.file))
-    })
-  }
-
-  console.log("开始上传文件，数量: ", upload_list.length)
-  console.log({ upload_list })
-  const file_upload_res_list = await Promise.all(upload_list)
+  // const upload_list = [
+  //   uploadFileApi(`${data.beDfsuInfo.md5}.dfsu`, data.beDfsuInfo.file), // 上传工程前 dfsu
+  //   uploadFileApi(`${data.afDfsuInfo.md5}.dfsu`, data.afDfsuInfo.file), // 上传工程后 dfsu
+  // ]
+  // // 如果存在
+  // if (data.projectRange.fileList.length > 0) {
+  //   data.projectRange.fileList.map((eachFile) => {
+  //     upload_list.push(uploadFileApi(`${data.projectRange.md5}${eachFile.ext}`, eachFile.file))
+  //   })
+  // }
+  // console.log("开始上传文件，数量: ", upload_list.length)
+  // console.log({ upload_list })
+  // const file_upload_res_list = await Promise.all(upload_list)
 
   // 检查是否上传成功
-  if (!file_upload_res_list.every((res) => res)) {
-    console.log("有文件上传失败")
-    console.log(file_upload_res_list)
-  } else {
-    console.log("所有文件上传成功")
-  }
+  // if (!file_upload_res_list.every((res) => res)) {
+  //   console.log("有文件上传失败")
+  //   console.log(file_upload_res_list)
+  // } else {
+  //   console.log("所有文件上传成功")
+  // }
 
   // 拼接api所需要的参数格式body
   const body: MxdToImgFormT = {
@@ -263,11 +265,11 @@ async function mxdToImg(data: FormDataItemT) {
   }
 
   // 项目范围或者点
-  if (data.projectRangeType == "point") {
-    body["project_point"] = `${data.projectPoints.x},${data.projectPoints.y}`
-  } else {
-    body["project_md5"] = data.projectRange.md5
-  }
+  // if (data.projectRangeType == "point") {
+  //   body["project_point"] = `${data.projectPoints.x},${data.projectPoints.y}`
+  // } else {
+  //   body["project_md5"] = data.projectRange.md5
+  // }
 
   console.log("## 开始调用合成接口")
 
