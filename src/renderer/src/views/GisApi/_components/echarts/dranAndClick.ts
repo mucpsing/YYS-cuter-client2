@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-08-13 21:13:19
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-19 11:18:21
+ * @LastEditors: CPS holy.dandelion@139.com
+ * @LastEditTime: 2024-08-19 21:25:10
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\echartsComponemt\dragRect.ts
  * @Description: 对已存在的echarts实例添加点击绘制的功能
  */
@@ -16,8 +16,8 @@ export default class ChartDragLine {
 
   private _dataId: string
   private _dataObj: { [dataId: string]: number[][] }
-  private config: { symbolSize: number; rectFillColor: string }
 
+  private config: { symbolSize: number; rectFillColor: string }
   private dragging: boolean
 
   constructor(inputTar: echarts.ECharts) {
@@ -44,9 +44,6 @@ export default class ChartDragLine {
     const that = this
     return new Proxy(data, {
       set(target, key, value) {
-        // 判断当前是否正在拖拽
-        if (that.dragging) return true
-
         const oldValue = target[key]
         if (oldValue !== value) {
           target[key] = value
@@ -65,7 +62,6 @@ export default class ChartDragLine {
     const newData = this._createData([])
 
     this._dataObj[newKey] = newData
-    // this._dataId = newKey
 
     return [newKey, newData]
   }
@@ -104,7 +100,9 @@ export default class ChartDragLine {
         // 阻止默认行为（可选，取决于你的需求）
         // event.preventDefault();
 
-        this._dataObj[this._dataId].splice(this._dataObj[this._dataId].length - 1, 1)
+        // this._dataObj[this._dataId].splice(this._dataObj[this._dataId].length - 1, 1)
+
+        this._dataObj[this._dataId].pop()
       }
     })
   }
@@ -192,10 +190,6 @@ export default class ChartDragLine {
     const that = this
 
     setTimeout(() => {
-      // 判断当前是否正在拖拽
-      if (that.dragging) return
-      that.dragging = true
-
       // Add shadow circles (which is not visible) to enable drag.
       // 视图绘制完成后再绘制拖拽点
       if (that._dataObj[that._dataId].length === 0) return
@@ -222,15 +216,17 @@ export default class ChartDragLine {
       }))
 
       this.chart.setOption({ graphic })
-      that.dragging = false
     }, 50)
   }
 
   private onPointDragging(dataId, dataIndex: number, pos: [number, number]) {
-    if (this.dragging) return
-
     const newPos = this.chart.convertFromPixel("grid", pos)
     const data = this._dataObj[dataId]
+
+    if (data.length === 0) this.dragging = false
+
+    if (this.dragging) return console.log("dragging")
+
     const _isPointEqual = isPointEqual(data[0], data[data.length - 1])
 
     if ((dataIndex == 0 || dataIndex == data.length - 1) && _isPointEqual) {
@@ -243,7 +239,11 @@ export default class ChartDragLine {
 
   private onPointClick(params: { offsetX: number; offsetY: number }) {
     const { offsetX, offsetY } = params
+    console.log(this._dataObj)
     const data = this._dataObj[this._dataId]
+
+    if (!data) return console.log("!!! data")
+
     const pointInPixel = [offsetX, offsetY]
     const pointInGrid = this.chart.convertFromPixel("grid", pointInPixel)
 
@@ -260,28 +260,42 @@ export default class ChartDragLine {
 
     const isClosed = isClosedPath(data)
     const isLastPoint = dataNearIndex === data.length - 1 && data.length > 0
+    const isEmpty = data.length === 0
 
+    console.log("当前位置", { dataNearIndex, isClosed, isLastPoint, isEmpty, pointInGrid })
     // 路径未闭合，没有临近点：新增
     if (dataNearIndex === -1 && !isClosed) {
       data.push(pointInGrid)
     }
 
-    // 闭合路径，点击最后一个点：删除
-    if (isLastPoint && isClosed) {
+    // 空路径：新增起点
+    else if (isEmpty) {
+      data.push(pointInGrid)
+    }
+
+    // 路径闭合，没有临近点：删除
+    else if (isLastPoint && isClosed) {
+      console.log(2)
+
       data.pop()
     }
 
     // 路径闭合，点击起点：删除
-    if (dataNearIndex === 0 && isClosed) {
+    else if (dataNearIndex === 0 && isClosed) {
+      console.log(3)
+
       data.pop()
     }
 
     // 路径未闭合，点击起点：闭合
-    if (dataNearIndex === 0 && !isClosed) {
+    else if (dataNearIndex === 0 && !isClosed) {
+      console.log(4)
       data.push(data[0])
     }
 
-    if (isLastPoint && !isClosed) {
+    // 路径未闭合，点击终点：删除
+    else if (isLastPoint && !isClosed) {
+      console.log(5)
       data.pop()
     }
   }
