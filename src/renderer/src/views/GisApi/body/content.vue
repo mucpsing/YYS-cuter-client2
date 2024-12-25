@@ -181,9 +181,13 @@ function nextSetpCheck(currtSetp: number): boolean {
 
       break
     case 2:
+      eventBus.emit("gis-api:fileTransfer-default-checked")
+
       const hasBeDfsu = Boolean(data.beDfsuMd5List.length == 0)
       const hasAfDfsu = Boolean(data.afDfsuMd5List.length == 0)
+      
       console.log({ hasBeDfsu, hasAfDfsu, data })
+
       if (hasBeDfsu || hasAfDfsu) {
         console.warn("多个dfsu文件的情况下需要指定")
         eventBus.emit(GUIDE_EVENTS.SHOW, ["setp2", 0, data.id])

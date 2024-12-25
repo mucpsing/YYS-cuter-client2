@@ -1,11 +1,12 @@
 <!--
- * @Author: CPS holy.dandelion@139.com
- * @Date: 2024-07-25 12:44:26
+ * @Author: cpasion-office-win10 373704015@qq.com
+ * @Date: 2024-07-26 10:28:28
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-26 14:36:45
- * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\index.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @LastEditTime: 2024-12-24 17:14:44
+ * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\index.vue
+ * @Description: 这是gis-api主页面功能展示区域入口文件，可以理解为页面的body
 -->
+
 <template>
   <section
     :class="['__gis-api__tabs', 'mb-2 p-2', 'rounded-xl', 'w-full h-full']"

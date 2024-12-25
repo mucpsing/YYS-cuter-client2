@@ -8,6 +8,7 @@
     <t-button @click="removePoints">removePoints</t-button>
 
     <t-select :options="options" :onChange="onChange"></t-select>
+    
   </div>
 </template>
 

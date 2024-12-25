@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-11-27 16:06:35
+ * @LastEditTime: 2024-12-24 16:07:47
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
@@ -123,6 +123,7 @@ import { getMd5 } from "@renderer/utils/calculateMd5"
 import * as API from "@gisapi/api"
 import { Delete1Icon } from "tdesign-icons-vue-next"
 import { truncateText } from "@gisapi/utils/index"
+import eventBus from "@renderer/libs/eventBus"
 
 import type { FileInfoItemT } from "@gisapi/Types"
 
@@ -131,24 +132,13 @@ const tabStore = useGisApiTabStore()
 const dropElementRef = ref<HTMLElement>()
 const DEFAULT_INPUT_ELEMENT_REF = document.createElement("input")
 
-// const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
-// const showDropMask = computed(() => Boolean(isOverDropZone.value && !localStore.dragging))
-// async function onDrop(files: File[] | null) {
-//   if (files && files.length >= 1) {
-//     // 文件读取
-//     console.log(files[0])
-//   }
-// }
-
 // 初始化Sortable
 onMounted(() => {
   nextTick(() => {
     initSortable()
-
-    // initData().then(() => {
-    //   initSortable()
-    // })
   })
+
+  eventBus.on("gis-api:fileTransfer-default-checked", onlyOneChecked)
 })
 
 const localStore = reactive({
@@ -172,36 +162,16 @@ const dataList = reactive({
   af: [] as FileInfoItemT[],
 })
 
-// const dataList = computed(() => {
-//   const fileList = {
-//     be: [] as FileInfoItemT[],
-//     af: [] as FileInfoItemT[],
-//   }
+/**
+ * @description: 当前如果只有一个文件，那么自动选中，给予下一步时快捷调用
+ */
+function onlyOneChecked() {
+  console.log("onlyOneChecked: ", { be: dataList.be, af: dataList.af })
 
-//   tabStore.currtFormData.beDfsuMd5List.forEach((md5) => {
-//     const fileInfo = fileStore.getFile(md5)
-//     if (fileInfo) fileList.be.push(fileInfo)
-//   })
+  if (dataList.be.length == 1 && !dataList.be[0].checked) onItemChecked("be", dataList.be[0])
 
-//   tabStore.currtFormData.afDfsuMd5List.forEach((md5) => {
-//     const fileInfo = fileStore.getFile(md5)
-//     if (fileInfo) fileList.af.push(fileInfo)
-//   })
-
-//   return fileList
-// })
-
-// async function initData() {
-//   tabStore.currtFormData.beDfsuMd5List.forEach((md5) => {
-//     const fileInfo = fileStore.getFile(md5)
-//     if (fileInfo) dataList.be.push(fileInfo)
-//   })
-
-//   tabStore.currtFormData.afDfsuMd5List.forEach((md5) => {
-//     const fileInfo = fileStore.getFile(md5)
-//     if (fileInfo) dataList.af.push(fileInfo)
-//   })
-// }
+  if (dataList.af.length == 1 && !dataList.af[0].checked) onItemChecked("af", dataList.af[0])
+}
 
 // 初始化Sortable的逻辑
 async function initSortable() {
@@ -232,19 +202,11 @@ async function initSortable() {
 
           // 修复
           const fromList = dataList[e.from.id]
-          // const toList = dataList[e.to.id]
+
           if (fromList.length == 1) {
-            // fromList[0].checked = true
             fromList[0].checked = false
             fromList[0].disabled = false
-            // tabStore.selectDfsu(e.from.id, target.md5)
           }
-
-          // if (toList.length == 1) {
-          //   toList[0].checked = true
-          //   tabStore.selectDfsu(e.to.id, target.md5)
-
-          // }
         }
 
         localStore.dragging = false
@@ -304,6 +266,7 @@ async function removeItemByChecked(dataKey: string) {
   target.forEach((eachData, idx) => {
     if (eachData.checked) {
       fileStore.removeDataByMd5(eachData.md5)
+      tabStore.removeDfsu(dataKey, eachData.md5)
       target.splice(idx, 1)
     }
   })
@@ -338,7 +301,7 @@ async function addItem(e, item: BaseItemT) {
   item.loading = true
 
   const data = dataList[item.id]
-  const target = item.id
+  // const target = item.id
 
   // 添加一个空item进行展示
   // 为了支持多个文件上传，这里使用了遍历

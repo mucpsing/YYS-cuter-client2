@@ -74,6 +74,7 @@ declare module 'vue' {
     Setp2_old_with_dfsuInfo: typeof import('./../renderer/src/views/GisApi/body/setp2/setp2_old_with_dfsuInfo.vue')['default']
     Setp3: typeof import('./../renderer/src/views/GisApi/body/setp3/setp3.vue')['default']
     Setp4: typeof import('./../renderer/src/views/GisApi/body/setp4/setp4.vue')['default']
+    'Setp4旧版显示图片使用': typeof import('./../renderer/src/views/GisApi/body/setp4/setp4旧版显示图片使用.vue')['default']
     Settings: typeof import('./../renderer/src/views/NsNpcManager/settings.vue')['default']
     SwiperSetp1: typeof import('./../renderer/src/views/GisApi/body/SwiperSetp1/index.vue')['default']
     SwiperSetp2: typeof import('./../renderer/src/views/GisApi/body/setp2/SwiperSetp2.vue')['default']
@@ -137,6 +138,7 @@ declare module 'vue' {
     TTextarea: typeof import('tdesign-vue-next')['Textarea']
     TTooltip: typeof import('tdesign-vue-next')['Tooltip']
     TTransfer: typeof import('tdesign-vue-next')['Transfer']
+    TyphoonUI: typeof import('./../renderer/src/views/TyphoonUI/index.vue')['default']
     WarterLevelAndSiltDischarge: typeof import('./../renderer/src/views/DataCharts/_components/WarterLevelAndSiltDischarge.vue')['default']
     Wellcome: typeof import('./../renderer/src/views/DataCharts/wellcome.vue')['default']
   }

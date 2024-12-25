@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-09-10 21:57:59
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-04-24 15:05:28
+ * @LastEditTime: 2024-12-25 09:34:26
  * @FilePath: \YYS-cuter-client2\src\renderer\src\router\routerList.ts
  * @Description: 路由元数据，用于生成路由和侧边栏的主菜单列
  */
@@ -34,6 +34,13 @@ export const routerList = [
     iconSub: "icon-yys-logistic",
     routerPath: "/GisApi",
     comment: () => import("@renderer/views/GisApi/index.vue"),
+  },
+  {
+    name: "Typhoon",
+    icon: "icon-yys-taifeng",
+    iconSub: "icon-yys-logistic",
+    routerPath: "/TyphoonUI",
+    comment: () => import("@renderer/views/TyphoonUI/index.vue"),
   },
   // {
   //   name: "NS-NPC管理",
