@@ -133,3 +133,17 @@ export function retainFirstLastAndOddIndexed<T>(arr: T[]): T[] {
 
   return result
 }
+
+/**
+ * 通过当前时间生成唯一id，然后截取前8位进行返回
+ */
+
+export function generateUniqueIdWithTimestamp(len: number = 20): string {
+  // 获取当前时间戳（毫秒）
+  const timestamp = Date.now().toString() // 将时间戳转换为字符串
+
+  // 截取前8位（注意：这样做会极大地增加ID冲突的风险）
+  if (len > timestamp.length) return timestamp
+
+  return timestamp.substring(0, len)
+}

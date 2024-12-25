@@ -1,35 +1,54 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-08-13 21:13:19
+<<<<<<< HEAD
  * @LastEditors: CPS holy.dandelion@139.com
  * @LastEditTime: 2024-08-19 21:25:10
+=======
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-09-06 17:04:15
+>>>>>>> ad0f950d33020952d584fa149b6979da883d7fe1
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\echartsComponemt\dragRect.ts
  * @Description: 对已存在的echarts实例添加点击绘制的功能
  */
 
 import type * as echarts from "echarts"
-import { isPointEqual, isClosedPath } from "./utils"
-import { isNearExistingPoint, isEchartsInstance } from "./utils"
+import * as utils from "./utils"
 
 export default class ChartDragLine {
   public chart: echarts.ECharts
 
   private _dataId: string
   private _dataObj: { [dataId: string]: number[][] }
+<<<<<<< HEAD
+=======
+  private config: {
+    symbolSize: number
+    rectFillColor: string
+    autoSwitchOnMove: boolean
+    autoSwitchOnHover: boolean
+  }
+>>>>>>> ad0f950d33020952d584fa149b6979da883d7fe1
 
   private config: { symbolSize: number; rectFillColor: string }
   private dragging: boolean
 
   constructor(inputTar: echarts.ECharts) {
-    if (isEchartsInstance(inputTar)) {
+    if (utils.isEchartsInstance(inputTar)) {
       this.chart = inputTar as echarts.ECharts
     } else {
       throw new Error("inputTar is not a valid echarts instance")
     }
 
-    this._dataObj = { "0": this._createData([]) }
-    this._dataId = "0"
-    this.config = { symbolSize: 20, rectFillColor: "rgba(255, 205, 205, .5 )" }
+    this._dataId = utils.generateUniqueIdWithTimestamp()
+    this._dataObj = { [this._dataId]: this._createData([]) }
+
+    this.config = {
+      symbolSize: 20,
+      rectFillColor: "rgba(255, 205, 205, .5 )",
+      autoSwitchOnMove: true,
+      autoSwitchOnHover: true,
+    }
     this.dragging = false
 
     this.initTooltip()
@@ -54,10 +73,24 @@ export default class ChartDragLine {
     })
   }
 
-  public addPolygon(): [string, number[][]] {
-    const allKeys = Object.keys(this._dataObj).map((strKey) => parseInt(strKey))
+  public getBindData() {
+    return this._dataObj
+  }
 
-    const newKey = (Math.max(...allKeys) + 1).toString() // 生成一个最大的key
+  public bindData(data: { [key: string]: number[][] }) {
+    this._dataObj = {}
+
+    Object.keys(data).forEach((key) => {
+      this._dataObj[key] = this._createData(data[key])
+    })
+  }
+
+  public addPolygon(newKey?: string): [string, number[][]] {
+    while (!newKey || Object.keys(this._dataObj).includes(newKey)) {
+      newKey = utils.generateUniqueIdWithTimestamp()
+    }
+
+    // const newKey = (Math.max(...allKeys) + 1).toString() // 生成一个最大的key
 
     const newData = this._createData([])
 
@@ -112,7 +145,11 @@ export default class ChartDragLine {
       tooltip: {
         triggerOn: "none",
         formatter: (params) =>
-          "X: " + params.data[0].toFixed(2) + "<br>Y: " + params.data[1].toFixed(2),
+          `ID: ${this._dataId}` +
+          "<br>X: " +
+          params.data[0].toFixed(2) +
+          "<br>Y: " +
+          params.data[1].toFixed(2),
       },
     })
   }
@@ -120,10 +157,8 @@ export default class ChartDragLine {
   private showTooltip = (dataId: string, dataIndex: number) => {
     const seriesId = `line_${dataId}`
 
-    if (this._dataId !== dataId) {
-      console.log("切换id")
-      this.switchPoly(dataId)
-    }
+    // 移动到矩形触发切换
+    if (this._dataId !== dataId) this.switchPoly(dataId)
 
     const series = this.chart.getOption().series as any[]
     const seriesIndex = series.findIndex((it) => it.id === seriesId)
@@ -144,8 +179,6 @@ export default class ChartDragLine {
   }
 
   private updateSeries() {
-    if (this.dragging) return
-
     const series: echarts.SeriesOption[] = []
     const key = this._dataId
 
@@ -219,6 +252,7 @@ export default class ChartDragLine {
     }, 50)
   }
 
+<<<<<<< HEAD
   private onPointDragging(dataId, dataIndex: number, pos: [number, number]) {
     const newPos = this.chart.convertFromPixel("grid", pos)
     const data = this._dataObj[dataId]
@@ -228,10 +262,27 @@ export default class ChartDragLine {
     if (this.dragging) return console.log("dragging")
 
     const _isPointEqual = isPointEqual(data[0], data[data.length - 1])
+=======
+  /**
+   * @description:
+   * @param {string} dataId
+   * @param {number} dataIndex
+   * @param {array} pos
+   * @return {*}
+   */
+  private onPointDragging(dataId: string, dataIndex: number, pos: [number, number]) {
+    if (this.dragging) return
 
-    if ((dataIndex == 0 || dataIndex == data.length - 1) && _isPointEqual) {
+    const newPos = this.chart.convertFromPixel("grid", pos)
+    const data = this._dataObj[dataId]
+    const lastIndex = data.length - 1
+    const _isPointEqual = utils.isPointEqual(data[0], data[lastIndex])
+    // const isClosedPath = isClosedPath(data)
+>>>>>>> ad0f950d33020952d584fa149b6979da883d7fe1
+
+    if ((dataIndex === 0 || dataIndex === lastIndex) && _isPointEqual) {
       data[0] = newPos
-      data[data.length - 1] = newPos
+      data[lastIndex] = newPos
     } else {
       data[dataIndex] = newPos
     }
@@ -255,10 +306,10 @@ export default class ChartDragLine {
 
     // 判断是否在现有点附近，如果是则获取该下标
     const dataNearIndex = existingPoints.findIndex((points) =>
-      isNearExistingPoint(pointInPixel, points, this.config.symbolSize),
+      utils.isNearExistingPoint(pointInPixel, points, this.config.symbolSize),
     )
 
-    const isClosed = isClosedPath(data)
+    const isClosed = utils.isClosedPath(data)
     const isLastPoint = dataNearIndex === data.length - 1 && data.length > 0
     const isEmpty = data.length === 0
 

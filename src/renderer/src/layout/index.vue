@@ -32,8 +32,9 @@ const router = useRouter()
 
 onMounted(() => {
   console.log("布局加载完成，加载路由")
-  router.push("/home")
-  // router.push(lastRouterPath)
+  // router.push("/home")
+  // router.push("/TyphoonUI")
+  router.push(lastRouterPath)
 })
 </script>
 

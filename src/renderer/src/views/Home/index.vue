@@ -2,14 +2,14 @@
  * @Author: Capsion 373704015@qq.com
  * @Date: 2024-08-01 20:05:49
  * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2024-12-24 22:31:18
+ * @LastEditTime: 2024-12-25 21:54:08
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup lang="ts">
 import * as echarts from "echarts"
-import "echarts/extension-src/bmap/bmap"
-type EChartsOption = echarts.EChartsOption
+// import "echarts/extension-src/bmap/bmap"
+// type EChartsOption = echarts.EChartsOption
 
 import { baseBmap, baseGeoCoordMap as geoCoordMap, data } from "./data"
 import { type DataItem } from "./data"

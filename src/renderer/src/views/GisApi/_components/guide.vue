@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 00:31:18
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-25 09:29:01
+ * @LastEditTime: 2024-11-27 16:03:39
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\guideSetp1.vue
  * @Description: 动态的引导组件
  * @BUG: 使用t-tab组件后，仅有第一页能正确生成引导，其他页面无法正常生成
@@ -21,6 +21,7 @@
 <script setup lang="ts">
 import { GuideProps, GuideStep } from "tdesign-vue-next"
 import eventBus from "@renderer/libs/eventBus"
+import { GUIDE_EVENTS } from "./guideEvents"
 
 const guideCurrentId = ref(-1)
 const mode = ref<"popup" | "dialog">("popup")
@@ -57,7 +58,7 @@ const setpObject = {
     [
       {
         element: "#Gis-Api__dfsu_input",
-        title: "【1】未指定.dfsu数据文件（必要）",
+        title: "【3】至少指定1个工程前和1个工程后文件",
         body: "请上传合法的dfsu工程文件（mikeFM的模型结果文件）",
         placement: "bottom-right",
         highlightPadding: 5,
@@ -158,15 +159,14 @@ function test(setpOption: GuideStep[]) {
 const showOnce = (args: any[]) => {
   show(...args)
 }
-
 onMounted(() => {
-  eventBus.on("show-guide", showOnce)
-  eventBus.on("test-guide", test)
+  eventBus.on(GUIDE_EVENTS.SHOW, showOnce)
+  eventBus.on(GUIDE_EVENTS.TEST, test)
 })
 
 onUnmounted(() => {
-  eventBus.off("show-guide", showOnce)
-  eventBus.off("test-guide", test)
+  eventBus.off(GUIDE_EVENTS.SHOW, showOnce)
+  eventBus.off(GUIDE_EVENTS.TEST, test)
 })
 </script>
 

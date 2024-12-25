@@ -1,10 +1,10 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-08 21:09:14
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-12-24 16:10:52
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
 <template>
   <section

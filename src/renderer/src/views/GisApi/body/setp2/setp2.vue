@@ -140,10 +140,10 @@ import { getMd5 } from "@renderer/utils/calculateMd5"
 // import DfsuInfo from "./dfsuInfo.vue"
 // import FileTransfer from "./fileTransfer/index.vue"
 import FileTransfer from "./fileTransfer.vue"
-import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
+// import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
 import { uploadFileApi } from "@gisapi/api"
-import type { FileInfoBase } from "@gisapi/Types"
+// import type { FileInfoBase } from "@gisapi/Types"
 import { useGisApiTabStore } from "@gisapi/store/index"
 
 const tabStore = useGisApiTabStore()
