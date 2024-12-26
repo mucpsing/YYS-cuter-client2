@@ -15,6 +15,7 @@
       "@components/*":["src/renderer/src/components/*"],
       "@views/*":["./src/renderer/src/views/*"],
       "@gisapi/*":["./src/renderer/src/views/GisApi/*"],
+      "@Typhoon/*":["./src/renderer/src/views/TyphoonUI/*"],
       "@data/*":["./src/renderer/src/data/*"],
       "@nsData/*":["./src/renderer/src/data/ns/*"],
       "@nsStore/*":["./src/renderer/src/stores/ns/*"],

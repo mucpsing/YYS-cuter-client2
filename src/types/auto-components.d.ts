@@ -68,6 +68,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchInput: typeof import('./../renderer/src/views/TyphoonUI/_components/SearchInput.vue')['default']
+    SearchInputBar: typeof import('./../renderer/src/views/TyphoonUI/_components/SearchInputBar.vue')['default']
     Section: typeof import("tdesign-vue-next")["Loading"]
     Set1: typeof import('./../renderer/src/views/GisApi/body/set1/index.vue')['default']
     Setp1: typeof import('./../renderer/src/views/GisApi/body/setp1/setp1.vue')['default']

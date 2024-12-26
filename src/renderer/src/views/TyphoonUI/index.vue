@@ -1,15 +1,15 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-12-24 17:03:36
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-26 17:02:56
+ * @LastEditors: Capsion 373704015@qq.com
+ * @LastEditTime: 2024-12-26 20:57:27
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\TyphoonUI\index.vue
  * @Description: 这是一个台风动态展示组件
 -->
 <template>
   <div :class="['w-full h-full', 'bg-gray-300 p-3 rounded-md relative']">
     <div id="echartsMapRef" ref="echartsMapRef" class="relative w-full h-full"></div>
-    <SearchInput></SearchInput>
+    <SearchInputBar></SearchInputBar>
 
     <div
       :class="[
@@ -25,11 +25,13 @@
 </template>
 
 <script setup lang="ts">
+import { eventBus } from "@renderer/libs"
+
 import * as echarts from "echarts"
 import "echarts-extension-amap"
 import { initJSAmap } from "./_components/amap"
 
-import SearchInput from "./_components/SearchInput.vue"
+import SearchInputBar from "./_components/SearchInputBar.vue"
 import ToolBar from "./_components/ToolBar.vue"
 import { testData } from "./data/testData"
 

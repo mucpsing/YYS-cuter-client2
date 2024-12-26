@@ -1,3 +1,11 @@
+<!--
+ * @Author: Capsion 373704015@qq.com
+ * @Date: 2024-12-26 20:46:37
+ * @LastEditors: Capsion 373704015@qq.com
+ * @LastEditTime: 2024-12-26 22:48:36
+ * @FilePath: \YYS-cuter-client2\src\renderer\src\views\TyphoonUI\_components\SearchInputBar.vue
+ * @Description: 搜索栏组件
+-->
 <template>
   <div
     :class="[
@@ -60,21 +68,22 @@ import { SelectInputProps, CheckboxGroupProps } from "tdesign-vue-next"
 import { ChevronDownIcon } from "tdesign-icons-vue-next"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
-interface BaseItemT {
-  title: string
-  id: string
-  loading: boolean
-}
+import { useTyphoonFileStore } from "@Typhoon/store/index"
+
+const fileStore = useTyphoonFileStore()
+
+console.log({ fileStore })
 
 const SEARCH_BAR_INPUT_REF = document.createElement("input")
-async function uploadFileDialog(item?: BaseItemT) {
-  console.log({ item })
+async function uploadFileDialog() {
   const target = "txt"
   // 调用点击事件
   SEARCH_BAR_INPUT_REF.accept = UP_FILE_ACCEPT_TYPE[target]
 
-  SEARCH_BAR_INPUT_REF.onchange = (e) => {
-    console.log({ e })
+  SEARCH_BAR_INPUT_REF.onchange = async (e: any) => {
+    if (!e || !e.target || !e.target.files) return
+
+    for (let file of e.target.files) await fileStore.addFile(file)
   }
 
   SEARCH_BAR_INPUT_REF.type = "file"
@@ -82,6 +91,7 @@ async function uploadFileDialog(item?: BaseItemT) {
   if (SEARCH_BAR_INPUT_REF.value) SEARCH_BAR_INPUT_REF.value = ""
   SEARCH_BAR_INPUT_REF.click()
 }
+
 interface CustomOptionInfo {
   label: string
   value?: number
