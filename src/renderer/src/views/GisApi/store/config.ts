@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-11-27 09:30:04
+ * @LastEditTime: 2024-12-26 17:08:24
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
  * @Description: 这里存放页面所有静态配置
  */
@@ -13,6 +13,7 @@ export const baseSize = ref<"small" | "large" | "medium">("large")
 export const UP_FILE_ACCEPT_TYPE = {
   dfsu: ".dfsu",
   shp: ".cpg,.dbf,.sbn,.sbx,.shp,.shx,.shp.xml",
+  txt: ".txt",
 }
 
 export const DEFAULT_SERVER_IP_LIST = [
