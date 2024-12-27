@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-12-24 17:03:36
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2024-12-26 20:57:27
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-12-27 17:01:58
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\TyphoonUI\index.vue
  * @Description: 这是一个台风动态展示组件
 -->
@@ -20,6 +20,8 @@
       ]"
     >
       <ToolBar></ToolBar>
+
+      <t-button @click="() => eventBus.emit('typhoon-test-events')">test</t-button>
     </div>
   </div>
 </template>
@@ -34,9 +36,11 @@ import { initJSAmap } from "./_components/amap"
 import SearchInputBar from "./_components/SearchInputBar.vue"
 import ToolBar from "./_components/ToolBar.vue"
 import { testData } from "./data/testData"
+import { useTyphoonFileStore } from "./store"
 
 import { type DataItem, data, baseGeoCoordMap } from "./data/cityData"
 
+const fileStore = useTyphoonFileStore()
 let AMap: any // 高德地图对象
 let mapModel: AMap.Map | null = null // 地图实例
 const echartsMapRef = ref<HTMLElement | null>(null)
@@ -54,16 +58,27 @@ const convertData = function (data: DataItem[]) {
   return res
 }
 
+async function test() {
+  console.log(fileStore.fileObj)
+  console.log(fileStore.fileMd5Options)
+  console.log(fileStore.currtTpyhoonNameList)
+  console.log(fileStore.currtTpyhoonDataList)
+}
+
 onMounted(async () => {
   fixEchatrstImageDataWarning()
 
   // await initAMap()
 
   // await initEcharts2d()
+
+  eventBus.on("typhoon-test-events", test)
 })
 
 onUnmounted(() => {
   mapModel?.destroy()
+
+  eventBus.off("typhoon-test-events", test)
 })
 
 async function initAMap() {

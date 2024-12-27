@@ -1,13 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-08-13 21:13:19
-<<<<<<< HEAD
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-19 21:25:10
-=======
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-09-06 17:04:15
->>>>>>> ad0f950d33020952d584fa149b6979da883d7fe1
+ * @LastEditTime: 2024-12-27 16:42:18
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\echartsComponemt\dragRect.ts
  * @Description: 对已存在的echarts实例添加点击绘制的功能
  */
@@ -20,17 +15,14 @@ export default class ChartDragLine {
 
   private _dataId: string
   private _dataObj: { [dataId: string]: number[][] }
-<<<<<<< HEAD
-=======
   private config: {
     symbolSize: number
     rectFillColor: string
     autoSwitchOnMove: boolean
     autoSwitchOnHover: boolean
   }
->>>>>>> ad0f950d33020952d584fa149b6979da883d7fe1
 
-  private config: { symbolSize: number; rectFillColor: string }
+  // private config: { symbolSize: number; rectFillColor: string }
   private dragging: boolean
 
   constructor(inputTar: echarts.ECharts) {
@@ -252,17 +244,6 @@ export default class ChartDragLine {
     }, 50)
   }
 
-<<<<<<< HEAD
-  private onPointDragging(dataId, dataIndex: number, pos: [number, number]) {
-    const newPos = this.chart.convertFromPixel("grid", pos)
-    const data = this._dataObj[dataId]
-
-    if (data.length === 0) this.dragging = false
-
-    if (this.dragging) return console.log("dragging")
-
-    const _isPointEqual = isPointEqual(data[0], data[data.length - 1])
-=======
   /**
    * @description:
    * @param {string} dataId
@@ -278,7 +259,6 @@ export default class ChartDragLine {
     const lastIndex = data.length - 1
     const _isPointEqual = utils.isPointEqual(data[0], data[lastIndex])
     // const isClosedPath = isClosedPath(data)
->>>>>>> ad0f950d33020952d584fa149b6979da883d7fe1
 
     if ((dataIndex === 0 || dataIndex === lastIndex) && _isPointEqual) {
       data[0] = newPos

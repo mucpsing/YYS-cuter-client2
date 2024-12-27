@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-09-10 21:57:59
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2024-12-25 23:33:51
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-12-27 16:41:01
  * @FilePath: \YYS-cuter-client2\src\renderer\src\router\routerList.ts
  * @Description: 路由元数据，用于生成路由和侧边栏的主菜单列
  */
@@ -12,7 +12,7 @@ export const routerList = [
     icon: "yuzhiyibiaopan",
     iconSub: "home1",
     routerPath: "/home",
-    comment: () => import("@renderer/views/Home/index.vue"),
+    comment: () => import("@renderer/views/Home/ProjectRect.vue"),
   },
   {
     name: "截图插件",

@@ -43,6 +43,7 @@ declare module 'vue' {
     HeadLessDialog: typeof import('./../renderer/src/components/global/headLessDialog.vue')['default']
     Home: typeof import('./../renderer/src/views/Home/index.vue')['default']
     ImageCuter: typeof import('./../renderer/src/views/ImageCuter/index.vue')['default']
+    Indxe: typeof import('./../renderer/src/views/TyphoonUI/_components/SearchBar/indxe.vue')['default']
     InfoPannel: typeof import('./../renderer/src/views/TyphoonUI/_components/InfoPannel.vue')['default']
     NHeader: typeof import("./../renderer/src/views/NsItemManager/n-header.vue")["default"]
     NpcBaseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/NpcBaseInfo.vue')['default']
