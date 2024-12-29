@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-12-24 17:03:36
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-27 17:01:58
+ * @LastEditors: Capsion 373704015@qq.com
+ * @LastEditTime: 2024-12-28 22:10:04
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\TyphoonUI\index.vue
  * @Description: 这是一个台风动态展示组件
 -->
@@ -23,6 +23,10 @@
 
       <t-button @click="() => eventBus.emit('typhoon-test-events')">test</t-button>
     </div>
+
+    <div :class="['absolute left-2 bottom-2', 'w-1/2']">
+      <TyphoonDataListTable></TyphoonDataListTable>
+    </div>
   </div>
 </template>
 
@@ -35,6 +39,8 @@ import { initJSAmap } from "./_components/amap"
 
 import SearchInputBar from "./_components/SearchInputBar.vue"
 import ToolBar from "./_components/ToolBar.vue"
+import TyphoonDataListTable from "./_components/TyphoonTable.vue"
+
 import { testData } from "./data/testData"
 import { useTyphoonFileStore } from "./store"
 
@@ -61,6 +67,7 @@ const convertData = function (data: DataItem[]) {
 async function test() {
   console.log(fileStore.fileObj)
   console.log(fileStore.fileMd5Options)
+  console.log(fileStore.currtSelectDataList)
   console.log(fileStore.currtTpyhoonNameList)
   console.log(fileStore.currtTpyhoonDataList)
 }

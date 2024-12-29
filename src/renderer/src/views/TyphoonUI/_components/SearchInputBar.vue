@@ -1,8 +1,8 @@
 <!--
  * @Author: Capsion 373704015@qq.com
  * @Date: 2024-12-26 20:46:37
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-27 17:10:07
+ * @LastEditors: Capsion 373704015@qq.com
+ * @LastEditTime: 2024-12-28 23:18:08
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\TyphoonUI\_components\SearchInputBar.vue
  * @Description: 搜索栏组件
 -->
@@ -39,6 +39,7 @@
         multiple
         @tag-change="onTagChange"
         @input-change="onInputChange"
+        @clear="fileStore.clearSelect"
       >
         <template #panel>
           <t-checkbox-group
@@ -107,6 +108,8 @@ import { ChevronDownIcon } from "tdesign-icons-vue-next"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
 import { useTyphoonFileStore } from "@Typhoon/store/index"
+import { getMd5 } from "@renderer/utils/calculateMd5"
+import { isNumber } from "lodash"
 
 const fileStore = useTyphoonFileStore()
 const localStore = reactive({
@@ -126,7 +129,19 @@ async function uploadFileDialog(inputElement: HTMLInputElement = SEARCH_BAR_INPU
   inputElement.onchange = async (e: any) => {
     if (!e || !e.target || !e.target.files) return
 
-    for (let file of e.target.files) await fileStore.addFile(file)
+    let fileInfo: any
+    let fileCount = 0
+    for (let file of e.target.files) {
+      fileInfo = await fileStore.addFile(file)
+      fileCount += 1
+    }
+
+    // 快速优化，如果当前未选择任何文件，则选择最后添加的一个
+    const md5 = fileInfo.md5 as string
+    if (fileCount && fileStore.currtFileMd5.length == 0) {
+      onCheckedChange([md5], { current: md5, type: "check" })
+      // fileStore.selectFile(fileInfo.md5)
+    }
   }
 
   inputElement.type = "file"
@@ -175,23 +190,33 @@ const onCheckedChange: CheckboxGroupProps["onChange"] = (val, { current, type })
     // 触发渲染
     fileStore.selectFile(current as string)
 
-    // const option = options.value.find((t) => t.value === current)
     const option = fileStore.fileMd5Options.find((t) => t.value === current)
     if (option) selectList.value.push(option)
   } else {
+    console.log("???")
+    fileStore.unSelectFIle(current as string)
+
     selectList.value = selectList.value.filter((v) => v.value !== current)
   }
 }
 
 // 可以根据触发来源，自由定制标签变化时的筛选器行为
 const onTagChange: SelectInputProps["onTagChange"] = (currentTags, context) => {
-  console.log(currentTags, context)
   const { trigger, index, item } = context
+
+  console.log("onTagChange: ", { currentTags, context })
+
   if (trigger === "clear") {
     selectList.value = []
   }
+
   if (["tag-remove", "backspace"].includes(trigger)) {
-    selectList.value.splice(index, 1)
+    if (isNumber(index) && index >= -1) {
+      selectList.value.splice(index, 1)
+      Object.values(fileStore.fileObj).forEach((obj) => {
+        if (obj.filename == item) fileStore.unSelectFIle(obj.md5)
+      })
+    }
   }
 }
 

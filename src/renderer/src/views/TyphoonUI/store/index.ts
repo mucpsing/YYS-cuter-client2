@@ -13,7 +13,7 @@ function initDataItem() {
     路径间隔: "G", // 每行路径间隔小时数: 2017年以前均为6(小时)，2017年开始登陆个例有3小时加密记录的为3,其余仍为6;
     英文名称: "H...H", // 热带气旋的英文名称,名称后加“(-1)n”表示副中心及其序号:
     生成日期: "I...I", // 数据集形成的日期.
-    RAW: [] as string[],
+    RAW: [] as string[][],
   }
 }
 
@@ -35,25 +35,40 @@ export const useTyphoonChartStore = defineStore("typhoonChartStore", {
 export const useTyphoonFileStore = defineStore("typhoonFileStore", {
   state: () => ({
     currtFileMd5: [] as string[], // 当前选择的文件
-    currtSelectFileList: [] as DataObjItemT[],
     fileObj: {} as { [md5: string]: DataObjT },
   }),
 
   getters: {
     fileMd5List: (state) => Object.keys(state.fileObj),
+
     fileMd5Options: (state) => {
       return Object.values(state.fileObj).map((item) => ({ label: item.filename, value: item.md5 }))
     },
+
+    currtSelectDataList: (state) => {
+      const res = [] as DataObjItemT[]
+      state.currtFileMd5.forEach((md5) => {
+        res.push(...state.fileObj[md5].parserData)
+      })
+      return res
+    },
+
     currtTpyhoonNameList: (state) => {
-      return state.currtSelectFileList.map((item, idx) => `${idx}) ${item.英文名称}_${item.id}`)
+      const res: string[] = []
+      state.currtFileMd5.forEach((md5) => {
+        state.fileObj[md5].parserData.map((item, idx) => {
+          res.push(`${idx}) ${item.英文名称}_${item.id}`)
+        })
+      })
+      return res
     },
     currtTpyhoonDataList: (state) => {
-      const res: any[] = []
+      const res: { label: string; data: string[][]; value: string }[] = []
       state.currtFileMd5.forEach((md5) => {
         state.fileObj[md5].parserData.map((item, idx) => {
           res.push({
             label: `${idx}) ${item.英文名称}_${item.id}`,
-            // data: item.RAW,
+            data: item.RAW,
             value: `${md5}_${item.英文名称}_${item.id}`,
           })
         })
@@ -63,26 +78,43 @@ export const useTyphoonFileStore = defineStore("typhoonFileStore", {
   },
 
   actions: {
+    async unSelectFIle(md5: string) {
+      const index = this.currtFileMd5.indexOf(md5)
+      if (index !== -1) this.currtFileMd5.splice(index, 1)
+    },
     async selectFile(md5: string) {
       if (!Object.hasOwn(this.fileObj, md5)) return
 
-      this.currtFileMd5 = [md5]
-      this.currtSelectFileList = this.fileObj[md5].parserData
+      // 因为 state.currtFileMd5 是一个多选的数组，判断是否已经存在，不存才进行添加
+      if (!Object.hasOwn(this.currtFileMd5, md5)) this.currtFileMd5.push(md5)
+    },
+
+    async clearSelect() {
+      this.currtFileMd5.length = 0
     },
 
     async addFile(file: File) {
       console.log(file)
-      await this.addDataFromTxt(file)
-    },
-
-    /**
-     * @description: 通过解析txt文件，返回文件对象
-     */
-    async addDataFromTxt(file: File) {
       const md5 = await getMd5(file)
       if (Object.hasOwn(this.fileObj, md5)) return console.warn("文件已存在")
 
-      const START_KEY = "66666"
+      const fileInfo = {
+        md5,
+        filename: file.name,
+        file,
+        parserData: await this.parserDataFromTxt(file),
+      }
+
+      this.fileObj[md5] = fileInfo
+
+      return fileInfo
+    },
+
+    /**
+     * @description: 解析txt文件，返回文件对象
+     */
+    async parserDataFromTxt(file: File, START_KEY: string = "66666") {
+      // const START_KEY = "66666"
       const resList: DataObjItemT[] = []
       const text = await file.text()
       const lines = text
@@ -121,13 +153,6 @@ export const useTyphoonFileStore = defineStore("typhoonFileStore", {
         } else if (eachLine.length == 6 && eachLine[0].length == 10) {
           res.RAW.push(eachLine)
         }
-      }
-
-      this.fileObj[md5] = {
-        md5,
-        filename: file.name,
-        file,
-        parserData: resList,
       }
 
       return resList
