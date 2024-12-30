@@ -11,7 +11,7 @@ export interface TyphoonData {
   //   geojson: GeoJSON.FeatureCollection<GeoJSON.LineString>
 }
 
-function initDataItem() {
+export function initDataItem() {
   return {
     id: 0,
     分类标志: "AAAAA", // 分类标志，66666'表示最佳路径资料;
@@ -23,13 +23,17 @@ function initDataItem() {
     路径间隔: "G", // 每行路径间隔小时数: 2017年以前均为6(小时)，2017年开始登陆个例有3小时加密记录的为3,其余仍为6;
     英文名称: "H...H", // 热带气旋的英文名称,名称后加“(-1)n”表示副中心及其序号:
     生成日期: "I...I", // 数据集形成的日期.
-    RAW: [] as any[],
+    RAW: [] as string[][],
   }
 }
 
-export async function parseTyphoonFile(file: File): Promise<any> {
-  const START_KEY = "66666"
-  const resList: any = []
+export type DataObjItemT = ReturnType<typeof initDataItem>
+
+/**
+ * @description: 解析txt文件，返回文件对象
+ */
+export async function parserDataFromTxt(file: File, START_KEY: string = "66666") {
+  const resList: DataObjItemT[] = []
   const text = await file.text()
   const lines = text
     .split("\n")
