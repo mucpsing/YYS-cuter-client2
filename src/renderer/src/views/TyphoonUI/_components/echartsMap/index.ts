@@ -127,49 +127,42 @@ export async function initEcharts2d(
       returnMapCameraState: true,
     },
     series: [
-      {
-        id: "lines_test",
-        type: "lines",
-        coordinateSystem: "amap",
-        polyline: true,
-        effect: {
-          show: true,
-          trailLength: 0.7,
-          color: "blue",
-          symbol: "circle",
-          symbolSize: 5,
-        },
-        lineStyle: {
-          color: "blue",
-          width: 2,
-          opacity: 0.8,
-        },
-        data: [],
-      },
-      {
-        id: "pm2.5",
-        name: "pm2.5",
-        type: "scatter",
-        coordinateSystem: "amap",
-        // data: convertData(data),
-        data: [],
-        symbolSize: function (val) {
-          return val[2] / 10
-        },
-        encode: {
-          value: 2,
-        },
-        label: {
-          formatter: "{b}",
-          position: "right",
-          show: false,
-        },
-        emphasis: {
-          label: {
-            show: true,
-          },
-        },
-      },
+      // {
+      //   id: "lines_test",
+      //   type: "lines",
+      //   coordinateSystem: "amap",
+      //   polyline: true,
+      //   effect: {
+      //     show: true,
+      //     trailLength: 0.7,
+      //     color: "blue",
+      //     symbol: "circle",
+      //     symbolSize: 5,
+      //   },
+      //   lineStyle: {
+      //     color: "blue",
+      //     width: 2,
+      //     opacity: 0.8,
+      //   },
+      //   data: [],
+      // },
+      // {
+      //   id: "pm2.5",
+      //   name: "pm2.5",
+      //   type: "scatter",
+      //   coordinateSystem: "amap",
+      //   data: [],
+      //   symbolSize: function (val) {
+      //     return val[2] / 10
+      //   },
+      //   encode: { value: 2 },
+      //   label: {
+      //     formatter: "{b}",
+      //     position: "right",
+      //     show: false,
+      //   },
+      //   emphasis: { label: { show: true } },
+      // },
       // {
       //   name: "Top 5",
       //   type: "effectScatter",

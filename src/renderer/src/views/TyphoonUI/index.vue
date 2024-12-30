@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-12-24 17:03:36
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-30 16:04:08
+ * @LastEditors: Capsion 373704015@qq.com
+ * @LastEditTime: 2024-12-30 21:43:25
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\TyphoonUI\index.vue
  * @Description: 这是一个台风动态展示组件
 -->
@@ -63,7 +63,7 @@ function converData(targetData: string[][]) {
   })
 
   // coords 是lines使用地图坐标时要求的格式，支持多个coords
-  return { lines: { coords: lines } }
+  return { lines }
 }
 
 async function test() {
@@ -78,46 +78,63 @@ async function chartRenderTpyhoonData(target) {
   console.log("render-typhoon-data: ", target)
   const [md5, name, id] = target
 
+  // 查找指定的台风数据
   const targetData = fileStore.fileObj[md5].parserData[id]
   if (targetData["英文名称"] !== name) return
 
   const data = converData(targetData.RAW)
 
-  const startPoint = [converCoords(targetData.RAW[0][3]), converCoords(targetData.RAW[0][2])] // 北京天安门
-  const endPoint = [
-    converCoords(targetData.RAW[targetData.RAW.length - 1][3]),
-
-    converCoords(targetData.RAW[targetData.RAW.length - 1][2]),
-  ]
+  // 因为每个台风位置都不一样，使用中间的位置未中心进行视图修正
+  const centerIndex = Math.trunc(data.lines.length / 2)
+  const centerCoord = [data.lines[centerIndex][0], data.lines[centerIndex][1]]
+  const len = data.lines.length
 
   // 设置中心
-  myChart.setOption({
-    amap: {
-      center: [startPoint[0], startPoint[1]],
-      zoom: 5,
-    },
-  })
+  myChart.setOption({ amap: { center: centerCoord } })
 
   let series: any = []
-  console.log({ data })
 
   // 生成线的坐标点列表
-  series.push({
-    id: "pm2.5",
-    data: [
-      { value: [startPoint[0], startPoint[1], 200], name },
-      { value: [endPoint[0], endPoint[1], 200], name },
-    ],
-  })
+  series.push(
+    {
+      id: `台风路线_${md5.slice(0, 6)}_${id}`,
+      type: "lines",
+      coordinateSystem: "amap",
+      polyline: true,
+      effect: {
+        show: true,
+        trailLength: 0.7,
+        symbol: "arrow",
+        trailWidth: 2,
+        trailOpacity: 1,
+        color: "#fff",
+        symbolSize: 5,
+      },
+      lineStyle: {
+        width: 2,
+        opacity: 0.8,
+      },
+      data: [{ coords: data.lines }],
+    },
+    {
+      id: `台风路线点_${md5.slice(0, 6)}_${id}`,
+      type: "scatter",
+      coordinateSystem: "amap",
+      symbolSize: 20,
+      encode: { value: 2 },
+      label: {
+        formatter: "{b}",
+        position: "right",
+        show: false,
+      },
+      emphasis: { label: { show: true } },
+      data: [
+        { value: [data.lines[0][0], data.lines[0][1], 200], name },
+        { value: [data.lines[len - 1][0], data.lines[len - 1][1], 200], name },
+      ],
+    },
+  )
   myChart.setOption({ series })
-
-  series.push({
-    id: "lines_test",
-    data: [data.lines],
-  })
-  myChart.setOption({ series })
-
-  console.log({ data, series })
 }
 
 onMounted(async () => {
