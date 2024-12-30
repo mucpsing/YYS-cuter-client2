@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-12-24 17:03:36
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-30 09:35:52
+ * @LastEditTime: 2024-12-30 09:56:33
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\TyphoonUI\index.vue
  * @Description: 这是一个台风动态展示组件
 -->
@@ -79,7 +79,7 @@ async function initAMap() {
   if (!echartsMapRef || !echartsMapRef.value) return console.error("echarts基础元素获取失败")
   myChart = await initEcharts2d(echartsMapRef as Ref<HTMLElement>)
   mapModel = myChart.getModel().getComponent("amap").getAMap()
-  console.log({ myChart })
+
   // 调用高德API
   if (!mapModel) return console.error("获取地图实例失败")
   mapModel.addControl(new AMap.Scale())

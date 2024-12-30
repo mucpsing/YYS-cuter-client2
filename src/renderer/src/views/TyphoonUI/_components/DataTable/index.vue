@@ -1,8 +1,8 @@
 <!--
  * @Author: Capsion 373704015@qq.com
  * @Date: 2024-12-27 21:09:01
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2024-12-28 22:31:11
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-12-30 10:17:22
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\TyphoonUI\_components\TyphoonTable.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -15,18 +15,31 @@
       row-key="index"
       :data="data"
       :columns="columns"
+      :stripe="localStore.stripe"
+      :bordered="localStore.bordered"
+      :hover="localStore.hover"
+      :show-header="localStore.showHeader"
     ></t-base-table>
   </t-card>
 </template>
 
 <script setup lang="ts">
 import { type TableProps } from "tdesign-vue-next"
-import { useTyphoonFileStore, type DataObjItemT } from "@Typhoon/store"
-import { TyphoonDataItemColumns } from "@Typhoon/_components/DataTable/TableColumns"
+import { useTyphoonFileStore } from "@Typhoon/store"
+import { type DataObjItemT } from "@Typhoon/utils"
+// import { TyphoonDataItemColumns } from "@Typhoon/_components/DataTable/TableColumns"
 
 const tableTitle = ref("台风列表")
 
 const fileStore = useTyphoonFileStore()
+const localStore = reactive({
+  currtTyphoon: "",
+  stripe: true, // 显示表格边框
+  bordered: false, // 显示表格边框
+  hover: true, // 显示悬浮效果
+  tableLayout: "auto", // 宽度自适应
+  showHeader: true, // 显示表头
+})
 
 // 展示错了，
 const columns = ref([

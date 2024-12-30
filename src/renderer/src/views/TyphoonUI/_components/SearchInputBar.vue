@@ -1,12 +1,11 @@
 <!--
  * @Author: Capsion 373704015@qq.com
  * @Date: 2024-12-26 20:46:37
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2024-12-28 23:18:08
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-12-30 10:15:55
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\TyphoonUI\_components\SearchInputBar.vue
  * @Description: 搜索栏组件
 -->
-<!-- fileStore.currtFileMd5.length > 0 ? 'h-[16vh] hover:h-[24vh]' : 'h-[8vh]', -->
 <template>
   <div
     :class="[
@@ -93,7 +92,7 @@
             :value="checkboxValue"
             :options="fileStore.currtTpyhoonDataList"
             class="tdesign-demo__panel-options-multiple"
-            @change="onCheckedChange"
+            @change="onTyphoonListChange"
           />
           <div v-else class="tdesign-demo__select-empty-multiple">暂无数据，点击右侧上传数据</div>
         </template>
@@ -104,21 +103,24 @@
 
 <script setup lang="ts">
 import { SelectInputProps, CheckboxGroupProps } from "tdesign-vue-next"
+import { type CheckboxGroupChangeContext } from "tdesign-vue-next"
+
 import { ChevronDownIcon } from "tdesign-icons-vue-next"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
 import { useTyphoonFileStore } from "@Typhoon/store/index"
-import { getMd5 } from "@renderer/utils/calculateMd5"
 import { isNumber } from "lodash"
 
 const fileStore = useTyphoonFileStore()
+
 const localStore = reactive({
   currtTyphoon: "",
+  stripe: true, // 显示表格边框
+  bordered: false, // 显示表格边框
+  hover: true, // 显示悬浮效果
+  tableLayout: false, // 宽度自适应
+  showHeader: false, // 显示表头
 })
-
-// const typhoonOptions = computed(()=>{
-//   fileStore.
-// })
 
 const SEARCH_BAR_INPUT_REF = document.createElement("input")
 async function uploadFileDialog(inputElement: HTMLInputElement = SEARCH_BAR_INPUT_REF) {
@@ -139,8 +141,9 @@ async function uploadFileDialog(inputElement: HTMLInputElement = SEARCH_BAR_INPU
     // 快速优化，如果当前未选择任何文件，则选择最后添加的一个
     const md5 = fileInfo.md5 as string
     if (fileCount && fileStore.currtFileMd5.length == 0) {
-      onCheckedChange([md5], { current: md5, type: "check" })
-      // fileStore.selectFile(fileInfo.md5)
+      if (onCheckedChange) {
+        onCheckedChange([md5], { current: md5, type: "check" } as CheckboxGroupChangeContext)
+      }
     }
   }
 
@@ -222,6 +225,10 @@ const onTagChange: SelectInputProps["onTagChange"] = (currentTags, context) => {
 
 const onInputChange: SelectInputProps["onInputChange"] = (val, context) => {
   console.log(val, context)
+}
+
+const onTyphoonListChange: CheckboxGroupProps["onChange"] = async (val, context) => {
+  console.log("onTyphoonListChange: ", { val, context })
 }
 </script>
 
