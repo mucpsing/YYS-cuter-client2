@@ -11,6 +11,10 @@ export interface TyphoonData {
   //   geojson: GeoJSON.FeatureCollection<GeoJSON.LineString>
 }
 
+export function converCoords(coord: number | string) {
+  return Math.round(parseInt(coord as string) / 10)
+}
+
 export function initDataItem() {
   return {
     id: 0,

@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-12-24 17:03:36
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-30 09:56:33
+ * @LastEditTime: 2024-12-30 16:04:08
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\TyphoonUI\index.vue
  * @Description: 这是一个台风动态展示组件
 -->
@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import { eventBus } from "@renderer/libs"
+import { EVENT_NAME } from "@Typhoon/events"
 
 import * as echarts from "echarts"
 import "echarts-extension-amap"
@@ -42,6 +43,7 @@ import ToolBar from "./_components/ToolBar.vue"
 import TyphoonDataListTable from "./_components/DataTable/index.vue"
 
 import { useTyphoonFileStore } from "./store"
+import { type DataObjItemT, converCoords } from "@Typhoon/utils"
 
 import { initEcharts2d } from "@Typhoon/_components/echartsMap/index"
 
@@ -52,6 +54,18 @@ let myChart: echarts.ECharts // echarts实例
 
 const echartsMapRef = ref<HTMLElement>()
 
+function converData(targetData: string[][]) {
+  // 先生成坐标信息
+  const lines: number[][] = []
+
+  targetData.forEach((eachLine: string[]) => {
+    lines.push([converCoords(eachLine[3]), converCoords(eachLine[2])])
+  })
+
+  // coords 是lines使用地图坐标时要求的格式，支持多个coords
+  return { lines: { coords: lines } }
+}
+
 async function test() {
   console.log(fileStore.fileObj)
   console.log(fileStore.fileMd5Options)
@@ -60,16 +74,64 @@ async function test() {
   console.log(fileStore.currtTpyhoonDataList)
 }
 
+async function chartRenderTpyhoonData(target) {
+  console.log("render-typhoon-data: ", target)
+  const [md5, name, id] = target
+
+  const targetData = fileStore.fileObj[md5].parserData[id]
+  if (targetData["英文名称"] !== name) return
+
+  const data = converData(targetData.RAW)
+
+  const startPoint = [converCoords(targetData.RAW[0][3]), converCoords(targetData.RAW[0][2])] // 北京天安门
+  const endPoint = [
+    converCoords(targetData.RAW[targetData.RAW.length - 1][3]),
+
+    converCoords(targetData.RAW[targetData.RAW.length - 1][2]),
+  ]
+
+  // 设置中心
+  myChart.setOption({
+    amap: {
+      center: [startPoint[0], startPoint[1]],
+      zoom: 5,
+    },
+  })
+
+  let series: any = []
+  console.log({ data })
+
+  // 生成线的坐标点列表
+  series.push({
+    id: "pm2.5",
+    data: [
+      { value: [startPoint[0], startPoint[1], 200], name },
+      { value: [endPoint[0], endPoint[1], 200], name },
+    ],
+  })
+  myChart.setOption({ series })
+
+  series.push({
+    id: "lines_test",
+    data: [data.lines],
+  })
+  myChart.setOption({ series })
+
+  console.log({ data, series })
+}
+
 onMounted(async () => {
-  // await initAMap()
+  await initAMap()
 
   eventBus.on("typhoon-test-events", test)
+  eventBus.on(EVENT_NAME.showTyphoon, chartRenderTpyhoonData)
 })
 
 onUnmounted(() => {
   mapModel?.destroy()
 
   eventBus.off("typhoon-test-events", test)
+  eventBus.off(EVENT_NAME.showTyphoon, chartRenderTpyhoonData)
 })
 
 async function initAMap() {

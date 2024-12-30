@@ -1,3 +1,11 @@
+<!--
+ * @Author: cpasion-office-win10 373704015@qq.com
+ * @Date: 2024-12-26 08:52:29
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2024-12-30 14:37:56
+ * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\ProjectRect.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
   <div class="" style="width: 800px; height: 600px">
     <div ref="testRef" class="w-full h-full"></div>
@@ -43,6 +51,10 @@ function addPoly() {
   data[newKey] = newData
 }
 
+/**
+ * 移除当前选中项的最后一个点。
+ * 如果当前选中项存在，则从其数据数组中弹出最后一个元素。
+ */
 function removePoints() {
   if (data[currtKey.value]) data[currtKey.value].pop()
 }

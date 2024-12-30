@@ -2,7 +2,7 @@
  * @Author: Capsion 373704015@qq.com
  * @Date: 2024-12-26 20:46:37
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-30 10:15:55
+ * @LastEditTime: 2024-12-30 10:57:28
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\TyphoonUI\_components\SearchInputBar.vue
  * @Description: 搜索栏组件
 -->
@@ -111,6 +111,8 @@ import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 import { useTyphoonFileStore } from "@Typhoon/store/index"
 import { isNumber } from "lodash"
 
+import { eventBus } from "@renderer/libs"
+import { EVENT_NAME } from "@Typhoon/events"
 const fileStore = useTyphoonFileStore()
 
 const localStore = reactive({
@@ -227,8 +229,13 @@ const onInputChange: SelectInputProps["onInputChange"] = (val, context) => {
   console.log(val, context)
 }
 
-const onTyphoonListChange: CheckboxGroupProps["onChange"] = async (val, context) => {
-  console.log("onTyphoonListChange: ", { val, context })
+const onTyphoonListChange: CheckboxGroupProps["onChange"] = async (_val, context) => {
+  const target = context.current
+  // console.log("onTyphoonListChange: ", { val, context }, { target })
+
+  const [md5, name, id] = (target as string).split("_")
+
+  eventBus.emit(EVENT_NAME.showTyphoon, [md5, name, parseInt(id)])
 }
 </script>
 
