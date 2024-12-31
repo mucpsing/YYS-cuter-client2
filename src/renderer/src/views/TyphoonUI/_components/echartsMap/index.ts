@@ -54,7 +54,6 @@ export async function initEcharts2d(
     console.warn("仅支持HTMLElement|Ref<HTMLElement>|string类型")
   }
 
-  console.log({ target })
   fixEchatrstImageDataWarning()
 
   const myChart = echarts.init(target, "echarts-2d-map", {

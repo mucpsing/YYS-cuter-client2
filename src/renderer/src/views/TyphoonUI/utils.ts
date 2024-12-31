@@ -1,3 +1,6 @@
+// import { type graphic } from "echarts"
+import chroma from "chroma-js"
+
 export interface TyphoonData {
   DATE: string[]
   TYPE: number[]
@@ -11,8 +14,30 @@ export interface TyphoonData {
   //   geojson: GeoJSON.FeatureCollection<GeoJSON.LineString>
 }
 
+export function typhoonStrongType(val: number) {
+  if (val == 0) return "弱于热带低压("
+  else if (val == 1) return "热带低压"
+  else if (val == 2) return "热带风暴"
+  else if (val == 3) return "强热带风暴"
+  else if (val == 4) return "台风"
+  else if (val == 5) return "强台风"
+  else if (val == 6) return "超强台风"
+  else if (val == 9) return "变性"
+  else return "未知"
+}
+
 export function converCoords(coord: number | string) {
   return Math.round(parseInt(coord as string) / 10)
+}
+
+export function parserRawData(rawData: string[]) {
+  return {
+    日期: rawData[0],
+    强度: typhoonStrongType(parseInt(rawData[1])),
+    "中心最底气压(hPa)": rawData[4],
+    "中心最大风速(MSW, m/s)": rawData[5],
+    平均风速: rawData.length > 6 ? rawData[6] : "暂无记录",
+  }
 }
 
 export function initDataItem() {
@@ -79,3 +104,108 @@ export async function parserDataFromTxt(file: File, START_KEY: string = "66666")
 
   return resList
 }
+
+// type GradientColor = graphic.LinearGradient | string
+
+/**
+ * @description: 颜色来自https://www.grabient.com/，将这个网站的颜色通过css写入，然后转换成echarts颜色
+ * @param {string} className
+ * @return {*}
+ */
+export function parseGradientToEchartsColor(className: string) {
+  // 获取所有已加载的样式表
+  const styleSheets = Array.from(document.styleSheets) as CSSStyleSheet[]
+
+  let backgroundColor: string | null = null
+  let backgroundImage: string | null = null
+
+  // 遍历所有样式表
+  for (const styleSheet of styleSheets) {
+    // 忽略跨域样式表（无法访问的样式表）
+    try {
+      const rules = styleSheet.cssRules || styleSheet.rules
+      if (!rules) continue
+
+      // 遍历所有规则，查找匹配的类
+      for (const rule of rules) {
+        if (rule instanceof CSSStyleRule && rule.selectorText.includes(`.${className}`)) {
+          backgroundColor = rule.style.backgroundColor || backgroundColor
+          backgroundImage = rule.style.backgroundImage || backgroundImage
+        }
+      }
+    } catch (e) {
+      console.warn("无法访问跨域样式表", e)
+    }
+  }
+
+  // 如果没有找到背景图或背景色，返回默认颜色
+  if (!backgroundColor && !backgroundImage) {
+    console.warn(`No background color or background image found for class: ${className}`)
+    return "#000" // 默认黑色
+  }
+
+  // 处理渐变背景图
+  if (backgroundImage && backgroundImage.startsWith("linear-gradient")) {
+    const gradientMatch = backgroundImage.match(/linear-gradient\(([\d\.]+)deg,\s*([^\)]+)\)/)
+
+    if (gradientMatch) {
+      const angle = parseFloat(gradientMatch[1]) // 渐变角度
+      const colors = gradientMatch[2].split(",").map((c) => c.trim()) // 渐变颜色数组
+
+      // 计算渐变方向的 cos 和 sin 值
+      const angleRad = (angle * Math.PI) / 180
+      const x = Math.cos(angleRad) // 渐变方向的 X 轴分量
+      const y = Math.sin(angleRad) // 渐变方向的 Y 轴分量
+
+      // 返回 LinearGradient 所需的参数
+      return [
+        x,
+        y,
+        0,
+        1, // 渐变方向
+        colors.map((color, index) => ({
+          offset: index / (colors.length - 1), // 计算渐变位置
+          color: color,
+        })),
+      ]
+    }
+  }
+
+  // 如果没有渐变效果，返回纯色（背景色）
+  return backgroundColor || "#000" // 默认返回黑色
+}
+
+/**
+ * @description: 扩展echarts的颜色，数据太多的时候不太够用，生成每个颜色的浅色和深色版本
+ * @param {string} colors 要扩展的颜色列表
+ */
+export function generateColorSeries(colors: string[] | null = null): string[] {
+  // 这个是echarts原来的颜色盘
+  const defaultColor = [
+    "#5470c6",
+    "#91cc75",
+    "#fac858",
+    "#ee6666",
+    "#73c0de",
+    "#3ba272",
+    "#fc8452",
+    "#9a60b4",
+    "#ea7ccc",
+  ]
+
+  colors = colors || defaultColor
+  const lightColor: string[] = []
+  const darkColor: string[] = []
+
+  const expandedColors: string[] = []
+
+  colors.forEach((color) => {
+    // 使用 chroma.js 生成浅色和深色版本
+    lightColor.push(chroma(color).brighten(2).hex()) // 生成浅色
+    darkColor.push(chroma(color).darken(2).hex()) // 生成深色
+  })
+
+  return expandedColors.concat(colors, darkColor, lightColor)
+}
+
+export const extendEchartColors = generateColorSeries()

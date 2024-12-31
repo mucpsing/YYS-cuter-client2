@@ -1,11 +1,3 @@
-<!--
- * @Author: cpasion-office-win10 373704015@qq.com
- * @Date: 2024-12-24 17:03:36
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2024-12-30 21:43:25
- * @FilePath: \yys-cuter-client2\src\renderer\src\views\TyphoonUI\index.vue
- * @Description: 这是一个台风动态展示组件
--->
 <template>
   <div :class="['w-full h-full', 'bg-gray-300 p-3 rounded-md relative']">
     <div id="echartsMapRef" ref="echartsMapRef" class="relative w-full h-full"></div>
@@ -31,21 +23,20 @@
 </template>
 
 <script setup lang="ts">
-import { eventBus } from "@renderer/libs"
-import { EVENT_NAME } from "@Typhoon/events"
-
 import * as echarts from "echarts"
 import "echarts-extension-amap"
-import { initJSAmap } from "./_components/amap"
 
-import SearchInputBar from "./_components/SearchInputBar.vue"
-import ToolBar from "./_components/ToolBar.vue"
-import TyphoonDataListTable from "./_components/DataTable/index.vue"
-
-import { useTyphoonFileStore } from "./store"
-import { type DataObjItemT, converCoords } from "@Typhoon/utils"
-
+import { eventBus } from "@renderer/libs"
+import { EVENT_NAME } from "@Typhoon/events"
+import { useTyphoonFileStore } from "@Typhoon/store"
+import { initJSAmap } from "@Typhoon/_components/amap"
 import { initEcharts2d } from "@Typhoon/_components/echartsMap/index"
+import { parserRawData } from "@Typhoon/utils"
+import { converCoords, extendEchartColors } from "@Typhoon/utils"
+
+import ToolBar from "@Typhoon/_components/ToolBar.vue"
+import SearchInputBar from "@Typhoon/_components/SearchInputBar.vue"
+import TyphoonDataListTable from "@Typhoon/_components/DataTable/index.vue"
 
 const fileStore = useTyphoonFileStore()
 let AMap: any // 高德地图对象
@@ -53,17 +44,37 @@ let mapModel: AMap.Map | null = null // 地图实例
 let myChart: echarts.ECharts // echarts实例
 
 const echartsMapRef = ref<HTMLElement>()
+const colorMap: { [md5: string]: string } = {}
+
+function getColor(md5: string) {
+  if (colorMap[md5]) return colorMap[md5]
+
+  let newColor = extendEchartColors.find((color) => {
+    if (!Object.values(colorMap).includes(color)) return true
+
+    return false
+  })
+
+  if (!newColor) newColor = "#000"
+
+  colorMap[md5] = newColor
+  return colorMap[md5]
+}
 
 function converData(targetData: string[][]) {
   // 先生成坐标信息
   const lines: number[][] = []
+  const points: any[] = []
 
-  targetData.forEach((eachLine: string[]) => {
-    lines.push([converCoords(eachLine[3]), converCoords(eachLine[2])])
+  targetData.forEach((eachLine: string[], idx) => {
+    const coord = [converCoords(eachLine[3]), converCoords(eachLine[2])]
+    const point = { value: [coord[0], coord[1], parserRawData(eachLine)], name: idx }
+    lines.push(coord)
+    points.push(point)
   })
 
   // coords 是lines使用地图坐标时要求的格式，支持多个coords
-  return { lines }
+  return { lines, points }
 }
 
 async function test() {
@@ -77,12 +88,14 @@ async function test() {
 async function chartRenderTpyhoonData(target) {
   console.log("render-typhoon-data: ", target)
   const [md5, name, id] = target
+  const dataId = `${md5.slice(0, 6)}_${id}`
 
   // 查找指定的台风数据
   const targetData = fileStore.fileObj[md5].parserData[id]
   if (targetData["英文名称"] !== name) return
 
   const data = converData(targetData.RAW)
+  console.log(data)
 
   // 因为每个台风位置都不一样，使用中间的位置未中心进行视图修正
   const centerIndex = Math.trunc(data.lines.length / 2)
@@ -90,14 +103,17 @@ async function chartRenderTpyhoonData(target) {
   const len = data.lines.length
 
   // 设置中心
+  const oldSeries = myChart.getOption().serie
   myChart.setOption({ amap: { center: centerCoord } })
+
+  const color = getColor(dataId)
 
   let series: any = []
 
   // 生成线的坐标点列表
   series.push(
     {
-      id: `台风路线_${md5.slice(0, 6)}_${id}`,
+      id: `台风路线_${dataId}`,
       type: "lines",
       coordinateSystem: "amap",
       polyline: true,
@@ -111,30 +127,66 @@ async function chartRenderTpyhoonData(target) {
         symbolSize: 5,
       },
       lineStyle: {
+        color,
         width: 2,
         opacity: 0.8,
       },
       data: [{ coords: data.lines }],
     },
     {
-      id: `台风路线点_${md5.slice(0, 6)}_${id}`,
+      id: `台风路线点_${dataId}`,
       type: "scatter",
+      color,
       coordinateSystem: "amap",
-      symbolSize: 20,
+      symbolSize: 8,
+      encode: { value: 2 },
+      // label: {
+      //   formatter: "{b}",
+      //   position: "right",
+      //   show: false,
+      // },
+      // emphasis: { label: { show: true } },
+      data: data.points,
+    },
+    {
+      id: `台风起点终点_${dataId}`,
+      name: `台风`,
+      type: "effectScatter",
+      color,
+      coordinateSystem: "amap",
+      symbolSize: 15,
       encode: { value: 2 },
       label: {
         formatter: "{b}",
         position: "right",
-        show: false,
+        show: true,
       },
-      emphasis: { label: { show: true } },
+      // emphasis: {
+      //   label: {
+      //     show: true,
+      //     formatter: (params) => {
+      //       console.log({ params })
+      //       return "aaaa"
+      //     },
+      //   },
+      // },
       data: [
-        { value: [data.lines[0][0], data.lines[0][1], 200], name },
-        { value: [data.lines[len - 1][0], data.lines[len - 1][1], 200], name },
+        { value: [data.lines[0][0], data.lines[0][1], name], name },
+        { value: [data.lines[len - 1][0], data.lines[len - 1][1], name], name },
       ],
+      tooltip: {
+        // formatter: (params) => {
+        //   console.log({ params })
+        //   return "{a} <br /> {b} <br /> {c} <br />{d}"
+        // },
+        formatter: "{a} <br /> {b} <br /> {c} <br />{d}",
+        padding: 5,
+      },
     },
   )
   myChart.setOption({ series })
+
+  console.log(oldSeries)
 }
 
 onMounted(async () => {
@@ -157,6 +209,8 @@ async function initAMap() {
   // @ts-ignore 获取到高德地图实例
   if (!echartsMapRef || !echartsMapRef.value) return console.error("echarts基础元素获取失败")
   myChart = await initEcharts2d(echartsMapRef as Ref<HTMLElement>)
+
+  // @ts-ignore 目前只有这个方法能在5.0版本后获取地图实例，这里先忽略错误
   mapModel = myChart.getModel().getComponent("amap").getAMap()
 
   // 调用高德API
@@ -165,3 +219,7 @@ async function initAMap() {
   mapModel.addControl(new AMap.ToolBar())
 }
 </script>
+
+<style lang="stylus">
+@import "./grabientColor.styl"
+</style>
