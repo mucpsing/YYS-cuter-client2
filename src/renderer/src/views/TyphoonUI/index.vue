@@ -95,7 +95,7 @@ async function chartRenderTpyhoonData(target) {
   if (targetData["英文名称"] !== name) return
 
   const data = converData(targetData.RAW)
-  console.log(data)
+  // console.log(data)
 
   // 因为每个台风位置都不一样，使用中间的位置未中心进行视图修正
   const centerIndex = Math.trunc(data.lines.length / 2)
@@ -103,7 +103,7 @@ async function chartRenderTpyhoonData(target) {
   const len = data.lines.length
 
   // 设置中心
-  const oldSeries = myChart.getOption().serie
+  const oldOption = myChart.getOption()
   myChart.setOption({ amap: { center: centerCoord } })
 
   const color = getColor(dataId)
@@ -171,22 +171,23 @@ async function chartRenderTpyhoonData(target) {
       //   },
       // },
       data: [
-        { value: [data.lines[0][0], data.lines[0][1], name], name },
-        { value: [data.lines[len - 1][0], data.lines[len - 1][1], name], name },
+        { value: [data.lines[0][0], data.lines[0][1], "起点"], name },
+        { value: [data.lines[len - 1][0], data.lines[len - 1][1], "终点"], name },
       ],
       tooltip: {
-        // formatter: (params) => {
-        //   console.log({ params })
-        //   return "{a} <br /> {b} <br /> {c} <br />{d}"
-        // },
-        formatter: "{a} <br /> {b} <br /> {c} <br />{d}",
+        formatter: (params) => {
+          console.log({ params })
+          const showMsg = {}
+          return `${params}`
+        },
+        // formatter: "{a} <br /> {b} <br /> {c} <br />{d}",
         padding: 5,
       },
     },
   )
   myChart.setOption({ series })
 
-  console.log(oldSeries)
+  console.log(oldOption)
 }
 
 onMounted(async () => {
