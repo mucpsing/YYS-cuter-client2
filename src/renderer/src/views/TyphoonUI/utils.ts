@@ -15,7 +15,7 @@ export interface TyphoonData {
 }
 
 export function typhoonStrongType(val: number) {
-  if (val == 0) return "弱于热带低压("
+  if (val == 0) return "弱于热带低压"
   else if (val == 1) return "热带低压"
   else if (val == 2) return "热带风暴"
   else if (val == 3) return "强热带风暴"
@@ -30,13 +30,24 @@ export function converCoords(coord: number | string) {
   return Math.round(parseInt(coord as string) / 10)
 }
 
-export function parserRawData(rawData: string[]) {
+export function parserEachPointData(rawData: string[]) {
+  const yydd = `${rawData[0].slice(0, 4)}年${rawData[0].slice(4, 6)}${rawData[0].slice(6, 8)}`
+  const HHMM = `${rawData[0].slice(8, 10)}时`
   return {
-    日期: rawData[0],
+    日期: `${yydd} ${HHMM}`,
     强度: typhoonStrongType(parseInt(rawData[1])),
-    "中心最底气压(hPa)": rawData[4],
-    "中心最大风速(MSW, m/s)": rawData[5],
+    "最底气压(hPa)": rawData[4],
+    "最大风速(MSW,m/s)": rawData[5],
     平均风速: rawData.length > 6 ? rawData[6] : "暂无记录",
+  }
+}
+
+export function parserTyphoonData(data: DataObjItemT) {
+  return {
+    生成时间: data.RAW[0][0],
+    结束时间: data.RAW[data.RAW.length - 1][0],
+    最大强度: "",
+    最大风速: "",
   }
 }
 

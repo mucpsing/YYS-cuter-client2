@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2024-12-26 21:17:35
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2025-01-02 14:56:58
  * @FilePath: \YYS-cuter-client2\electron.vite.config.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -30,6 +30,16 @@ export default defineConfig({
     },
   },
   renderer: {
+    server: {
+      host: "0.0.0.0",
+      // proxy: {
+      //   "/gis-api": {
+      //     target: "http://localhost:4040",
+      //     changeOrigin: true,
+      //     rewrite: (path) => path.replace(/^\/gis-api/, "/gis-api"),
+      //   },
+      // },
+    },
     resolve: {
       alias: {
         "@renderer": resolve("./src/renderer/src"),

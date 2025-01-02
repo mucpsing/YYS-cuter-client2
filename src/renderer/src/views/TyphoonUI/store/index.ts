@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-12-30 09:06:03
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-31 15:57:16
+ * @LastEditTime: 2025-01-02 09:15:07
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\TyphoonUI\store\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -62,7 +62,7 @@ export const useTyphoonFileStore = defineStore("typhoonFileStore", {
           res.push({
             label: `${idx}) ${item.英文名称}_${item.id}`,
             data: item.RAW,
-            value: `${md5}_${item.英文名称}_${item.id}`,
+            value: `${md5}_${item.英文名称}_${item.id}`, // targetId,每个台风数据的唯一ID
           })
         })
       })
@@ -71,6 +71,13 @@ export const useTyphoonFileStore = defineStore("typhoonFileStore", {
   },
 
   actions: {
+    // TargetId由`${md5}_${item.英文名称}_${item.id}`组成
+    // 通过fileStore.fileObj[md5].parserData[id] 获取
+    async getTyphoonInfoByTargetId(target: string):Promise<DataObjItemT> {
+      const [md5, _name, id] = target.split("_")
+      return this.fileObj[md5].parserData[id]
+    },
+
     async unSelectFIle(md5: string) {
       const index = this.currtFileMd5.indexOf(md5)
       if (index !== -1) this.currtFileMd5.splice(index, 1)
