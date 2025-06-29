@@ -131,28 +131,28 @@ b
 </template>
 
 <script setup lang="ts">
-import path from "path-browserify"
-import { storeToRefs } from "pinia"
+// import path from "path-browserify"
+// import { storeToRefs } from "pinia"
 import { useDropZone } from "@vueuse/core"
 
-import { getMd5 } from "@renderer/utils/calculateMd5"
+// import { getMd5 } from "@renderer/utils/calculateMd5"
 
 // import DfsuInfo from "./dfsuInfo.vue"
 // import FileTransfer from "./fileTransfer/index.vue"
 import FileTransfer from "./fileTransfer.vue"
 // import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 
-import { uploadFileApi } from "@gisapi/api"
+// import { uploadFileApi } from "@gisapi/api"
 // import type { FileInfoBase } from "@gisapi/Types"
 import { useGisApiTabStore } from "@gisapi/store/index"
 
 const tabStore = useGisApiTabStore()
-const { formDataList, currtTabId } = storeToRefs(tabStore)
+// const { formDataList, currtTabId } = storeToRefs(tabStore)
 let customFileUpInputElement: HTMLInputElement
-const localStore = reactive({
-  projectLoading: false,
-  switchIconRoate: 90,
-})
+// const localStore = reactive({
+//   projectLoading: false,
+//   switchIconRoate: 90,
+// })
 
 onMounted(() => {
   customFileUpInputElement = document.createElement("input")
@@ -175,94 +175,94 @@ async function onDrop(files: File[] | null) {
   }
 }
 
-async function upFileHandler(e: any, target: "be" | "af" | "project") {
-  if (!e.target) return console.log("获取实例失败")
-  if (!e.target.files) return console.log("没有选中文件")
+// async function upFileHandler(e: any, target: "be" | "af" | "project") {
+//   if (!e.target) return console.log("获取实例失败")
+//   if (!e.target.files) return console.log("没有选中文件")
 
-  const files = e.target.files
-  const beInfo = formDataList.value[currtTabId.value].beDfsuInfo
-  const afInfo = formDataList.value[currtTabId.value].afDfsuInfo
+//   const files = e.target.files
+//   const beInfo = formDataList.value[currtTabId.value].beDfsuInfo
+//   const afInfo = formDataList.value[currtTabId.value].afDfsuInfo
 
-  let infoList: any[]
-  if (target == "be") {
-    infoList = [beInfo]
-    if (files.length >= 2) infoList.push(afInfo)
-    const be_dfsu_info = await updateDfsuInfo(files, infoList)
-    console.log({ be_dfsu_info })
-  } else if (target == "af") {
-    infoList = [afInfo]
-    if (files.length >= 2) infoList.push(beInfo)
-    const af_dfsu_info = await updateDfsuInfo(files, infoList)
-    console.log({ af_dfsu_info })
-  } else if (target == "project") {
-    await updateProjectRangeInfo(files)
-    return
-  }
-}
+//   let infoList: any[]
+//   if (target == "be") {
+//     infoList = [beInfo]
+//     if (files.length >= 2) infoList.push(afInfo)
+//     const be_dfsu_info = await updateDfsuInfo(files, infoList)
+//     console.log({ be_dfsu_info })
+//   } else if (target == "af") {
+//     infoList = [afInfo]
+//     if (files.length >= 2) infoList.push(beInfo)
+//     const af_dfsu_info = await updateDfsuInfo(files, infoList)
+//     console.log({ af_dfsu_info })
+//   } else if (target == "project") {
+//     await updateProjectRangeInfo(files)
+//     return
+//   }
+// }
 
-async function updateDfsuInfo(files: FileList, infoList: any[]) {
-  infoList.forEach(async (fileInfo, index) => {
-    const file = (files as FileList)[index]
+// async function updateDfsuInfo(files: FileList, infoList: any[]) {
+//   infoList.forEach(async (fileInfo, index) => {
+//     const file = (files as FileList)[index]
 
-    fileInfo.reading = true
-    setTimeout(() => (fileInfo.reading = false), 30000)
+//     fileInfo.reading = true
+//     setTimeout(() => (fileInfo.reading = false), 30000)
 
-    fileInfo.size = file.size / 1024 / 1024
-    fileInfo.name = file.name
-    fileInfo.md5 = await getMd5(file)
-    fileInfo.file = file
+//     fileInfo.size = file.size / 1024 / 1024
+//     fileInfo.name = file.name
+//     fileInfo.md5 = await getMd5(file)
+//     fileInfo.file = file
 
-    const dfsu_info = await uploadFileApi(`${infoList[index].md5}.dfsu`, file)
+//     const dfsu_info = await uploadFileApi(`${infoList[index].md5}.dfsu`, file)
 
-    setTimeout(() => (fileInfo.reading = false), 600)
+//     setTimeout(() => (fileInfo.reading = false), 600)
 
-    if (dfsu_info) {
-      fileInfo.bounds = dfsu_info.bounds
-      fileInfo.range_geojson = dfsu_info.range_geojson
-    } else {
-      console.log("dfsu文件上传失败")
-    }
+//     if (dfsu_info) {
+//       fileInfo.bounds = dfsu_info.bounds
+//       fileInfo.range_geojson = dfsu_info.range_geojson
+//     } else {
+//       console.log("dfsu文件上传失败")
+//     }
 
-    return dfsu_info
-  })
-}
+//     return dfsu_info
+//   })
+// }
 
-async function updateProjectRangeInfo(files: FileList) {
-  let basename = "" // 用来确保只会获取一个shp，其他不同名字的shp不会进行读取
+// async function updateProjectRangeInfo(files: FileList) {
+//   let basename = "" // 用来确保只会获取一个shp，其他不同名字的shp不会进行读取
 
-  const projectRangeInfo = formDataList.value[currtTabId.value].projectRange
+//   const projectRangeInfo = formDataList.value[currtTabId.value].projectRange
 
-  localStore.projectLoading = true
+//   localStore.projectLoading = true
 
-  projectRangeInfo.fileList.length = 0
+//   projectRangeInfo.fileList.length = 0
 
-  for (let file of files) {
-    // 获取后缀
-    let ext = path.extname(file.name)
-    if (file.name.endsWith(".shp.xml")) ext = ".shp.xml"
+//   for (let file of files) {
+//     // 获取后缀
+//     let ext = path.extname(file.name)
+//     if (file.name.endsWith(".shp.xml")) ext = ".shp.xml"
 
-    // 获取basename
-    if (!basename) basename = file.name.toString().replace(ext, "")
+//     // 获取basename
+//     if (!basename) basename = file.name.toString().replace(ext, "")
 
-    if (basename != file.name.toString().replace(ext, "")) {
-      setTimeout(() => (localStore.projectLoading = false), 600)
-      console.log("请确保每次仅选择一套shp文件")
-      continue
-    }
+//     if (basename != file.name.toString().replace(ext, "")) {
+//       setTimeout(() => (localStore.projectLoading = false), 600)
+//       console.log("请确保每次仅选择一套shp文件")
+//       continue
+//     }
 
-    // 只记录shp文件的md5
-    if (ext == ".shp") {
-      projectRangeInfo.md5 = await getMd5(file)
-      projectRangeInfo.name = path.basename(file.name, ext)
-    }
+//     // 只记录shp文件的md5
+//     if (ext == ".shp") {
+//       projectRangeInfo.md5 = await getMd5(file)
+//       projectRangeInfo.name = path.basename(file.name, ext)
+//     }
 
-    projectRangeInfo.fileList.push({ file, ext, name: file.name })
-  }
+//     projectRangeInfo.fileList.push({ file, ext, name: file.name })
+//   }
 
-  projectRangeInfo.fileCount = projectRangeInfo.fileList.length
+//   projectRangeInfo.fileCount = projectRangeInfo.fileList.length
 
-  setTimeout(() => (localStore.projectLoading = false), 600)
-}
+//   setTimeout(() => (localStore.projectLoading = false), 600)
+// }
 </script>
 
 <style lang="stylus"></style>

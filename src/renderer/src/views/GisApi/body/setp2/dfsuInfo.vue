@@ -1,13 +1,14 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-22 14:23:07
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-07-26 21:48:36
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2025-06-27 15:43:25
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\dfsuInfo.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <t-card class="flex-grow-[1]" :title="props.title" :loading="props.fileInfo.reading">
+    <!-- 文件列表 -->
     <div :class="['flex justify-start']">
       <div class="flex flex-col text-gray-500">
         <h3 class="my-1 text-lg text-black"><strong>文件：</strong>{{ props.fileInfo.name }}</h3>
@@ -18,6 +19,8 @@
         <span>唯一名称：{{ props.fileInfo.md5 }}</span>
       </div>
     </div>
+
+    <!-- 没有文件时的提示 -->
     <div class="flex justify-center w-full pt-3">
       <t-button
         size="medium"

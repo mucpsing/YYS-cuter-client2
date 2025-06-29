@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-24 16:07:47
+ * @LastEditTime: 2025-06-29 16:42:13
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
@@ -240,7 +240,6 @@ async function uploadFileDialog(item: BaseItemT) {
   const target = "dfsu"
   // 调用点击事件
   DEFAULT_INPUT_ELEMENT_REF.accept = UP_FILE_ACCEPT_TYPE[target]
-
   DEFAULT_INPUT_ELEMENT_REF.onchange = (e) => addItem(e, item)
 
   DEFAULT_INPUT_ELEMENT_REF.type = "file"

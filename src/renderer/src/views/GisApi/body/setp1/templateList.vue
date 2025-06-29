@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 16:27:17
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-11-27 09:30:38
+ * @LastEditTime: 2025-06-27 08:46:30
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp1\templateList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -27,7 +27,13 @@
           v-for="item in tabStore.templateInfoList"
           :key="item.template_id"
           theme="poster2"
-          class="cursor-pointer hover:bg-gray-300/10"
+          :class="[
+            'transition-all ',
+            'cursor-pointer hover:bg-gray-400/30',
+            tabStore.currtFormData.templateInfo.template_id == item.template_id
+              ? 'border-1 border-solid border-blue-400'
+              : '',
+          ]"
           @click="() => onClickTemplate(item)"
         >
           <div :class="['flex gap-4']">
@@ -104,9 +110,10 @@ async function updateTemplateList() {
   setTimeout(() => (localStore.loading = false), 1200)
 }
 
-const onClickTemplate = debounce((item) => {
-  tabStore.setTemplateInfoToFormDataById(item.template_id)
-}, 200)
+const onClickTemplate = debounce(
+  (item) => tabStore.setTemplateInfoToFormDataById(item.template_id),
+  200,
+)
 </script>
 
 <style scoped></style>

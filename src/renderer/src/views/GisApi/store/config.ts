@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-26 17:08:24
+ * @LastEditTime: 2025-06-27 15:14:27
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
  * @Description: 这里存放页面所有静态配置
  */
@@ -32,9 +32,10 @@ export const SETP_OPTIONS_LIST = [
 
 export const API = {
   getTemplateList: "/mxd_template_list",
-  upload: "/upload_file",
+  upload: "/upload_file", // 上传文件，dfsu、shp（使用压缩包形式）
   uploadCheck: "/check_file_exists",
   mxdToImg: "/mxd_to_img",
+  getProjectRange: "/get_project_range", // 生成工程范围，可能会失败，需要网格一致
   test: "/serverCheck",
 }
 
@@ -48,7 +49,7 @@ export const config = reactive({
   // 服务器端口
   SERVER_PROT: "4040",
 
-  SERVER_API: "gis-api",
+  SERVER_API: "gisArcMapApi/v1", // API前缀
 
   DEFAULT_RADIAN_OR_ANGLE: "弧度" as "弧度" | "角度",
 

@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-12-24 16:10:52
+ * @LastEditTime: 2025-06-29 17:06:27
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -56,40 +56,41 @@
 
             <!-- 稀释折点 -->
             <t-form-item label="稀释折点" name="name" label-align="left" initial-data="TDesign">
-              <t-slider
-                :max="600"
-                :min="10"
-                :step="10"
-                v-model="localStore.maxLinkPoint"
-                :show-tooltip="true"
-                :input-number-props="{
-                  theme: 'column',
-                }"
-              />
-            </t-form-item>
+              <div class="w-full">
+                <div>
+                  <t-slider
+                    :max="600"
+                    :min="10"
+                    :step="10"
+                    v-model="localStore.maxLinkPoint"
+                    :show-tooltip="true"
+                    :input-number-props="{
+                      theme: 'column',
+                    }"
+                  />
+                </div>
 
-            <!-- 稀释折点的快捷标签 -->
-            <t-form-item label=" " name="name" label-align="left" initial-data="TDesign">
-              <div class="flex flex-row gap-[5px]">
-                <template
-                  v-for="(theme, idx) in ['primary', 'danger', 'warning', 'success']"
-                  :key="theme"
-                >
-                  <t-button
-                    @click="() => (localStore.maxLinkPoint = 100 * (1 + idx))"
-                    variant="outline"
-                    size="small"
-                    :theme="(theme as TBtnThemeT)"
+                <div class="flex flex-row gap-[5px]">
+                  <template
+                    v-for="(theme, idx) in ['primary', 'danger', 'warning', 'success']"
+                    :key="theme"
                   >
-                    {{ 100 * (1 + idx) }}
-                  </t-button>
-                </template>
+                    <t-button
+                      @click="() => (localStore.maxLinkPoint = 100 * (1 + idx))"
+                      variant="outline"
+                      size="small"
+                      :theme="(theme as TBtnThemeT)"
+                    >
+                      {{ 100 * (1 + idx) }}
+                    </t-button>
+                  </template>
+                </div>
               </div>
             </t-form-item>
 
             <!-- 输出尺寸 -->
             <t-form-item label="输出尺寸" name="name" label-align="left" initial-data="TDesign">
-              <div class="flex flex-wrap flex-row gap-2 max-w-[200px]">
+              <div class="flex flex-wrap flex-row gap-2">
                 <template v-for="(item, idx) in paperSizeList" :key="idx">
                   <t-button
                     @click="() => (currtPaper = item.value)"
@@ -100,6 +101,21 @@
                     {{ `${item.label} (${item.value})` }}
                   </t-button>
                 </template>
+              </div>
+            </t-form-item>
+
+            <!-- 项目范围 -->
+            <t-form-item label="项目范围">
+              <div class="flex items-center justify-center gap-4">
+                <div class="flex gap-2">
+                  <strong>自动生成</strong>
+                  <t-switch> </t-switch>
+                </div>
+                <div>
+                  <t-button size="small" theme="success" @click="()=>{
+                    console.log('tabStore.currtFormData: ',tabStore.currtFormData)
+                  }">下载</t-button>
+                </div>
               </div>
             </t-form-item>
 
@@ -168,6 +184,8 @@ async function onSelectRangeFile(md5: string) {
 }
 
 onMounted(() => {
+  console.log("step3 on onMounted")
+
   // 初始化时，如果有文件信息，则默认绘制一个
   if (fileStore.geoJsonOptions.length > 0 && currtSelectDfsuName.value == "") {
     let md5 = ""
