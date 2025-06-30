@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS-surfacePro7 holy.dandelion@139.com
  * @Date: 2023-01-24 23:53:09
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-27 22:22:12
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2025-06-30 09:44:28
  * @FilePath: \yys-cuter-client\src\components\ImageCuter\config\paneImage.vue
  * @Description: 截图插件的图片配置折叠栏
 -->
@@ -20,41 +20,24 @@
       </t-button>
     </template>
 
+    <!-- :suffix="`(${config.IMG_MAX_SIZE} KB)`" -->
     <t-form-item label="文件大小" name="IMG_MAX_SIZE">
-      <div :style="{ display: 'block' }">
-        <t-col :span="8" :class="['w-full']">
-          <t-input-number
-            :value="fileMaxSize"
-            :suffix="`(${config.IMG_MAX_SIZE})`"
-            @onChange="onSizeUnitInputChange"
-          ></t-input-number>
-        </t-col>
-
-        <t-col :span="4" :class="['w-full']">
-          <t-select
-            v-model="sizeUnit"
-            :options="sizeOptions"
-            @onChange="onSizeUnitSelectChange"
-          ></t-select>
-        </t-col>
+      <div class="flex gap-1">
+        <t-input-number
+          :value="fileMaxSize"
+          @onChange="onSizeUnitInputChange"
+          theme="column"
+          style="min-width: 100px"
+        ></t-input-number>
+        -
+        <t-select
+          label="单位："
+          v-model="sizeUnit"
+          :options="sizeOptions"
+          @onChange="onSizeUnitSelectChange"
+          style="width: 120px"
+        ></t-select>
       </div>
-
-      <t-row :gutter="16">
-        <t-col :span="8" :class="['w-full']">
-          <t-input-number
-            :value="fileMaxSize"
-            :suffix="`(${config.IMG_MAX_SIZE})`"
-            @onChange="onSizeUnitInputChange"
-          ></t-input-number>
-        </t-col>
-        <t-col :span="4" :class="['w-full']">
-          <t-select
-            v-model="sizeUnit"
-            :options="sizeOptions"
-            @onChange="onSizeUnitSelectChange"
-          ></t-select>
-        </t-col>
-      </t-row>
     </t-form-item>
 
     <t-form-item label="支持格式" name="IMG_SUPORT_TYPES">

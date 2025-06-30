@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS-surfacePro7 holy.dandelion@139.com
  * @Date: 2023-01-24 23:51:30
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-06-28 16:13:44
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2025-06-30 09:48:08
  * @FilePath: \yys-cuter-client\src\components\ImageCuter\config\panelScreen.vue
  * @Description: 截图插件的【显示配置】部分
 -->
@@ -22,24 +22,22 @@
     </template>
 
     <t-form-item label="最大尺寸" name="SCREEN_MAX">
-      <t-row :gutter="16">
-        <t-col :span="6">
-          <t-input-number
-            v-model="config.SCREEN_MAX_HEIGHT"
-            type="number"
-            label="高度："
-            suffix="px"
-          ></t-input-number>
-        </t-col>
-        <t-col :span="6">
-          <t-input-number
-            v-model="config.SCREEN_MAX_WIDTH"
-            type="number"
-            label="宽度："
-            suffix="px"
-          ></t-input-number>
-        </t-col>
-      </t-row>
+      <div class="flex gap-2">
+        <t-input-number
+          v-model="config.SCREEN_MAX_HEIGHT"
+          label="高度："
+          suffix="px"
+          theme="normal"
+          style="min-width: 120px"
+        ></t-input-number>
+        <t-input-number
+          v-model="config.SCREEN_MAX_WIDTH"
+          theme="normal"
+          label="宽度："
+          suffix="px"
+          style="min-width: 120px"
+        ></t-input-number>
+      </div>
     </t-form-item>
 
     <t-form-item label="裁剪框宽度" name="CROP_BORDER_WIDTH">
@@ -47,8 +45,10 @@
         <t-col :span="6">
           <t-input-number
             v-model="config.CROP_BORDER_WIDTH"
-            type="number"
+            label="边框："
             suffix="px"
+            theme="normal"
+            align="center"
           ></t-input-number>
         </t-col>
       </t-row>

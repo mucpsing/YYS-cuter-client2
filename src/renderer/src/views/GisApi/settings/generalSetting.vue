@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-27 22:05:24
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-11-19 09:57:51
+ * @LastEditTime: 2025-06-30 09:19:25
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\settings\generalSettingl.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -36,7 +36,11 @@
     </t-form-item>
 
     <t-form-item label="服务器端口" name="SERVER_PROT">
-      <t-input v-model="config.SERVER_PROT" @blur="() => checkServer()" type="number"></t-input>
+      <t-input-number
+        v-model="config.SERVER_PROT"
+        @blur="() => checkServer()"
+        theme="column"
+      ></t-input-number>
     </t-form-item>
 
     <t-form-item label="HTTP协议" name="SERVER_PROTOCOL">
