@@ -1,12 +1,12 @@
 <!--
- * @Author: CPS holy.dandelion@139.com
- * @Date: 2024-06-30 00:31:18
+ * @Author: cpasion-office-win10 373704015@qq.com
+ * @Date: 2024-07-26 10:28:28
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-11-27 16:03:39
- * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\_components\guideSetp1.vue
- * @Description: 动态的引导组件
- * @BUG: 使用t-tab组件后，仅有第一页能正确生成引导，其他页面无法正常生成
+ * @LastEditTime: 2025-06-30 10:00:08
+ * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\guide.vue
+ * @Description: 引导提示组件，当必要信息或者选项没有填写时，显示提示信息，并给出相应的引导提示
 -->
+
 <template>
   <t-guide
     v-model="guideCurrentId"
