@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-11-19 09:05:18
+ * @LastEditTime: 2025-07-01 08:59:22
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -53,11 +53,14 @@ export type MxdToImgFormProjectPoints = {
 export type MxdToImgFormT = MxdToImgFormProjectShp | MxdToImgFormProjectPoints
 
 export async function getTemplateList() {
+  console.log("getTemplateList:")
+
   try {
     const { status, data } = await server().get(API.getTemplateList)
 
     if (status == 200) return data.res as TemplateInfo[]
 
+    console.warn("getTemplateList fail:", data)
     return []
   } catch (err) {
     // console.log(err)

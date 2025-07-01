@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-06-29 17:06:27
+ * @LastEditTime: 2025-07-01 17:22:22
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -44,9 +44,11 @@
           </template>
           <t-form labelWidth="70px" class="h-full">
             <!-- 范围选择 -->
+
+            <!-- :options="fileStore.geoJsonOptions" -->
             <t-form-item label="选择范围" name="name" label-align="left" initial-data="TDesign">
               <t-select
-                :options="fileStore.geoJsonOptions"
+                :options="geoJsonOptions"
                 v-model="currtSelectDfsuName"
                 class="min-w-[100px] w-full"
                 :onChange="(value) => onSelectRangeFile(value as string)"
@@ -90,7 +92,7 @@
 
             <!-- 输出尺寸 -->
             <t-form-item label="输出尺寸" name="name" label-align="left" initial-data="TDesign">
-              <div class="flex flex-wrap flex-row gap-2">
+              <div class="flex flex-row flex-wrap gap-2">
                 <template v-for="(item, idx) in paperSizeList" :key="idx">
                   <t-button
                     @click="() => (currtPaper = item.value)"
@@ -112,9 +114,7 @@
                   <t-switch> </t-switch>
                 </div>
                 <div>
-                  <t-button size="small" theme="success" @click="()=>{
-                    console.log('tabStore.currtFormData: ',tabStore.currtFormData)
-                  }">下载</t-button>
+                  <t-button size="small" theme="success" @click="test">下载</t-button>
                 </div>
               </div>
             </t-form-item>
@@ -151,9 +151,7 @@ const tabStore = useGisApiTabStore()
 const currtSelectDfsuName = ref("")
 const currtRangeGeoJson = ref<any[]>([])
 const echartGeoJsonRef = ref<HTMLElement & { resize: () => void }>()
-function test() {
-  console.log(echartGeoJsonRef)
-}
+
 const localStore = reactive({
   width: 520,
   height: 380,
@@ -179,6 +177,35 @@ const themeList = [
   "success",
 ]
 
+function test() {
+  console.log("test")
+
+  console.log(geoJsonOptions)
+}
+
+const geoJsonOptions = computed<{ value: string; label: string }[]>(() => {
+  const options: { value: string; label: string }[] = []
+
+  const fileList = [
+    ...tabStore.currtFormData.afDfsuMd5List,
+    ...tabStore.currtFormData.beDfsuMd5List,
+  ]
+
+  console.log({ fileList })
+
+  for (const md5 of fileList) {
+    console.log({ md5 })
+
+    if (Object.keys(fileStore.dfsuObj).includes(md5)) {
+      options.push({
+        value: md5,
+        label: fileStore.dfsuObj[md5].name,
+      })
+    }
+  }
+  return options
+})
+
 async function onSelectRangeFile(md5: string) {
   currtRangeGeoJson.value[0] = await fileStore.getGeoJsonByMd5(md5)
 }
@@ -186,25 +213,9 @@ async function onSelectRangeFile(md5: string) {
 onMounted(() => {
   console.log("step3 on onMounted")
 
-  // 初始化时，如果有文件信息，则默认绘制一个
-  if (fileStore.geoJsonOptions.length > 0 && currtSelectDfsuName.value == "") {
-    let md5 = ""
-    if (tabStore.currtFormData.beDfsuInfo) {
-      md5 = tabStore.currtFormData.beDfsuInfo.md5
-    } else if (tabStore.currtFormData.afDfsuInfo) {
-      md5 = tabStore.currtFormData.afDfsuInfo.md5
-    } else {
-      // 当前所有都为空
-
-      if (Object.keys(fileStore.geoJsonObj).length > 0) {
-        md5 = fileStore.geoJsonObj.keys()[0]
-      }
-    }
-
-    if (md5) {
-      onSelectRangeFile(md5)
-      currtSelectDfsuName.value = md5
-    }
+  // 初始化时，则默认绘制一个河道
+  if (currtSelectDfsuName.value == "" && geoJsonOptions.value.length > 0) {
+    onSelectRangeFile(geoJsonOptions.value[0].value)
   }
 })
 </script>

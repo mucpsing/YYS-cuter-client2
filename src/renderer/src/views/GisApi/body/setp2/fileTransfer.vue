@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-06-29 16:42:13
+ * @LastEditTime: 2025-07-01 17:05:31
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
@@ -91,7 +91,7 @@
 
                     <span>{{ truncateText(item.name, 16) }} ({{ item.size.toFixed(2) }}MB)</span>
 
-                    <div>
+                    <div class="flex flex-col items-center justify-center">
                       <div v-if="item.uploadProgress == 0">文件解析中...</div>
 
                       <div v-else class="min-w-[150px]">
@@ -157,6 +157,9 @@ const baseStore = reactive<BaseItemT[]>([
   { title: "工程后", id: "af", loading: false },
 ])
 
+// BUG 这里需要更新使用computed，确保数据源更新
+// this.formDataList[this.currtTabId][targetKey] = [md5]
+// 忘记了为什么这里要使用局部缓存
 const dataList = reactive({
   be: [] as FileInfoItemT[],
   af: [] as FileInfoItemT[],
@@ -166,8 +169,6 @@ const dataList = reactive({
  * @description: 当前如果只有一个文件，那么自动选中，给予下一步时快捷调用
  */
 function onlyOneChecked() {
-  console.log("onlyOneChecked: ", { be: dataList.be, af: dataList.af })
-
   if (dataList.be.length == 1 && !dataList.be[0].checked) onItemChecked("be", dataList.be[0])
 
   if (dataList.af.length == 1 && !dataList.af[0].checked) onItemChecked("af", dataList.af[0])

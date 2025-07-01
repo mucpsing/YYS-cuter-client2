@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-06-27 15:14:27
+ * @LastEditTime: 2025-07-01 08:53:32
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
  * @Description: 这里存放页面所有静态配置
  */
@@ -20,7 +20,7 @@ export const DEFAULT_SERVER_IP_LIST = [
   "localhost",
   "127.0.0.1",
   "192.168.100.37",
-  "DESKTOP-0ROH1ER",
+  "CPS-OFFICE-WIN10",
 ]
 
 export const SETP_OPTIONS_LIST = [

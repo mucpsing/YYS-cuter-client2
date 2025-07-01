@@ -1,12 +1,14 @@
 <template>
   <div :class="['flex flex-col h-full px-2 gap-1']">
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
+      <!-- 【按钮】添加工况 -->
       <t-tooltip content="添加工况">
         <t-button :onClick="() => (localStore.showAddTapDialog = true)"
           ><template #icon><AddIcon /></template
         ></t-button>
       </t-tooltip>
 
+      <!-- 【弹窗】添加工况 -->
       <t-dialog
         header="创建工况配置"
         body="对话框内容"
@@ -34,11 +36,14 @@
         </ul>
       </t-dialog>
 
+      <!-- 【步骤条】 -->
+      <!-- 步骤条不进行事件hook，生产环境禁止通过点击跳过步骤，所有hook操作都在【上一步】和【下一步】两个点击按钮事件进行控制 -->
+      <!-- 所有hook事件都在 onSwtichSetp() 和 nextSetpCheck() 中进行控制 -->
       <t-steps
         size="small"
         v-model="formDataList[currtTabId].setp"
         layout="horizontal"
-        :readonly="false"
+        :readonly="localStore.readOnly"
         :options="Sopts"
       />
     </header>
@@ -53,7 +58,7 @@
       <t-button
         class="flex-[1]"
         :disabled="formDataList[currtTabId].setp == 1"
-        @click="swtichSetp('back')"
+        @click="onSwtichSetp('back')"
         size="medium"
         >上一步<template #icon>
           <c-icon-font
@@ -83,7 +88,7 @@
       <t-button
         class="flex-[1]"
         :disabled="formDataList[currtTabId].setp == Sopts.length"
-        @click="swtichSetp('next')"
+        @click="onSwtichSetp('next')"
         size="medium"
         >下一步<template #suffix>
           <c-icon-font
@@ -103,7 +108,7 @@ import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
 import { GUIDE_EVENTS } from "@gisapi/_components/guideEvents"
 
 import { eventBus } from "@renderer/libs"
-import { uploadFileApi, mxdToImgApi } from "@gisapi/api"
+import { mxdToImgApi } from "@gisapi/api"
 
 import { SETP_OPTIONS_LIST } from "@gisapi/store/config"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
@@ -125,6 +130,7 @@ const { formDataList, currtTabId, currtExtendId } = storeToRefs(tabStore)
 const localStore = reactive({
   loading: false,
   showAddTapDialog: false,
+  readOnly: import.meta.env.DEV ? false : true,
 })
 
 const Sopts = computed(() => SETP_OPTIONS_LIST)
@@ -146,6 +152,27 @@ async function onAddTap() {
   localStore.showAddTapDialog = false
 }
 
+/**
+ * @description: 点击下一步，上一步按钮的中转函数
+ */
+function onSwtichSetp(setp: "next" | "back") {
+  const currtdata = tabStore.currtFormData
+
+  switch (setp) {
+    case "next":
+      if (currtdata.setp == Sopts.value.length) return
+
+      // 进行校验，如果不满足则进行提示并不进行跳转
+      if (!nextSetpCheck(currtdata.setp)) return
+
+      currtdata.setp += 1
+      break
+
+    case "back":
+      if (currtdata.setp == 0) return
+      currtdata.setp -= 1
+  }
+}
 /**
  * @description: 点击下一步时触发的检查器，检查是否满足进入下一setp的必要条件
  * @param {*} currtSetp 当前step
@@ -181,47 +208,26 @@ function nextSetpCheck(currtSetp: number): boolean {
 
       break
     case 2:
+      // 【1】检查是否以上传文件但没选中
       eventBus.emit("gis-api:fileTransfer-default-checked")
 
+      // 【2】检查是否已经上传文件，确保工程前后都至少选择一个工况文件
       const hasBeDfsu = Boolean(data.beDfsuMd5List.length == 0)
       const hasAfDfsu = Boolean(data.afDfsuMd5List.length == 0)
-      
-      console.log({ hasBeDfsu, hasAfDfsu, data })
-
       if (hasBeDfsu || hasAfDfsu) {
         console.warn("多个dfsu文件的情况下需要指定")
         eventBus.emit(GUIDE_EVENTS.SHOW, ["setp2", 0, data.id])
 
         return false
       }
+
       break
     case 3:
-      break
+      console.log("3")
+      if (tabStore.currtFormData.afDfsuMd5List) break
   }
 
   return true
-}
-
-/**
- * @description: 点击下一步，上一步按钮的中转函数
- */
-function swtichSetp(setp: "next" | "back") {
-  const currtdata = tabStore.currtFormData
-
-  switch (setp) {
-    case "next":
-      if (currtdata.setp == Sopts.value.length) return
-
-      if (!nextSetpCheck(currtdata.setp)) return
-
-      currtdata.setp += 1
-
-      break
-
-    case "back":
-      if (currtdata.setp == 0) return
-      currtdata.setp -= 1
-  }
 }
 
 /**

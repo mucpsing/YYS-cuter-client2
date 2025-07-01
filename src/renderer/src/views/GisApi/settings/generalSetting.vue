@@ -87,7 +87,7 @@ const SERVER_KEYS = ["SERVER_IP", "SERVER_PROT"]
 
 const V = computed(
   () =>
-    `${config.SERVER_PROTOCOL}://${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}/`,
+    `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}/`,
 )
 const resetConfigData = (item) => {
   console.log("resetConfigData: ", item)

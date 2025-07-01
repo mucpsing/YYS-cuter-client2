@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-11-27 15:51:43
+ * @LastEditTime: 2025-07-01 15:22:46
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
@@ -182,6 +182,7 @@ export const useGisApiTabStore = defineStore("formState", {
     },
 
     async getTemplateList() {
+      this.templateInfoList.length = 0
       this.templateInfoList = await getTemplateList()
     },
   },

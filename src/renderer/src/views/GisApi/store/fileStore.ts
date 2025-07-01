@@ -19,19 +19,18 @@ export const useFileStroe = defineStore("fileStore", {
   }),
 
   getters: {
-    geoJsonOptions(state) {
-      const options: { value: string; label: string }[] = []
-      for (const [geoMd5, _geoData] of Object.entries(state.dfsuObj)) {
-        if (!Object.keys(state.dfsuObj).includes(geoMd5)) continue
-
-        options.push({
-          label: state.dfsuObj[geoMd5].name,
-          value: geoMd5,
-        })
-      }
-
-      return options
-    },
+    // BUG 不好用，当前是所有geojson，需要修改为指定tabID的文件列表
+    // geoJsonOptions(state) {
+    //   const options: { value: string; label: string }[] = []
+    //   for (const [geoMd5, _geoData] of Object.entries(state.dfsuObj)) {
+    //     if (!Object.keys(state.dfsuObj).includes(geoMd5)) continue
+    //     options.push({
+    //       label: state.dfsuObj[geoMd5].name,
+    //       value: geoMd5,
+    //     })
+    //   }
+    //   return options
+    // },
   },
 
   actions: {
@@ -42,7 +41,7 @@ export const useFileStroe = defineStore("fileStore", {
     //   }
     // },
 
-     getFile(md5: string) {
+    getFile(md5: string) {
       if (this.dfsuObj[md5]) {
         return this.dfsuObj[md5]
       }
