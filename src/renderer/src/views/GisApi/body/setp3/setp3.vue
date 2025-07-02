@@ -1,5 +1,13 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
+ * @Date: 2024-08-13 16:09:58
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2025-07-02 15:10:39
+ * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\setp3.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!--
+ * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
  * @LastEditTime: 2025-07-01 17:22:22
@@ -178,9 +186,9 @@ const themeList = [
 ]
 
 function test() {
-  console.log("test")
+  console.log(tabStore.currtFormData)
 
-  console.log(geoJsonOptions)
+  console.log(fileStore)
 }
 
 const geoJsonOptions = computed<{ value: string; label: string }[]>(() => {
@@ -216,6 +224,7 @@ onMounted(() => {
   // 初始化时，则默认绘制一个河道
   if (currtSelectDfsuName.value == "" && geoJsonOptions.value.length > 0) {
     onSelectRangeFile(geoJsonOptions.value[0].value)
+    currtSelectDfsuName.value = geoJsonOptions.value[0].label
   }
 })
 </script>

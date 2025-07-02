@@ -108,12 +108,12 @@ import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
 import { GUIDE_EVENTS } from "@gisapi/_components/guideEvents"
 
 import { eventBus } from "@renderer/libs"
-import { mxdToImgApi } from "@gisapi/api"
+import * as Server from "@gisapi/utils/server"
 
 import { SETP_OPTIONS_LIST } from "@gisapi/store/config"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
-import type { MxdToImgFormT } from "@gisapi/api"
+import type { MxdToImgFormT } from "@gisapi/utils/server"
 import type { FormDataItemT } from "@gisapi/store/formDataState"
 
 const SwiperComponentList = {
@@ -224,7 +224,9 @@ function nextSetpCheck(currtSetp: number): boolean {
       break
     case 3:
       console.log("3")
-      if (tabStore.currtFormData.afDfsuMd5List) break
+      if (tabStore.currtFormData.afDfsuMd5List) {
+      }
+      break
   }
 
   return true
@@ -284,7 +286,7 @@ async function mxdToImg(data: FormDataItemT) {
   console.log("## 开始调用合成接口")
 
   console.log({ body })
-  const res = await mxdToImgApi(body)
+  const res = await Server.mxdToImgApi(body)
   console.log({ res })
 
   localStore.loading = false

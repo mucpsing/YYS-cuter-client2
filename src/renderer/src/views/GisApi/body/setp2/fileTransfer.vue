@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-01 17:05:31
+ * @LastEditTime: 2025-07-02 16:12:43
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
@@ -120,7 +120,7 @@ import Sortable from "sortablejs"
 import { useFileStroe, useGisApiTabStore } from "@gisapi/store/index"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 import { getMd5 } from "@renderer/utils/calculateMd5"
-import * as API from "@gisapi/api"
+import * as Server from "@gisapi/utils/server"
 import { Delete1Icon } from "tdesign-icons-vue-next"
 import { truncateText } from "@gisapi/utils/index"
 import eventBus from "@renderer/libs/eventBus"
@@ -323,7 +323,7 @@ async function addItem(e, item: BaseItemT) {
     data.push(newItem)
 
     // 尝试进行上传，并传递上传进度的变量
-    API.uploadFile(newItem, (uploadPress: number) => {
+    Server.uploadFile(newItem, (uploadPress: number) => {
       // 如果不动态获取真实实例，在上传中移动可能丢失进度条
       updateItemById(newItem.id, { uploadProgress: uploadPress })
     })
@@ -340,7 +340,7 @@ async function addItem(e, item: BaseItemT) {
         }
       })
       .catch((err) => {
-        console.warn("API.uploadFile: ", { err })
+        console.warn("Server.uploadFile: ", { err })
         removeItemById(newItem.id)
       })
   }

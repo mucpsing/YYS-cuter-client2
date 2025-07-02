@@ -2,13 +2,14 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-01 08:59:22
+ * @LastEditTime: 2025-07-02 16:10:34
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 import Axios from "axios"
-import config, { API } from "./store/config"
+import config from "../store/config"
+import API from "../store/API"
 import type { TemplateInfo, FileInfoBase } from "@gisapi/Types"
 import type { FileInfoItemT } from "@gisapi/Types"
 
@@ -68,7 +69,7 @@ export async function getTemplateList() {
   }
 }
 
-export async function uploadCheck(fineMd5WithExtName: any): Promise<FileInfoBase | boolean> {
+export async function uploadCheck(fineMd5WithExtName: any): Promise<FileInfoBase | undefined> {
   try {
     const res = await server().get(`${API.uploadCheck}/${fineMd5WithExtName}`)
 
@@ -77,12 +78,12 @@ export async function uploadCheck(fineMd5WithExtName: any): Promise<FileInfoBase
         // console.log("文件已经存在，返回服务器缓存", res.data.res)
         return res.data.res.file_info as FileInfoBase
       }
-      return false
+      return undefined
     }
-    return false
+    return undefined
   } catch (err) {
     console.log("文件上传失败: ", { err })
-    return false
+    return undefined
   }
 }
 
@@ -94,12 +95,11 @@ export async function uploadFile(
 ): Promise<UploadResT> {
   try {
     const upload_check_res = await uploadCheck(fileInfo.md5Name)
-
     if (upload_check_res) return upload_check_res
 
     const formData = new FormData()
-    formData.append("file_name_md5", fileInfo.md5Name)
-    formData.append("file", fileInfo.file)
+    formData.append("file_name_md5", fileInfo.md5Name as string)
+    formData.append("file", fileInfo.file as File)
 
     try {
       const res = await server().post(API.upload, formData, {
@@ -108,8 +108,10 @@ export async function uploadFile(
 
         // 通过回调函数来将上传进度传出去
         onUploadProgress: (progressEvent) => {
-          let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-          if (updateProgressCallback) updateProgressCallback(percentCompleted)
+          if (progressEvent.total) {
+            let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            if (updateProgressCallback) updateProgressCallback(percentCompleted)
+          }
         },
       })
 
@@ -140,8 +142,6 @@ export async function uploadFileApi(
   formData.append("filen_name_md5", filen_name_md5)
   formData.append("file", file)
 
-  console.log({ formData })
-
   try {
     const res = await server().post(API.upload, formData, {
       headers: { "content-type": "multipart/form-data" },
@@ -162,6 +162,23 @@ export async function uploadFileApi(
     return false
   }
   return false
+}
+
+export async function getDfsuDifferenceToGeoJson(dfsu1Md5: string, dfsu2Md5: string) {
+  try {
+    const res = await server().post(
+      API.iGeometryDifference,
+      { md5_1: dfsu1Md5, md5_2: dfsu2Md5, output_format: "geojson" },
+      { timeout: 60000 },
+    )
+
+    if (res.status == 200 && res.data.success) return res.data.res
+
+    return undefined
+  } catch (err) {
+    console.log(err)
+    return undefined
+  }
 }
 
 export async function mxdToImgApi(body: MxdToImgFormBase): Promise<boolean> {

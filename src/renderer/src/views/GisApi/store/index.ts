@@ -2,14 +2,14 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-01 15:22:46
+ * @LastEditTime: 2025-07-02 16:02:03
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
 import { defineStore } from "pinia"
 import { createFormData } from "./formDataState"
 import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
-import { getTemplateList, serverCheckApi } from "@gisapi/api"
+import { getTemplateList, serverCheckApi } from "@renderer/views/GisApi/utils/server"
 
 import type { TabValue } from "tdesign-vue-next"
 import type { TemplateInfo } from "@gisapi/Types"

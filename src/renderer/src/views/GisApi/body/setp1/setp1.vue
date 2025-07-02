@@ -111,7 +111,7 @@
 <script setup lang="tsx">
 import { storeToRefs } from "pinia"
 import { debounce } from "lodash"
-import { SearchIcon, PrintIcon } from "tdesign-icons-vue-next"
+import { SearchIcon } from "tdesign-icons-vue-next"
 
 import { currtPreviewUrlHost } from "@gisapi/store/config"
 import { DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/formDataState"

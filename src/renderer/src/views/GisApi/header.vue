@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-08-29 10:39:32
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-07-29 10:30:58
+ * @LastEditTime: 2025-07-02 16:18:21
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\header.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -42,7 +42,7 @@ import { Link1Icon, LinkUnlinkIcon, SettingIcon } from "tdesign-icons-vue-next"
 import { eventBus } from "@renderer/libs"
 import { SettingPageValue as SettingsPageId } from "@renderer/stores"
 
-import { serverCheckApi } from "./api"
+import { serverCheckApi } from "@gisapi/utils/server"
 
 import { useGisApiStateStore } from "@gisapi/store/index"
 const glboalStore = useGisApiStateStore()

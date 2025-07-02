@@ -2,12 +2,12 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-01 08:53:32
+ * @LastEditTime: 2025-07-02 16:01:03
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
  * @Description: 这里存放页面所有静态配置
  */
 import { ref } from "vue"
-
+import API from "./API"
 export const baseSize = ref<"small" | "large" | "medium">("large")
 
 export const UP_FILE_ACCEPT_TYPE = {
@@ -29,15 +29,6 @@ export const SETP_OPTIONS_LIST = [
   { title: "视图配置", value: 3 },
   { title: "图片生成", value: 4 },
 ]
-
-export const API = {
-  getTemplateList: "/mxd_template_list",
-  upload: "/upload_file", // 上传文件，dfsu、shp（使用压缩包形式）
-  uploadCheck: "/check_file_exists",
-  mxdToImg: "/mxd_to_img",
-  getProjectRange: "/get_project_range", // 生成工程范围，可能会失败，需要网格一致
-  test: "/serverCheck",
-}
 
 export const config = reactive({
   // http协议

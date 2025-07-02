@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import config, { DEFAULT_SERVER_IP_LIST } from "../store/config"
-import { serverCheckApi } from "@gisapi/api"
+import { serverCheckApi } from "@gisapi/utils/server"
 import { useGisApiStateStore } from "@gisapi/store/index"
 const glboalStore = useGisApiStateStore()
 
