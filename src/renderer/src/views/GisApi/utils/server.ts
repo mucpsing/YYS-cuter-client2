@@ -2,9 +2,9 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-02 16:10:34
+ * @LastEditTime: 2025-07-02 16:39:38
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 所有API的包装工具类，所有外部要调用服务器都要引入这个类，实际的API保存在store/API中
  */
 
 import Axios from "axios"
@@ -164,6 +164,12 @@ export async function uploadFileApi(
   return false
 }
 
+/**
+ * @description: 计算两个已存在服务器的dfsu文件的几何面积差值，返回geojson
+ * @param {string} dfsu1Md5
+ * @param {string} dfsu2Md5
+ * @return {*}
+ */
 export async function getDfsuDifferenceToGeoJson(dfsu1Md5: string, dfsu2Md5: string) {
   try {
     const res = await server().post(

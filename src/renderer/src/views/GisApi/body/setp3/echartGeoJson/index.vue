@@ -1,8 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-08 21:18:32
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2025-07-03 14:41:08
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -46,7 +46,7 @@ import ChartGenJson from "./echartGeoJson"
 const emit = defineEmits(["update:rect"])
 const props = withDefaults(defineProps<DefaultPropsT>(), Props)
 
-const chartContainerRef = ref(null)
+const chartContainerRef = ref<HTMLDivElement | null>(null)
 const rectElementRef = ref<HTMLDivElement | null>(null)
 let myChart: ChartGenJson
 
@@ -57,6 +57,7 @@ const watchList: WatchStopHandle[] = [
 ]
 
 const drawOnce = debounce(() => {
+  console.log("drawOnce: ", props.geoJson)
   myChart.drawPolygon(props.geoJson[0], { max_len: props.maxLinkPoint })
 }, 300)
 
@@ -91,6 +92,10 @@ onUnmounted(() => {
 defineExpose({
   resize: () => {
     if (myChart) myChart.resize()
+  },
+
+  addProjectRange: (polygon) => {
+    if (myChart) myChart.addPolygon(polygon, { id: "projectRange" })
   },
 })
 </script>

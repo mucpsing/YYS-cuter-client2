@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-13 16:09:58
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-02 15:10:39
+ * @LastEditTime: 2025-07-02 17:15:47
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\setp3.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -153,12 +153,16 @@
 import EchartGeoJson from "./echartGeoJson/index.vue"
 import { useGisApiTabStore, useFileStroe } from "@gisapi/store/index"
 import type { TBtnThemeT } from "@gisapi/Types"
+import { getDfsuDifferenceToGeoJson } from "@gisapi/utils/server"
+
 const fileStore = useFileStroe()
 const tabStore = useGisApiTabStore()
 
 const currtSelectDfsuName = ref("")
 const currtRangeGeoJson = ref<any[]>([])
-const echartGeoJsonRef = ref<HTMLElement & { resize: () => void }>()
+const echartGeoJsonRef = ref<
+  HTMLElement & { resize: () => void; addProjectRange: (geojson: any) => void }
+>()
 
 const localStore = reactive({
   width: 520,
@@ -185,10 +189,23 @@ const themeList = [
   "success",
 ]
 
-function test() {
+async function test() {
   console.log(tabStore.currtFormData)
 
   console.log(fileStore)
+
+  if (geoJsonOptions.value.length < 2) return
+
+  const diff_geojson = await getDfsuDifferenceToGeoJson(
+    tabStore.currtFormData.beDfsuMd5List[0],
+    tabStore.currtFormData.afDfsuMd5List[0],
+  )
+
+  if (diff_geojson && echartGeoJsonRef.value) {
+    console.log({ diff_geojson })
+    currtRangeGeoJson.value[0] = diff_geojson.geojson
+    // echartGeoJsonRef.value.addProjectRange(diff_geojson.geojson)
+  }
 }
 
 const geoJsonOptions = computed<{ value: string; label: string }[]>(() => {
@@ -199,11 +216,7 @@ const geoJsonOptions = computed<{ value: string; label: string }[]>(() => {
     ...tabStore.currtFormData.beDfsuMd5List,
   ]
 
-  console.log({ fileList })
-
   for (const md5 of fileList) {
-    console.log({ md5 })
-
     if (Object.keys(fileStore.dfsuObj).includes(md5)) {
       options.push({
         value: md5,

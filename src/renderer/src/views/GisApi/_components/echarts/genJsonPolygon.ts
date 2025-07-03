@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-15 11:04:13
+ * @LastEditTime: 2025-07-03 17:09:03
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -237,19 +237,37 @@ class ChartGeoJson {
         },
       ],
 
-      graphic: [
-        {
-          id: "test",
-          type: "polygon",
-          shape: {
-            points: polygon,
-          },
-        },
-      ],
+      // graphic: [
+      //   {
+      //     id: "test",
+      //     type: "polygon",
+      //     shape: {
+      //       points: polygon,
+      //     },
+      //   },
+      // ],
     }
 
     this.chart.setOption(option)
     this.drawPolygonCount++
+  }
+
+  public drawPolygonWithGraphic(polygon, config: { id: string }) {
+    const currtOptions = this.chart.getOption()
+
+    console.log({ currtOptions })
+
+    const series = [
+      {
+        id: config.id,
+        type: "line",
+        data: polygon,
+        Symbol: false,
+        symbolSize: 0,
+      },
+    ]
+
+    this.chart.setOption({ series })
   }
 
   private _recordBounds = throttle((position: number[]) => {

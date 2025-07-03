@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-08-16 11:00:51
+ * @LastEditTime: 2025-07-02 17:11:25
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -226,6 +226,23 @@ class ChartGeoJson {
     const yAxisMax = bounds.maxY - shape.height / 2 + offset
     return { xAxisMin, xAxisMax, yAxisMin, yAxisMax }
   }
+  // config: AddPolygonConfig
+  public addPolygon(geojson: FeatureCollection, config: { id: string }) {
+    if (!geojson) return console.warn("have no geojsonData")
+
+    console.log('addPolygon: ', geojson)
+    const polygon = geojson.features[0].geometry.coordinates[0]
+    this.chart.setOption({
+      series: [
+        {
+          id: config.id,
+          data: polygon,
+          Symbol: false,
+          symbolSize: 0,
+        },
+      ],
+    })
+  }
 
   public drawPolygon(geojson: FeatureCollection, config: DrawPolygonConfig) {
     if (!geojson) return console.warn("have no geojsonData")
@@ -237,6 +254,7 @@ class ChartGeoJson {
     // 根据config.max_len，保留第一个和最后一个点，并且每隔一个点保留一个点
     const polygonRaw = geojson.features[0].geometry.coordinates[0]
     const polygon = this.diluteThePolygon(polygonRaw, config.max_len)
+
     // 计算边界
     const bounds = this.calculateBounds(polygon)
     // 计算宽高
@@ -292,15 +310,15 @@ class ChartGeoJson {
         },
       ],
 
-      graphic: [
-        {
-          id: "test",
-          type: "polygon",
-          shape: {
-            points: polygon,
-          },
-        },
-      ],
+      // graphic: [
+      //   {
+      //     id: "test",
+      //     type: "polygon",
+      //     shape: {
+      //       points: polygon,
+      //     },
+      //   },
+      // ],
     }
 
     this.chart.setOption(option)
