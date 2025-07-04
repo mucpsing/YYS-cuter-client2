@@ -2,9 +2,9 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2025-07-03 08:48:30
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-03 16:57:30
+ * @LastEditTime: 2025-07-04 09:40:18
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Demo\polygon.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 这是gisapi的多边形echarts组件预览调试demo
 -->
 <template>
   <div class="relative w-full h-full bg-red-300">
@@ -21,8 +21,7 @@
 
 <script setup lang="ts">
 import { debounce } from "lodash"
-import ChartGenJson from "@gisapi/_components/echarts/genJsonPolygon"
-// import ChartGenJson2 from "@gisapi/body/setp3/echartGeoJson/echartGeoJson"
+import ChartGenJson from "@gisapi/_components/echarts/geoJsonPolygon"
 import testData, { projectRange } from "@gisapi/_components/echarts/testData"
 
 let myChart: ChartGenJson
@@ -41,7 +40,8 @@ async function test() {
   console.log("/demo/polygon: ")
 
   if (myChart) {
-    myChart.drawPolygonWithGraphic(projectRange.features[0].geometry.coordinates[0], { id: "0" })
+    myChart.addPolygon(projectRange.features[0].geometry.coordinates[0], { id: "0" })
+    myChart.addPolygon(projectRange.features[1].geometry.coordinates[0], { id: "2" })
   }
 }
 

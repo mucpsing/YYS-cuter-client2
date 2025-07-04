@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-09-10 21:57:59
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-03 08:56:06
+ * @LastEditTime: 2025-07-04 09:58:28
  * @FilePath: \YYS-cuter-client2\src\renderer\src\router\routerList.ts
  * @Description: 路由元数据，用于生成路由和侧边栏的主菜单列
  */
@@ -12,7 +12,7 @@ export const routerList = [
     icon: "yuzhiyibiaopan",
     iconSub: "home1",
     routerPath: "/home",
-    comment: () => import("@renderer/views/Home/ProjectRect.vue"),
+    comment: () => import("@renderer/views/Home/test.vue"),
   },
 
   {
@@ -44,12 +44,20 @@ export const routerList = [
     comment: () => import("@renderer/views/TyphoonUI/index.vue"),
   },
   {
-    name: "仪表盘",
+    name: "多边形追加",
     icon: "yuzhiyibiaopan",
     iconSub: "home1",
-    routerPath: "/home",
+    routerPath: "/demo/polygon",
     comment: () => import("@renderer/views/Demo/polygon.vue"),
   },
+  {
+    name: "多边形绘制",
+    icon: "yuzhiyibiaopan",
+    iconSub: "home1",
+    routerPath: "/demo/projectRect",
+    comment: () => import("@renderer/views/Demo/ProjectRect.vue"),
+  },
+
   // {
   //   name: "NS-NPC管理",
   //   icon: "icon-yys-youxi",

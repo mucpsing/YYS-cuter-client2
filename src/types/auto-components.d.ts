@@ -67,7 +67,7 @@ declare module 'vue' {
     PanelServer: typeof import('./../renderer/src/views/ImageCuter/config/panelServer.vue')['default']
     Paper: typeof import('./../renderer/src/views/Home/paper.vue')['default']
     Polygon: typeof import('./../renderer/src/views/Demo/polygon.vue')['default']
-    ProjectRect: typeof import('./../renderer/src/views/Home/ProjectRect.vue')['default']
+    ProjectRect: typeof import('./../renderer/src/views/Demo/ProjectRect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchInput: typeof import('./../renderer/src/views/TyphoonUI/_components/SearchInput.vue')['default']
