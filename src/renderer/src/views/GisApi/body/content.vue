@@ -108,7 +108,7 @@ import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
 import { GUIDE_EVENTS } from "@gisapi/_components/guideEvents"
 
 import { eventBus } from "@renderer/libs"
-import * as Server from "@gisapi/utils/server"
+import { mxdToImgApi } from "@gisapi/utils/server"
 
 import { SETP_OPTIONS_LIST } from "@gisapi/store/config"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
@@ -239,9 +239,7 @@ function nextSetpCheck(currtSetp: number): boolean {
  */
 async function mxdToImg(data: FormDataItemT) {
   // localStore.loading = true
-  console.log({ data })
   console.log(tabStore.currtFormData)
-  return
 
   // 创建上传列表
   // const upload_list = [
@@ -269,12 +267,16 @@ async function mxdToImg(data: FormDataItemT) {
   // 拼接api所需要的参数格式body
   const body: MxdToImgFormT = {
     template_id: data.mxdId,
-    dfsu_be_md5: data.beDfsuInfo.md5,
-    dfsu_af_md5: data.afDfsuInfo.md5,
+    dfsu_be_md5: data.beDfsuMd5List[0],
+    dfsu_af_md5: data.afDfsuMd5List[0],
     output_name: data.title,
     river_range: data.riverRange,
     radian_or_angle: data.radian_or_angle == "弧度" ? "radian" : "angle",
   }
+
+  console.log({ body })
+
+  return
 
   // 项目范围或者点
   // if (data.projectRangeType == "point") {
@@ -286,7 +288,7 @@ async function mxdToImg(data: FormDataItemT) {
   console.log("## 开始调用合成接口")
 
   console.log({ body })
-  const res = await Server.mxdToImgApi(body)
+  const res = await mxdToImgApi(body)
   console.log({ res })
 
   localStore.loading = false

@@ -1,16 +1,8 @@
 <!--
  * @Author: cpasion-office-win10 373704015@qq.com
- * @Date: 2024-08-13 16:09:58
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-02 17:15:47
- * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\setp3.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
-<!--
- * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-01 17:22:22
+ * @LastEditTime: 2025-07-04 10:21:02
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -33,7 +25,7 @@
             v-model:rect="tabStore.currtFormData.projectPoints"
             :geo-json="currtRangeGeoJson"
             :maxLinkPoint="localStore.maxLinkPoint"
-            :draw-rect-size="currtPaper"
+            :draw-rect-size="localStore.currtPaper"
             :width="localStore.width"
             :height="localStore.height"
             :showRect="localStore.showRect"
@@ -57,7 +49,7 @@
             <t-form-item label="选择范围" name="name" label-align="left" initial-data="TDesign">
               <t-select
                 :options="geoJsonOptions"
-                v-model="currtSelectDfsuName"
+                v-model="localStore.currtSelectDfsuName"
                 class="min-w-[100px] w-full"
                 :onChange="(value) => onSelectRangeFile(value as string)"
               >
@@ -101,12 +93,12 @@
             <!-- 输出尺寸 -->
             <t-form-item label="输出尺寸" name="name" label-align="left" initial-data="TDesign">
               <div class="flex flex-row flex-wrap gap-2">
-                <template v-for="(item, idx) in paperSizeList" :key="idx">
+                <template v-for="(item, idx) in paperSizeOptions" :key="idx">
                   <t-button
-                    @click="() => (currtPaper = item.value)"
+                    @click="() => (localStore.currtPaper = item.value)"
                     variant="outline"
                     size="small"
-                    :theme="(themeList[idx] as TBtnThemeT)"
+                    :theme="(themeListTab[idx] as TBtnThemeT)"
                   >
                     {{ `${item.label} (${item.value})` }}
                   </t-button>
@@ -155,30 +147,30 @@ import { useGisApiTabStore, useFileStroe } from "@gisapi/store/index"
 import type { TBtnThemeT } from "@gisapi/Types"
 import { getDfsuDifferenceToGeoJson } from "@gisapi/utils/server"
 
-const fileStore = useFileStroe()
-const tabStore = useGisApiTabStore()
-
-const currtSelectDfsuName = ref("")
 const currtRangeGeoJson = ref<any[]>([])
 const echartGeoJsonRef = ref<
   HTMLElement & { resize: () => void; addProjectRange: (geojson: any) => void }
 >()
 
+const fileStore = useFileStroe()
+const tabStore = useGisApiTabStore()
 const localStore = reactive({
   width: 520,
   height: 380,
   showRect: true,
   maxLinkPoint: 50,
+  currtSelectDfsuName: "",
+  currtPaper: "297x210",
 })
 
-const currtPaper = ref("297x210")
-const paperSizeList = [
+const paperSizeOptions = [
   { label: "A4", value: "297x210" },
   { label: "A3", value: "420x297" },
   { label: "A2", value: "594x420" },
   { label: "A1", value: "842x594" },
 ]
-const themeList = [
+
+const themeListTab = [
   "primary",
   "danger",
   "warning",
@@ -190,10 +182,6 @@ const themeList = [
 ]
 
 async function test() {
-  console.log(tabStore.currtFormData)
-
-  console.log(fileStore)
-
   if (geoJsonOptions.value.length < 2) return
 
   const diff_geojson = await getDfsuDifferenceToGeoJson(
@@ -202,12 +190,11 @@ async function test() {
   )
 
   if (diff_geojson && echartGeoJsonRef.value) {
-    console.log({ diff_geojson })
-    currtRangeGeoJson.value[0] = diff_geojson.geojson
-    // echartGeoJsonRef.value.addProjectRange(diff_geojson.geojson)
+    echartGeoJsonRef.value.addProjectRange(diff_geojson.geojson)
   }
 }
 
+// 【选择范围】的下拉选项列表，根据当前所选的tab动态生成
 const geoJsonOptions = computed<{ value: string; label: string }[]>(() => {
   const options: { value: string; label: string }[] = []
 
@@ -227,6 +214,7 @@ const geoJsonOptions = computed<{ value: string; label: string }[]>(() => {
   return options
 })
 
+// 【选择范围】根据选择的范围绘制
 async function onSelectRangeFile(md5: string) {
   currtRangeGeoJson.value[0] = await fileStore.getGeoJsonByMd5(md5)
 }
@@ -235,9 +223,9 @@ onMounted(() => {
   console.log("step3 on onMounted")
 
   // 初始化时，则默认绘制一个河道
-  if (currtSelectDfsuName.value == "" && geoJsonOptions.value.length > 0) {
+  if (localStore.currtSelectDfsuName == "" && geoJsonOptions.value.length > 0) {
     onSelectRangeFile(geoJsonOptions.value[0].value)
-    currtSelectDfsuName.value = geoJsonOptions.value[0].label
+    localStore.currtSelectDfsuName = geoJsonOptions.value[0].label
   }
 })
 </script>
