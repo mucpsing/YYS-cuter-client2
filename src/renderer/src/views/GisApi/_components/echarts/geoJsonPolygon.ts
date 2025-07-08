@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-04 09:34:55
+ * @LastEditTime: 2025-07-07 09:27:17
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -97,6 +97,11 @@ class ChartGeoJson {
     }
   }
 
+  /**
+   * @description: 创建拖拽元素，这个元素基于div，不是内置在echarts中的
+   * @param {HTMLElement} element
+   * @param {string} outerId
+   */
   public interactInit(element: HTMLElement, outerId: string = "#interactInitId") {
     if (element.parentElement) {
       element.parentElement.id = "interactInitId"
@@ -236,16 +241,6 @@ class ChartGeoJson {
           zlevel: 0,
         },
       ],
-
-      // graphic: [
-      //   {
-      //     id: "test",
-      //     type: "polygon",
-      //     shape: {
-      //       points: polygon,
-      //     },
-      //   },
-      // ],
     }
 
     this.chart.setOption(option)
@@ -268,6 +263,14 @@ class ChartGeoJson {
     ]
 
     this.chart.setOption({ series })
+  }
+
+  public removePolygon(id: string) {
+    const options = this.chart.getOption()
+
+    options.series.forEach((item) => {
+      if (item.id == id) this.chart.setOption({ series: [{ id, data: [] }] })
+    })
   }
 
   private _recordBounds = throttle((position: number[]) => {

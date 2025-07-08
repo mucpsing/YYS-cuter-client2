@@ -272,6 +272,7 @@ async function mxdToImg(data: FormDataItemT) {
     output_name: data.title,
     river_range: data.riverRange,
     radian_or_angle: data.radian_or_angle == "弧度" ? "radian" : "angle",
+    show_range2D: tabStore.currtFormData.projectPoints,
   }
 
   console.log({ body })

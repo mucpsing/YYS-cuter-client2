@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-02 16:39:38
+ * @LastEditTime: 2025-07-04 15:58:56
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 所有API的包装工具类，所有外部要调用服务器都要引入这个类，实际的API保存在store/API中
  */
@@ -33,13 +33,14 @@ const server = (timeout = DEFAULT_AXIOS_TIMEOUT) => {
   return SERVER
 }
 
+export type show_range2DT = [xmin: number, ymin: number, xmax: number, ymax: number]
 export type MxdToImgFormBase = {
   template_id: number
   dfsu_be_md5: string
   dfsu_af_md5: string
   output_name: string
   river_range?: "工程前" | "工程后"
-  show_range?: number
+  show_range2D?: show_range2DT
   radian_or_angle?: "radian" | "angle"
 }
 

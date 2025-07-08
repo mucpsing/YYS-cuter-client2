@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-04 10:06:02
+ * @LastEditTime: 2025-07-07 09:21:07
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -97,7 +97,8 @@ defineExpose({
 
   addProjectRange: (polygon: any) => {
     polygon.features.forEach((feature, idx) => {
-      myChart.addPolygon(feature.geometry.coordinates[0], { id: `projectRange${idx}` })
+      myChart.removePolygon(`projectRange_${idx}`)
+      myChart.addPolygon(feature.geometry.coordinates[0], { id: `projectRange_${idx}` })
     })
   },
 })

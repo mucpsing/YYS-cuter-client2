@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-01 09:25:02
+ * @LastEditTime: 2025-07-04 15:58:04
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\state.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @Description: 建议所有state变量使用currtXxxxXxxx来命名
@@ -11,7 +11,7 @@
 
 import type { BoundsT, TemplateInfo } from "@gisapi/Types"
 export const DEFAULT_TEMPLATE_OUTNAME = "未命名工况"
-
+import type { show_range2DT } from "@gisapi/utils/server"
 export function createFormData(newTabId: number) {
   return {
     id: newTabId,
@@ -60,7 +60,7 @@ export function createFormData(newTabId: number) {
     mxdId: -1, // 要使用的mxd模板id
     mxdName: "",
     projectRangeType: "shp" as "point" | "shp" | "geojson", // 仅前端用来打包参数时区分用shp还是point
-    projectPoints: [0, 0, 0, 0] as number[], // [minX, maxX, minY, maxY]
+    projectPoints: [0, 0, 0, 0] as show_range2DT, // [minX, maxX, minY, maxY]
     radian_or_angle: "弧度" as `弧度` | `角度`,
     show_range: 600, // 显示范围
     mesh_size: 25,
