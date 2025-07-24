@@ -16,6 +16,7 @@ export function createFormData(newTabId: number) {
   return {
     id: newTabId,
     setp: 1,
+    timeStep: -1, // 使用dfsu哪个时间序列进行数据处理
     title: DEFAULT_TEMPLATE_OUTNAME,
     beDfsuMd5List: [] as string[], // 使用列表形式存储md5，后续添加批量导出功能
     afDfsuMd5List: [] as string[], // 使用列表形式存储md5，后续添加批量导出功能

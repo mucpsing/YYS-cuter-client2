@@ -241,29 +241,6 @@ async function mxdToImg(data: FormDataItemT) {
   // localStore.loading = true
   console.log(tabStore.currtFormData)
 
-  // 创建上传列表
-  // const upload_list = [
-  //   uploadFileApi(`${data.beDfsuInfo.md5}.dfsu`, data.beDfsuInfo.file), // 上传工程前 dfsu
-  //   uploadFileApi(`${data.afDfsuInfo.md5}.dfsu`, data.afDfsuInfo.file), // 上传工程后 dfsu
-  // ]
-  // // 如果存在
-  // if (data.projectRange.fileList.length > 0) {
-  //   data.projectRange.fileList.map((eachFile) => {
-  //     upload_list.push(uploadFileApi(`${data.projectRange.md5}${eachFile.ext}`, eachFile.file))
-  //   })
-  // }
-  // console.log("开始上传文件，数量: ", upload_list.length)
-  // console.log({ upload_list })
-  // const file_upload_res_list = await Promise.all(upload_list)
-
-  // 检查是否上传成功
-  // if (!file_upload_res_list.every((res) => res)) {
-  //   console.log("有文件上传失败")
-  //   console.log(file_upload_res_list)
-  // } else {
-  //   console.log("所有文件上传成功")
-  // }
-
   // 拼接api所需要的参数格式body
   const body: MxdToImgFormT = {
     template_id: data.mxdId,
@@ -271,30 +248,21 @@ async function mxdToImg(data: FormDataItemT) {
     dfsu_af_md5: data.afDfsuMd5List[0],
     output_name: data.title,
     river_range: data.riverRange,
-    radian_or_angle: data.radian_or_angle == "弧度" ? "radian" : "angle",
-    show_range2D: tabStore.currtFormData.projectPoints,
+    // radian_or_angle: data.radian_or_angle == "弧度" ? "radian" : "angle",
+    show_range: tabStore.currtFormData.projectPoints,
+    crs: "auto",
+    time_step: data.timeStep,
+    sub_title: data.outputName,
   }
 
   console.log({ body })
 
-  return
-
-  // 项目范围或者点
-  // if (data.projectRangeType == "point") {
-  //   body["project_point"] = `${data.projectPoints.x},${data.projectPoints.y}`
-  // } else {
-  //   body["project_md5"] = data.projectRange.md5
-  // }
-
-  console.log("## 开始调用合成接口")
-
-  console.log({ body })
   const res = await mxdToImgApi(body)
   console.log({ res })
 
   localStore.loading = false
 
-  // return res
+  return res
 }
 </script>
 

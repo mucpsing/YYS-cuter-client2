@@ -105,6 +105,24 @@ b
             </div>
           </div>
           <t-divider class="my-2"></t-divider>
+          <!-- --------------- 【 指定时间序列 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>时间序列</strong></h2>
+              <p>设置要输出的时间序列，默认-1，既最后一个</p>
+            </div>
+            <div class="flex gap-1">
+              <t-input-number
+                theme="normal"
+                size="medium"
+                v-model="tabStore.currtFormData.timeStep"
+                class="w-[100px]"
+                align="center"
+              ></t-input-number>
+            </div>
+          </div>
+
+          <t-divider class="my-2"></t-divider>
 
           <!-- --------------- 【 等值线显示范围 】 --------------- -->
           <div class="flex items-center justify-between mt-2">

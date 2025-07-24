@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-26 10:28:28
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-01 15:23:39
+ * @LastEditTime: 2025-07-10 15:47:01
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\index.vue
  * @Description: 这是gis-api主页面功能展示区域入口文件，可以理解为页面的body
 -->
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import BodyContent from "./content.vue"
+import BodyContent from "./container.vue"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
 import eventBus from "@renderer/libs/eventBus"

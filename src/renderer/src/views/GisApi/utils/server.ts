@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-04 15:58:56
+ * @LastEditTime: 2025-07-24 16:12:19
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 所有API的包装工具类，所有外部要调用服务器都要引入这个类，实际的API保存在store/API中
  */
@@ -40,19 +40,22 @@ export type MxdToImgFormBase = {
   dfsu_af_md5: string
   output_name: string
   river_range?: "工程前" | "工程后"
-  show_range2D?: show_range2DT
+  show_range?: show_range2DT
   radian_or_angle?: "radian" | "angle"
+  crs?: string | number // 支持直接使用crs代码， auto|unknown
+  time_step?: number
+  sub_title: string // 图例名称
 }
 
-export type MxdToImgFormProjectShp = {
-  project_md5?: string
-} & MxdToImgFormBase
+// export type MxdToImgFormProjectShp = {
+//   project_md5?: string
+// } & MxdToImgFormBase
 
-export type MxdToImgFormProjectPoints = {
-  project_point?: string
-} & MxdToImgFormBase
+// export type MxdToImgFormProjectPoints = {
+//   project_point?: string
+// } & MxdToImgFormBase
 
-export type MxdToImgFormT = MxdToImgFormProjectShp | MxdToImgFormProjectPoints
+export type MxdToImgFormT = MxdToImgFormBase
 
 export async function getTemplateList() {
   console.log("getTemplateList:")

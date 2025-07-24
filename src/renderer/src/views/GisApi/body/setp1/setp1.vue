@@ -35,7 +35,7 @@
             </div>
 
             <t-space direction="vertical" size="10px">
-              <t-input-adornment prepend="1、输出名称：">
+              <t-input-adornment prepend="1、图例名称：">
                 <t-select-input
                   :id="`Gis-Api__template_input_mxd_name_${tabStore.currtFormData.id}`"
                   :value="tabStore.currtFormData.outputName"

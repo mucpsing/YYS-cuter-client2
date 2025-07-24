@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-04 15:24:23
+ * @LastEditTime: 2025-07-24 15:50:28
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -107,27 +107,46 @@
             </t-form-item>
 
             <!-- 项目范围 -->
-            <t-form-item label="项目范围">
-              <div class="flex items-center justify-center gap-4">
-                <div class="flex gap-2">
-                  <strong>自动生成</strong>
-                  <t-switch> </t-switch>
+            <t-form-item label="其他设置">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-center gap-4">
+                  <div class="flex gap-2">
+                    <t-select
+                      v-model="localStore.projectRangeModel"
+                      :loading="localStore.projectRangeLoadding"
+                      @change="onProjectRangeModelChange"
+                    >
+                      <t-option key="auto" label="自动生成" value="auto" />
+                      <t-option key="user" label="手动上传" value="user" />
+                    </t-select>
+                  </div>
+
+                  <div v-show="localStore.projectRangeModel == 'user'">
+                    <t-button
+                      :loading="localStore.projectRangeLoadding"
+                      size="medium"
+                      theme="danger"
+                      @click="test"
+                      >X</t-button
+                    >
+                  </div>
                 </div>
-                <div>
-                  <t-button size="small" theme="success" @click="test">下载</t-button>
+                <div class="flex items-center justify-start gap-2">
+                  <strong>视图框</strong>
+                  <t-switch v-model="localStore.showRect">选择框</t-switch>
                 </div>
               </div>
             </t-form-item>
 
             <!-- 输出尺寸 -->
-            <t-form-item label="其他操作" name="name" label-align="left" initial-data="TDesign">
+            <!-- <t-form-item label="其他操作" name="name" label-align="left" initial-data="TDesign">
               <div class="flex flex-row items-center justify-center gap-2">
                 <div class="flex items-center justify-center gap-2">
                   <strong>视图框</strong>
                   <t-switch v-model="localStore.showRect">选择框</t-switch>
                 </div>
               </div>
-            </t-form-item>
+            </t-form-item> -->
           </t-form>
 
           <template #footer>
@@ -161,6 +180,8 @@ const localStore = reactive({
   maxLinkPoint: 50,
   currtSelectDfsuName: "",
   currtPaper: "297x210",
+  projectRangeLoadding: false,
+  projectRangeModel: "auto", // auto | user
 })
 
 const paperSizeOptions = [
@@ -181,18 +202,25 @@ const themeListTab = [
   "success",
 ]
 
-async function test() {
-  if (geoJsonOptions.value.length < 2) return
+async function onProjectRangeModelChange() {
+  console.log("onProjectRangeModelChange: ")
 
-  const diff_geojson = await getDfsuDifferenceToGeoJson(
-    tabStore.currtFormData.beDfsuMd5List[0],
-    tabStore.currtFormData.afDfsuMd5List[0],
-  )
+  if (localStore.projectRangeModel == "auto") {
+    // 调用远程的接口生成两个dfsu之间的差值
+    if (geoJsonOptions.value.length < 2) return
 
-  if (diff_geojson && echartGeoJsonRef.value) {
-    echartGeoJsonRef.value.addProjectRange(diff_geojson.geojson)
+    const diff_geojson = await getDfsuDifferenceToGeoJson(
+      tabStore.currtFormData.beDfsuMd5List[0],
+      tabStore.currtFormData.afDfsuMd5List[0],
+    )
+
+    if (diff_geojson && echartGeoJsonRef.value) {
+      echartGeoJsonRef.value.addProjectRange(diff_geojson.geojson)
+    }
   }
 }
+
+async function test() {}
 
 // 【选择范围】的下拉选项列表，根据当前所选的tab动态生成
 const geoJsonOptions = computed<{ value: string; label: string }[]>(() => {
@@ -226,6 +254,8 @@ onMounted(() => {
   if (localStore.currtSelectDfsuName == "" && geoJsonOptions.value.length > 0) {
     onSelectRangeFile(geoJsonOptions.value[0].value)
     localStore.currtSelectDfsuName = geoJsonOptions.value[0].label
+
+    onProjectRangeModelChange()
   }
 })
 </script>
