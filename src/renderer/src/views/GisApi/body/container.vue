@@ -1,5 +1,7 @@
 <template>
   <div :class="['flex flex-col h-full px-2 gap-1']">
+    <TopToolBar v-model:showAddDia="localStore.showAddTapDialog" />
+
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
       <!-- 【按钮】添加工况 -->
       <t-tooltip content="添加工况">
@@ -115,6 +117,8 @@ import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
 import type { MxdToImgFormT } from "@gisapi/utils/server"
 import type { FormDataItemT } from "@gisapi/store/formDataState"
+
+import TopToolBar from "./topToolBar/index.vue"
 
 const SwiperComponentList = {
   "1": defineAsyncComponent(() => import("./setp1/setp1.vue")),
