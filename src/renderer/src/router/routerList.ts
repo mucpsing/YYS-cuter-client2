@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2023-09-10 21:57:59
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-04 09:58:28
+ * @LastEditTime: 2025-08-05 10:02:11
  * @FilePath: \YYS-cuter-client2\src\renderer\src\router\routerList.ts
  * @Description: 路由元数据，用于生成路由和侧边栏的主菜单列
  */
@@ -81,7 +81,7 @@ export const routerList = [
   // },
 ]
 
-export const lastRouterPath = routerList[routerList.length - 1].routerPath
-// export const lastRouterPath = routerList[3].routerPath
+// export const lastRouterPath = routerList[routerList.length - 1].routerPath
+export const lastRouterPath = routerList[3].routerPath
 
 export default routerList

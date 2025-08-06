@@ -1,43 +1,9 @@
 <template>
   <div :class="['flex flex-col h-full px-2 gap-1']">
-    <TopToolBar v-model:showAddDia="localStore.showAddTapDialog" />
+    <!-- 浮动工具条，整合了一些前置功能，添加工况、历史任务等 -->
+    <TopToolBar />
 
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
-      <!-- 【按钮】添加工况 -->
-      <t-tooltip content="添加工况">
-        <t-button :onClick="() => (localStore.showAddTapDialog = true)"
-          ><template #icon><AddIcon /></template
-        ></t-button>
-      </t-tooltip>
-
-      <!-- 【弹窗】添加工况 -->
-      <t-dialog
-        header="创建工况配置"
-        body="对话框内容"
-        :visible="localStore.showAddTapDialog"
-        :on-close="() => (localStore.showAddTapDialog = false)"
-        confirmOnEnter
-        @confirm="onAddTap"
-      >
-        <ul class="p-1">
-          <li class="flex gap-2 py-1">
-            <h3><strong>继承工况配置生成：</strong></h3>
-            <t-dropdown
-              :options="selectTemplateExtendIdOptions"
-              @click="(data) => {
-                tabStore.currtExtendId = data.value as number
-                currtExtendValue = data.content as string
-              }"
-            >
-              <t-button size="small" variant="outline"
-                >{{ currtExtendValue }}
-                <template #suffix><ChevronDownIcon /> </template>
-              </t-button>
-            </t-dropdown>
-          </li>
-        </ul>
-      </t-dialog>
-
       <!-- 【步骤条】 -->
       <!-- 步骤条不进行事件hook，生产环境禁止通过点击跳过步骤，所有hook操作都在【上一步】和【下一步】两个点击按钮事件进行控制 -->
       <!-- 所有hook事件都在 onSwtichSetp() 和 nextSetpCheck() 中进行控制 -->
@@ -106,7 +72,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia"
-import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
 import { GUIDE_EVENTS } from "@gisapi/_components/guideEvents"
 
 import { eventBus } from "@renderer/libs"
@@ -129,32 +94,15 @@ const SwiperComponentList = {
 
 const globalStore = useGisApiStateStore()
 const tabStore = useGisApiTabStore()
-const { formDataList, currtTabId, currtExtendId } = storeToRefs(tabStore)
+const { formDataList, currtTabId } = storeToRefs(tabStore)
 
 const localStore = reactive({
   loading: false,
-  showAddTapDialog: false,
+  // showAddTapDialog: false,
   readOnly: import.meta.env.DEV ? false : true,
 })
 
 const Sopts = computed(() => SETP_OPTIONS_LIST)
-
-const currtExtendValue = ref("不继承")
-const selectTemplateExtendIdOptions = computed(() => {
-  const res = [{ content: `不继承`, value: -1 }]
-
-  formDataList.value.forEach((item, idx) => {
-    res.push({ content: item.title, value: idx })
-  })
-
-  return res
-})
-
-async function onAddTap() {
-  tabStore.addTab(currtExtendId.value)
-
-  localStore.showAddTapDialog = false
-}
 
 /**
  * @description: 点击下一步，上一步按钮的中转函数
