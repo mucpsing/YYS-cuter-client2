@@ -2,40 +2,46 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2025-08-05 15:24:08
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-05 16:00:25
+ * @LastEditTime: 2025-08-08 15:39:15
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\taskManager\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <t-dialog
-    header="历史任务管理器"
-    body="历史任务管理器"
+    header="历史任务"
     :visible="taskStore.dialog.visible"
-    :on-close="
-      () => {
-        taskStore.closeDialog()
-      }
-    "
-    confirmOnEnter
-    @confirm="onConfirm"
+    :onClose="onClose"
+    confirmOnEnter=""
+    draggable=""
+    mode="modal"
+    :footer="null"
   >
-    <t-empty>
-      <template #action>
-        <t-button @click="close">关闭</t-button>
-      </template>
-    </t-empty>
+    <template v-show="taskStore.taskList.length == 0">
+      <t-empty :title="localStore.emptyTitle" :description="localStore.emptyDescription">
+        <t-button @click="onClose">关闭</t-button>
+      </t-empty>
+    </template>
+
+    <TaskList></TaskList>
   </t-dialog>
 </template>
 
 <script setup lang="ts">
+import TaskList from "./taskList.vue"
 import { AddIcon, Task1Icon, HistoryIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
-import { useTaskStroe } from "@gisapi/store/index"
+import { useTaskStore } from "@gisapi/store/index"
 
-const taskStore = useTaskStroe()
-const title = ref("空状态 Empty")
-const description = ref("暂无任务")
-async function onConfirm() {}
-async function close() {}
+const fakeData = [
+  // 这个是数据模版
+  { taskId: "123", request: {}, preview: {} },
+  { taskId: "222", request: {}, preview: {} },
+]
+const localStore = reactive({
+  emptyTitle: "任务列表",
+  emptyDescription: "暂无任务",
+})
+const taskStore = useTaskStore()
+async function onClose() {
+  taskStore.closeDialog()
+}
 </script>
-
-<style scoped></style>

@@ -3,8 +3,8 @@
   <t-dialog
     header="创建工况配置"
     body="对话框内容"
-    :visible="localStore.showAddTapDialog"
-    :on-close="() => (localStore.showAddTapDialog = false)"
+    :visible="tabStore.showAddTapDialog"
+    :on-close="() => tabStore.closeAddTabDialog()"
     confirmOnEnter
     @confirm="onAddTap"
   >
@@ -37,9 +37,9 @@
     @click="handleClick"
     @hover="handleHover"
   >
-    <t-sticky-item label="新建工况">
+    <!-- <t-sticky-item label="新建工况">
       <template #icon><add-icon /></template>
-    </t-sticky-item>
+    </t-sticky-item> -->
 
     <t-sticky-item label="历史任务">
       <template #icon><HistoryIcon /></template>
@@ -54,9 +54,9 @@ import TaskDialog from "@gisapi/body/taskManager/dialog.vue"
 import { StickyToolProps } from "tdesign-vue-next"
 import { AddIcon, Task1Icon, HistoryIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
 
-import { useGisApiTabStore, useGisApiStateStore, useTaskStroe } from "@gisapi/store/index"
+import { useGisApiTabStore, useGisApiStateStore, useTaskStore } from "@gisapi/store/index"
 
-const taskStore = useTaskStroe()
+const taskStore = useTaskStore()
 const globalStore = useGisApiStateStore()
 const tabStore = useGisApiTabStore()
 const { formDataList, currtTabId, currtExtendId } = storeToRefs(tabStore)
@@ -66,7 +66,7 @@ const localStore = reactive({
   showAddTapDialog: false,
 
   addNewTab: {
-    title: "新建工况",
+    title: "添加工况",
     action: () => {
       localStore.showAddTapDialog = true
     },
@@ -95,8 +95,6 @@ const handleClick: StickyToolProps["onClick"] = ({ e, item }) => {
   console.log(item)
   switch (item.label) {
     case localStore.addNewTab.title:
-      console.log("新建工况")
-      // showAddDia.value = true
       localStore.addNewTab.action()
 
       break

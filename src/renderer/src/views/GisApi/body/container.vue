@@ -4,6 +4,13 @@
     <TopToolBar />
 
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
+      <!-- 【按钮】添加工况 -->
+      <t-tooltip content="添加工况">
+        <t-button :onClick="() => tabStore.closeAddTabDialog()"
+          ><template #icon><AddIcon /> </template
+        ></t-button>
+      </t-tooltip>
+
       <!-- 【步骤条】 -->
       <!-- 步骤条不进行事件hook，生产环境禁止通过点击跳过步骤，所有hook操作都在【上一步】和【下一步】两个点击按钮事件进行控制 -->
       <!-- 所有hook事件都在 onSwtichSetp() 和 nextSetpCheck() 中进行控制 -->
@@ -44,13 +51,14 @@
         theme="success"
         size="medium"
         :loading="localStore.loading"
-        >生成图片 (1/4)
+        >添加并开始任务
         <template #icon>
-          <c-icon-font
+          <TaskDoubleIcon />
+          <!-- <c-icon-font
             iconName="icon-yys-picture"
             color="white"
             :class="['text-white mr-2']"
-          ></c-icon-font>
+          ></c-icon-font> -->
         </template>
       </t-button>
       <t-button
@@ -75,13 +83,15 @@ import { storeToRefs } from "pinia"
 import { GUIDE_EVENTS } from "@gisapi/_components/guideEvents"
 
 import { eventBus } from "@renderer/libs"
-import { mxdToImgApi } from "@gisapi/utils/server"
+import { mxdToImgApi, taskTest } from "@gisapi/utils/server"
 
 import { SETP_OPTIONS_LIST } from "@gisapi/store/config"
-import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
-import type { MxdToImgFormT } from "@gisapi/utils/server"
-import type { FormDataItemT } from "@gisapi/store/formDataState"
+import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
+import { useTaskStore } from "@gisapi/store/index"
+
+import type { MxdToImgFormT, FormDataItemT } from "@gisapi/Types"
+import { TaskDoubleIcon, AddIcon } from "tdesign-icons-vue-next"
 
 import TopToolBar from "./topToolBar/index.vue"
 
@@ -92,8 +102,9 @@ const SwiperComponentList = {
   "4": defineAsyncComponent(() => import("./setp4/setp4.vue")),
 }
 
-const globalStore = useGisApiStateStore()
 const tabStore = useGisApiTabStore()
+const globalStore = useGisApiStateStore()
+
 const { formDataList, currtTabId } = storeToRefs(tabStore)
 
 const localStore = reactive({
@@ -209,12 +220,14 @@ async function mxdToImg(data: FormDataItemT) {
 
   console.log({ body })
 
-  const res = await mxdToImgApi(body)
-  console.log({ res })
+  const taskRes = await taskTest(body)
+  // const taskRes = await mxdToImgApi(body)
+  if (!taskRes) {
+    localStore.loading = false
+    return
+  }
 
-  localStore.loading = false
-
-  return res
+  // taskStore.addTask(taskRes, body)
 }
 </script>
 

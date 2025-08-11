@@ -1,11 +1,32 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 22:08:32
- * @LastEditors: CPS holy.dandelion@139.com
- * @LastEditTime: 2024-08-07 23:27:02
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2025-08-08 15:46:17
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\Types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
+
+export { type TaskItemT } from "@gisapi/store/taskStore"
+export { type FormDataItemT } from "@gisapi/store/formDataState"
+
+// api接口返回的类型
+export type show_range2DT = [xmin: number, ymin: number, xmax: number, ymax: number]
+export type MxdToImgFormBase = {
+  template_id: number
+  dfsu_be_md5: string
+  dfsu_af_md5: string
+  output_name: string
+  river_range?: "工程前" | "工程后"
+  show_range?: show_range2DT
+  radian_or_angle?: "radian" | "angle"
+  crs?: string | number // 支持直接使用crs代码， auto|unknown
+  time_step?: number
+  sub_title: string // 图例名称
+}
+
+export type MxdToImgFormT = MxdToImgFormBase
+
 /**
  * @description: 整个组件的核心数据
  * @return {*}
