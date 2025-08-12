@@ -277,24 +277,10 @@ async function mxdToImg(data: FormDataItemT) {
 
   console.log({ body })
 
-  return
-
-  // 项目范围或者点
-  // if (data.projectRangeType == "point") {
-  //   body["project_point"] = `${data.projectPoints.x},${data.projectPoints.y}`
-  // } else {
-  //   body["project_md5"] = data.projectRange.md5
-  // }
-
-  console.log("## 开始调用合成接口")
-
-  console.log({ body })
   const res = await mxdToImgApi(body)
   console.log({ res })
 
   localStore.loading = false
-
-  // return res
 }
 </script>
 
