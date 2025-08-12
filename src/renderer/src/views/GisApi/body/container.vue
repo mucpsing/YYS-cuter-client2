@@ -46,7 +46,7 @@
 
       <!-- :disabled="formDataList[currtTabId].setp != 3" -->
       <t-button
-        :on-click="() => mxdToImg(formDataList[currtTabId])"
+        :on-click="() => mxdToImg()"
         class="flex-[1]"
         theme="success"
         size="medium"
@@ -54,11 +54,6 @@
         >添加并开始任务
         <template #icon>
           <TaskDoubleIcon />
-          <!-- <c-icon-font
-            iconName="icon-yys-picture"
-            color="white"
-            :class="['text-white mr-2']"
-          ></c-icon-font> -->
         </template>
       </t-button>
       <t-button
@@ -200,7 +195,8 @@ function nextSetpCheck(currtSetp: number): boolean {
  * @param {*} data
  * @return {*}
  */
-async function mxdToImg(data: FormDataItemT) {
+async function mxdToImg() {
+  const data = tabStore.currtFormData
   // localStore.loading = true
   console.log(tabStore.currtFormData)
 
@@ -212,7 +208,7 @@ async function mxdToImg(data: FormDataItemT) {
     output_name: data.title,
     river_range: data.riverRange,
     // radian_or_angle: data.radian_or_angle == "弧度" ? "radian" : "angle",
-    show_range: tabStore.currtFormData.projectPoints,
+    show_range: data.projectPoints,
     crs: "auto",
     time_step: data.timeStep,
     sub_title: data.outputName,

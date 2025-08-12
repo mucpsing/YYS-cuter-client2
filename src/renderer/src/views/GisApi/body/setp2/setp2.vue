@@ -12,7 +12,8 @@ b
       <FileTransfer />
     </header>
 
-    <div :class="['flex-grow-[1] overflow-auto __scrollbar-bule']">
+    <!-- 下方配置区域 -->
+    <section :class="['flex-grow-[1] overflow-auto __scrollbar-bule']">
       <div class="h-[0]">
         <t-card>
           <div class="flex items-center justify-between mt-2">
@@ -26,7 +27,6 @@ b
             </div>
             <div class="flex gap-1 text-md">
               <t-dropdown
-                size="medium"
                 :options="[
                   { content: `弧度(rad)`, value: `弧度` },
                   { content: `角度(deg)`, value: `角度` },
@@ -69,7 +69,6 @@ b
             </div>
             <div class="flex gap-1 text-md">
               <t-dropdown
-                size="medium"
                 :options="[
                   { content: `工程前`, value: `工程前` },
                   { content: `工程后`, value: `工程后` },
@@ -144,7 +143,7 @@ b
           </div>
         </t-card>
       </div>
-    </div>
+    </section>
   </section>
 </template>
 
@@ -155,7 +154,6 @@ import { useGisApiTabStore } from "@gisapi/store/index"
 
 const tabStore = useGisApiTabStore()
 let customFileUpInputElement: HTMLInputElement
-
 
 onMounted(() => {
   customFileUpInputElement = document.createElement("input")
@@ -177,8 +175,6 @@ async function onDrop(files: File[] | null) {
     }
   }
 }
-
-
 </script>
 
 <style lang="stylus"></style>

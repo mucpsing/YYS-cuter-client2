@@ -108,8 +108,8 @@ importers:
         specifier: ^0.3.7
         version: 0.3.7(vue@3.4.36(typescript@5.5.4))
       tdesign-vue-next:
-        specifier: ^1.15.2
-        version: 1.15.2(vue@3.4.36(typescript@5.5.4))
+        specifier: ^1.14.2
+        version: 1.14.2(vue@3.4.36(typescript@5.5.4))
       vanilla-jsoneditor:
         specifier: ^0.18.0
         version: 0.18.13
@@ -1400,11 +1400,11 @@ packages:
     resolution: {integrity: sha512-Wa3cgG4+IC9zqezwozLbVBIiJ7Cjg1J2hPxvXcp1F3SFjzQzbdiGhOtI1thVfRBnBCX3kvCW63iaP9v+4yYa8w==}
     hasBin: true
 
+  dayjs@1.11.10:
+    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
+
   dayjs@1.11.12:
     resolution: {integrity: sha512-Rt2g+nTbLlDWZTwwrIXjy9MeiZmSDI375FvZs72ngxx8PDC6YXOeR3q5LAuPzjZQxhiWdRKac7RKV+YyQYfYIg==}
-
-  dayjs@1.11.13:
-    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
 
   de-indent@1.0.2:
     resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==}
@@ -2905,8 +2905,8 @@ packages:
     peerDependencies:
       vue: ^3.0.0
 
-  tdesign-vue-next@1.15.2:
-    resolution: {integrity: sha512-EGuI3zJZD5JA6BB+s/+PeFZ08lqcTJtFCdI4O+1QJ/ru4Rie6fTgkrCL+IR9R3NQNyG4Di5T2SziAbSH1v9j7Q==}
+  tdesign-vue-next@1.14.2:
+    resolution: {integrity: sha512-Wcg0SjT4W7JmMhwCI4/rnk8bJzcmjed/YAemVDaOY33U8PqUsU3DxxP/vJ2gbLH7NkFgLGVNpeAdTqYdmHnV4w==}
     engines: {node: '>= 18'}
     peerDependencies:
       vue: '>=3.1.0'
@@ -4590,9 +4590,9 @@ snapshots:
       temp: 0.9.4
       word-wrap: 1.2.5
 
-  dayjs@1.11.12: {}
+  dayjs@1.11.10: {}
 
-  dayjs@1.11.13: {}
+  dayjs@1.11.12: {}
 
   de-indent@1.0.2: {}
 
@@ -6218,7 +6218,7 @@ snapshots:
       '@babel/runtime': 7.28.2
       vue: 3.4.36(typescript@5.5.4)
 
-  tdesign-vue-next@1.15.2(vue@3.4.36(typescript@5.5.4)):
+  tdesign-vue-next@1.14.2(vue@3.4.36(typescript@5.5.4)):
     dependencies:
       '@babel/runtime': 7.28.2
       '@popperjs/core': 2.11.8
@@ -6226,7 +6226,7 @@ snapshots:
       '@types/sortablejs': 1.15.8
       '@types/tinycolor2': 1.4.6
       '@types/validator': 13.15.2
-      dayjs: 1.11.13
+      dayjs: 1.11.10
       lodash-es: 4.17.21
       mitt: 3.0.1
       sortablejs: 1.15.2

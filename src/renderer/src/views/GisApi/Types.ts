@@ -9,6 +9,7 @@
 
 export { type TaskItemT } from "@gisapi/store/taskStore"
 export { type FormDataItemT } from "@gisapi/store/formDataState"
+export { type FileInfoItemT } from "@gisapi/store/fileStore"
 
 // api接口返回的类型
 export type show_range2DT = [xmin: number, ymin: number, xmax: number, ymax: number]
@@ -71,19 +72,19 @@ export interface FileInfoBase {
   range_geojson: any
 }
 
-export interface FileInfoItemT {
-  id: string
-  name: string
-  checked: boolean
-  disabled: boolean
-  md5Name?: string
-  loading?: boolean
-  size?: number
-  md5: string
-  file?: File
-  uploadProgress?: number
-  uploadStatus?: string
-  geoJson?: any[]
-}
+// export interface FileInfoItemT {
+//   id: string
+//   name: string
+//   checked: boolean
+//   // disabled: boolean
+//   md5Name?: string
+//   loading?: boolean
+//   size?: number
+//   md5: string
+//   file?: File
+//   uploadProgress?: number
+//   uploadStatus?: string
+//   geoJson?: any[]
+// }
 
 export type TBtnThemeT = "default" | "success" | "primary" | "warning" | "danger"

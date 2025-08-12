@@ -2,12 +2,27 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-11-19 09:30:51
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2024-11-27 10:08:05
+ * @LastEditTime: 2025-08-12 15:26:55
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\modules\fileStore.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { defineStore } from "pinia"
-import type { FileInfoItemT } from "@gisapi/Types"
+
+import { getMd5 } from "@renderer/utils/calculateMd5"
+export interface FileInfoItemT {
+  id: string
+  name: string
+  md5: string
+  md5Name: string
+  size: number
+  file: File
+  // checked: boolean
+  // loading?: boolean
+  // disabled: boolean
+  // uploadProgress?: number
+  // uploadStatus?: string
+  geoJson?: any[]
+}
 
 // 存放文件数据的store
 export const useFileStroe = defineStore("fileStore", {
@@ -54,17 +69,28 @@ export const useFileStroe = defineStore("fileStore", {
       delete this.geoJsonObj[md5]
     },
 
-    async addDfsuItem(item: FileInfoItemT) {
-      this.dfsuObj[item.md5] = item
+    async addDfsuItem(file: File) {
+      const md5 = await getMd5(file)
 
-      if (item.geoJson) {
-        this.geoJsonObj[item.md5] = item.geoJson
+      const fileInfo: FileInfoItemT = {
+        id: new Date().getTime().toString(36),
+        name: file.name,
+        md5,
+        md5Name: `${md5}.dfsu`,
+        size: file.size / 1024 / 1024,
+        // checked: false,
+        // disabled: false,
+        // uploadProgress: 0,
+        file,
       }
 
-      // const tabStore = useGisApiTabStore()
-      // if(tabStore.currtFormData.dfsu_md5.length < 2) {
-      //   tabStore.currtFormData.dfsu_md5.push(item.md5)
-      // }
+      this.dfsuObj[md5] = fileInfo
+
+      if (fileInfo.geoJson) {
+        this.geoJsonObj[fileInfo.md5] = fileInfo.geoJson
+      }
+
+      return fileInfo
     },
 
     async addGelJsonItem(item) {
