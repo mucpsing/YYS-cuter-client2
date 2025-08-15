@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-11 10:19:52
+ * @LastEditTime: 2025-08-15 14:27:08
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 所有API的包装工具类，所有外部要调用服务器都要引入这个类，实际的API保存在store/API中
  */
@@ -72,6 +72,7 @@ export async function uploadCheck(fineMd5WithExtName: any): Promise<FileInfoBase
 type UploadResT = FileInfoBase | false
 
 export async function uploadFile(
+  file: File,
   fileInfo: FileInfoItemT,
   updateProgressCallback: ((progress: number) => void) | undefined = undefined,
 ): Promise<UploadResT> {
@@ -81,7 +82,7 @@ export async function uploadFile(
 
     const formData = new FormData()
     formData.append("file_name_md5", fileInfo.md5Name as string)
-    formData.append("file", fileInfo.file as File)
+    formData.append("file", file as File)
 
     try {
       const res = await server().post(API.upload, formData, {
@@ -189,6 +190,21 @@ export async function taskTest(body: MxdToImgFormBase): Promise<undefined | Task
 export async function mxdToImgApi(body: MxdToImgFormBase): Promise<undefined | TaskItemT> {
   try {
     const res = await server().post(API.mxdToImg, body, { timeout: 30000 })
+
+    console.log({ res })
+
+    if (res.status == 200 && res.data.success) return res.data.res
+
+    return
+  } catch (err) {
+    console.log(err)
+    return
+  }
+}
+
+export async function mxdToImgApiByTask(body: MxdToImgFormBase): Promise<undefined | TaskItemT> {
+  try {
+    const res = await server().post(API.mxdToImgByTask, body, { timeout: 3000 })
 
     console.log({ res })
 

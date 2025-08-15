@@ -9,7 +9,8 @@ b
       :class="['flex-grow-[0]', 'flex flex-col gap-1 justify-center', 'min-h-[200px] relative']"
       :id="`Gis-Api__dfsu_input_${tabStore.currtFormData.id}`"
     >
-      <FileTransfer />
+      <!-- <FileTransfer /> -->
+      <FileTransferNew />
     </header>
 
     <!-- 下方配置区域 -->
@@ -150,6 +151,7 @@ b
 <script setup lang="ts">
 import { useDropZone } from "@vueuse/core"
 import FileTransfer from "./fileTransfer.vue"
+import FileTransferNew from "./fileTransfer_new.vue"
 import { useGisApiTabStore } from "@gisapi/store/index"
 
 const tabStore = useGisApiTabStore()

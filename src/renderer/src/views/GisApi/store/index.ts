@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-12 15:17:26
+ * @LastEditTime: 2025-08-15 14:56:55
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
@@ -71,43 +71,49 @@ export const useGisApiTabStore = defineStore("tabStore", {
     formDataList: [createFormData(0)], // 初始化0索引的数据模板
 
     templateInfoList: [] as TemplateInfo[], // 从后端获取mxd模板数据
+    fileListKeys: ["beDfsuMd5List", "afDfsuMd5List"],
   }),
 
   getters: {
     currtTab: (state) => state.tabList[state.currtTabId],
     currtFormData: (state) => state.formDataList[state.currtTabId],
-    currtFormDataDfsuList: (state) => [
-      ...state.formDataList[state.currtTabId].beDfsuMd5List,
-      ...state.formDataList[state.currtTabId].afDfsuMd5List,
-    ],
   },
 
   actions: {
-    // addDfsu(dataKey: string, md5: string) {
-    //   const targetKey = dataKey == "be" ? "beDfsuMd5List" : "afDfsuMd5List"
-
-    //   this.formDataList[this.currtTabId][targetKey].push(md5)
-    // },
-
     clreanDfsu(dataKey: string) {
-      const targetKey = dataKey == "be" ? "beDfsuMd5List" : "afDfsuMd5List"
-      this.formDataList[this.currtTabId][targetKey] = []
+      this.formDataList[this.currtTabId][dataKey] = []
     },
 
     // TODO 当前仅实现了单选，后续实现多选
-    selectDfsu(dataKey: string, md5: string) {
-      const targetKey = dataKey == "be" ? "beDfsuMd5List" : "afDfsuMd5List"
+    selectDfsu(targetKey: string, md5: string) {
+      // const targetKey = dataKey == "be" ? "beDfsuMd5List" : "afDfsuMd5List"
 
       if (!this.formDataList[this.currtTabId][targetKey].includes(md5))
         this.formDataList[this.currtTabId][targetKey] = [md5]
     },
 
-    removeDfsu(dataKey: string, md5: string) {
-      const targetKey = dataKey == "be" ? "beDfsuMd5List" : "afDfsuMd5List"
+    addDfsu(key: "beDfsuMd5List" | "afDfsuMd5List", md5: string) {
+      this.formDataList[this.currtTabId][key].push()
+    },
 
-      const index = this.formDataList[this.currtTabId][targetKey].indexOf(md5)
+    updateSelectFileItemByMd5(md5: string, newInfo: any) {
+      for (let key of this.fileListKeys) {
+        for (let eachIten of this.formDataList[this.currtTabId][key]) {
+          if (eachIten.md5 === md5) Object.assign(eachIten, newInfo)
+        }
+      }
+    },
 
-      if (index >= 0) this.formDataList[this.currtTabId][targetKey].splice(index, 1)
+    removeDfsu(md5: string) {
+      for (let key of this.fileListKeys) {
+        const index = this.formDataList[this.currtTabId][key].indexOf(md5)
+        const removeItem = this.formDataList[this.currtTabId][key][index]
+
+        if (index >= 0) {
+          this.formDataList[this.currtTabId][key].splice(index, 1)
+          return removeItem
+        }
+      }
     },
 
     showAddTabDialog() {
@@ -184,14 +190,14 @@ export const useGisApiTabStore = defineStore("tabStore", {
       }
     },
 
-    async exchaneDfsuInfo() {
-      const temp = Object.assign({}, this.formDataList[this.currtTabId].beDfsuInfo)
-      Object.assign(
-        this.formDataList[this.currtTabId].beDfsuInfo,
-        this.formDataList[this.currtTabId].afDfsuInfo,
-      )
-      Object.assign(this.formDataList[this.currtTabId].afDfsuInfo, temp)
-    },
+    // async exchaneDfsuInfo() {
+    //   const temp = Object.assign({}, this.formDataList[this.currtTabId].beDfsuInfo)
+    //   Object.assign(
+    //     this.formDataList[this.currtTabId].beDfsuInfo,
+    //     this.formDataList[this.currtTabId].afDfsuInfo,
+    //   )
+    //   Object.assign(this.formDataList[this.currtTabId].afDfsuInfo, temp)
+    // },
 
     async getTemplateList() {
       this.templateInfoList.length = 0

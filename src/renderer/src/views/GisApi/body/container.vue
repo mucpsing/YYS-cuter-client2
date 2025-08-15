@@ -78,14 +78,14 @@ import { storeToRefs } from "pinia"
 import { GUIDE_EVENTS } from "@gisapi/_components/guideEvents"
 
 import { eventBus } from "@renderer/libs"
-import { mxdToImgApi, taskTest } from "@gisapi/utils/server"
+import { mxdToImgApi, taskTest, mxdToImgApiByTask } from "@gisapi/utils/server"
 
 import { SETP_OPTIONS_LIST } from "@gisapi/store/config"
 
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 import { useTaskStore } from "@gisapi/store/index"
 
-import type { MxdToImgFormT, FormDataItemT } from "@gisapi/Types"
+import type { MxdToImgFormT } from "@gisapi/Types"
 import { TaskDoubleIcon, AddIcon } from "tdesign-icons-vue-next"
 
 import TopToolBar from "./topToolBar/index.vue"
@@ -197,14 +197,18 @@ function nextSetpCheck(currtSetp: number): boolean {
  */
 async function mxdToImg() {
   const data = tabStore.currtFormData
-  // localStore.loading = true
-  console.log(tabStore.currtFormData)
+
+  // 获取已经选择的文件md5
+  let dfsu_be_md5 = data.beDfsuMd5List.find((item) => item.checked)
+  let dfsu_af_md5 = data.afDfsuMd5List.find((item) => item.checked)
+
+  if (!dfsu_be_md5 || !dfsu_af_md5) return console.warn("请选择文件")
 
   // 拼接api所需要的参数格式body
   const body: MxdToImgFormT = {
     template_id: data.mxdId,
-    dfsu_be_md5: data.beDfsuMd5List[0],
-    dfsu_af_md5: data.afDfsuMd5List[0],
+    dfsu_be_md5: dfsu_be_md5.md5,
+    dfsu_af_md5: dfsu_af_md5.md5,
     output_name: data.title,
     river_range: data.riverRange,
     // radian_or_angle: data.radian_or_angle == "弧度" ? "radian" : "angle",
@@ -214,16 +218,15 @@ async function mxdToImg() {
     sub_title: data.outputName,
   }
 
-  console.log({ body })
+  localStore.loading = true
 
-  const taskRes = await taskTest(body)
+  const taskRes = await mxdToImgApiByTask(body)
   // const taskRes = await mxdToImgApi(body)
-  if (!taskRes) {
-    localStore.loading = false
-    return
-  }
+
+  console.log({ body, taskRes })
 
   // taskStore.addTask(taskRes, body)
+  setTimeout(() => (localStore.loading = false), 1000)
 }
 </script>
 
