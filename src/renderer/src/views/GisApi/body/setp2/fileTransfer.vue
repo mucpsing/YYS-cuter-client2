@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-15 15:00:27
+ * @LastEditTime: 2025-08-18 16:24:31
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
@@ -34,12 +34,7 @@
             <t-button
               size="small"
               theme="danger"
-              :on-click="
-                () => {
-                  console.log('清空文件')
-                  console.log(tabStore.currtFormData)
-                }
-              "
+              :on-click="() => removeItemByChecked(eachElement.id)"
             >
               <template #icon>
                 <Delete1Icon />
@@ -79,7 +74,6 @@
           </template>
 
           <!-- 文件列表，每个文件以按钮形式覆盖 -->
-          <!-- :on-click="() => onItemChecked(eachElement.id, item)" -->
           <template v-for="item in tabStore.currtFormData[eachElement.id]" :key="item.id">
             <li class="flex items-center w-full my-1" :data-id="item.id">
               <t-button
@@ -131,18 +125,27 @@ import { Delete1Icon } from "tdesign-icons-vue-next"
 import { truncateText } from "@gisapi/utils/index"
 import eventBus from "@renderer/libs/eventBus"
 
-import type { FileTabInfoItemT } from "@gisapi/Types"
+import type { FileListKeyT } from "@gisapi/Types"
 
 const fileStore = useFileStroe()
 const tabStore = useGisApiTabStore()
 const dropElementRef = ref<HTMLElement>()
 const DEFAULT_INPUT_ELEMENT_REF = document.createElement("input")
 
-function removeItemByChecked() {}
+function removeItemByChecked(fileKey: FileListKeyT) {
+  const removeMd5List: string[] = []
+  tabStore.currtFormData[fileKey].forEach((eachData) => {
+    if (eachData.checked) {
+      removeMd5List.push(eachData.md5)
+    }
+  })
+
+  removeMd5List.forEach((md5) => tabStore.removeDfsu(md5))
+}
 
 interface ElementStoreT {
   title: string
-  id: "beDfsuMd5List" | "afDfsuMd5List"
+  id: FileListKeyT
   loading: boolean
 }
 
@@ -193,6 +196,7 @@ async function initSortable() {
         const { id } = eachElement
 
         // 修改排序
+        if (!e.newIndex || !e.oldIndex) return
         if (e.from.id === e.to.id) {
           const item = currtTabData[id].splice(e.oldIndex, 1)[0]
           currtTabData[id].splice(e.newIndex, 0, item)
@@ -218,26 +222,6 @@ async function initSortable() {
       },
     })
   })
-}
-
-async function onItemChecked(dataListKey: string, item: FileTabInfoItemT) {
-  // 临时处理上传失败的文件
-  // TODO 应该建立一个check函数，通过md5对存在pinia中的数据进行检查
-  // if (item.uploadProgress != 100) {
-  //   item.name = `${item.name} 文件上传失败，进行移除...111`
-  //   setTimeout(() => fileStore.removeDataByMd5(item.md5), 3000)
-  //   return
-  // }
-
-  item.checked = !item.checked
-  if (item.checked) {
-    tabStore.currtFormData[dataListKey].forEach((eachData) => {
-      if (item.id != eachData.id) eachData.checked = false
-    })
-  }
-
-  // 工程前后数据存放
-  tabStore.selectDfsu(dataListKey, item.md5)
 }
 
 async function uploadFileDialog(elementStore: ElementStoreT) {
@@ -268,23 +252,26 @@ async function addItem(e, elementStore: ElementStoreT) {
   if (e.target.files.length == 0) return console.warn("没有文件")
   elementStore.loading = true
 
-  // 获取存放本次数据的容器，因为有两个框，一个框是工程前be，一个框是工程后af
-  const dataContainer = tabStore.currtFormData[elementStore.id]
+  // TODO 是否需要优化，这里使用了tabStore和fileStore两个store进行数据操作
+
+  // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
+  let fileCount = parseInt(e.target.files.length)
+  tabStore.fileListKeys.forEach((key) => (fileCount += tabStore.currtFormData[key].length))
+  let fileIndex = 0
+  let fileKey = elementStore.id
 
   // 添加一个空elementStore进行展示
   // 为了支持多个文件上传，这里使用了遍历
   for (let file of e.target.files) {
     const fileInfo = await fileStore.addDfsuItem(file)
     const { md5 } = fileInfo
-    const tabFileItem = {
-      ...fileInfo,
-      checked: false,
-      loading: false,
-      disabled: false,
-      uploadProgress: 0,
+
+    // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
+    if (fileCount == 2) {
+      fileKey = tabStore.fileListKeys[fileIndex]
     }
 
-    dataContainer.push(tabFileItem)
+    tabStore.addDfsu(fileKey, md5)
 
     // 尝试进行上传，并传递上传进度的变量
     uploadFile(file, fileInfo, (uploadPress: number) => {
@@ -306,6 +293,8 @@ async function addItem(e, elementStore: ElementStoreT) {
         fileStore.removeDataByMd5(md5)
         tabStore.removeDfsu(md5)
       })
+
+    fileIndex++
   }
 
   elementStore.loading = false

@@ -98,6 +98,7 @@ const SwiperComponentList = {
 }
 
 const tabStore = useGisApiTabStore()
+const taskStore = useTaskStore()
 const globalStore = useGisApiStateStore()
 
 const { formDataList, currtTabId } = storeToRefs(tabStore)
@@ -218,14 +219,16 @@ async function mxdToImg() {
     sub_title: data.outputName,
   }
 
+  // 调用后台合成接口
   localStore.loading = true
-
   const taskRes = await mxdToImgApiByTask(body)
-  // const taskRes = await mxdToImgApi(body)
 
+  if (!taskRes) return (localStore.loading = false)
+  eventBus.emit("gis-api:setp2:create-preview-to-task", taskRes.task_id)
+
+  taskStore.addTask(taskRes)
   console.log({ body, taskRes })
 
-  // taskStore.addTask(taskRes, body)
   setTimeout(() => (localStore.loading = false), 1000)
 }
 </script>

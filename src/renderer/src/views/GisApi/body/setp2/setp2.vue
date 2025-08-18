@@ -9,8 +9,7 @@ b
       :class="['flex-grow-[0]', 'flex flex-col gap-1 justify-center', 'min-h-[200px] relative']"
       :id="`Gis-Api__dfsu_input_${tabStore.currtFormData.id}`"
     >
-      <!-- <FileTransfer /> -->
-      <FileTransferNew />
+      <FileTransfer />
     </header>
 
     <!-- 下方配置区域 -->
@@ -149,9 +148,8 @@ b
 </template>
 
 <script setup lang="ts">
-import { useDropZone } from "@vueuse/core"
+// import { useDropZone } from "@vueuse/core"
 import FileTransfer from "./fileTransfer.vue"
-import FileTransferNew from "./fileTransfer_new.vue"
 import { useGisApiTabStore } from "@gisapi/store/index"
 
 const tabStore = useGisApiTabStore()
@@ -168,15 +166,15 @@ onUnmounted(() => {
 })
 
 // 用来支持拖拽文件
-const dropElementRef = ref<HTMLElement>()
-const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
-async function onDrop(files: File[] | null) {
-  if (isOverDropZone && files) {
-    if (files.length == 1) {
-      // 文件读取
-    }
-  }
-}
+// const dropElementRef = ref<HTMLElement>()
+// const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
+// async function onDrop(files: File[] | null) {
+//   if (isOverDropZone && files) {
+//     if (files.length == 1) {
+//       // 文件读取
+//     }
+//   }
+// }
 </script>
 
 <style lang="stylus"></style>
