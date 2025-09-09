@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-07 09:27:17
+ * @LastEditTime: 2025-08-18 15:01:20
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -64,6 +64,18 @@ class ChartGeoJson {
     }
 
     this.chartEventRegister()
+  }
+
+  public getBase64Image(): string {
+    const chartInstance = echarts.getInstanceByDom(this.el)
+    if (!chartInstance) return ""
+
+    // 导出为 Base64 格式的图片
+    return chartInstance.getDataURL({
+      type: "png", // 图片格式：png/jpeg
+      pixelRatio: 2, // 放大倍数，提高清晰度
+      backgroundColor: "#fff", // 设置背景颜色
+    })
   }
 
   private chartEventRegister() {
@@ -248,6 +260,7 @@ class ChartGeoJson {
   }
 
   public addPolygon(polygon, config: { id: string }) {
+    // console.log({ addPolygon: polygon, config })
     const series: echarts.LineSeriesOption[] = [
       {
         id: config.id,
@@ -273,6 +286,27 @@ class ChartGeoJson {
     })
   }
 
+  public recordBounds(position: number[]) {
+    this._recordBounds(position)
+  }
+
+  /**
+   * @description: 绘制裁剪范围
+   * @return {*}
+   */
+  public drawClipRange() {
+    this.addPolygon(
+      [
+        [this.rectCoords[0], this.rectCoords[1]], // 左上角
+        [this.rectCoords[2], this.rectCoords[1]], // 右上角
+        [this.rectCoords[2], this.rectCoords[3]], // 右下角
+        [this.rectCoords[0], this.rectCoords[3]], // 左下角
+        [this.rectCoords[0], this.rectCoords[1]], // 左上角
+      ],
+      { id: "clipPolygonRange" },
+    )
+  }
+
   private _recordBounds = throttle((position: number[]) => {
     if (!this.chart) return
 
@@ -283,7 +317,9 @@ class ChartGeoJson {
     if (this.drawPolygonCount == 0) return
     const leftTopXY = this.chart.convertFromPixel({ seriesId: "polygon_base" }, startXY)
     const rightbottomXY = this.chart.convertFromPixel({ seriesId: "polygon_base" }, endXY)
-    this.rectCoords = [...leftTopXY, ...rightbottomXY]
+    this.rectCoords = [...leftTopXY, ...rightbottomXY] // 记录一个矩形坐标，暴露给外部
+
+    this.drawClipRange()
   }, 100)
 
   /**
@@ -294,10 +330,6 @@ class ChartGeoJson {
     if (this.drawPolygonCount == 0) return coords
 
     return this.chart.convertFromPixel({ seriesId: "polygon_base" }, coords)
-  }
-
-  public recordBounds(position: number[]) {
-    this._recordBounds(position)
   }
 
   public dispose() {

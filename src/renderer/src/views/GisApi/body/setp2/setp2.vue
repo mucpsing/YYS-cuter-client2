@@ -148,7 +148,7 @@ b
 </template>
 
 <script setup lang="ts">
-import { useDropZone } from "@vueuse/core"
+// import { useDropZone } from "@vueuse/core"
 import FileTransfer from "./fileTransfer.vue"
 import { useGisApiTabStore } from "@gisapi/store/index"
 
@@ -166,15 +166,15 @@ onUnmounted(() => {
 })
 
 // 用来支持拖拽文件
-const dropElementRef = ref<HTMLElement>()
-const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
-async function onDrop(files: File[] | null) {
-  if (isOverDropZone && files) {
-    if (files.length == 1) {
-      // 文件读取
-    }
-  }
-}
+// const dropElementRef = ref<HTMLElement>()
+// const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
+// async function onDrop(files: File[] | null) {
+//   if (isOverDropZone && files) {
+//     if (files.length == 1) {
+//       // 文件读取
+//     }
+//   }
+// }
 </script>
 
 <style lang="stylus"></style>

@@ -2,14 +2,15 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 22:08:32
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-08 15:46:17
+ * @LastEditTime: 2025-08-18 16:19:46
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\Types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
-export { type TaskItemT } from "@gisapi/store/taskStore"
-export { type FormDataItemT } from "@gisapi/store/formDataState"
-export { type FileInfoItemT } from "@gisapi/store/fileStore"
+export type { TaskItemT } from "@gisapi/store/taskStore"
+export type { FormDataItemT } from "@gisapi/store/formDataState"
+export type { FileInfoItemBaseT, FileTabInfoItemT } from "@gisapi/store/fileStore"
+export type { FileListKeyT } from "@gisapi/store/index"
 
 // api接口返回的类型
 export type show_range2DT = [xmin: number, ymin: number, xmax: number, ymax: number]
@@ -71,20 +72,5 @@ export interface FileInfoBase {
   bounds: BoundsT
   range_geojson: any
 }
-
-// export interface FileInfoItemT {
-//   id: string
-//   name: string
-//   checked: boolean
-//   // disabled: boolean
-//   md5Name?: string
-//   loading?: boolean
-//   size?: number
-//   md5: string
-//   file?: File
-//   uploadProgress?: number
-//   uploadStatus?: string
-//   geoJson?: any[]
-// }
 
 export type TBtnThemeT = "default" | "success" | "primary" | "warning" | "danger"

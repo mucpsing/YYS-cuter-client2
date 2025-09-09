@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-12 09:43:20
+ * @LastEditTime: 2025-08-15 14:21:58
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -196,8 +196,8 @@ async function onProjectRangeModelChange() {
     if (geoJsonOptions.value.length < 2) return
 
     const diff_geojson = await getDfsuDifferenceToGeoJson(
-      tabStore.currtFormData.beDfsuMd5List[0],
-      tabStore.currtFormData.afDfsuMd5List[0],
+      tabStore.currtFormData.beDfsuMd5List[0].md5,
+      tabStore.currtFormData.afDfsuMd5List[0].md5,
     )
 
     if (diff_geojson && echartGeoJsonRef.value) {
@@ -217,11 +217,11 @@ const geoJsonOptions = computed<{ value: string; label: string }[]>(() => {
     ...tabStore.currtFormData.beDfsuMd5List,
   ]
 
-  for (const md5 of fileList) {
-    if (Object.keys(fileStore.dfsuObj).includes(md5)) {
+  for (const fileInfo of fileList) {
+    if (Object.keys(fileStore.dfsuObj).includes(fileInfo.md5)) {
       options.push({
-        value: md5,
-        label: fileStore.dfsuObj[md5].name,
+        value: fileInfo.md5,
+        label: fileStore.dfsuObj[fileInfo.md5].name,
       })
     }
   }

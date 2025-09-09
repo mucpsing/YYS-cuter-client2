@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-07 09:21:07
+ * @LastEditTime: 2025-08-18 15:01:23
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -33,6 +33,36 @@
         <li v-for="(item, idx) of props.rect" :key="idx">{{ item }}</li>
       </ul>
     </div>
+
+    <t-button
+      :on-click="
+        () => {
+          testUrl = myChart.getBase64Image()
+          testDialogVisible = true
+        }
+      "
+      >test</t-button
+    >
+
+    <t-dialog
+      header="历史任务"
+      :visible="testDialogVisible"
+      :onClose="() => (testDialogVisible = false)"
+      mode="modal"
+      :footer="false"
+    >
+      <img :class="['w-[200px] h-[200px]']" :src="testUrl" alt="test" />
+
+      <t-button
+        :on-click="
+          () => {
+            testUrl = myChart.getBase64Image()
+            console.log(testUrl)
+          }
+        "
+        >test</t-button
+      >
+    </t-dialog>
   </div>
 </template>
 
@@ -43,6 +73,11 @@ import Props, { type DefaultPropsT } from "./props"
 
 // import ChartGenJson from "./echartGeoJson"
 import ChartGenJson from "@gisapi/_components/echarts/geoJsonPolygon"
+import eventBus from "@renderer/libs/eventBus"
+import { useTaskStore } from "@gisapi/store/index"
+
+const testUrl = ref("")
+const testDialogVisible = ref(false)
 
 const emit = defineEmits(["update:rect"])
 const props = withDefaults(defineProps<DefaultPropsT>(), Props)
@@ -77,10 +112,18 @@ onMounted(() => {
       .interactInit(rectElementRef.value)
       .on("onRectMove", (e) => updateRectCoordsToData(e.rectCoords))
       .on("onRectResize", (e) => updateRectCoordsToData(e.rectCoords))
-    // .on("onDataZoom", (e) => emit("update:rect", e.rectCoords))
   }
 
   if (props.geoJson.length > 0) drawOnce()
+
+  eventBus.on("gis-api:setp2:create-preview-to-task", (taskId: string) => {
+    const base64 = myChart.getBase64Image()
+    if (!base64) return
+
+    console.log("生成缩率图到任务", { taskId, base64 })
+
+    useTaskStore().updateTask(taskId, { preview: base64 })
+  })
 })
 
 // 在组件卸载时销毁 ECharts 实例
