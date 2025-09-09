@@ -12,7 +12,8 @@ b
       <FileTransfer />
     </header>
 
-    <div :class="['flex-grow-[1] overflow-auto __scrollbar-bule']">
+    <!-- 下方配置区域 -->
+    <section :class="['flex-grow-[1] overflow-auto __scrollbar-bule']">
       <div class="h-[0]">
         <t-card>
           <div class="flex items-center justify-between mt-2">
@@ -26,7 +27,6 @@ b
             </div>
             <div class="flex gap-1 text-md">
               <t-dropdown
-                size="medium"
                 :options="[
                   { content: `弧度(rad)`, value: `弧度` },
                   { content: `角度(deg)`, value: `角度` },
@@ -69,7 +69,6 @@ b
             </div>
             <div class="flex gap-1 text-md">
               <t-dropdown
-                size="medium"
                 :options="[
                   { content: `工程前`, value: `工程前` },
                   { content: `工程后`, value: `工程后` },
@@ -105,6 +104,24 @@ b
             </div>
           </div>
           <t-divider class="my-2"></t-divider>
+          <!-- --------------- 【 指定时间序列 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']"><strong>时间序列</strong></h2>
+              <p>设置要输出的时间序列，默认-1，既最后一个</p>
+            </div>
+            <div class="flex gap-1">
+              <t-input-number
+                theme="normal"
+                size="medium"
+                v-model="tabStore.currtFormData.timeStep"
+                class="w-[100px]"
+                align="center"
+              ></t-input-number>
+            </div>
+          </div>
+
+          <t-divider class="my-2"></t-divider>
 
           <!-- --------------- 【 等值线显示范围 】 --------------- -->
           <div class="flex items-center justify-between mt-2">
@@ -126,7 +143,7 @@ b
           </div>
         </t-card>
       </div>
-    </div>
+    </section>
   </section>
 </template>
 
@@ -137,7 +154,6 @@ import { useGisApiTabStore } from "@gisapi/store/index"
 
 const tabStore = useGisApiTabStore()
 let customFileUpInputElement: HTMLInputElement
-
 
 onMounted(() => {
   customFileUpInputElement = document.createElement("input")
@@ -159,8 +175,6 @@ async function onDrop(files: File[] | null) {
     }
   }
 }
-
-
 </script>
 
 <style lang="stylus"></style>

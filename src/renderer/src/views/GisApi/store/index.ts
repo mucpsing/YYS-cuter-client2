@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-02 16:02:03
+ * @LastEditTime: 2025-08-12 15:17:26
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
@@ -14,7 +14,7 @@ import { getTemplateList, serverCheckApi } from "@renderer/views/GisApi/utils/se
 import type { TabValue } from "tdesign-vue-next"
 import type { TemplateInfo } from "@gisapi/Types"
 
-export const useGisApiStateStore = defineStore("globalState", {
+export const useGisApiStateStore = defineStore("globalStore", {
   state: () => ({
     isGisServerConnected: false,
     GlobalLoading: false,
@@ -55,11 +55,11 @@ export const useGisApiStateStore = defineStore("globalState", {
   },
 })
 
-export const useGisApiTabStore = defineStore("formState", {
+export const useGisApiTabStore = defineStore("tabStore", {
   state: () => ({
     currtTabId: 0,
     currtExtendId: -1, // 记录要继承哪个模板的下标
-
+    showAddTapDialog: false, // 关联@gisApi/body/topToolBar里面的dialog组件
     tabList: [
       {
         id: 0 as TabValue,
@@ -76,6 +76,10 @@ export const useGisApiTabStore = defineStore("formState", {
   getters: {
     currtTab: (state) => state.tabList[state.currtTabId],
     currtFormData: (state) => state.formDataList[state.currtTabId],
+    currtFormDataDfsuList: (state) => [
+      ...state.formDataList[state.currtTabId].beDfsuMd5List,
+      ...state.formDataList[state.currtTabId].afDfsuMd5List,
+    ],
   },
 
   actions: {
@@ -104,6 +108,14 @@ export const useGisApiTabStore = defineStore("formState", {
       const index = this.formDataList[this.currtTabId][targetKey].indexOf(md5)
 
       if (index >= 0) this.formDataList[this.currtTabId][targetKey].splice(index, 1)
+    },
+
+    showAddTabDialog() {
+      this.showAddTapDialog = true
+    },
+
+    closeAddTabDialog() {
+      this.showAddTapDialog = false
     },
 
     addTab(extendTabId: string | number = -1) {
@@ -198,3 +210,4 @@ export const useGisApiChartStroe = defineStore("chartsState", {
 // 存放文件数据的store
 // export const useFileStroe = defineStore("fileStore", fileStoreBase)
 export { useFileStroe } from "./fileStore"
+export { useTaskStore } from "./taskStore"

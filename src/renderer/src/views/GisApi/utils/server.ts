@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-04 15:58:56
+ * @LastEditTime: 2025-08-11 10:19:52
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 所有API的包装工具类，所有外部要调用服务器都要引入这个类，实际的API保存在store/API中
  */
@@ -11,18 +11,20 @@ import Axios from "axios"
 import config from "../store/config"
 import API from "../store/API"
 import type { TemplateInfo, FileInfoBase } from "@gisapi/Types"
-import type { FileInfoItemT } from "@gisapi/Types"
+import type { FileInfoItemT, TaskItemT, MxdToImgFormBase } from "@gisapi/Types"
 
 const DEFAULT_AXIOS_TIMEOUT = 6000
 const FILE_UPLOAD_TIMEOUT = 300000
-let BASE_URL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}`
+
+const DEFAULT_BASE_URL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}`
+let BASE_URL = `${DEFAULT_BASE_URL}`
 let SERVER = Axios.create({ baseURL: BASE_URL, timeout: DEFAULT_AXIOS_TIMEOUT })
 
 /**
  * @description: 首先检查当前的url是否有被更改，如果更改了就重新创建axios，否则返回原始的axios
  */
 const server = (timeout = DEFAULT_AXIOS_TIMEOUT) => {
-  let baseURL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/${config.SERVER_API}`
+  let baseURL = `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}`
 
   if (baseURL != BASE_URL || !SERVER) {
     // console.log("重新创建baseURL：", baseURL)
@@ -32,27 +34,6 @@ const server = (timeout = DEFAULT_AXIOS_TIMEOUT) => {
 
   return SERVER
 }
-
-export type show_range2DT = [xmin: number, ymin: number, xmax: number, ymax: number]
-export type MxdToImgFormBase = {
-  template_id: number
-  dfsu_be_md5: string
-  dfsu_af_md5: string
-  output_name: string
-  river_range?: "工程前" | "工程后"
-  show_range2D?: show_range2DT
-  radian_or_angle?: "radian" | "angle"
-}
-
-export type MxdToImgFormProjectShp = {
-  project_md5?: string
-} & MxdToImgFormBase
-
-export type MxdToImgFormProjectPoints = {
-  project_point?: string
-} & MxdToImgFormBase
-
-export type MxdToImgFormT = MxdToImgFormProjectShp | MxdToImgFormProjectPoints
 
 export async function getTemplateList() {
   console.log("getTemplateList:")
@@ -188,16 +169,35 @@ export async function getDfsuDifferenceToGeoJson(dfsu1Md5: string, dfsu2Md5: str
   }
 }
 
-export async function mxdToImgApi(body: MxdToImgFormBase): Promise<boolean> {
+export async function taskTest(body: MxdToImgFormBase): Promise<undefined | TaskItemT> {
   try {
-    const res = await server().post(API.mxdToImg, body, { timeout: 60000 })
+    const res = await server().get(API.getTaskById, {
+      params: { task_id: "server_start" },
+      timeout: 3000,
+    })
 
-    if (res.status == 200 && res.data.success) return true
+    console.log("taskTest: ", res)
 
-    return false
+    if (res.status == 200 && res.data.success) return res.data.res
+
+    return undefined
   } catch (err) {
     console.log(err)
-    return false
+    return undefined
+  }
+}
+export async function mxdToImgApi(body: MxdToImgFormBase): Promise<undefined | TaskItemT> {
+  try {
+    const res = await server().post(API.mxdToImg, body, { timeout: 30000 })
+
+    console.log({ res })
+
+    if (res.status == 200 && res.data.success) return res.data.res
+
+    return
+  } catch (err) {
+    console.log(err)
+    return
   }
 }
 

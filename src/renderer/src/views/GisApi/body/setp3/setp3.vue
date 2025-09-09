@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-04 15:24:23
+ * @LastEditTime: 2025-08-12 09:43:20
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -13,7 +13,7 @@
     <div class="flex flex-row gap-2">
       <!-- echart 范围截取组件 -->
       <div class="flex-col flex-1">
-        <t-card title="范围选择">
+        <t-card title="范围预览">
           <template #actions>
             <t-button @click="echartGeoJsonRef?.resize" variant="text" theme="primary"
               >重置视图</t-button
@@ -44,13 +44,10 @@
           </template>
           <t-form labelWidth="70px" class="h-full">
             <!-- 范围选择 -->
-
-            <!-- :options="fileStore.geoJsonOptions" -->
             <t-form-item label="选择范围" name="name" label-align="left" initial-data="TDesign">
               <t-select
                 :options="geoJsonOptions"
                 v-model="localStore.currtSelectDfsuName"
-                class="min-w-[100px] w-full"
                 :onChange="(value) => onSelectRangeFile(value as string)"
               >
               </t-select>
@@ -107,22 +104,31 @@
             </t-form-item>
 
             <!-- 项目范围 -->
-            <t-form-item label="项目范围">
-              <div class="flex items-center justify-center gap-4">
-                <div class="flex gap-2">
-                  <strong>自动生成</strong>
-                  <t-switch> </t-switch>
-                </div>
-                <div>
-                  <t-button size="small" theme="success" @click="test">下载</t-button>
-                </div>
-              </div>
-            </t-form-item>
+            <t-form-item label="其他设置">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-center gap-4">
+                  <div class="flex gap-2">
+                    <t-select
+                      v-model="localStore.projectRangeModel"
+                      :loading="localStore.projectRangeLoadding"
+                      @change="onProjectRangeModelChange"
+                    >
+                      <t-option key="auto" label="自动生成" value="auto" />
+                      <t-option key="user" label="手动上传" value="user" />
+                    </t-select>
+                  </div>
 
-            <!-- 输出尺寸 -->
-            <t-form-item label="其他操作" name="name" label-align="left" initial-data="TDesign">
-              <div class="flex flex-row items-center justify-center gap-2">
-                <div class="flex items-center justify-center gap-2">
+                  <div v-show="localStore.projectRangeModel == 'user'">
+                    <t-button
+                      :loading="localStore.projectRangeLoadding"
+                      size="small"
+                      theme="danger"
+                      @click="test"
+                      >X</t-button
+                    >
+                  </div>
+                </div>
+                <div class="flex items-center justify-start gap-2">
                   <strong>视图框</strong>
                   <t-switch v-model="localStore.showRect">选择框</t-switch>
                 </div>
@@ -132,7 +138,7 @@
 
           <template #footer>
             <div>
-              <t-button @click="test" theme="success" class="w-full"> 保存范围到本地</t-button>
+              <t-button @click="test" theme="success" class="w-full">保存范围到本地</t-button>
             </div>
           </template>
         </t-card>
@@ -152,6 +158,7 @@ const echartGeoJsonRef = ref<
   HTMLElement & { resize: () => void; addProjectRange: (geojson: any) => void }
 >()
 
+const testName = ref("")
 const fileStore = useFileStroe()
 const tabStore = useGisApiTabStore()
 const localStore = reactive({
@@ -161,6 +168,8 @@ const localStore = reactive({
   maxLinkPoint: 50,
   currtSelectDfsuName: "",
   currtPaper: "297x210",
+  projectRangeLoadding: false,
+  projectRangeModel: "auto", // auto | user
 })
 
 const paperSizeOptions = [
@@ -181,18 +190,23 @@ const themeListTab = [
   "success",
 ]
 
-async function test() {
-  if (geoJsonOptions.value.length < 2) return
+async function onProjectRangeModelChange() {
+  if (localStore.projectRangeModel == "auto") {
+    // 调用远程的接口生成两个dfsu之间的差值
+    if (geoJsonOptions.value.length < 2) return
 
-  const diff_geojson = await getDfsuDifferenceToGeoJson(
-    tabStore.currtFormData.beDfsuMd5List[0],
-    tabStore.currtFormData.afDfsuMd5List[0],
-  )
+    const diff_geojson = await getDfsuDifferenceToGeoJson(
+      tabStore.currtFormData.beDfsuMd5List[0],
+      tabStore.currtFormData.afDfsuMd5List[0],
+    )
 
-  if (diff_geojson && echartGeoJsonRef.value) {
-    echartGeoJsonRef.value.addProjectRange(diff_geojson.geojson)
+    if (diff_geojson && echartGeoJsonRef.value) {
+      echartGeoJsonRef.value.addProjectRange(diff_geojson.geojson)
+    }
   }
 }
+
+async function test() {}
 
 // 【选择范围】的下拉选项列表，根据当前所选的tab动态生成
 const geoJsonOptions = computed<{ value: string; label: string }[]>(() => {
@@ -220,12 +234,12 @@ async function onSelectRangeFile(md5: string) {
 }
 
 onMounted(() => {
-  console.log("step3 on onMounted")
-
   // 初始化时，则默认绘制一个河道
   if (localStore.currtSelectDfsuName == "" && geoJsonOptions.value.length > 0) {
     onSelectRangeFile(geoJsonOptions.value[0].value)
     localStore.currtSelectDfsuName = geoJsonOptions.value[0].label
+
+    onProjectRangeModelChange()
   }
 })
 </script>

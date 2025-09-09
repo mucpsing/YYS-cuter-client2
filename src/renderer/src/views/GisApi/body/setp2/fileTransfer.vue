@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-02 16:38:34
+ * @LastEditTime: 2025-08-12 15:33:23
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
@@ -16,7 +16,7 @@
       <div class="GisApi__drapMaskTip">最多支持读取前两个dfsu文件</div>
     </div> -->
 
-    <template v-for="baseItem of baseStore">
+    <template v-for="baseItem of ElementList">
       <div :class="['flex flex-col flex-1', 'p-4 rounded-lg', 'border border-gray-200']">
         <h3
           class="flex flex-row items-center justify-between pb-2 mb-2 text-lg font-medium border-b"
@@ -119,7 +119,7 @@ import Sortable from "sortablejs"
 // import { useDropZone } from "@vueuse/core"
 import { useFileStroe, useGisApiTabStore } from "@gisapi/store/index"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
-import { getMd5 } from "@renderer/utils/calculateMd5"
+
 import { uploadFile } from "@gisapi/utils/server"
 import { Delete1Icon } from "tdesign-icons-vue-next"
 import { truncateText } from "@gisapi/utils/index"
@@ -132,27 +132,43 @@ const tabStore = useGisApiTabStore()
 const dropElementRef = ref<HTMLElement>()
 const DEFAULT_INPUT_ELEMENT_REF = document.createElement("input")
 
+interface FileInfoItemTT extends FileInfoItemT {
+  checked: boolean
+  loading?: boolean
+  disabled: boolean
+  uploadProgress?: number
+  uploadStatus?: string
+}
+
+interface BaseItemT {
+  title: string
+  id: "be" | "af"
+  loading: boolean
+}
+
 // 初始化Sortable
 onMounted(() => {
-  nextTick(() => {
-    initSortable()
-  })
+  nextTick(() => initSortable())
 
   eventBus.on("gis-api:fileTransfer-default-checked", onlyOneChecked)
+
+  console.log("fileTransfer1", tabStore)
+  console.log("fileTransfer2", fileStore)
+
+  const currentData = tabStore.currtFormData
+
+  console.log("当前的文件列表: ", currentData)
+  console.log("当前的文件列表: ", tabStore.currtFormDataDfsuList)
 })
 
 const localStore = reactive({
   switchIconRoate: 0,
   dragging: false,
+  beDfsuList: [] as FileInfoItemTT[],
+  afDfsuList: [] as FileInfoItemTT[],
 })
 
-interface BaseItemT {
-  title: string
-  id: string
-  loading: boolean
-}
-
-const baseStore = reactive<BaseItemT[]>([
+const ElementList = reactive<BaseItemT[]>([
   { title: "工程前", id: "be", loading: false },
   { title: "工程后", id: "af", loading: false },
 ])
@@ -161,8 +177,8 @@ const baseStore = reactive<BaseItemT[]>([
 // this.formDataList[this.currtTabId][targetKey] = [md5]
 // 忘记了为什么这里要使用局部缓存
 const dataList = reactive({
-  be: [] as FileInfoItemT[],
-  af: [] as FileInfoItemT[],
+  be: [] as FileInfoItemTT[],
+  af: [] as FileInfoItemTT[],
 })
 
 /**
@@ -176,10 +192,10 @@ function onlyOneChecked() {
 
 // 初始化Sortable的逻辑
 async function initSortable() {
-  baseStore.forEach((item) => {
-    const element = document.getElementById(item.id)
+  ElementList.forEach((eachElement) => {
+    const element = document.getElementById(eachElement.id)
 
-    if (!element) return console.log(`element is null: ${item.id}`)
+    if (!element) return console.log(`element is null: ${eachElement.id}`)
 
     Sortable.create(element, {
       group: "items",
@@ -187,7 +203,7 @@ async function initSortable() {
       onStart: () => (localStore.dragging = true),
 
       onEnd: (e) => {
-        const { id } = item
+        const { id } = eachElement
 
         // 修改排序
         if (e.from.id === e.to.id) {
@@ -216,7 +232,7 @@ async function initSortable() {
   })
 }
 
-async function onItemChecked(dataListKey: string, item: FileInfoItemT) {
+async function onItemChecked(dataListKey: string, item: FileInfoItemTT) {
   // 临时处理上传失败的文件
   // TODO 应该建立一个check函数，通过md5对存在pinia中的数据进行检查
   if (item.uploadProgress != 100) {
@@ -237,7 +253,6 @@ async function onItemChecked(dataListKey: string, item: FileInfoItemT) {
 }
 
 async function uploadFileDialog(item: BaseItemT) {
-  console.log({ item })
   const target = "dfsu"
   // 调用点击事件
   DEFAULT_INPUT_ELEMENT_REF.accept = UP_FILE_ACCEPT_TYPE[target]
@@ -300,27 +315,15 @@ async function addItem(e, item: BaseItemT) {
   if (e.target.files.length == 0) return console.warn("没有文件")
   item.loading = true
 
-  const data = dataList[item.id]
-  // const target = item.id
+  // 获取存放本次数据的容器，因为有两个框，一个框是工程前be，一个框是工程后af
+  const dataContainer = dataList[item.id]
 
   // 添加一个空item进行展示
   // 为了支持多个文件上传，这里使用了遍历
   for (let file of e.target.files) {
-    const md5 = await getMd5(file)
-
-    const newItem: FileInfoItemT = {
-      id: new Date().getTime().toString(36),
-      name: file.name,
-      md5,
-      md5Name: `${md5}.dfsu`,
-      size: file.size / 1024 / 1024,
-      checked: false,
-      disabled: false,
-      uploadProgress: 0,
-      file,
-    }
-
-    data.push(newItem)
+    const newItem = await fileStore.addDfsuItem(file)
+    const { md5 } = newItem
+    dataContainer.push(newItem)
 
     // 尝试进行上传，并传递上传进度的变量
     uploadFile(newItem, (uploadPress: number) => {
@@ -331,8 +334,8 @@ async function addItem(e, item: BaseItemT) {
         // 上传成功后，添加带store
         if (upload_res && upload_res.range_geojson) {
           fileStore.geoJsonObj[md5] = upload_res.range_geojson
-          fileStore.dfsuObj[md5] = newItem
 
+          // fileStore.dfsuObj[md5] = newItem
           // tabStore.addDfsu(target, md5)
           updateItemById(newItem.id, { uploadProgress: 100 })
         } else {

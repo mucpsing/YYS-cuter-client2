@@ -35,7 +35,7 @@
             </div>
 
             <t-space direction="vertical" size="10px">
-              <t-input-adornment prepend="1、输出名称：">
+              <t-input-adornment prepend="1、图例名称：">
                 <t-select-input
                   :id="`Gis-Api__template_input_mxd_name_${tabStore.currtFormData.id}`"
                   :value="tabStore.currtFormData.outputName"
@@ -68,8 +68,8 @@
                     @click="() => onTitleWithPopupChange(outNameTipWordsList[idx])"
                     class="cursor-pointer"
                     size="small"
-                    :theme="outputNameTagList[idx].theme"
-                    :variant="outputNameTagList[idx].variant"
+                    :theme='(outputNameTagList[idx].theme as "default" | "primary" | "danger" | "warning" | "success")'
+                    :variant='(outputNameTagList[idx].variant as "dark" | "light" | "outline" | "light-outline")'
                     >{{ item }}</t-tag
                   >
                 </template>
@@ -138,7 +138,7 @@ const outNameTipWordsList = [
   "50年一遇",
   "100年一遇",
   "200年一遇",
-]
+] as const
 const tipWrodsPopupVisible = ref(false) // 是否显示提示列表的状态
 
 const template_name_list = computed(() =>

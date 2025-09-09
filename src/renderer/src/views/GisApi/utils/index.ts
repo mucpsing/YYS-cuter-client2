@@ -12,13 +12,31 @@ export function truncateText(text: string, maxLength: number = 30): string {
   return text.substring(0, maxLength - 3) + "..."
 }
 
+// /**
+//  * @description: 创建TD按钮的彩虹色列表用到的数据对象,当前仅支持5*4的标签数量，既20个
+//  * @return {*}
+//  */
+// export function crossCombineThemesAndVariants(
+//   themeList: string[] = ["primary", "warning", "danger", "success"],
+//   variantList: string[] = ["dark", "light", "outline", "light-outline"],
+// ): { theme: string; variant: string }[] {
+//   return variantList.flatMap((variant) => themeList.map((theme) => ({ theme, variant })))
+// }
+
 /**
- * @description: 创建TD按钮的彩虹色列表用到的数据对象,当前仅支持5*4的标签数量，既20个
- * @return {*}
+ * @description 创建主题和变体的笛卡尔积组合，返回具体字面量类型而非宽泛的 string[]
+ * @template T - 主题字面量类型
+ * @template V - 变体字面量类型
+ * @param themeList 主题数组，默认为 ["primary", "warning", "danger", "success"]
+ * @param variantList 变体数组，默认为 ["dark", "light", "outline", "light-outline"]
+ * @returns 返回组合后的数组，类型为 `{ theme: T; variant: V }[]`
+ * @example
+ * // 返回类型为 Array<{theme: 'primary' | 'warning', variant: 'dark' | 'light'}>
+ * crossCombineThemesAndVariants(['primary', 'warning'], ['dark', 'light'] as const);
  */
-export function crossCombineThemesAndVariants(
-  themeList: string[] = ["primary", "warning", "danger", "success"],
-  variantList: string[] = ["dark", "light", "outline", "light-outline"],
-): { theme: string; variant: string }[] {
+export function crossCombineThemesAndVariants<T extends string, V extends string>(
+  themeList: readonly T[] = ["primary", "warning", "danger", "success"] as T[],
+  variantList: readonly V[] = ["dark", "light", "outline", "light-outline"] as V[],
+): { theme: T; variant: V }[] {
   return variantList.flatMap((variant) => themeList.map((theme) => ({ theme, variant })))
 }

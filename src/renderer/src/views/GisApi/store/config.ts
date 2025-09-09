@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-07-02 16:01:03
+ * @LastEditTime: 2025-08-12 09:11:39
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
  * @Description: 这里存放页面所有静态配置
  */
@@ -40,7 +40,7 @@ export const config = reactive({
   // 服务器端口
   SERVER_PROT: "4040",
 
-  SERVER_API: "gisArcMapApi/v1", // API前缀
+  // SERVER_API: "gisArcMapApi/v1", // 弃用
 
   DEFAULT_RADIAN_OR_ANGLE: "弧度" as "弧度" | "角度",
 

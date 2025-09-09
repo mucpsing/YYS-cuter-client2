@@ -1,40 +1,15 @@
 <template>
   <div :class="['flex flex-col h-full px-2 gap-1']">
+    <!-- 浮动工具条，整合了一些前置功能，添加工况、历史任务等 -->
+    <TopToolBar />
+
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
       <!-- 【按钮】添加工况 -->
       <t-tooltip content="添加工况">
-        <t-button :onClick="() => (localStore.showAddTapDialog = true)"
-          ><template #icon><AddIcon /></template
+        <t-button :onClick="() => tabStore.closeAddTabDialog()"
+          ><template #icon><AddIcon /> </template
         ></t-button>
       </t-tooltip>
-
-      <!-- 【弹窗】添加工况 -->
-      <t-dialog
-        header="创建工况配置"
-        body="对话框内容"
-        :visible="localStore.showAddTapDialog"
-        :on-close="() => (localStore.showAddTapDialog = false)"
-        confirmOnEnter
-        @confirm="onAddTap"
-      >
-        <ul class="p-1">
-          <li class="flex gap-2 py-1">
-            <h3><strong>继承工况配置生成：</strong></h3>
-            <t-dropdown
-              :options="selectTemplateExtendIdOptions"
-              @click="(data) => {
-                tabStore.currtExtendId = data.value as number
-                currtExtendValue = data.content as string
-              }"
-            >
-              <t-button size="small" variant="outline"
-                >{{ currtExtendValue }}
-                <template #suffix><ChevronDownIcon /> </template>
-              </t-button>
-            </t-dropdown>
-          </li>
-        </ul>
-      </t-dialog>
 
       <!-- 【步骤条】 -->
       <!-- 步骤条不进行事件hook，生产环境禁止通过点击跳过步骤，所有hook操作都在【上一步】和【下一步】两个点击按钮事件进行控制 -->
@@ -71,18 +46,14 @@
 
       <!-- :disabled="formDataList[currtTabId].setp != 3" -->
       <t-button
-        :on-click="() => mxdToImg(formDataList[currtTabId])"
+        :on-click="() => mxdToImg()"
         class="flex-[1]"
         theme="success"
         size="medium"
         :loading="localStore.loading"
-        >生成图片 (1/4)
+        >添加并开始任务
         <template #icon>
-          <c-icon-font
-            iconName="icon-yys-picture"
-            color="white"
-            :class="['text-white mr-2']"
-          ></c-icon-font>
+          <TaskDoubleIcon />
         </template>
       </t-button>
       <t-button
@@ -104,17 +75,20 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia"
-import { AddIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
 import { GUIDE_EVENTS } from "@gisapi/_components/guideEvents"
 
 import { eventBus } from "@renderer/libs"
-import { mxdToImgApi } from "@gisapi/utils/server"
+import { mxdToImgApi, taskTest } from "@gisapi/utils/server"
 
 import { SETP_OPTIONS_LIST } from "@gisapi/store/config"
-import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
-import type { MxdToImgFormT } from "@gisapi/utils/server"
-import type { FormDataItemT } from "@gisapi/store/formDataState"
+import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
+import { useTaskStore } from "@gisapi/store/index"
+
+import type { MxdToImgFormT, FormDataItemT } from "@gisapi/Types"
+import { TaskDoubleIcon, AddIcon } from "tdesign-icons-vue-next"
+
+import TopToolBar from "./topToolBar/index.vue"
 
 const SwiperComponentList = {
   "1": defineAsyncComponent(() => import("./setp1/setp1.vue")),
@@ -123,34 +97,18 @@ const SwiperComponentList = {
   "4": defineAsyncComponent(() => import("./setp4/setp4.vue")),
 }
 
-const globalStore = useGisApiStateStore()
 const tabStore = useGisApiTabStore()
-const { formDataList, currtTabId, currtExtendId } = storeToRefs(tabStore)
+const globalStore = useGisApiStateStore()
+
+const { formDataList, currtTabId } = storeToRefs(tabStore)
 
 const localStore = reactive({
   loading: false,
-  showAddTapDialog: false,
+  // showAddTapDialog: false,
   readOnly: import.meta.env.DEV ? false : true,
 })
 
 const Sopts = computed(() => SETP_OPTIONS_LIST)
-
-const currtExtendValue = ref("不继承")
-const selectTemplateExtendIdOptions = computed(() => {
-  const res = [{ content: `不继承`, value: -1 }]
-
-  formDataList.value.forEach((item, idx) => {
-    res.push({ content: item.title, value: idx })
-  })
-
-  return res
-})
-
-async function onAddTap() {
-  tabStore.addTab(currtExtendId.value)
-
-  localStore.showAddTapDialog = false
-}
 
 /**
  * @description: 点击下一步，上一步按钮的中转函数
@@ -237,32 +195,10 @@ function nextSetpCheck(currtSetp: number): boolean {
  * @param {*} data
  * @return {*}
  */
-async function mxdToImg(data: FormDataItemT) {
+async function mxdToImg() {
+  const data = tabStore.currtFormData
   // localStore.loading = true
   console.log(tabStore.currtFormData)
-
-  // 创建上传列表
-  // const upload_list = [
-  //   uploadFileApi(`${data.beDfsuInfo.md5}.dfsu`, data.beDfsuInfo.file), // 上传工程前 dfsu
-  //   uploadFileApi(`${data.afDfsuInfo.md5}.dfsu`, data.afDfsuInfo.file), // 上传工程后 dfsu
-  // ]
-  // // 如果存在
-  // if (data.projectRange.fileList.length > 0) {
-  //   data.projectRange.fileList.map((eachFile) => {
-  //     upload_list.push(uploadFileApi(`${data.projectRange.md5}${eachFile.ext}`, eachFile.file))
-  //   })
-  // }
-  // console.log("开始上传文件，数量: ", upload_list.length)
-  // console.log({ upload_list })
-  // const file_upload_res_list = await Promise.all(upload_list)
-
-  // 检查是否上传成功
-  // if (!file_upload_res_list.every((res) => res)) {
-  //   console.log("有文件上传失败")
-  //   console.log(file_upload_res_list)
-  // } else {
-  //   console.log("所有文件上传成功")
-  // }
 
   // 拼接api所需要的参数格式body
   const body: MxdToImgFormT = {
@@ -271,16 +207,23 @@ async function mxdToImg(data: FormDataItemT) {
     dfsu_af_md5: data.afDfsuMd5List[0],
     output_name: data.title,
     river_range: data.riverRange,
-    radian_or_angle: data.radian_or_angle == "弧度" ? "radian" : "angle",
-    show_range2D: tabStore.currtFormData.projectPoints,
+    // radian_or_angle: data.radian_or_angle == "弧度" ? "radian" : "angle",
+    show_range: data.projectPoints,
+    crs: "auto",
+    time_step: data.timeStep,
+    sub_title: data.outputName,
   }
 
   console.log({ body })
 
-  const res = await mxdToImgApi(body)
-  console.log({ res })
+  const taskRes = await taskTest(body)
+  // const taskRes = await mxdToImgApi(body)
+  if (!taskRes) {
+    localStore.loading = false
+    return
+  }
 
-  localStore.loading = false
+  // taskStore.addTask(taskRes, body)
 }
 </script>
 
