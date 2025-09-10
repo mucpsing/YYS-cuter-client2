@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia"
-import TaskDialog from "@gisapi/body/taskManager/dialog.vue"
+import TaskDialog from "./taskManager/dialog.vue"
 
 import { StickyToolProps } from "tdesign-vue-next"
 import { AddIcon, Task1Icon, HistoryIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
