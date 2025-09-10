@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2025-08-05 15:25:35
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-15 17:29:52
+ * @LastEditTime: 2025-08-19 10:35:55
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\taskStore.ts
  * @Description: 存储所有历史任务记录的store
  */
@@ -32,16 +32,36 @@ export interface TaskItemT {
 
 export const useTaskStore = defineStore("taskStore", {
   state: () => ({
+    currtTaskId: "" as string,
     dialog: {
       visible: true,
       title: "",
       content: "",
     },
     // taskList: [] as TaskItemT[],
-    taskList: [{ task_id: "test", progress: 50, status: "pending", preview: "" }] as TaskItemT[],
+    taskList: [
+      { task_id: "test", progress: 50, status: "pending", preview: "" },
+      { task_id: "test2", progress: 50, status: "pending", preview: "" },
+      { task_id: "test3", progress: 50, status: "pending", preview: "" },
+      { task_id: "test4", progress: 50, status: "pending", preview: "" },
+      { task_id: "test5", progress: 50, status: "pending", preview: "" },
+    ] as TaskItemT[],
   }),
 
+  getters: {
+    currentSelectTask: (state) => {
+      const searchTask = state.taskList.find((task) => task.task_id === state.currtTaskId)
+      if (!searchTask) return state.taskList[0]
+      return searchTask
+    },
+  },
+
   actions: {
+    // 设置成当前激活，展示具体任务信息到任务页
+    selectTask(taskId: string) {
+      this.currtTaskId = taskId
+    },
+
     getTask(taskId: string) {
       return this.taskList.find((task) => task.task_id === taskId)
     },

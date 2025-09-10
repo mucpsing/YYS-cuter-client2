@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-05 16:13:25
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-18 15:01:23
+ * @LastEditTime: 2025-08-20 16:47:58
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\_components\echartGeoJson.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
     :class="[show ? '' : 'bg-gray-200']"
@@ -17,12 +17,18 @@
       class="relative rounded-lg border-slate-500"
     ></div>
 
-    <!-- 裁剪框 -->
+    <!-- 裁剪框，覆盖在echarts元素上层 -->
     <div
       ref="rectElementRef"
-      v-show="props.geoJson.length > 0 && props.showRect"
-      class="absolute top-0 w-20 h-20 border-2 border-red-600"
-    ></div>
+      v-show="props.geoJson.length > 0 && props.showRect && isInside"
+      :class="[
+        'absolute top-0 w-20 h-20 bg-red-200/50',
+        'flex items-end justify-center',
+        'text-center text-gray-500 text-xl',
+      ]"
+    >
+      <div :class="['translate-y-[120%]']">拖动蒙版修改裁剪范围</div>
+    </div>
 
     <!-- 左下角信息框，展示最终坐标 -->
     <div
@@ -30,18 +36,18 @@
       class="absolute bottom-0 left-0 pointer-events-none"
     >
       <ul>
-        <li v-for="(item, idx) of props.rect" :key="idx">{{ item }}</li>
+        <li v-for="(item, idx) of props.rect" :key="idx">{{ item.toFixed(3) }}</li>
       </ul>
     </div>
 
-    <t-button
+    <!-- <t-button
       :on-click="
         () => {
           testUrl = myChart.getBase64Image()
           testDialogVisible = true
         }
       "
-      >test</t-button
+      >{{ isInside.toString() }}</t-button
     >
 
     <t-dialog
@@ -62,7 +68,7 @@
         "
         >test</t-button
       >
-    </t-dialog>
+    </t-dialog> -->
   </div>
 </template>
 
@@ -76,6 +82,9 @@ import ChartGenJson from "@gisapi/_components/echarts/geoJsonPolygon"
 import eventBus from "@renderer/libs/eventBus"
 import { useTaskStore } from "@gisapi/store/index"
 
+import { useMouseInElement } from "@vueuse/core"
+// const target = useTemplateRef<HTMLDivElement>("target")
+
 const testUrl = ref("")
 const testDialogVisible = ref(false)
 
@@ -85,6 +94,9 @@ const props = withDefaults(defineProps<DefaultPropsT>(), Props)
 const chartContainerRef = ref<HTMLDivElement | null>(null)
 const rectElementRef = ref<HTMLDivElement | null>(null)
 let myChart: ChartGenJson
+
+const { isOutside } = useMouseInElement(chartContainerRef)
+const isInside = computed(() => !isOutside.value)
 
 // 存放watch事件，在组件卸载时销毁
 const watchList: WatchStopHandle[] = [

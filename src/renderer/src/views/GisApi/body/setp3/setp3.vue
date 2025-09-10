@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-15 14:21:58
+ * @LastEditTime: 2025-08-20 16:40:01
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -158,7 +158,6 @@ const echartGeoJsonRef = ref<
   HTMLElement & { resize: () => void; addProjectRange: (geojson: any) => void }
 >()
 
-const testName = ref("")
 const fileStore = useFileStroe()
 const tabStore = useGisApiTabStore()
 const localStore = reactive({

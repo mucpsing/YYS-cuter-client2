@@ -224,10 +224,11 @@ async function mxdToImg() {
   const taskRes = await mxdToImgApiByTask(body)
 
   if (!taskRes) return (localStore.loading = false)
+  taskStore.addTask(taskRes)
+
   eventBus.emit("gis-api:setp2:create-preview-to-task", taskRes.task_id)
 
-  taskStore.addTask(taskRes)
-  console.log({ body, taskRes })
+  console.log({ body, taskRes, taskStore: taskStore.taskList })
 
   setTimeout(() => (localStore.loading = false), 1000)
 }
