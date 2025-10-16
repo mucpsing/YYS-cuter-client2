@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2025-08-05 15:25:35
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-19 10:35:55
+ * @LastEditTime: 2025-10-16 08:55:18
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\taskStore.ts
  * @Description: 存储所有历史任务记录的store
  */
@@ -38,14 +38,14 @@ export const useTaskStore = defineStore("taskStore", {
       title: "",
       content: "",
     },
-    // taskList: [] as TaskItemT[],
-    taskList: [
-      { task_id: "test", progress: 50, status: "pending", preview: "" },
-      { task_id: "test2", progress: 50, status: "pending", preview: "" },
-      { task_id: "test3", progress: 50, status: "pending", preview: "" },
-      { task_id: "test4", progress: 50, status: "pending", preview: "" },
-      { task_id: "test5", progress: 50, status: "pending", preview: "" },
-    ] as TaskItemT[],
+    taskList: [] as TaskItemT[],
+    // taskList: [
+    //   { task_id: "test", progress: 50, status: "pending", preview: "" },
+    //   { task_id: "test2", progress: 50, status: "pending", preview: "" },
+    //   { task_id: "test3", progress: 50, status: "pending", preview: "" },
+    //   { task_id: "test4", progress: 50, status: "pending", preview: "" },
+    //   { task_id: "test5", progress: 50, status: "pending", preview: "" },
+    // ] as TaskItemT[],
   }),
 
   getters: {

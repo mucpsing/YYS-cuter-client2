@@ -6,7 +6,7 @@
     <header :class="['flex justify-between items-center', 'py-6 px-6 gap-8', 'min-w-[250px]']">
       <!-- 【按钮】添加工况 -->
       <t-tooltip content="添加工况">
-        <t-button :onClick="() => tabStore.closeAddTabDialog()"
+        <t-button :onClick="() => tabStore.showAddTabDialog()"
           ><template #icon><AddIcon /> </template
         ></t-button>
       </t-tooltip>
@@ -85,7 +85,7 @@ import { SETP_OPTIONS_LIST } from "@gisapi/store/config"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 import { useTaskStore } from "@gisapi/store/index"
 
-import type { MxdToImgFormT } from "@gisapi/Types"
+import type { MxdToImgFormT, show_range2DT } from "@gisapi/Types"
 import { TaskDoubleIcon, AddIcon } from "tdesign-icons-vue-next"
 
 import TopToolBar from "./topToolBar/index.vue"
@@ -217,6 +217,18 @@ async function mxdToImg() {
     crs: "auto",
     time_step: data.timeStep,
     sub_title: data.outputName,
+    sub_title_zoom_ratio: data.subTitleZoomRatio,
+    contour_setp: data.contour_setp,
+  }
+
+  if (data.projectPointsStr) {
+    let customShowRange = data.projectPointsStr.split(";").map((item) => Math.round(Number(item)))
+
+    if (customShowRange && customShowRange.length == 4) {
+      body.show_range = customShowRange as show_range2DT
+    } else {
+      console.log("存在自定义范围，但是不合法:", customShowRange)
+    }
   }
 
   // 调用后台合成接口

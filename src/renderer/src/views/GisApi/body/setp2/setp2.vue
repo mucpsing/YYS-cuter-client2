@@ -141,6 +141,59 @@ b
               ></t-input-number>
             </div>
           </div>
+
+          <t-divider class="my-2"></t-divider>
+
+          <!-- --------------- 【 图例缩放比例 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
+                <strong>图例缩放比例</strong>
+              </h2>
+              <p>图例的视图比例，0.5缩小，1.5放大，默认1.0</p>
+            </div>
+            <div class="flex gap-1">
+              <t-input-number
+                v-model="tabStore.currtFormData.subTitleZoomRatio"
+                theme="normal"
+                size="medium"
+                class="w-[100px]"
+                :decimal-places="1"
+                align="center"
+              ></t-input-number>
+            </div>
+          </div>
+
+          <t-divider class="my-2"></t-divider>
+
+          <!-- --------------- 【 等值线显示值 】 --------------- -->
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex flex-col items-start justify-between">
+              <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
+                <strong>等值线显示值</strong>
+              </h2>
+              <p>图例的视图比例，0.5缩小，1.5放大，默认1.0</p>
+              <div class="flex gap-1 mt-2">
+                <t-input
+                  v-model="tabStore.currtFormData.contour_setp"
+                  theme="normal"
+                  size="medium"
+                  class="min-w-[500px] mr-2"
+                  align="left"
+                ></t-input>
+                <t-button
+                  theme="danger"
+                  variant="outline"
+                  @click="
+                    () => {
+                      tabStore.currtFormData.contour_setp = DEFAULT_CONTOUR_STEP
+                    }
+                  "
+                  >默认</t-button
+                >
+              </div>
+            </div>
+          </div>
         </t-card>
       </div>
     </section>
@@ -151,7 +204,7 @@ b
 // import { useDropZone } from "@vueuse/core"
 import FileTransfer from "./fileTransfer.vue"
 import { useGisApiTabStore } from "@gisapi/store/index"
-
+import { DEFAULT_CONTOUR_STEP } from "@gisapi/store/formDataState"
 const tabStore = useGisApiTabStore()
 let customFileUpInputElement: HTMLInputElement
 

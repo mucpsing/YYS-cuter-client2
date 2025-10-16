@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-20 16:31:48
+ * @LastEditTime: 2025-10-16 10:17:16
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
@@ -230,6 +230,7 @@ async function initSortable() {
 }
 
 async function uploadFileDialog(elementStore: ElementStoreT) {
+  console.log("elementStore: ", elementStore)
   const target = "dfsu"
   // 调用点击事件
   DEFAULT_INPUT_ELEMENT_REF.accept = UP_FILE_ACCEPT_TYPE[target]
@@ -262,7 +263,7 @@ async function addItem(e, elementStore: ElementStoreT) {
   // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
   let fileCount = parseInt(e.target.files.length)
   tabStore.fileListKeys.forEach((key) => (fileCount += tabStore.currtFormData[key].length))
-  let fileIndex = 0
+  let fileIndex = 1
   let fileKey = elementStore.id
 
   // 添加一个空elementStore进行展示
@@ -271,8 +272,10 @@ async function addItem(e, elementStore: ElementStoreT) {
     const fileInfo = await fileStore.addDfsuItem(file)
     const { md5 } = fileInfo
 
+    // BUG 可能存在UI上的交互错误
     // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
     if (fileCount == 2) {
+      console.log("fileIndex: ", fileIndex)
       fileKey = tabStore.fileListKeys[fileIndex]
     }
 

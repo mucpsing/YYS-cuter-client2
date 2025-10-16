@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 22:08:32
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-18 16:19:46
+ * @LastEditTime: 2025-10-16 16:10:58
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\Types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -25,6 +25,8 @@ export type MxdToImgFormBase = {
   crs?: string | number // 支持直接使用crs代码， auto|unknown
   time_step?: number
   sub_title: string // 图例名称
+  sub_title_zoom_ratio: number
+  contour_setp: string
 }
 
 export type MxdToImgFormT = MxdToImgFormBase
