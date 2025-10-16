@@ -109,7 +109,7 @@ const handleClick: StickyToolProps["onClick"] = ({ e, item }) => {
 async function onAddTap() {
   tabStore.addTab(currtExtendId.value)
 
-  localStore.showAddTapDialog = false
+  tabStore.closeAddTabDialog()
 }
 
 const handleHover: StickyToolProps["onHover"] = (context) => {

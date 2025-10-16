@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-20 16:40:01
+ * @LastEditTime: 2025-10-16 16:40:23
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -134,13 +134,31 @@
                 </div>
               </div>
             </t-form-item>
+
+            <!-- 裁剪范围 -->
+            <t-form-item label="裁剪范围">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-center gap-4">
+                  <div class="flex gap-2">
+                    <t-textarea
+                      v-model="tabStore.currtFormData.projectPointsStr"
+                      :autosize="{ minRows: 4, maxRows: 4 }"
+                      size="medium"
+                      class="min-w-[300px]"
+                    ></t-textarea>
+                  </div>
+                </div>
+              </div>
+            </t-form-item>
           </t-form>
 
-          <template #footer>
+          <!-- TODO 添加裁件范围的全局缓存下拉列表功能，继承功能 -->
+
+          <!-- <template #footer>
             <div>
               <t-button @click="test" theme="success" class="w-full">保存范围到本地</t-button>
             </div>
-          </template>
+          </template> -->
         </t-card>
       </div>
     </div>
