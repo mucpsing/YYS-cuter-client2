@@ -167,12 +167,14 @@ b
           <t-divider class="my-2"></t-divider>
 
           <!-- --------------- 【 等值线显示值 】 --------------- -->
+          <!-- TODO 缓存失效，需要在后台添加动态的等值线重新显示功能-->
+          <!-- TODO 添加不使用缓存的功能 -->
           <div class="flex items-center justify-between mt-2">
             <div class="flex flex-col items-start justify-between">
               <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
                 <strong>等值线显示值</strong>
               </h2>
-              <p>图例的视图比例，0.5缩小，1.5放大，默认1.0</p>
+              <p>自定义等值线步进，使用英文的分号<strong>';'</strong> 分割每个步进，默认</p>
               <div class="flex gap-1 mt-2">
                 <t-input
                   v-model="tabStore.currtFormData.contour_setp"
