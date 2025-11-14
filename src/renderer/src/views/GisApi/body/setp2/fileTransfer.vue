@@ -2,116 +2,103 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-10-16 10:17:16
+ * @LastEditTime: 2025-11-14 16:36:43
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
 <template>
-  <div
-    ref="dropElementRef"
-    :class="['flex justify-between', 'w-full min-h-[160px] max-h-[240px]', 'gap-2 ', 'relative']"
-  >
-    <!-- 拖拽激活后的样式遮罩层 -->
-    <!-- <div class="GisApi__drapMask" :class="{ 'GisApi__drapMask-show': showDropMask }">
-      <div class="GisApi__drapMaskTip">最多支持读取前两个dfsu文件</div>
-    </div> -->
+    <div
+        ref="dropElementRef"
+        :class="['flex justify-between', 'w-full min-h-[160px] max-h-[240px]', 'gap-2 ', 'relative']"
+    >
+        <template v-for="eachElement of ElementList">
+            <div :class="['flex flex-col flex-1', 'p-4 rounded-lg', 'border border-gray-200']">
+                <h3 class="flex flex-row items-center justify-between pb-2 mb-2 text-lg font-medium border-b">
+                    <strong>{{ eachElement.title }}</strong>
 
-    <template v-for="eachElement of ElementList">
-      <div :class="['flex flex-col flex-1', 'p-4 rounded-lg', 'border border-gray-200']">
-        <h3
-          class="flex flex-row items-center justify-between pb-2 mb-2 text-lg font-medium border-b"
-        >
-          <strong>{{ eachElement.title }}</strong>
-
-          <div class="flex gap-2">
-            <t-button
-              :on-click="() => uploadFileDialog(eachElement)"
-              theme="success"
-              size="small"
-              :loading="eachElement.loading"
-              >选择文件</t-button
-            >
-            <t-button
-              size="small"
-              theme="danger"
-              :on-click="() => removeItemByChecked(eachElement.id)"
-            >
-              <template #icon>
-                <Delete1Icon />
-              </template>
-            </t-button>
-          </div>
-        </h3>
-
-        <ul
-          :id="eachElement.id"
-          :class="[
-            '__scrollbar-bule',
-            'relative flex-col flex-1 pr-1',
-            'overflow-y-auto overflow-x-hidden',
-            'list-none',
-          ]"
-        >
-          <!-- 【空文件状态】上传提示词模板 -->
-          <template v-if="tabStore.currtFormData[eachElement.id].length == 0">
-            <div
-              @click="() => uploadFileDialog(eachElement)"
-              :class="[
-                'transition-all duration-500 ease-in-out',
-                'absolute w-full  h-full text-center',
-                'hover:bg-blue-100 rounded-md',
-                'text-base cursor-pointer border-2 border-dashed border-gray-200',
-                tabStore.currtFormData[eachElement.id].length == 0 ? 'text-gray-300' : 'opacity-0',
-              ]"
-            >
-              <div
-                :class="['w-full h-full', '', 'flex flex-col flex-1 justify-center items-center']"
-              >
-                <p>拖拽或点击上传dfsu文件</p>
-                <p>（将文件拖放到此处或者点击下方选择按钮）</p>
-              </div>
-            </div>
-          </template>
-
-          <!-- 文件列表，每个文件以按钮形式覆盖 -->
-          <template v-for="item in tabStore.currtFormData[eachElement.id]" :key="item.id">
-            <li class="flex items-center w-full my-1" :data-id="item.id">
-              <t-button
-                block
-                theme="default"
-                :variant="item.checked ? 'base' : 'outline'"
-                :class="['fix__t-button-content-w-full relative', 'flex flex-row flex-1']"
-                :on-click="() => (item.checked = !item.checked)"
-                :disabled="item.disabled"
-                :loading="item.uploadProgress != 100"
-              >
-                <template #content>
-                  <div class="flex justify-between flex-1 w-full">
-                    <input v-model="item.checked" type="checkbox" :disabled="item.disabled" />
-
-                    <span>{{ truncateText(item.name, 16) }} ({{ item.size.toFixed(2) }}MB)</span>
-
-                    <div class="flex flex-col items-center justify-center">
-                      <div v-if="item.uploadProgress == 0">文件解析中...</div>
-
-                      <div v-else class="min-w-[150px]">
-                        <t-progress
-                          :color="{ from: '#0052D9', to: '#00A870' }"
-                          :percentage="item.uploadProgress"
-                          :status="item.uploadProgress == 100 ? 'success' : 'active'"
-                          theme="line"
-                        />
-                      </div>
+                    <div class="flex gap-2">
+                        <t-button
+                            :on-click="() => uploadFileDialog(eachElement)"
+                            theme="success"
+                            size="small"
+                            :loading="eachElement.loading"
+                            >选择文件</t-button
+                        >
+                        <t-button size="small" theme="danger" :on-click="() => removeItemByChecked(eachElement.id)">
+                            <template #icon>
+                                <Delete1Icon />
+                            </template>
+                        </t-button>
                     </div>
-                  </div>
-                </template>
-              </t-button>
-            </li>
-          </template>
-        </ul>
-      </div>
-    </template>
-  </div>
+                </h3>
+
+                <ul
+                    :id="eachElement.id"
+                    :class="[
+                        '__scrollbar-bule',
+                        'relative flex-col flex-1 pr-1',
+                        'overflow-y-auto overflow-x-hidden',
+                        'list-none',
+                    ]"
+                >
+                    <!-- 【空文件状态】上传提示词模板 -->
+                    <template v-if="tabStore.currtFormData[eachElement.id].length == 0">
+                        <div
+                            @click="() => uploadFileDialog(eachElement)"
+                            :class="[
+                                'transition-all duration-500 ease-in-out',
+                                'absolute w-full  h-full text-center',
+                                'hover:bg-blue-100 rounded-md',
+                                'text-base cursor-pointer border-2 border-dashed border-gray-200',
+                                tabStore.currtFormData[eachElement.id].length == 0 ? 'text-gray-300' : 'opacity-0',
+                            ]"
+                        >
+                            <div :class="['w-full h-full', '', 'flex flex-col flex-1 justify-center items-center']">
+                                <p>拖拽或点击上传dfsu文件</p>
+                                <p>（将文件拖放到此处或者点击下方选择按钮）</p>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- 文件列表，每个文件以按钮形式覆盖 -->
+                    <template v-for="item in tabStore.currtFormData[eachElement.id]" :key="item.id">
+                        <li class="flex items-center w-full my-1" :data-id="item.id">
+                            <t-button
+                                block
+                                theme="default"
+                                :variant="item.checked ? 'base' : 'outline'"
+                                :class="['fix__t-button-content-w-full relative', 'flex flex-row flex-1']"
+                                :on-click="() => (item.checked = !item.checked)"
+                                :disabled="item.disabled"
+                                :loading="item.uploadProgress != 100"
+                            >
+                                <template #content>
+                                    <div class="flex justify-between flex-1 w-full">
+                                        <input v-model="item.checked" type="checkbox" :disabled="item.disabled" />
+
+                                        <span>{{ truncateText(item.name, 16) }} ({{ item.size.toFixed(2) }}MB)</span>
+
+                                        <div class="flex flex-col items-center justify-center">
+                                            <div v-if="item.uploadProgress == 0">文件解析中...</div>
+
+                                            <div v-else class="min-w-[150px]">
+                                                <t-progress
+                                                    :color="{ from: '#0052D9', to: '#00A870' }"
+                                                    :percentage="item.uploadProgress"
+                                                    :status="item.uploadProgress == 100 ? 'success' : 'active'"
+                                                    theme="line"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </t-button>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -138,108 +125,125 @@ const dropElementRef = ref<HTMLElement>()
 const DEFAULT_INPUT_ELEMENT_REF = document.createElement("input")
 
 function removeItemByChecked(fileKey: FileListKeyT) {
-  const removeMd5List: string[] = []
-  tabStore.currtFormData[fileKey].forEach((eachData) => {
-    if (eachData.checked) {
-      removeMd5List.push(eachData.md5)
-    }
-  })
+    const removeMd5List: string[] = []
+    tabStore.currtFormData[fileKey].forEach((eachData) => {
+        if (eachData.checked) {
+            removeMd5List.push(eachData.md5)
+        }
+    })
 
-  removeMd5List.forEach((md5) => tabStore.removeDfsu(md5))
+    removeMd5List.forEach((md5) => tabStore.removeDfsu(md5))
 }
 
 interface ElementStoreT {
-  title: string
-  id: FileListKeyT
-  loading: boolean
+    title: string
+    id: FileListKeyT
+    loading: boolean
 }
 
 const localStore = reactive({
-  switchIconRoate: 0,
-  dragging: false,
+    switchIconRoate: 0,
+    dragging: false,
 })
 
 const ElementList = reactive<ElementStoreT[]>([
-  { title: "工程前", id: "beDfsuMd5List", loading: false },
-  { title: "工程后", id: "afDfsuMd5List", loading: false },
+    { title: "工程前1", id: "beDfsuMd5List", loading: false },
+    { title: "工程后2", id: "afDfsuMd5List", loading: false },
 ])
 
 // 初始化Sortable
 onMounted(() => {
-  nextTick(() => initSortable())
+    nextTick(() => initSortable())
 
-  // 这个全局事件供外部下一步进行数据校验时调用
-  eventBus.on("gis-api:fileTransfer-default-checked", onlyOneChecked)
+    // 这个全局事件供外部下一步进行数据校验时调用
+    eventBus.on("gis-api:fileTransfer-default-checked", onlyOneChecked)
 })
 
 /**
  * @description: 当前如果只有一个文件，那么自动选中，给予下一步时快捷调用
  */
 function onlyOneChecked() {
-  console.log("onlyOneChecked", tabStore.currtFormData)
-  for (let key of tabStore.fileListKeys) {
-    console.log("onlyOneChecked", key, tabStore.currtFormData[key])
+    console.log("onlyOneChecked", tabStore.currtFormData)
+    for (let key of tabStore.fileListKeys) {
+        console.log("onlyOneChecked", key, tabStore.currtFormData[key])
 
-    if (tabStore.currtFormData[key].length == 1) tabStore.currtFormData[key][0].checked = true
-  }
+        if (tabStore.currtFormData[key].length == 1) tabStore.currtFormData[key][0].checked = true
+    }
 }
 
 // 初始化拖拽组件
 async function initSortable() {
-  ElementList.forEach((eachElement) => {
-    const element = document.getElementById(eachElement.id)
-    const currtTabData = tabStore.currtFormData
+    ElementList.forEach((eachElement) => {
+        const element = document.getElementById(eachElement.id)
+        const currtTabData = tabStore.currtFormData
 
-    if (!element) return console.log(`element is null: ${eachElement.id}`)
+        if (!element) return console.log(`element is null: ${eachElement.id}`)
 
-    Sortable.create(element, {
-      group: "items",
-      animation: 150,
-      onStart: () => (localStore.dragging = true),
+        Sortable.create(element, {
+            group: "items",
+            animation: 150,
 
-      onEnd: (e) => {
-        const { id } = eachElement
+            onStart: () => {
+                localStore.dragging = true
+                console.log("onStart:", localStore.dragging)
+            },
 
-        // 修改排序
-        if (!e.newIndex || !e.oldIndex) return
-        if (e.from.id === e.to.id) {
-          const item = currtTabData[id].splice(e.oldIndex, 1)[0]
-          currtTabData[id].splice(e.newIndex, 0, item)
-        } else {
-          // 元素拖动
-          const target = currtTabData[e.from.id].splice(e.oldIndex, 1)[0]
-          if (!target) return console.warn("发生异常，数据为空: ", tabStore.currtFormData)
-          if (target.checked) target.checked = false
-          if (target.disabled) target.disabled = false
+            onEnd: (e) => {
+                const { id } = eachElement
 
-          currtTabData[e.to.id].splice(e.newIndex, 0, target)
+                console.log("onEnd:", { localStore, currtTabData })
 
-          // 修复
-          const fromList = currtTabData[e.from.id]
+                // 修改排序
+                if (e.newIndex == undefined || e.oldIndex == undefined) {
+                    return console.log("onEnd 3", e)
+                }
 
-          if (fromList.length == 1) {
-            fromList[0].checked = false
-            fromList[0].disabled = false
-          }
-        }
+                if (e.from.id === e.to.id) {
+                    console.log("onEnd1:")
+                    const item = currtTabData[id].splice(e.oldIndex, 1)[0]
+                    currtTabData[id].splice(e.newIndex, 0, item)
+                } else {
+                    console.log("onEnd2:")
 
-        localStore.dragging = false
-      },
+                    // 元素拖动
+                    const target = currtTabData[e.from.id].splice(e.oldIndex, 1)[0]
+                    if (!target) {
+                        console.log({ e })
+
+                        return console.warn("发生异常，数据为空: ", tabStore.currtFormData)
+                    }
+
+                    if (target.checked) target.checked = false
+                    if (target.disabled) target.disabled = false
+
+                    currtTabData[e.to.id].splice(e.newIndex, 0, target)
+
+                    // 修复
+                    const fromList = currtTabData[e.from.id]
+
+                    if (fromList.length == 1) {
+                        fromList[0].checked = false
+                        fromList[0].disabled = false
+                    }
+                }
+
+                localStore.dragging = false
+            },
+        })
     })
-  })
 }
 
 async function uploadFileDialog(elementStore: ElementStoreT) {
-  console.log("elementStore: ", elementStore)
-  const target = "dfsu"
-  // 调用点击事件
-  DEFAULT_INPUT_ELEMENT_REF.accept = UP_FILE_ACCEPT_TYPE[target]
-  DEFAULT_INPUT_ELEMENT_REF.onchange = (e) => addItem(e, elementStore)
+    // console.log("elementStore: ", elementStore)
+    const target = "dfsu"
+    // 调用点击事件
+    DEFAULT_INPUT_ELEMENT_REF.accept = UP_FILE_ACCEPT_TYPE[target]
+    DEFAULT_INPUT_ELEMENT_REF.onchange = (e) => addItem(e, elementStore)
 
-  DEFAULT_INPUT_ELEMENT_REF.type = "file"
-  DEFAULT_INPUT_ELEMENT_REF.multiple = true
-  if (DEFAULT_INPUT_ELEMENT_REF.value) DEFAULT_INPUT_ELEMENT_REF.value = ""
-  DEFAULT_INPUT_ELEMENT_REF.click()
+    DEFAULT_INPUT_ELEMENT_REF.type = "file"
+    DEFAULT_INPUT_ELEMENT_REF.multiple = true
+    if (DEFAULT_INPUT_ELEMENT_REF.value) DEFAULT_INPUT_ELEMENT_REF.value = ""
+    DEFAULT_INPUT_ELEMENT_REF.click()
 }
 
 /**
@@ -253,59 +257,59 @@ async function uploadFileDialog(elementStore: ElementStoreT) {
  * @returns 无返回值，但会更新数据列表和文件存储对象。
  */
 async function addItem(e, elementStore: ElementStoreT) {
-  if (!e.target) return console.warn("获取实例失败")
-  if (!e.target.files) return console.warn("没有选中文件")
-  if (e.target.files.length == 0) return console.warn("没有文件")
-  elementStore.loading = true
+    if (!e.target) return console.warn("获取实例失败")
+    if (!e.target.files) return console.warn("没有选中文件")
+    if (e.target.files.length == 0) return console.warn("没有文件")
+    elementStore.loading = true
 
-  // TODO 是否需要优化，这里使用了tabStore和fileStore两个store进行数据操作
+    // TODO 是否需要优化，这里使用了tabStore和fileStore两个store进行数据操作
 
-  // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
-  let fileCount = parseInt(e.target.files.length)
-  tabStore.fileListKeys.forEach((key) => (fileCount += tabStore.currtFormData[key].length))
-  let fileIndex = 1
-  let fileKey = elementStore.id
-
-  // 添加一个空elementStore进行展示
-  // 为了支持多个文件上传，这里使用了遍历
-  for (let file of e.target.files) {
-    const fileInfo = await fileStore.addDfsuItem(file)
-    const { md5 } = fileInfo
-
-    // BUG 可能存在UI上的交互错误
     // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
-    if (fileCount == 2) {
-      console.log("fileIndex: ", fileIndex)
-      fileKey = tabStore.fileListKeys[fileIndex]
+    let fileCount = parseInt(e.target.files.length)
+    tabStore.fileListKeys.forEach((key) => (fileCount += tabStore.currtFormData[key].length))
+    let fileIndex = 1
+    let fileKey = elementStore.id
+
+    // 添加一个空elementStore进行展示
+    // 为了支持多个文件上传，这里使用了遍历
+    for (let file of e.target.files) {
+        const fileInfo = await fileStore.addDfsuItem(file)
+        const { md5 } = fileInfo
+
+        // BUG 可能存在UI上的交互错误
+        // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
+        if (fileCount == 2) {
+            console.log("fileIndex: ", fileIndex)
+            fileKey = tabStore.fileListKeys[fileIndex]
+        }
+
+        tabStore.addDfsu(fileKey, md5)
+
+        // 尝试进行上传，并传递上传进度的变量
+        uploadFile(file, fileInfo, (uploadPress: number) => {
+            tabStore.updateSelectFileItemByMd5(md5, { uploadProgress: uploadPress })
+        })
+            .then((upload_res) => {
+                // 上传成功后，后端会解析出geojson，dfsu的几何轮廓，将这个轮廓缓存到fileStore中
+                if (upload_res && upload_res.range_geojson) {
+                    fileStore.geoJsonObj[md5] = upload_res.range_geojson
+                    tabStore.updateSelectFileItemByMd5(md5, { uploadProgress: 100 })
+                } else {
+                    // 上传失败？
+                    fileStore.removeDataByMd5(md5)
+                    tabStore.removeDfsu(md5)
+                }
+            })
+            .catch((err) => {
+                console.warn("Server.uploadFile: ", { err })
+                fileStore.removeDataByMd5(md5)
+                tabStore.removeDfsu(md5)
+            })
+
+        fileIndex++
     }
 
-    tabStore.addDfsu(fileKey, md5)
-
-    // 尝试进行上传，并传递上传进度的变量
-    uploadFile(file, fileInfo, (uploadPress: number) => {
-      tabStore.updateSelectFileItemByMd5(md5, { uploadProgress: uploadPress })
-    })
-      .then((upload_res) => {
-        // 上传成功后，后端会解析出geojson，dfsu的几何轮廓，将这个轮廓缓存到fileStore中
-        if (upload_res && upload_res.range_geojson) {
-          fileStore.geoJsonObj[md5] = upload_res.range_geojson
-          tabStore.updateSelectFileItemByMd5(md5, { uploadProgress: 100 })
-        } else {
-          // 上传失败？
-          fileStore.removeDataByMd5(md5)
-          tabStore.removeDfsu(md5)
-        }
-      })
-      .catch((err) => {
-        console.warn("Server.uploadFile: ", { err })
-        fileStore.removeDataByMd5(md5)
-        tabStore.removeDfsu(md5)
-      })
-
-    fileIndex++
-  }
-
-  elementStore.loading = false
+    elementStore.loading = false
 }
 </script>
 
