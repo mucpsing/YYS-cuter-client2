@@ -222,7 +222,7 @@ async function mxdToImg() {
   }
 
   if (data.projectPointsStr) {
-    let customShowRange = data.projectPointsStr.split(";").map((item) => Math.round(Number(item)))
+    let customShowRange = data.projectPointsStr.split(";").map((item) => Number(item))
 
     if (customShowRange && customShowRange.length == 4) {
       body.show_range = customShowRange as show_range2DT
