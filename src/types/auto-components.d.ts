@@ -37,6 +37,7 @@ declare module 'vue' {
     ImageCuter: typeof import('./../renderer/src/views/ImageCuter/index.vue')['default']
     Indxe: typeof import('./../renderer/src/views/TyphoonUI/_components/SearchBar/indxe.vue')['default']
     InfoPannel: typeof import('./../renderer/src/views/TyphoonUI/_components/InfoPannel.vue')['default']
+    Message: typeof import('./../renderer/src/views/GisApi/_components/message.vue')['default']
     NpcBaseInfo: typeof import('./../renderer/src/views/NsNpcManager/body/NpcBaseInfo.vue')['default']
     NpcDrop: typeof import('./../renderer/src/views/NsNpcManager/body/NpcDrop.vue')['default']
     NpcParams: typeof import('./../renderer/src/views/NsNpcManager/body/NpcParams.vue')['default']

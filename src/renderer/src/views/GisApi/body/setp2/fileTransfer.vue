@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-11-14 16:36:43
+ * @LastEditTime: 2025-11-14 17:26:15
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
@@ -24,7 +24,7 @@
                             :loading="eachElement.loading"
                             >选择文件</t-button
                         >
-                        <t-button size="small" theme="danger" :on-click="() => removeItemByChecked(eachElement.id)">
+                        <t-button size="small" theme="danger" :on-click="() => removeItemByChecked(eachElement)">
                             <template #icon>
                                 <Delete1Icon />
                             </template>
@@ -103,6 +103,7 @@
 
 <script setup lang="ts">
 import Sortable from "sortablejs"
+import { MessagePlugin } from "tdesign-vue-next"
 
 import { useFileStroe, useGisApiTabStore } from "@gisapi/store/index"
 import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
@@ -114,19 +115,16 @@ import eventBus from "@renderer/libs/eventBus"
 
 import type { FileListKeyT } from "@gisapi/Types"
 
-// import { useMouseInElement } from "@vueuse/core"
-// const target = useTemplateRef<HTMLDivElement>("target")
-// const {isOutside } = useMouseInElement(target)
-// const isInside = computed(() => !isOutside.value)
-
 const fileStore = useFileStroe()
 const tabStore = useGisApiTabStore()
 const dropElementRef = ref<HTMLElement>()
 const DEFAULT_INPUT_ELEMENT_REF = document.createElement("input")
 
-function removeItemByChecked(fileKey: FileListKeyT) {
+function removeItemByChecked(eachElement: ElementStoreT) {
+    console.log({ eachElement })
+
     const removeMd5List: string[] = []
-    tabStore.currtFormData[fileKey].forEach((eachData) => {
+    tabStore.currtFormData[eachElement.id].forEach((eachData) => {
         if (eachData.checked) {
             removeMd5List.push(eachData.md5)
         }
@@ -265,6 +263,7 @@ async function addItem(e, elementStore: ElementStoreT) {
     // TODO 是否需要优化，这里使用了tabStore和fileStore两个store进行数据操作
 
     // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
+    const allFileCount = parseInt(tabStore.currtFileCount)
     let fileCount = parseInt(e.target.files.length)
     tabStore.fileListKeys.forEach((key) => (fileCount += tabStore.currtFormData[key].length))
     let fileIndex = 1
@@ -274,14 +273,21 @@ async function addItem(e, elementStore: ElementStoreT) {
     // 为了支持多个文件上传，这里使用了遍历
     for (let file of e.target.files) {
         const fileInfo = await fileStore.addDfsuItem(file)
+
+        // 文件添加失败或者已经存在
+        if (!fileInfo) {
+            MessagePlugin.warning({
+                content: "文件已存在，请勿重复添加",
+                duration: 3000,
+                zIndex: 1001,
+            })
+
+            continue
+        }
         const { md5 } = fileInfo
 
-        // BUG 可能存在UI上的交互错误
-        // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
-        if (fileCount == 2) {
-            console.log("fileIndex: ", fileIndex)
-            fileKey = tabStore.fileListKeys[fileIndex]
-        }
+        // 当首次添加两个文件时，需要将第一个文件分配给工程前，第二个文件分配给工程后
+        if (fileCount == 2 && allFileCount == 0) fileKey = tabStore.fileListKeys[fileIndex - 1]
 
         tabStore.addDfsu(fileKey, md5)
 
