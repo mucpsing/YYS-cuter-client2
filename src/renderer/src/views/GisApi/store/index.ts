@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-11-14 17:21:54
+ * @LastEditors: Capsion 373704015@qq.com
+ * @LastEditTime: 2025-12-30 22:10:38
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
@@ -26,6 +26,11 @@ export const useGisApiStateStore = defineStore("globalStore", {
     }),
 
     actions: {
+        // 需要在最外层的app.vue或者index.vue调用，初始化本store
+        async init() {
+            await this.checkoutServerOnReady()
+        },
+
         async checkoutServerOnReady() {
             this.GlobalLoading = true
             const formStore = useGisApiTabStore()

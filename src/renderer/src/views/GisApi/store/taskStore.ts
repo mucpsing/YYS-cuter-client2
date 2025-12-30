@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2025-08-05 15:25:35
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-12-30 17:03:30
+ * @LastEditors: Capsion 373704015@qq.com
+ * @LastEditTime: 2025-12-30 21:59:28
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\taskStore.ts
  * @Description: 存储所有历史任务记录的store
  */
@@ -10,6 +10,7 @@
 import { defineStore } from "pinia"
 import * as server from "@gisapi/utils/server"
 import type { FileInfoItemBaseT, MxdToImgFormT } from "@gisapi/Types"
+import type { FileInfoItemBaseT, TaskItemT, MxdToImgFormBase } from "@gisapi/Types"
 
 export interface TaskItemT {
     preview: string
@@ -27,7 +28,7 @@ export const useTaskStore = defineStore("taskStore", {
     state: () => ({
         currtTaskId: "" as string,
         dialog: {
-            visible: true,
+            visible: false,
             title: "",
             content: "",
         },
@@ -55,6 +56,15 @@ export const useTaskStore = defineStore("taskStore", {
     },
 
     actions: {
+        // 现在topToolbar.vue中调用执行
+        async init() {
+            console.log("initTask 获取任务列表")
+
+            const taskHistoryList = await server.getAllTask()
+
+            console.log({ taskHistoryList })
+        },
+
         watchTask(taskId: string) {
             if (!this.watchTaskList.includes(taskId)) this.watchTaskList.push(taskId)
             if (this.watchTaskEventLoopId == null) {
@@ -89,6 +99,7 @@ export const useTaskStore = defineStore("taskStore", {
                 }, this.watchInteralTime)
             }
         },
+
         // 设置成当前激活，展示具体任务信息到任务页
         selectTask(taskId: string) {
             this.currtTaskId = taskId
@@ -117,6 +128,10 @@ export const useTaskStore = defineStore("taskStore", {
         },
         closeDialog() {
             this.dialog.visible = false
+        },
+
+        async getRemoteHistoryTaskList(): Promise<TaskItemT[] | undefined> {
+            return await server.getAllTask()
         },
     },
 })
