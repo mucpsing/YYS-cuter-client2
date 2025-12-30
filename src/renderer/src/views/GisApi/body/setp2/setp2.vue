@@ -216,17 +216,6 @@ onUnmounted(() => {
     document.body.appendChild(customFileUpInputElement)
     document.body.removeChild(customFileUpInputElement)
 })
-
-// 用来支持拖拽文件
-// const dropElementRef = ref<HTMLElement>()
-// const { isOverDropZone } = useDropZone(dropElementRef, onDrop)
-// async function onDrop(files: File[] | null) {
-//   if (isOverDropZone && files) {
-//     if (files.length == 1) {
-//       // 文件读取
-//     }
-//   }
-// }
 </script>
 
 <style lang="stylus"></style>
