@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2025-12-30 22:10:38
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2026-01-08 09:57:20
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
@@ -35,19 +35,15 @@ export const useGisApiStateStore = defineStore("globalStore", {
             this.GlobalLoading = true
             const formStore = useGisApiTabStore()
 
-            for (let serverIp of DEFAULT_SERVER_IP_LIST) {
-                console.log("检查IP: ", serverIp)
-                config.SERVER_IP = serverIp
-                this.isGisServerConnected = await serverCheckApi(500)
+            console.log("检查IP: ", config.SERVER_IP)
+            this.isGisServerConnected = await serverCheckApi(500)
 
-                if (this.isGisServerConnected && formStore.templateInfoList.length == 0) {
-                    await formStore.getTemplateList()
+            if (this.isGisServerConnected && formStore.templateInfoList.length == 0) {
+                await formStore.getTemplateList()
 
-                    setTimeout(() => (this.GlobalLoading = false), 600)
-
-                    break
-                }
+                setTimeout(() => (this.GlobalLoading = false), 600)
             }
+
             setTimeout(() => (this.GlobalLoading = false), 1200)
         },
 
@@ -85,9 +81,9 @@ export const useGisApiTabStore = defineStore("tabStore", {
         currtTab: (state) => state.tabList[state.currtTabId],
         currtFormData: (state) => state.formDataList[state.currtTabId],
         currtFileCount: (state) => {
-            let allFileList = 0
-            state.fileListKeys.forEach((key) => (allFileList += state.formDataList[state.currtTabId][key].length))
-            return allFileList
+            let allFileCount = 0
+            state.fileListKeys.forEach((key) => (allFileCount += state.formDataList[state.currtTabId][key].length))
+            return allFileCount
         },
     },
 

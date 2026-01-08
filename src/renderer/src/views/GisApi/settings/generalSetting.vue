@@ -1,8 +1,8 @@
 <!--
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-27 22:05:24
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2025-12-30 22:07:59
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2026-01-08 10:10:33
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\settings\generalSettingl.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -72,9 +72,10 @@ const btnTheme = computed(() => (glboalStore.isGisServerConnected ? "success" : 
 const SERVER_KEYS = ["SERVER_IP", "SERVER_PROT"]
 
 const V = computed(() => `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/`)
-const resetConfigData = (item) => {
-    console.log("resetConfigData: ", item)
-}
+
+// const resetConfigData = (item) => {
+//     console.log("resetConfigData: ", item)
+// }
 
 async function checkServer() {
     btnLoading.value = true

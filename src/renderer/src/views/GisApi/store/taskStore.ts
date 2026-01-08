@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2025-08-05 15:25:35
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2025-12-30 21:59:28
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2025-12-31 15:40:34
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\taskStore.ts
  * @Description: 存储所有历史任务记录的store
  */
@@ -33,8 +33,8 @@ export const useTaskStore = defineStore("taskStore", {
             content: "",
         },
         taskList: [] as TaskItemT[],
-        watchTaskList: [] as string[],
-        watchTaskEventLoopId: null as NodeJS.Timeout | null, //
+
+        watchTaskEventLoopId: {} as { [key: string]: NodeJS.Timeout }, //
         watchInteralTime: 1000 as number, // 默认1秒间隔
         watchInteralCount: 0 as number, // 默认监听1分钟没有任何任务的话，自动停止
         watchInteralMaxCount: 60 as number, // 默认监听1分钟没有任何任务的话，自动停止
@@ -66,38 +66,18 @@ export const useTaskStore = defineStore("taskStore", {
         },
 
         watchTask(taskId: string) {
-            if (!this.watchTaskList.includes(taskId)) this.watchTaskList.push(taskId)
-            if (this.watchTaskEventLoopId == null) {
-                console.log("开启监听任务事件")
-                this.watchTaskEventLoopId = setInterval(async () => {
-                    if (this.watchTaskList.length == 0) {
-                        this.watchInteralCount++
-                        return
-                    } else if (this.watchTaskList.length <= 5) {
-                        for (let taskId of this.watchTaskList) {
-                            const localTask = this.getTask(taskId)
+            this.watchTaskEventLoopId[taskId] = setInterval(async () => {
+                const remoteTask = await server.getTaskById(taskId)
 
-                            const remoteTask = await server.getTaskById(taskId)
+                if (!remoteTask) return console.log("远程调用失败？")
 
-                            console.log("watchTask: ", localTask, remoteTask)
-                        }
-                        this.watchInteralCount = 0
-                    } else {
-                        const remoteTaskList = await server.getAllTask()
+                this.updateTask(taskId, remoteTask)
 
-                        if (!remoteTaskList) return
-
-                        for (let remoteTask of remoteTaskList) {
-                            const localTask = this.getTask(remoteTask.task_id)
-
-                            if (!localTask) continue
-
-                            console.log("watchTask: ", localTask, remoteTask)
-                        }
-                        this.watchInteralCount = 0
-                    }
-                }, this.watchInteralTime)
-            }
+                if (remoteTask.status === "completed") {
+                    clearInterval(this.watchTaskEventLoopId[taskId])
+                    delete this.watchTaskEventLoopId[taskId]
+                }
+            }, this.watchInteralTime)
         },
 
         // 设置成当前激活，展示具体任务信息到任务页

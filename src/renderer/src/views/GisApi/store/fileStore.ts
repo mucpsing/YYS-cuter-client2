@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-11-19 09:30:51
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-11-14 17:14:12
+ * @LastEditTime: 2026-01-08 10:40:00
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\modules\fileStore.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -71,8 +71,8 @@ export const useFileStroe = defineStore("fileStore", {
             const md5 = await getMd5(file)
 
             if (Object.hasOwn(this.dfsuObj, md5)) {
-                console.warn("文件已存在，忽律添加文件，这里是否需要添加信息提醒")
-                return
+                console.warn("文件已存在，将从缓存中添加", this.dfsuObj[md5])
+                return this.dfsuObj[md5]
             }
 
             const fileInfo: FileInfoItemBaseT = {

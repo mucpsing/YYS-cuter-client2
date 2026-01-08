@@ -241,7 +241,7 @@ async function mxdToImg() {
 
     taskStore.addTask(taskRes)
 
-    taskStore.watchTask(taskRes.task_id)
+    // taskStore.watchTask(taskRes.task_id)
 
     eventBus.emit("gis-api:setp2:create-preview-to-task", taskRes.task_id)
 

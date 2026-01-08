@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-31 08:49:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-11-14 17:26:15
+ * @LastEditTime: 2026-01-08 10:39:22
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\Home\index.vue
  * @Description: 这里是文件筐拉选组件，内置了拖拽上传功能，默认自动上传，返回md5存放在fileStore中
 -->
@@ -123,6 +123,7 @@ const DEFAULT_INPUT_ELEMENT_REF = document.createElement("input")
 function removeItemByChecked(eachElement: ElementStoreT) {
     console.log({ eachElement })
 
+    // 删除tabStore的
     const removeMd5List: string[] = []
     tabStore.currtFormData[eachElement.id].forEach((eachData) => {
         if (eachData.checked) {
@@ -263,7 +264,7 @@ async function addItem(e, elementStore: ElementStoreT) {
     // TODO 是否需要优化，这里使用了tabStore和fileStore两个store进行数据操作
 
     // 【交互优化1】当初始文件为0，且本次添加2个文件时，一个文件分配给工程前，一个分配给工程后
-    const allFileCount = parseInt(tabStore.currtFileCount)
+    const allFileCount = tabStore.currtFileCount
     let fileCount = parseInt(e.target.files.length)
     tabStore.fileListKeys.forEach((key) => (fileCount += tabStore.currtFormData[key].length))
     let fileIndex = 1
@@ -277,7 +278,7 @@ async function addItem(e, elementStore: ElementStoreT) {
         // 文件添加失败或者已经存在
         if (!fileInfo) {
             MessagePlugin.warning({
-                content: "文件已存在，请勿重复添加",
+                content: "添加文件失败，请检查文件格式是否正确",
                 duration: 3000,
                 zIndex: 1001,
             })
