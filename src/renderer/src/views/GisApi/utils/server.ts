@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-12-30 16:43:25
+ * @LastEditTime: 2026-01-09 10:34:21
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 所有API的包装工具类，所有外部要调用服务器都要引入这个类，实际的API保存在store/API中
  */
@@ -54,7 +54,7 @@ export async function getTemplateList() {
 export async function uploadCheck(fineMd5WithExtName: any): Promise<FileInfoBase | undefined> {
     try {
         const res = await server().get(`${API.uploadCheck}/${fineMd5WithExtName}`)
-
+        console.log("fineMd5WithExtName: ", fineMd5WithExtName)
         if (res.status == 200 && res.data.success) {
             if (fineMd5WithExtName.endsWith(".dfsu") || fineMd5WithExtName.endsWith(".shp")) {
                 // console.log("文件已经存在，返回服务器缓存", res.data.res)
@@ -77,8 +77,14 @@ export async function uploadFile(
     updateProgressCallback: ((progress: number) => void) | undefined = undefined,
 ): Promise<UploadResT> {
     try {
+        // 检查文件
         const upload_check_res = await uploadCheck(fileInfo.md5Name)
-        if (upload_check_res) return upload_check_res
+        if (upload_check_res) {
+            console.log("文件已经存在，返回服务器缓存", upload_check_res)
+            return upload_check_res
+        } else {
+            console.log("文件不存在，开始上传")
+        }
 
         const formData = new FormData()
         formData.append("file_name_md5", fileInfo.md5Name as string)
