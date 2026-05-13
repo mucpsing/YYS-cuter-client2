@@ -83,7 +83,7 @@ import { mxdToImgApi, taskTest, mxdToImgApiByTask } from "@gisapi/utils/server"
 import { SETP_OPTIONS_LIST } from "@gisapi/store/config"
 
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
-import { useTaskStore } from "@gisapi/store/index"
+import { useTaskStore, useConfigStore } from "@gisapi/store/index"
 
 import type { MxdToImgFormT, show_range2DT } from "@gisapi/Types"
 import { TaskDoubleIcon, AddIcon } from "tdesign-icons-vue-next"
@@ -100,6 +100,7 @@ const SwiperComponentList = {
 const tabStore = useGisApiTabStore()
 const taskStore = useTaskStore()
 const globalStore = useGisApiStateStore()
+const configStore = useConfigStore()
 
 const { formDataList, currtTabId } = storeToRefs(tabStore)
 
@@ -206,6 +207,7 @@ async function mxdToImg() {
     if (!dfsu_be_md5 || !dfsu_af_md5) return console.warn("请选择文件")
 
     // 拼接api所需要的参数格式body
+    /** 本类型与后端/routers/v1/gisArcMap/types.py中DfsuToShpRequest始终保持一致 **/
     const body: MxdToImgFormT = {
         template_id: data.mxdId,
         dfsu_be_md5: dfsu_be_md5.md5,
@@ -219,6 +221,7 @@ async function mxdToImg() {
         sub_title: data.outputName,
         sub_title_zoom_ratio: data.subTitleZoomRatio,
         contour_setp: data.contour_setp,
+        contour_min_len:data.contourMinLen
     }
 
     if (data.projectPointsStr) {
@@ -231,21 +234,28 @@ async function mxdToImg() {
         }
     }
 
+    console.log({ body })
+
     // 调用后台合成接口
     localStore.loading = true
-    const taskRes = await mxdToImgApiByTask(body)
 
-    console.log("taskRes", taskRes)
+    if (configStore.DEFAULT_USE_TASK_QUEUE) {
+        const taskRes = await mxdToImgApiByTask(body)
 
-    if (!taskRes) return (localStore.loading = false)
+        console.log("taskRes", taskRes)
 
-    taskStore.addTask(taskRes)
+        if (!taskRes) return (localStore.loading = false)
 
-    // taskStore.watchTask(taskRes.task_id)
+        taskStore.addTask(taskRes)
+        eventBus.emit("gis-api:setp2:create-preview-to-task", taskRes.task_id)
+        setTimeout(() => (localStore.loading = false), 1000)
+    } else {
+        const taskRes = await mxdToImgApi(body)
 
-    eventBus.emit("gis-api:setp2:create-preview-to-task", taskRes.task_id)
+        console.log("taskRes", taskRes)
 
-    setTimeout(() => (localStore.loading = false), 1000)
+        localStore.loading = false
+    }
 }
 </script>
 

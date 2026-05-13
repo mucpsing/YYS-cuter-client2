@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-10-16 16:40:10
+ * @LastEditTime: 2026-05-12 10:36:49
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\state.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @Description: 建议所有state变量使用currtXxxxXxxx来命名
@@ -32,7 +32,7 @@ export function createFormData(newTabId: number) {
     radian_or_angle: "弧度" as `弧度` | `角度`,
     show_range: 600, // 显示范围
     mesh_size: 25,
-    contour_range: 200, // 大于这个长度的流速等值线才会被显示
+    contourMinLen: 200, // 大于这个长度的流速等值线才会被显示
     contour_setp: DEFAULT_CONTOUR_STEP, // 等值线要显示哪些值
     subTitleZoomRatio: 1.0,
     templateInfo: {} as TemplateInfo,

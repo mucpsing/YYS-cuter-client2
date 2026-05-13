@@ -2,27 +2,14 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2025-08-05 15:25:35
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-12-31 15:40:34
+ * @LastEditTime: 2026-01-16 10:28:35
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\taskStore.ts
  * @Description: 存储所有历史任务记录的store
  */
 
 import { defineStore } from "pinia"
 import * as server from "@gisapi/utils/server"
-import type { FileInfoItemBaseT, MxdToImgFormT } from "@gisapi/Types"
-import type { FileInfoItemBaseT, TaskItemT, MxdToImgFormBase } from "@gisapi/Types"
-
-export interface TaskItemT {
-    preview: string
-    task_id: string
-    status: "pending" | "running" | "processing" | "completed" | "failed" | "cancelling" | "cancelled" | "invalid" // invalid
-    progress: number
-    request: MxdToImgFormT
-    created_at: number
-    updated_at: number
-    result: any
-    error: any
-}
+import type { TaskItemT } from "@gisapi/Types"
 
 export const useTaskStore = defineStore("taskStore", {
     state: () => ({
@@ -38,13 +25,6 @@ export const useTaskStore = defineStore("taskStore", {
         watchInteralTime: 1000 as number, // 默认1秒间隔
         watchInteralCount: 0 as number, // 默认监听1分钟没有任何任务的话，自动停止
         watchInteralMaxCount: 60 as number, // 默认监听1分钟没有任何任务的话，自动停止
-        // taskList: [
-        //   { task_id: "test", progress: 50, status: "pending", preview: "" },
-        //   { task_id: "test2", progress: 50, status: "pending", preview: "" },
-        //   { task_id: "test3", progress: 50, status: "pending", preview: "" },
-        //   { task_id: "test4", progress: 50, status: "pending", preview: "" },
-        //   { task_id: "test5", progress: 50, status: "pending", preview: "" },
-        // ] as TaskItemT[],
     }),
 
     getters: {
@@ -79,6 +59,8 @@ export const useTaskStore = defineStore("taskStore", {
                 }
             }, this.watchInteralTime)
         },
+
+        watchTaskWs(taskId: string) {},
 
         // 设置成当前激活，展示具体任务信息到任务页
         selectTask(taskId: string) {

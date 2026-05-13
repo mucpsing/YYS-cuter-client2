@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-11-17 10:51:47
+ * @LastEditTime: 2026-05-12 17:14:55
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -100,7 +100,7 @@
                         </t-form-item>
 
                         <!-- 项目范围 -->
-                        <t-form-item label="其他设置">
+                        <t-form-item label="项目范围">
                             <div class="flex flex-col gap-2">
                                 <div class="flex items-center justify-center gap-4">
                                     <div class="flex gap-2">
@@ -114,11 +114,17 @@
                                         </t-select>
                                     </div>
 
-                                    <div v-show="localStore.projectRangeModel == 'user'">
+                                    <div v-show="localStore.projectRangeModel === 'user'" class="flex gap-2">
                                         <t-button
                                             :loading="localStore.projectRangeLoadding"
-                                            size="small"
-                                            theme="danger"
+                                            theme="primary"
+                                            @click="test"
+                                            class="min-w-[100px]"
+                                            >上传</t-button
+                                        >
+                                        <t-button
+                                            :loading="localStore.projectRangeLoadding"
+                                            variant="outline"
                                             @click="test"
                                             >X</t-button
                                         >
@@ -132,6 +138,7 @@
                         </t-form-item>
 
                         <!-- 裁剪范围 -->
+                        <!-- TODO 添加裁剪范围的全局缓存下拉列表功能，继承功能 -->
                         <t-form-item label="裁剪范围">
                             <div class="flex flex-col gap-2">
                                 <div class="flex items-center justify-center gap-4">
@@ -148,13 +155,11 @@
                         </t-form-item>
                     </t-form>
 
-                    <!-- TODO 添加裁件范围的全局缓存下拉列表功能，继承功能 -->
-
-                    <!-- <template #footer>
-            <div>
-              <t-button @click="test" theme="success" class="w-full">保存范围到本地</t-button>
-            </div>
-          </template> -->
+                    <template #footer>
+                        <div>
+                            <t-button @click="test" theme="success" class="w-full">保存范围到本地</t-button>
+                        </div>
+                    </template>
                 </t-card>
             </div>
         </div>
@@ -192,7 +197,8 @@ const paperSizeOptions = [
 
 const themeListTab = ["primary", "danger", "warning", "success", "primary", "danger", "warning", "success"]
 
-async function onProjectRangeModelChange() {
+async function onProjectRangeModelChange(value) {
+    console.log({ value })
     if (localStore.projectRangeModel == "auto") {
         // 调用远程的接口生成两个dfsu之间的差值
         if (geoJsonOptions.value.length < 2) return
@@ -205,6 +211,9 @@ async function onProjectRangeModelChange() {
         if (diff_geojson && echartGeoJsonRef.value) {
             echartGeoJsonRef.value.addProjectRange(diff_geojson.geojson)
         }
+    } else if (localStore.projectRangeModel == "user") {
+        // 这里渲染上传按钮，添加独立的上传功能，上传成功的话自动将上传后后端返回的文件id存入
+        localStore.projectRangeModel
     }
 }
 
@@ -240,7 +249,7 @@ onMounted(() => {
         onSelectRangeFile(geoJsonOptions.value[0].value)
         localStore.currtSelectDfsuName = geoJsonOptions.value[0].label
 
-        onProjectRangeModelChange()
+        // onProjectRangeModelChange()
     }
 })
 </script>

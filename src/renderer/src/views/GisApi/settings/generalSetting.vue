@@ -2,12 +2,12 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-27 22:05:24
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-01-08 10:10:33
+ * @LastEditTime: 2026-03-04 10:34:49
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\settings\generalSettingl.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-    <t-collapse-panel value="服务器配置" header="服务器配置" class="collapse-style">
+    <t-collapse-panel value="GisAPI" header="GisAPI" class="collapse-style">
         <template #expandIcon>
             <c-icon-font class="text-xl" iconName="fuwuqi-shouye"></c-icon-font>
         </template>
@@ -54,6 +54,14 @@
             <t-input v-model="config.DEFAULT_TEST_API" :placeholder="config.DEFAULT_TEST_API.toString()"></t-input>
         </t-form-item>
 
+        <t-form-item label="使用任务队列" name="DEFAULT_USE_TASK_QUEUE">
+            <t-switch v-model="config.DEFAULT_USE_TASK_QUEUE"></t-switch>
+        </t-form-item>
+
+        <t-form-item label="体例名称提示" name="DEFAULT_USE_TASK_QUEUE">
+            <t-tag-input v-model="config.SETP_1_SETTINGS.outNameTipWordsList" clearable />
+        </t-form-item>
+
         <div class="w-full mx-2 text-xs text-center text-gray-400">当前服务器： {{ V }}</div>
 
         <t-button class="w-full my-4 text-sm" @click="checkServer" :loading="btnLoading" :theme="btnTheme"
@@ -73,9 +81,9 @@ const SERVER_KEYS = ["SERVER_IP", "SERVER_PROT"]
 
 const V = computed(() => `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}/`)
 
-// const resetConfigData = (item) => {
-//     console.log("resetConfigData: ", item)
-// }
+const resetConfigData = (item) => {
+    console.log("resetConfigData: ", item)
+}
 
 async function checkServer() {
     btnLoading.value = true

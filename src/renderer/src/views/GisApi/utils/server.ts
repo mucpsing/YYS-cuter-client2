@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-20 17:29:22
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-01-09 10:34:21
+ * @LastEditTime: 2026-01-13 15:23:57
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\api.ts
  * @Description: 所有API的包装工具类，所有外部要调用服务器都要引入这个类，实际的API保存在store/API中
  */
@@ -46,7 +46,7 @@ export async function getTemplateList() {
         console.warn("getTemplateList fail:", data)
         return []
     } catch (err) {
-        // console.log(err)
+        console.log(err)
         return []
     }
 }

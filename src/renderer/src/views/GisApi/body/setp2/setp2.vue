@@ -130,7 +130,7 @@
                         </div>
                         <div class="flex gap-1">
                             <t-input-number
-                                v-model="tabStore.currtFormData.contour_range"
+                                v-model="tabStore.currtFormData.contourMinLen"
                                 theme="normal"
                                 size="medium"
                                 class="w-[100px]"

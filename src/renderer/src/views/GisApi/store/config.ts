@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-01-08 10:23:39
+ * @LastEditTime: 2026-03-04 14:30:46
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
  * @Description: 这里存放页面所有静态配置
  */
@@ -12,6 +12,25 @@ import API from "./API"
 const uniq = (arr: any[]) => arr.filter((v, i, a) => a.indexOf(v) === i)
 
 export const baseSize = ref<"small" | "large" | "medium">("large")
+
+export const DEFAULT_SETTINGS = {
+    SETP_1_SETTINGS: {
+        // 步骤1：选择模板
+        outNameTipWordsList: [
+            "工程前",
+            "工程后",
+            "枯水",
+            "洪水",
+            "以洪为主",
+            "以潮为主",
+            "10年一遇",
+            "20年一遇",
+            "50年一遇",
+            "100年一遇",
+            "200年一遇",
+        ],
+    },
+}
 
 export const UP_FILE_ACCEPT_TYPE = {
     dfsu: ".dfsu",
@@ -47,6 +66,10 @@ export const config = reactive({
     DEFAULT_CONTOUR_RANGE: 200,
 
     DEFAULT_TEST_API: API.test,
+
+    DEFAULT_USE_TASK_QUEUE: true, // 是否使用task管理多任务
+
+    SETP_1_SETTINGS: { outNameTipWordsList: [...DEFAULT_SETTINGS.SETP_1_SETTINGS.outNameTipWordsList] },
 })
 
 const _DEFAULT_SERVER_IP_LIST = ["localhost", "127.0.0.1", "192.168.100.37", "CPS-OFFICE-WIN10"]
@@ -57,4 +80,8 @@ export const DEFAULT_SERVER_IP_LIST = uniq(_DEFAULT_SERVER_IP_LIST)
 export const currtPreviewUrlHost = computed(
     () => `${config.SERVER_PROTOCOL}//${config.SERVER_IP}:${config.SERVER_PROT}`,
 )
+
+export function useConfigStore() {
+    return config
+}
 export default config

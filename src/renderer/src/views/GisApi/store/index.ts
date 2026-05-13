@@ -2,16 +2,18 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-01-08 09:57:20
+ * @LastEditTime: 2026-05-13 17:38:24
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
 import { defineStore } from "pinia"
-import { createFormData } from "./formDataState"
-import config, { DEFAULT_SERVER_IP_LIST } from "@gisapi/store/config"
+import { createFormData, type FormDataItemT } from "./formDataState"
+import config from "@gisapi/store/config"
 import { getTemplateList, serverCheckApi } from "@renderer/views/GisApi/utils/server"
 import { useFileStroe } from "./fileStore"
 // import { useTaskStore } from "./taskStore"
+
+import { cloneDeep } from "lodash-es"
 
 import type { TabValue } from "tdesign-vue-next"
 import type { TemplateInfo } from "@gisapi/Types"
@@ -71,7 +73,7 @@ export const useGisApiTabStore = defineStore("tabStore", {
         ],
 
         formCount: 1,
-        formDataList: [createFormData(0)], // 初始化0索引的数据模板
+        formDataList: [createFormData(0)] as FormDataItemT[], // 初始化0索引的数据模板
 
         templateInfoList: [] as TemplateInfo[], // 从后端获取mxd模板数据
         fileListKeys: ["beDfsuMd5List", "afDfsuMd5List"] as FileListKeyT[],
@@ -151,7 +153,7 @@ export const useGisApiTabStore = defineStore("tabStore", {
             const newFormData = createFormData(newTabId)
 
             if (extendTabId >= 0) {
-                Object.assign(newFormData, this.formDataList[extendTabId])
+                Object.assign(newFormData, cloneDeep(this.formDataList[extendTabId]))
 
                 this.currtTabId++
             }
@@ -213,6 +215,7 @@ export const useGisApiTabStore = defineStore("tabStore", {
         async getTemplateList() {
             this.templateInfoList.length = 0
             this.templateInfoList = await getTemplateList()
+            console.log("templateInfoList:", this.templateInfoList)
         },
     },
 })
@@ -226,3 +229,4 @@ export const useGisApiChartStroe = defineStore("chartsState", {
 
 export { useFileStroe } from "./fileStore"
 export { useTaskStore } from "./taskStore"
+export { useConfigStore } from "./config"
