@@ -1,7 +1,7 @@
 <template>
-  <Layout />
-  <!--  -->
-  <cps-dialog ref="cpsDialogRef"></cps-dialog>
+    <Layout />
+    <!--  -->
+    <cps-dialog ref="cpsDialogRef"></cps-dialog>
 </template>
 
 <script lang="ts">
@@ -11,26 +11,26 @@ import { eventBus } from "@renderer/libs"
 import { CpsDialogElement } from "@renderer/global"
 
 export default defineComponent({
-  components: { Layout, cpsDialog },
-  setup() {
-    const cpsDialogRef = ref<CpsDialogElement>()
-    async function eventOpenCpsDialog(opts: any) {
-      if (cpsDialogRef && cpsDialogRef.value) {
-        cpsDialogRef.value.open(opts)
-      }
-    }
+    components: { Layout, cpsDialog },
+    setup() {
+        const cpsDialogRef = ref<CpsDialogElement>()
+        async function eventOpenCpsDialog(opts: any) {
+            if (cpsDialogRef && cpsDialogRef.value) {
+                cpsDialogRef.value.open(opts)
+            }
+        }
 
-    onMounted(() => {
-      eventBus.on("showDialog", eventOpenCpsDialog)
-      console.log("app on load")
-    })
+        onMounted(() => {
+            eventBus.on("showDialog", eventOpenCpsDialog)
+            console.log("app on load")
+        })
 
-    onUnmounted(() => {
-      eventBus.off("showDialog", eventOpenCpsDialog)
-    })
+        onUnmounted(() => {
+            eventBus.off("showDialog", eventOpenCpsDialog)
+        })
 
-    return { cpsDialogRef }
-  },
+        return { cpsDialogRef }
+    },
 })
 </script>
 

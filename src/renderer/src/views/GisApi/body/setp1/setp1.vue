@@ -34,30 +34,16 @@
 
                         <t-space direction="vertical" size="10px">
                             <t-input-adornment prepend="1、图例名称：">
-                                <t-select-input
-                                    :id="`Gis-Api__template_input_mxd_name_${tabStore.currtFormData.id}`"
-                                    :value="tabStore.currtFormData.outputName"
-                                    :popup-visible="tipWrodsPopupVisible"
-                                    :popup-props="{ overlayInnerStyle: { padding: '0px' } }"
-                                    placeholder="点击列出常用命名推荐"
-                                    allow-input
+                                <t-input
                                     clearable
-                                    @input-change="onTitleChange"
-                                    @popup-visible-change="(val) => (tipWrodsPopupVisible = val)"
-                                >
-                                    <template #panel>
-                                        <ul class="">
-                                            <li
-                                                class="w-full p-2 cursor-pointer hover:bg-gray-200"
-                                                v-for="item in outNameTipWordsList"
-                                                :key="item"
-                                                @click="() => onTitleWithPopupChange(item)"
-                                            >
-                                                {{ item }}
-                                            </li>
-                                        </ul>
-                                    </template>
-                                </t-select-input>
+                                    type="text"
+                                    v-model="tabStore.currtFormData.outputName"
+                                    @change="onTitleChange"
+                                    @blur="onTitleInputOnBlur"
+                                    @focus="onTitleInputOnFocus"
+                                    :id="`Gis-Api__template_input_mxd_name_${tabStore.currtFormData.id}`"
+                                    placeholder="请输入内容"
+                                />
                             </t-input-adornment>
 
                             <div class="flex flex-wrap gap-2 mb-4 whitespace-nowrap">
@@ -110,6 +96,7 @@
 import { storeToRefs } from "pinia"
 import { debounce } from "lodash"
 import { SearchIcon } from "tdesign-icons-vue-next"
+import type { InputProps } from "tdesign-vue-next"
 
 import { currtPreviewUrlHost } from "@gisapi/store/config"
 import { DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/formDataState"
@@ -179,30 +166,34 @@ const onSelectInputHandler = (s: string) => {
 /**
  * @description: 输入新标题时，同步tab标题显示的函数，有多次触发的BUG，这里使用debounce进行消除
  */
-const onTitleChange = debounce(async (newTitle: string) => {
-    if (newTitle === "") {
+const onTitleChange = (newTitle) => {
+    tabStore.formDataList[tabStore.currtTabId].title = newTitle
+    tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
+    tabStore.tabList[tabStore.currtTabId].label = newTitle
+}
+
+const onTitleInputOnBlur: InputProps["onBlur"] = (newTitle: string) => {
+    if (newTitle.length == 0) {
         newTitle = DEFAULT_TEMPLATE_OUTNAME
     }
 
     tabStore.formDataList[tabStore.currtTabId].title = newTitle
     tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
     tabStore.tabList[tabStore.currtTabId].label = newTitle
-}, 100)
+}
 
+const onTitleInputOnFocus: InputProps["onFocus"] = (newTitle) => {
+    if (newTitle == DEFAULT_TEMPLATE_OUTNAME) tabStore.currtFormData.outputName = ""
+}
 /**
  * @description: 选择了常用后缀的触发函数
  */
 async function onTitleWithPopupChange(new_popup: string) {
-    let newTitle: string
-    if (["", DEFAULT_TEMPLATE_OUTNAME].includes(tabStore.formDataList[tabStore.currtTabId].title)) {
-        newTitle = new_popup
-    } else {
-        newTitle = `${tabStore.formDataList[tabStore.currtTabId].title}_${new_popup}`
-    }
-
-    tabStore.formDataList[tabStore.currtTabId].title = newTitle
-    tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
-    tabStore.tabList[tabStore.currtTabId].label = newTitle
+    // tabStore.currtFormData.outputName = `${tabStore.currtFormData.outputName}_${new_popup}`
+    
+    tabStore.formDataList[tabStore.currtTabId].title = `${tabStore.formDataList[tabStore.currtTabId].title}_${new_popup}`
+    tabStore.formDataList[tabStore.currtTabId].outputName = `${tabStore.formDataList[tabStore.currtTabId].outputName}_${new_popup}`
+    tabStore.tabList[tabStore.currtTabId].label = `${tabStore.tabList[tabStore.currtTabId].label}_${new_popup}`
     tipWrodsPopupVisible.value = false
 }
 </script>

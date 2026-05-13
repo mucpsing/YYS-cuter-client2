@@ -9,33 +9,46 @@
 -->
 
 <template>
-  <div class="flex w-screen h-screen cps__layout">
-    <layoutNav />
-    <main class="w-full cps__layout-main">
-      <router-view v-slot="{ Component }">
-        <transition name="scale-slide">
-          <keep-alive>
-            <component :is="Component" />
-          </keep-alive>
-        </transition>
-      </router-view>
-    </main>
-    <settingsPage />
-  </div>
+    <div class="flex w-screen h-screen cps__layout">
+        <layoutNav />
+        <main class="w-full cps__layout-main">
+            <router-view v-slot="{ Component }">
+                <transition name="scale-slide">
+                    <keep-alive>
+                        <component :is="Component" />
+                    </keep-alive>
+                </transition>
+            </router-view>
+        </main>
+        <settingsPage />
+    </div>
 </template>
 
 <script setup lang="ts">
 import layoutNav from "@renderer/layout/aside/index.vue"
 import settingsPage from "@renderer/layout/settings.vue"
 import { lastRouterPath } from "@renderer/router/routerList"
+
+console.log("layout 1")
 const router = useRouter()
 
-onMounted(() => {
-  console.log("布局加载完成，加载路由")
-  // router.push("/home")
-  // router.push("/TyphoonUI")
-  router.push(lastRouterPath)
+const state = reactive({
+    n: 1,
 })
+
+const c = computed(() => {
+    state.n
+    console.log("layout computed")
+})
+
+onMounted(() => {
+    console.log("布局加载完成，加载路由")
+    // router.push("/home")
+    // router.push("/TyphoonUI")
+    router.push(lastRouterPath)
+})
+
+console.log("layout 2")
 </script>
 
 <style lang="stylus" scoped>

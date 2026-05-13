@@ -97,6 +97,7 @@ declare module 'vue' {
     TInput: typeof import('tdesign-vue-next')['Input']
     TInputAdornment: typeof import('tdesign-vue-next')['InputAdornment']
     TInputNumber: typeof import('tdesign-vue-next')['InputNumber']
+    TIntpu: typeof import('tdesign-vue-next')['Intpu']
     TLoading: typeof import('tdesign-vue-next')['Loading']
     ToolBar: typeof import('./../renderer/src/views/TyphoonUI/_components/ToolBar.vue')['default']
     ToolsBar: typeof import('./../renderer/src/views/ImageCuter/body/toolsBar.vue')['default']

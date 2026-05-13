@@ -1,8 +1,8 @@
 /*
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-30 22:08:32
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-01-15 16:42:46
+ * @LastEditors: Capsion 373704015@qq.com
+ * @LastEditTime: 2026-05-14 00:45:26
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\Types.ts
  * @Description: 这里将所有的类型收集进行导出
  */
@@ -40,6 +40,7 @@ export type MxdToImgFormBase = {
     sub_title: string // 图例名称
     sub_title_zoom_ratio: number
     contour_setp: string
+    contour_min_len:number
 }
 
 /** 本类型与后端/routers/v1/gisArcMap/types.py中DfsuToShpRequest始终保持一致 **/
