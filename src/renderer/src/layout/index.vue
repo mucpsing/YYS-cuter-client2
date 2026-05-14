@@ -10,8 +10,8 @@
 
 <template>
     <div class="flex w-screen h-screen cps__layout">
-        <layoutNav />
-        <main class="w-full cps__layout-main">
+        <layoutNav ref="layoutNavRef" />
+        <main ref="mainRef" class="w-full cps__layout-main">
             <router-view v-slot="{ Component }">
                 <transition name="scale-slide">
                     <keep-alive>
@@ -29,26 +29,56 @@ import layoutNav from "@renderer/layout/aside/index.vue"
 import settingsPage from "@renderer/layout/settings.vue"
 import { lastRouterPath } from "@renderer/router/routerList"
 
-console.log("layout 1")
 const router = useRouter()
 
-const state = reactive({
-    n: 1,
-})
+const mainRef = ref<HTMLElement | null>(null)
+const layoutNavRef = ref<InstanceType<typeof layoutNav> | null>(null)
+let fixedNavWidth = 0
+let rafId: number | null = null
+const updateMainMaxWidth = () => {
+    if (!mainRef.value) return
+    const maxWidth = Math.max(0, window.innerWidth - fixedNavWidth)
+    mainRef.value.style.maxWidth = `${maxWidth}px`
+}
 
-const c = computed(() => {
-    state.n
-    console.log("layout computed")
-})
+// 带 requestAnimationFrame 的 resize 处理
+const handleResize = () => {
+    if (rafId) cancelAnimationFrame(rafId)
+    rafId = requestAnimationFrame(() => {
+        updateMainMaxWidth()
+        rafId = null
+    })
+}
 
-onMounted(() => {
+// 重新获取导航栏宽度并更新布局
+const initLayout = () => {
+    const navElement = layoutNavRef.value?.$el as HTMLElement | undefined
+    const newWidth = navElement?.offsetWidth ?? 0
+    if (newWidth > 0) {
+        fixedNavWidth = newWidth
+    } else {
+        // 退化处理：若获取不到宽度，可尝试默认值或保留上次有效值
+        if (fixedNavWidth === 0) fixedNavWidth = 200 // 根据实际侧边栏默认宽度调整
+    }
+    updateMainMaxWidth()
+}
+
+onMounted(async () => {
     console.log("布局加载完成，加载路由")
     // router.push("/home")
     // router.push("/TyphoonUI")
-    router.push(lastRouterPath)
+    await router.push(lastRouterPath)
+
+    await nextTick()
+
+    initLayout()
+    window.addEventListener("resize", handleResize)
 })
 
-console.log("layout 2")
+onUnmounted(() => {
+    window.removeEventListener("resize", handleResize)
+    if (rafId) cancelAnimationFrame(rafId)
+})
 </script>
 
 <style lang="stylus" scoped>
