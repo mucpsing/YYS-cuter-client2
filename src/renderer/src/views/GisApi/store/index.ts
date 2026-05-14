@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
- * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-05-14 15:13:47
+ * @LastEditors: Capsion 373704015@qq.com
+ * @LastEditTime: 2026-05-15 00:02:29
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
@@ -64,7 +64,7 @@ export const useGisApiTabStore = defineStore("tabStore", {
     state: () => ({
         currtTabId: 0,
         currtExtendId: -1, // 记录要继承哪个模板的下标,tabID，但是当前当前似乎没有用到
-        showAddTapDialog: false, // 关联@gisApi/body/topToolBar里面的dialog组件
+        showAddTabDialogFlag: false, // 关联@gisApi/body/topToolBar里面的dialog组件
         tabList: [
             {
                 id: 0 as TabValue,
@@ -77,6 +77,10 @@ export const useGisApiTabStore = defineStore("tabStore", {
 
         templateInfoList: [] as TemplateInfo[], // 从后端获取mxd模板数据
         fileListKeys: ["beDfsuMd5List", "afDfsuMd5List"] as FileListKeyT[],
+
+        // 创建dialog的分页，方便外部调用
+        currentAddTabPage: 1,
+        currentAddTabPageSize: 9,
     }),
 
     getters: {
@@ -90,6 +94,13 @@ export const useGisApiTabStore = defineStore("tabStore", {
     },
 
     actions: {
+        setCurrentAddTabPage(newPage: number) {
+            if (newPage >= 1 && newPage <= this.formDataList.length / this.currentAddTabPageSize + 1) {
+                console.log(2)
+                this.currentAddTabPage = newPage
+            }
+        },
+
         clreanDfsu(dataKey: string) {
             this.formDataList[this.currtTabId][dataKey] = []
         },
@@ -139,15 +150,15 @@ export const useGisApiTabStore = defineStore("tabStore", {
         },
 
         showAddTabDialog() {
-            this.showAddTapDialog = true
+            this.showAddTabDialogFlag = true
         },
 
         closeAddTabDialog() {
-            this.showAddTapDialog = false
+            this.showAddTabDialogFlag = false
         },
 
         /**
-         * @description: 
+         * @description:
          * @param {string} extendTabId -1代表创建全新
          * @return {*}
          */

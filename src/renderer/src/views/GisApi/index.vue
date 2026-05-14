@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2025-12-30 22:06:48
+ * @LastEditTime: 2026-05-14 23:35:59
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\index.vue
  * @Description: 这个gisapi页面的入口文件，这里用来引入全局组件和核心组件，全局事件的注册
 -->
@@ -36,10 +36,11 @@ import GisApiBody from "./body/index.vue"
 import GuideSetp from "@gisapi/_components/guide.vue"
 import eventBus from "@renderer/libs/eventBus"
 
-import { useGisApiStateStore, useTaskStore } from "@gisapi/store/index"
+import { useGisApiStateStore, useTaskStore, useGisApiTabStore } from "@gisapi/store/index"
 
 const glboalStore = useGisApiStateStore()
 const taskStore = useTaskStore()
+const tabStore = useGisApiTabStore()
 
 export default {
     components: { GisApiHeader, GisApiBody, GuideSetp },
@@ -49,11 +50,38 @@ export default {
         function handlePlusKeyPressed(event: KeyboardEvent) {
             if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return
 
-            if (event.key === "+") {
-                console.log("+ 键被按下了！")
-                // 在这里添加你希望执行的代码
-            } else if (event.key === "-") {
-                console.log("- 键被按下了！")
+            switch (event.key) {
+                case "1":
+                    if (tabStore.showAddTabDialogFlag) {
+                        console.log("数字1")
+                    }
+                    break
+
+                // 新增左右箭头
+                case "ArrowLeft":
+                    console.log("ArrowLeft")
+                    if (tabStore.showAddTabDialogFlag) {
+                        tabStore.setCurrentAddTabPage(tabStore.currentAddTabPage - 1)
+                    }
+                    break
+                case "ArrowRight":
+                    console.log("ArrowRight")
+                    if (tabStore.showAddTabDialogFlag) {
+                        tabStore.setCurrentAddTabPage(tabStore.currentAddTabPage + 1)
+                    }
+                    break
+
+                case "+":
+                    // 在这里添加你希望执行的代码
+                    if (tabStore.showAddTabDialogFlag) {
+                        tabStore.addTab(-1)
+                    } else {
+                        tabStore.showAddTabDialog()
+                    }
+                    break
+                case "-":
+                    tabStore.closeAddTabDialog()
+                    break
             }
         }
 
