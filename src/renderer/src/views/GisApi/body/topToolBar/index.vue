@@ -1,32 +1,16 @@
+<!--
+ * @Author: cpasion-office-win10 373704015@qq.com
+ * @Date: 2025-12-31 08:36:52
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2026-05-14 09:20:28
+ * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\topToolBar\index.vue
+ * @Description: 页面上零散的全局浮动或者置顶工具组件收集器
+-->
 <template>
-    <!-- 【弹窗】添加工况 -->
-    <t-dialog
-        header="创建工况配置"
-        body="对话框内容"
-        :visible="tabStore.showAddTapDialog"
-        :on-close="() => tabStore.closeAddTabDialog()"
-        confirmOnEnter
-        @confirm="onAddTap"
-    >
-        <ul class="p-1">
-            <li class="flex gap-2 py-1">
-                <h3><strong>继承工况配置生成：</strong></h3>
-                <t-dropdown
-                    :options="selectTemplateExtendIdOptions"
-                    @click="(data) => {
-                tabStore.currtExtendId = data.value as number
-                currtExtendValue = data.content as string
-              }"
-                >
-                    <t-button size="small" variant="outline"
-                        >{{ currtExtendValue }}
-                        <template #suffix><ChevronDownIcon /> </template>
-                    </t-button>
-                </t-dropdown>
-            </li>
-        </ul>
-    </t-dialog>
+    <!-- 添加工况 -->
+    <AddTabDialog></AddTabDialog>
 
+    <!-- 任务管理组件 -->
     <TaskDialog></TaskDialog>
 
     <!-- 浮动菜单栏按钮 -->
@@ -37,10 +21,6 @@
         @click="handleClick"
         @hover="handleHover"
     >
-        <!-- <t-sticky-item label="新建工况">
-      <template #icon><add-icon /></template>
-    </t-sticky-item> -->
-
         <t-sticky-item label="历史任务">
             <template #icon><HistoryIcon /></template>
         </t-sticky-item>
@@ -48,18 +28,15 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia"
 import TaskDialog from "./taskManager/dialog.vue"
+import AddTabDialog from "./addTabDialog.vue"
 
 import { StickyToolProps } from "tdesign-vue-next"
-import { AddIcon, Task1Icon, HistoryIcon, ChevronDownIcon } from "tdesign-icons-vue-next"
+import { HistoryIcon } from "tdesign-icons-vue-next"
 
-import { useGisApiTabStore, useGisApiStateStore, useTaskStore } from "@gisapi/store/index"
+import { useTaskStore } from "@gisapi/store/index"
 
 const taskStore = useTaskStore()
-const globalStore = useGisApiStateStore()
-const tabStore = useGisApiTabStore()
-const { formDataList, currtTabId, currtExtendId } = storeToRefs(tabStore)
 
 const localStore = reactive({
     loading: false,
@@ -80,18 +57,7 @@ const localStore = reactive({
     },
 })
 
-const currtExtendValue = ref("不继承")
-const selectTemplateExtendIdOptions = computed(() => {
-    const res = [{ content: `不继承`, value: -1 }]
-
-    formDataList.value.forEach((item, idx) => {
-        res.push({ content: item.title, value: idx })
-    })
-
-    return res
-})
-
-const handleClick: StickyToolProps["onClick"] = ({ e, item }) => {
+const handleClick: StickyToolProps["onClick"] = ({ item }) => {
     console.log(item)
     switch (item.label) {
         case localStore.addNewTab.title:
@@ -106,14 +72,8 @@ const handleClick: StickyToolProps["onClick"] = ({ e, item }) => {
     }
 }
 
-async function onAddTap() {
-    tabStore.addTab(currtExtendId.value)
-
-    tabStore.closeAddTabDialog()
-}
-
 const handleHover: StickyToolProps["onHover"] = (context) => {
-    // console.log("hover", context)
+    console.log("hover", context)
 }
 </script>
 

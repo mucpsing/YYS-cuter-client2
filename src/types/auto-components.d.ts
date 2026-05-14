@@ -11,6 +11,7 @@ declare module 'vue' {
     '穿梭框': typeof import('./../renderer/src/views/Home/穿梭框.vue')['default']
     '纯CSS的tabs组件DEMO': typeof import('./../renderer/src/views/Home/纯CSS的tabs组件DEMO.vue')['default']
     '弹性父组件DEMO': typeof import('./../renderer/src/views/Home/弹性父组件DEMO.vue')['default']
+    AddTabDialog: typeof import('./../renderer/src/views/GisApi/body/topToolBar/addTabDialog.vue')['default']
     Body: typeof import('./../renderer/src/views/GisApi/body/index.vue')['default']
     Config: typeof import('./../renderer/src/views/ImageCuter/config/index.vue')['default']
     Container: typeof import('./../renderer/src/views/GisApi/body/container.vue')['default']
