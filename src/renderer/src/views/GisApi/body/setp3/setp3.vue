@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-05-12 17:14:55
+ * @LastEditTime: 2026-06-26 15:09:46
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -14,6 +14,8 @@
                 <t-card title="范围预览">
                     <template #actions>
                         <t-button @click="echartGeoJsonRef?.resize" variant="text" theme="primary">重置视图</t-button>
+
+                        <t-button @click="()=>console.log(tabStore.currtFormData.projectPoints)"></t-button>
                     </template>
                     <EchartGeoJson
                         ref="echartGeoJsonRef"

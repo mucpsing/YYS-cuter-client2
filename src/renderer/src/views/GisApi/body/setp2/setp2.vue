@@ -160,24 +160,90 @@
                             <h2 :class="['SwiperSetp__h2', 'xl:text-xl text-sm']">
                                 <strong>等值线显示值</strong>
                             </h2>
-                            <p>自定义等值线步进，使用英文的分号<strong>';'</strong> 分割每个步进，默认</p>
+
+                            <div>
+                                <span>自定义等值线步进</span>
+                            </div>
                             <div class="flex gap-1 mt-2">
-                                <t-input
+                                <t-popup placement="top-right">
+                                    <t-button>常用间隔</t-button>
+                                    <template #content>
+                                        <div class="max-w-2xl p-6 mx-auto">
+                                            <h2 class="mb-4 font-semibold">常用等值线范围 (点击)</h2>
+
+                                            <!-- 主容器：使用 grid 自动填充列，每列最小宽度 80px，自动均分 -->
+                                            <div class="grid grid-cols-9 gap-2">
+                                                <!-- 第一组标签 -->
+                                                <template
+                                                    v-for="(item, idx) of Array.from(
+                                                        { length: 9 },
+                                                        (_, i) => (i + 1) / 10 + '',
+                                                    )"
+                                                    :key="`row1-${idx}`"
+                                                >
+                                                    <t-tag
+                                                        @click="() => onContourTipClick(item)"
+                                                        class="justify-center cursor-pointer"
+                                                        size="medium"
+                                                        :theme="(outputNameTagList[idx]?.theme as 'default' | 'primary' | 'danger' | 'warning' | 'success') || 'default'"
+                                                        :variant="(outputNameTagList[idx]?.variant as 'dark' | 'light' | 'outline' | 'light-outline') || 'outline'"
+                                                    >
+                                                        {{ item }}
+                                                    </t-tag>
+                                                </template>
+
+                                                <!-- 第二组标签 -->
+                                                <template
+                                                    v-for="(item, idx) of Array.from(
+                                                        { length: 9 },
+                                                        (_, i) => (i + 1) / 100 + '',
+                                                    )"
+                                                    :key="`row2-${idx}`"
+                                                >
+                                                    <t-tag
+                                                        @click="() => onContourTipClick(item)"
+                                                        class="justify-center cursor-pointer"
+                                                        size="medium"
+                                                        :theme="(outputNameTagList[idx]?.theme as 'default' | 'primary' | 'danger' | 'warning' | 'success') || 'default'"
+                                                        :variant="(outputNameTagList[idx]?.variant as 'dark' | 'light' | 'outline' | 'light-outline') || 'outline'"
+                                                    >
+                                                        {{ item }}
+                                                    </t-tag>
+                                                </template>
+                                            </div>
+                                            <div class="flex gap-2 mt-2">
+                                                <t-button
+                                                    theme="danger"
+                                                    size="small"
+                                                    @click="
+                                                        () =>
+                                                            (tabStore.currtFormData.contour_setp = DEFAULT_CONTOUR_STEP)
+                                                    "
+                                                    >默认值</t-button
+                                                >
+                                                <t-button size="small" @click="() => onContourTipClick('0')"
+                                                    >"0"</t-button
+                                                >
+                                            </div>
+                                        </div>
+                                    </template>
+                                </t-popup>
+
+                                <t-tag-input
+                                    clearable
+                                    excess-tags-display-type="break-line"
                                     v-model="tabStore.currtFormData.contour_setp"
                                     theme="normal"
                                     size="medium"
-                                    class="min-w-[500px] mr-2"
+                                    class="min-w-[200px] max-w-[480px] mr-2"
                                     align="left"
-                                ></t-input>
+                                    placeholder="手动输入等值线间隔"
+                                >
+                                </t-tag-input>
                                 <t-button
                                     theme="danger"
-                                    variant="outline"
-                                    @click="
-                                        () => {
-                                            tabStore.currtFormData.contour_setp = DEFAULT_CONTOUR_STEP
-                                        }
-                                    "
-                                    >默认</t-button
+                                    @click="() => (tabStore.currtFormData.contour_setp = DEFAULT_CONTOUR_STEP)"
+                                    >默认值</t-button
                                 >
                             </div>
                         </div>
@@ -193,6 +259,31 @@
 import FileTransfer from "./fileTransfer.vue"
 import { useGisApiTabStore } from "@gisapi/store/index"
 import { DEFAULT_CONTOUR_STEP } from "@gisapi/store/formDataState"
+
+import { crossCombineThemesAndVariants } from "@gisapi/utils/index"
+const outputNameTagList = crossCombineThemesAndVariants()
+
+const outNameTipWordsList = Array.from({ length: 9 }, (_, i) => (i + 1) / 10 + "")
+
+const visibleIdAttach = ref(false)
+
+async function onContourTipClick(tagTipValue: string) {
+    const list = tabStore.currtFormData.contour_setp
+    if (list.includes(tagTipValue)) {
+        list.splice(list.indexOf(tagTipValue), 1)
+    } else {
+        list.push(tagTipValue)
+    }
+
+    if (tagTipValue === "0") return
+
+    if (list.includes(`-${tagTipValue}`)) {
+        list.splice(list.indexOf(`-${tagTipValue}`), 1)
+    } else {
+        list.push(`-${tagTipValue}`)
+    }
+}
+
 const tabStore = useGisApiTabStore()
 let customFileUpInputElement: HTMLInputElement
 

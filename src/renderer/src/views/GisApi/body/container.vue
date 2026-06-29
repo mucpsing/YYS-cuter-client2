@@ -220,7 +220,7 @@ async function mxdToImg() {
         time_step: data.timeStep,
         sub_title: data.outputName,
         sub_title_zoom_ratio: data.subTitleZoomRatio,
-        contour_setp: data.contour_setp,
+        contour_setp: data.contour_setp.join(';'),
         contour_min_len:data.contourMinLen
     }
 

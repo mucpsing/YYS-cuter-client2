@@ -109,6 +109,7 @@ declare module 'vue' {
     TOption: typeof import('tdesign-vue-next')['Option']
     TopToolBar: typeof import('./../renderer/src/views/GisApi/body/topToolBar/index.vue')['default']
     TPagination: typeof import('tdesign-vue-next')['Pagination']
+    TPopup: typeof import('tdesign-vue-next')['Popup']
     TProgress: typeof import('tdesign-vue-next')['Progress']
     TRow: typeof import('tdesign-vue-next')['Row']
     TSelect: typeof import('tdesign-vue-next')['Select']

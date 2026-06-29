@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2023-09-26 14:23:33
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-05-12 10:36:49
+ * @LastEditTime: 2026-06-26 17:29:09
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\state.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @Description: 建议所有state变量使用currtXxxxXxxx来命名
@@ -12,7 +12,7 @@
 import type { TemplateInfo, show_range2DT } from "@gisapi/Types"
 import type { FileTabInfoItemT } from "@gisapi/Types"
 
-export const DEFAULT_CONTOUR_STEP = "0;0.01;-0.01;0.02;-0.02;-0.03;0.03;"
+export const DEFAULT_CONTOUR_STEP = ["0","0.01","-0.01","0.02","-0.02","-0.03","0.03"]
 export const DEFAULT_TEMPLATE_OUTNAME = "未命名工况"
 export function createFormData(newTabId: number) {
   return {
