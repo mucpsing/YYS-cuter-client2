@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2025-08-18 15:01:20
+ * @LastEditTime: 2026-07-06 11:29:35
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -16,16 +16,47 @@
     }
  */
 import * as echarts from "echarts"
+
 import interact from "interactjs"
 import { throttle } from "lodash"
 import type { FeatureCollection } from "./geoJson"
 import * as utils from "./utils"
 
+const DEBUG = false
+
+const logger = async (message?: any, ...optionalParams: any[]) => {
+    if (DEBUG) console.log(message, ...optionalParams)
+}
 export interface DrawPolygonConfig {
     title?: string
     max_len?: number
     axis_offset?: number
     range?: number[]
+    dataZoomOption?: any
+}
+
+/**
+ * @description: 实例化时的配置选项
+ * @return {*}
+ */
+export interface InitOpts extends echarts.EChartsInitOpts {
+    events?: {
+        // 事件回调
+        onPolygonDraw?: (this: ChartGeoJson) => void
+        onRectMove?: (this: ChartGeoJson) => void
+        onRectResize?: (this: ChartGeoJson) => void
+        // onDataZoom?: (e:any) => void
+    }
+
+    rect?: {
+        // 矩形框的初始位置和大小
+        startX: number
+        startY: number
+        startWidth: number
+        startHeight: number
+    }
+
+    startZoomOptions?: any // 初始缩放比例
 }
 
 class ChartGeoJson {
@@ -48,6 +79,10 @@ class ChartGeoJson {
     public chart: echarts.ECharts
     private interact: any
 
+    public config: InitOpts
+
+    public state: any = {}
+
     public events: {
         onPolygonDraw?: (this: ChartGeoJson) => void
         onRectMove?: (this: ChartGeoJson) => void
@@ -55,12 +90,16 @@ class ChartGeoJson {
         onDataZoom?: (this: ChartGeoJson) => void
     } = {}
 
-    constructor(el: HTMLElement, config: any) {
+    constructor(el: HTMLElement, config?: InitOpts) {
         this.el = el
         this.chart = echarts.init(this.el, null, config)
+        this.config = config || {}
+        this.state = {
+            dataZoomOptions: [],
+        }
 
-        if (config.events) {
-            Object.assign(this.events, config.events)
+        if (this.config.events) {
+            Object.assign(this.events, this.config.events)
         }
 
         this.chartEventRegister()
@@ -79,20 +118,16 @@ class ChartGeoJson {
     }
 
     private chartEventRegister() {
-        this.chart
-            .on("dataZoom", () => {
-                this.emit("onDataZoom")
-            })
-            .on("finished", () => {
-                // 如果未绘制一些数据会获取失败
-                this.emit("onPolygonDraw")
-            })
-            .on("click", (params) => {
-                console.log(params)
-            })
-            .on("mousedown", (params) => {
-                console.log(params)
-            })
+        this.chart.on("finished", () => {
+            // 如果未绘制一些数据会获取失败
+            this.emit("onPolygonDraw")
+        })
+        // .on("click", (params) => {
+        //     logger(params)
+        // })
+        // .on("mousedown", (params) => {
+        //     logger(params)
+        // })
     }
 
     public on(event: keyof typeof this.events, callback: (...any: any[]) => any) {
@@ -114,7 +149,7 @@ class ChartGeoJson {
      * @param {HTMLElement} element
      * @param {string} outerId
      */
-    public interactInit(element: HTMLElement, outerId: string = "#interactInitId") {
+    public interactInit(element: HTMLElement, outerId: string = "#interactInitId", initPosition?: number[]) {
         if (element.parentElement) {
             element.parentElement.id = "interactInitId"
         } else {
@@ -138,12 +173,15 @@ class ChartGeoJson {
                         y += event.deltaRect.top
 
                         target.style.transform = "translate(" + x + "px," + y + "px)"
+                        console.log("init1: ", target.style.transform)
+
                         target.setAttribute("data-x", x)
                         target.setAttribute("data-y", y)
 
                         const bounds = [x, y, event.rect.width, event.rect.height].map((item) => Math.trunc(item))
                         that.recordBounds(bounds)
                         that.emit("onRectResize")
+                        console.log("onresizable.move")
                     },
                 },
             })
@@ -157,6 +195,7 @@ class ChartGeoJson {
 
                         // translate the element
                         target.style.transform = "translate(" + x + "px, " + y + "px)"
+                        console.log("init2: ", target.style.transform)
 
                         // update the posiion attributes
                         target.setAttribute("data-x", x)
@@ -165,6 +204,7 @@ class ChartGeoJson {
                         const bounds = [x, y, event.rect.width, event.rect.height].map((item) => Math.trunc(item))
                         that.recordBounds(bounds)
                         that.emit("onRectMove")
+                        console.log("ondraggable.move")
                     },
                 },
                 inertia: true,
@@ -229,11 +269,13 @@ class ChartGeoJson {
 
             dataZoom: [
                 {
+                    id: "dataZoomX",
                     type: "inside",
                     xAxisIndex: 0,
                     filterMode: "none",
                 },
                 {
+                    id: "dataZoomY",
                     type: "inside",
                     yAxisIndex: 0,
                     filterMode: "none",
@@ -251,12 +293,14 @@ class ChartGeoJson {
             ],
         }
 
+        if (config.dataZoomOption) Object.assign(option.dataZoom, config.dataZoomOption)
+
         this.chart.setOption(option)
         this.drawPolygonCount++
     }
 
     public addPolygon(polygon, config: { id: string }) {
-        // console.log({ addPolygon: polygon, config })
+        // logger({ addPolygon: polygon, config })
         const series: echarts.LineSeriesOption[] = [
             {
                 id: config.id,
@@ -333,12 +377,14 @@ class ChartGeoJson {
     }
 
     public resize() {
-        this.chart.dispatchAction({
-            type: "dataZoom",
-            start: 0,
-            end: 100,
-        })
+        // this.chart.dispatchAction({
+        //     type: "dataZoom",
+        //     start: 0,
+        //     end: 100,
+        // })
     }
+
+    public getDataZoomOptions() {}
 }
 
 export default ChartGeoJson

@@ -99,6 +99,6 @@ function handleMiddleClick(event) {
 }
 
 .SwiperSetp__h2 {
-  @apply text-slate-600 pb-1
+  @apply text-slate-600 pb-1 text-lg
 }
 </style>

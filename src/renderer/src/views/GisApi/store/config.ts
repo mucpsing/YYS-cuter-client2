@@ -2,7 +2,7 @@
  * @Author: CPS holy.dandelion@139.com
  * @Date: 2024-06-21 21:40:50
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-03-04 14:30:46
+ * @LastEditTime: 2026-07-01 16:07:42
  * @FilePath: \YYS-cuter-client2\src\renderer\src\views\GisApi\store\config.ts
  * @Description: 这里存放页面所有静态配置
  */
@@ -67,7 +67,7 @@ export const config = reactive({
 
     DEFAULT_TEST_API: API.test,
 
-    DEFAULT_USE_TASK_QUEUE: true, // 是否使用task管理多任务
+    DEFAULT_USE_TASK_QUEUE: true, // 是否使用task管理多任务，一个是同步等待后端，一个是异步等待后端
 
     SETP_1_SETTINGS: { outNameTipWordsList: [...DEFAULT_SETTINGS.SETP_1_SETTINGS.outNameTipWordsList] },
 })

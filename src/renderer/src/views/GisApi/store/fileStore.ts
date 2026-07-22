@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-11-19 09:30:51
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-01-08 10:40:00
+ * @LastEditTime: 2026-07-22 14:53:32
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\modules\fileStore.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -36,21 +36,6 @@ export const useFileStroe = defineStore("fileStore", {
         geoJsonObj: {} as { [md5: string]: any },
         fileList: [] as File[],
     }),
-
-    getters: {
-        // BUG 不好用，当前是所有geojson，需要修改为指定tabID的文件列表
-        // geoJsonOptions(state) {
-        //   const options: { value: string; label: string }[] = []
-        //   for (const [geoMd5, _geoData] of Object.entries(state.dfsuObj)) {
-        //     if (!Object.keys(state.dfsuObj).includes(geoMd5)) continue
-        //     options.push({
-        //       label: state.dfsuObj[geoMd5].name,
-        //       value: geoMd5,
-        //     })
-        //   }
-        //   return options
-        // },
-    },
 
     actions: {
         getFile(md5: string) {

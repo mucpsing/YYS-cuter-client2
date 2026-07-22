@@ -226,7 +226,6 @@ export async function mxdToImgApi(body: MxdToImgFormBase): Promise<undefined | T
     try {
         const res = await server().post(API.mxdToImg, body, { timeout: 30000 })
 
-        console.log({ res })
 
         if (res.status == 200 && res.data.success) return res.data.res
 

@@ -1,8 +1,8 @@
 /*
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-07-18 14:59:47
- * @LastEditors: Capsion 373704015@qq.com
- * @LastEditTime: 2026-05-15 00:02:29
+ * @LastEditors: cpasion-office-win10 373704015@qq.com
+ * @LastEditTime: 2026-07-06 16:02:40
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\store\index.ts
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
@@ -169,7 +169,10 @@ export const useGisApiTabStore = defineStore("tabStore", {
             const newFormData = createFormData(newTabId)
 
             if (extendTabId >= 0) {
-                Object.assign(newFormData, cloneDeep(this.formDataList[extendTabId]))
+                const tabItem = this.formDataList[extendTabId]
+
+                Object.assign(newFormData, cloneDeep(tabItem))
+                newFormData.id = newTabId
 
                 this.currtTabId++
             }

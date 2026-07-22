@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-06-28 08:59:23
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-06-26 15:09:46
+ * @LastEditTime: 2026-07-01 16:51:26
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\SwiperSetp3.vue
  * @Description: 展示河道，数据是从后端返回的geojson格式
 -->
@@ -15,7 +15,7 @@
                     <template #actions>
                         <t-button @click="echartGeoJsonRef?.resize" variant="text" theme="primary">重置视图</t-button>
 
-                        <t-button @click="()=>console.log(tabStore.currtFormData.projectPoints)"></t-button>
+                        <t-button @click="() => console.log(tabStore.currtFormData.projectPoints)"></t-button>
                     </template>
                     <EchartGeoJson
                         ref="echartGeoJsonRef"
@@ -146,7 +146,9 @@
                                 <div class="flex items-center justify-center gap-4">
                                     <div class="flex gap-2">
                                         <t-textarea
-                                            v-model="tabStore.currtFormData.projectPointsStr"
+                                            v-bind:model-value="projectPointsStr"
+                                            @change="onProjectPointsChange"
+                                            placeholder="请输入裁剪范围"
                                             :autosize="{ minRows: 4, maxRows: 4 }"
                                             size="medium"
                                             class="min-w-[300px]"
@@ -189,6 +191,22 @@ const localStore = reactive({
     projectRangeLoadding: false,
     projectRangeModel: "auto", // auto | user
 })
+
+const projectPointsStr = computed(() => {
+    return tabStore.currtFormData.projectPoints.join("\n")
+})
+
+async function onProjectPointsChange(e: string) {
+    console.log({ e })
+}
+
+function onPaperSizeChange(value: string) {
+    localStore.currtPaper = value
+}
+
+function onMaxLinkPointChange(value: number) {
+    localStore.maxLinkPoint = value
+}
 
 const paperSizeOptions = [
     { label: "A4", value: "297x210" },
@@ -245,9 +263,7 @@ async function onSelectRangeFile(md5: string) {
 
 onMounted(() => {
     // 初始化时，则默认绘制一个河道
-    console.log(1)
     if (localStore.currtSelectDfsuName == "" && geoJsonOptions.value.length > 0) {
-        console.log(2)
         onSelectRangeFile(geoJsonOptions.value[0].value)
         localStore.currtSelectDfsuName = geoJsonOptions.value[0].label
 

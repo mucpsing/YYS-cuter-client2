@@ -220,8 +220,10 @@ async function mxdToImg() {
         time_step: data.timeStep,
         sub_title: data.outputName,
         sub_title_zoom_ratio: data.subTitleZoomRatio,
-        contour_setp: data.contour_setp.join(';'),
-        contour_min_len:data.contourMinLen
+        contour_setp: data.contour_setp.join(";"),
+        contour_min_len: data.contourMinLen,
+        interpolation: data.interpolation == "插值" ? true : false,
+        direction_arrow_size: data.directionArrowSize,
     }
 
     if (data.projectPointsStr) {
