@@ -1,6 +1,6 @@
 <template>
     <div class="h-[0]">
-        <t-card>
+        <t-card class="mx-1">
             <template v-for="(item, index) in configItems" :key="item.key">
                 <div class="flex items-center justify-between mt-2">
                     <div class="flex flex-col items-start justify-between gap-1">

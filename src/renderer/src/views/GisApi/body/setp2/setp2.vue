@@ -19,7 +19,8 @@
 
 <script setup lang="ts">
 // import { useDropZone } from "@vueuse/core"
-import FileTransfer from "./fileTransfer.vue"
+import FileTransfer from "./fileTransfers/index.vue"
+// import FileTransfer from "./fileTransfer.vue"
 import ConfigPanel from "./configPanel.vue"
 
 import { useGisApiTabStore } from "@gisapi/store/index"
