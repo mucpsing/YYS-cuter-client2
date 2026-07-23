@@ -51,12 +51,12 @@ function handleSelectFiles(listId: FileListKeyT) {
 
     input.onchange = async (e) => {
         const files = (e.target as HTMLInputElement).files
+
         if (files && files.length > 0) {
             // 将 FileList 转为 File[]
             const fileArray = Array.from(files)
-            await addFiles(fileArray, listId, (md5, progress) => {
-                // 可在此添加额外进度回调
-            })
+            await addFiles(fileArray, listId)
+
             // 自动选中唯一文件
             autoCheckSingle()
         }
@@ -67,6 +67,7 @@ function handleSelectFiles(listId: FileListKeyT) {
     // 若已存在值则重置，以支持重复选择同一文件
     if (input.value) input.value = ""
     input.click()
+    if (card) card.loading = false
 }
 
 function handleRemoveChecked(listId: FileListKeyT) {
@@ -111,6 +112,10 @@ onMounted(() => {
     nextTick(() => {
         // 初次拖拽由 useSortableDrag 自动初始化
     })
+})
+
+onUnmounted(() => {
+    console.log("un111111111")
 })
 </script>
 
