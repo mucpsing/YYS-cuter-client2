@@ -13,13 +13,14 @@ import type { TemplateInfo, show_range2DT } from "@gisapi/Types"
 import type { FileTabInfoItemT } from "@gisapi/Types"
 
 export const DEFAULT_CONTOUR_STEP = ["0", "0.01", "-0.01", "0.02", "-0.02", "-0.03", "0.03"]
-export const DEFAULT_TEMPLATE_OUTNAME = "未命名工况"
+export const DEFAULT_TEMPLATE_OUTNAME = "图例上面显示的名称（必填项）"
+export const DEFAULT_TEMPLATE_PROJECT_NAME = "未命名项目"
 export function createFormData(newTabId: number) {
     return {
         id: newTabId,
         setp: 1,
         timeStep: -1, // 使用dfsu哪个时间序列进行数据处理
-        title: DEFAULT_TEMPLATE_OUTNAME,
+        title: DEFAULT_TEMPLATE_PROJECT_NAME,
         beDfsuMd5List: [] as FileTabInfoItemT[], // 使用列表形式存储md5，后续添加批量导出功能
         afDfsuMd5List: [] as FileTabInfoItemT[], // 使用列表形式存储md5，后续添加批量导出功能
         outputName: "",

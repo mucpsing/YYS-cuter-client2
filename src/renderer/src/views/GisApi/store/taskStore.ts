@@ -10,6 +10,7 @@
 import { defineStore } from "pinia"
 import * as server from "@gisapi/utils/server"
 import type { TaskItemT } from "@gisapi/Types"
+import type { MxdToImgFormT } from "@gisapi/Types"
 
 export const useTaskStore = defineStore("taskStore", {
     state: () => ({
@@ -71,12 +72,14 @@ export const useTaskStore = defineStore("taskStore", {
             return this.taskList.find((task) => task.task_id === taskId)
         },
 
-        addTask(taskInfo: TaskItemT) {
+        // addTask(taskInfo: TaskItemT) {
+        addTask(taksRequestBody: MxdToImgFormT) {
             // body调用接口后，返回的taskInfo转换为本地的taskItem
             // 将taskItem放到state中
             // 显示taskDialog
-            if (!taskInfo.preview) taskInfo.preview = ""
-            this.taskList.push(taskInfo)
+            // if (!taskInfo.preview) taskInfo.preview = ""
+
+            this.taskList.push(taksRequestBody)
         },
         updateTask(taskId: string, newTaskInfo: Partial<TaskItemT>) {
             // 更新任务状态

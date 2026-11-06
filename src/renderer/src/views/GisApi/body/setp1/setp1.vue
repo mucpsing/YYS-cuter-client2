@@ -10,17 +10,13 @@
                     <div :class="['flex-col flex-[111] flex gap-4 justify-around', 'h-full']">
                         <div :class="['flex flex-col', 'flex-1  flex-grow-[11]']">
                             <div :class="['flex items-center justify-center']">
-                                <t-image
-                                    :class="['min-w-[160px] min-h-[160px]', 'max-w-[300px]']"
-                                    :error="'未选择任何模板'"
+                                <t-image :class="['min-w-[160px] min-h-[160px]', 'max-w-[300px]']" :error="'未选择任何模板'"
                                     :src="`${currtPreviewUrlHost}${tabStore.currtFormData.templateInfo.preview}`"
-                                    class="cursor-pointer hover:opacity-75"
-                                    @click="
+                                    class="cursor-pointer hover:opacity-75" @click="
                                         glboalStore.showPreview(
                                             `${currtPreviewUrlHost}${tabStore.currtFormData.templateInfo.preview}`,
                                         )
-                                    "
-                                >
+                                        ">
                                 </t-image>
                             </div>
 
@@ -33,54 +29,40 @@
                         </div>
 
                         <t-space direction="vertical" size="10px">
-                            <t-input-adornment prepend="1、图例名称：">
-                                <t-input
-                                    clearable
-                                    type="text"
-                                    v-model="tabStore.currtFormData.outputName"
-                                    @change="onTitleChange"
-                                    @blur="onTitleInputOnBlur"
-                                    @focus="onTitleInputOnFocus"
+                            <t-input-adornment prepend="1、任务名称：">
+                                <t-input clearable type="text" v-model="tabStore.tabList[tabStore.currtTabId].label"
+                                    @change="onTitleChange" @focus="onTitleInputOnFocus" @blur="onTitleInputOnBlur"
                                     :id="`Gis-Api__template_input_mxd_name_${tabStore.currtFormData.id}`"
-                                    placeholder="请输入内容"
-                                />
+                                    :placeholder="DEFAULT_TEMPLATE_PROJECT_NAME" />
                             </t-input-adornment>
 
                             <div class="flex flex-wrap gap-2 mb-4 whitespace-nowrap">
                                 <template v-for="(item, idx) of outNameTipWordsList" :key="idx">
-                                    <t-tag
-                                        @click="() => onTitleWithPopupChange(outNameTipWordsList[idx])"
-                                        class="cursor-pointer"
-                                        size="small"
+                                    <t-tag @click="() => onTitleWithPopupChange(outNameTipWordsList[idx])"
+                                        class="cursor-pointer" size="small"
                                         :theme='(outputNameTagList[idx].theme as "default" | "primary" | "danger" | "warning" | "success")'
-                                        :variant='(outputNameTagList[idx].variant as "dark" | "light" | "outline" | "light-outline")'
-                                        >{{ item }}</t-tag
-                                    >
+                                        :variant='(outputNameTagList[idx].variant as "dark" | "light" | "outline" | "light-outline")'>{{
+                                            item }}</t-tag>
                                 </template>
                             </div>
-
-                            <t-input-adornment prepend="2、选择模板：">
-                                <t-auto-complete
-                                    :id="`Gis-Api__template_input_select_${formDataList[currtTabId].id}`"
-                                    :value="formDataList[currtTabId].mxdName"
-                                    :options="template_name_list"
-                                    placeholder="从右方【模板列表】中选择"
-                                    clearable
-                                    highlight-keyword
-                                    filterable
-                                    @change="onSelectInputHandler"
-                                    @clear="
-                                        () => {
-                                            console.log('clear')
-                                            formDataList[currtTabId].mxdId = -1
-                                            formDataList[currtTabId].mxdName = ''
-                                        }
-                                    "
-                                >
-                                    <template #suffixIcon><SearchIcon /></template>
-                                </t-auto-complete>
-                            </t-input-adornment>
                         </t-space>
+                        <!-- <TitleInput></TitleInput> -->
+
+                        <t-input-adornment prepend="2、选择模板：">
+                            <t-auto-complete :id="`Gis-Api__template_input_select_${formDataList[currtTabId].id}`"
+                                :value="formDataList[currtTabId].mxdName" :options="template_name_list"
+                                placeholder="从右方【模板列表】中选择" clearable highlight-keyword filterable
+                                @change="onSelectInputHandler" @clear="() => {
+                                    console.log('clear')
+                                    formDataList[currtTabId].mxdId = -1
+                                    formDataList[currtTabId].mxdName = ''
+                                }
+                                    ">
+                                <template #suffixIcon>
+                                    <SearchIcon />
+                                </template>
+                            </t-auto-complete>
+                        </t-input-adornment>
                     </div>
                 </t-card>
             </div>
@@ -94,15 +76,13 @@
 
 <script setup lang="tsx">
 import { storeToRefs } from "pinia"
-import { debounce } from "lodash"
 import { SearchIcon } from "tdesign-icons-vue-next"
 import type { InputProps } from "tdesign-vue-next"
 
 import { currtPreviewUrlHost } from "@gisapi/store/config"
-import { DEFAULT_TEMPLATE_OUTNAME } from "@gisapi/store/formDataState"
+import { DEFAULT_TEMPLATE_PROJECT_NAME } from "@gisapi/store/formDataState"
 
 import { crossCombineThemesAndVariants } from "@gisapi/utils/index"
-
 import TemplateList from "./templateList.vue"
 import { useGisApiTabStore, useGisApiStateStore } from "@gisapi/store/index"
 
@@ -112,17 +92,19 @@ const { formDataList, currtTabId } = storeToRefs(tabStore)
 
 // 提示词列表
 const outNameTipWordsList = [
-    "工程前",
-    "工程后",
-    "枯水",
-    "洪水",
-    "以洪为主",
-    "以潮为主",
-    "10年一遇",
-    "20年一遇",
-    "50年一遇",
-    "100年一遇",
-    "200年一遇",
+    "防洪评价",
+    "影响分析",
+    // "运行期",
+    // "施工期",
+    // "枯水",
+    // "洪水",
+    // "以洪为主",
+    // "以潮为主",
+    // "10年一遇",
+    // "20年一遇",
+    // "50年一遇",
+    // "100年一遇",
+    // "200年一遇",
 ]
 const tipWrodsPopupVisible = ref(false) // 是否显示提示列表的状态
 
@@ -167,33 +149,38 @@ const onSelectInputHandler = (s: string) => {
  * @description: 输入新标题时，同步tab标题显示的函数，有多次触发的BUG，这里使用debounce进行消除
  */
 const onTitleChange = (newTitle) => {
-    tabStore.formDataList[tabStore.currtTabId].title = newTitle
-    tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
+    // tabStore.formDataList[tabStore.currtTabId].title = newTitle
+    // tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
     tabStore.tabList[tabStore.currtTabId].label = newTitle
 }
 
-const onTitleInputOnBlur: InputProps["onBlur"] = (newTitle: string) => {
-    if (newTitle.length == 0) {
-        newTitle = DEFAULT_TEMPLATE_OUTNAME
+const onTitleInputOnBlur: InputProps["onBlur"] = (value) => {
+
+    const newTitle = String(value ?? "") || DEFAULT_TEMPLATE_PROJECT_NAME
+
+    // tabStore.formDataList[tabStore.currtTabId].title = newTitle
+    // tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
+    tabStore.tabList[tabStore.currtTabId].label = newTitle
+}
+
+const onTitleInputOnFocus: InputProps["onFocus"] = () => {
+    if (tabStore.currtFormData.outputName === DEFAULT_TEMPLATE_PROJECT_NAME) {
+        tabStore.currtFormData.outputName = ""
+        tabStore.currtFormData.title = ""
     }
-
-    tabStore.formDataList[tabStore.currtTabId].title = newTitle
-    tabStore.formDataList[tabStore.currtTabId].outputName = newTitle
-    tabStore.tabList[tabStore.currtTabId].label = newTitle
 }
 
-const onTitleInputOnFocus: InputProps["onFocus"] = (newTitle) => {
-    if (newTitle == DEFAULT_TEMPLATE_OUTNAME) tabStore.currtFormData.outputName = ""
-}
-/**
- * @description: 选择了常用后缀的触发函数
- */
 async function onTitleWithPopupChange(new_popup: string) {
-    // tabStore.currtFormData.outputName = `${tabStore.currtFormData.outputName}_${new_popup}`
-    
-    tabStore.formDataList[tabStore.currtTabId].title = `${tabStore.formDataList[tabStore.currtTabId].title}_${new_popup}`
-    tabStore.formDataList[tabStore.currtTabId].outputName = `${tabStore.formDataList[tabStore.currtTabId].outputName}_${new_popup}`
-    tabStore.tabList[tabStore.currtTabId].label = `${tabStore.tabList[tabStore.currtTabId].label}_${new_popup}`
+    // const formData = tabStore.formDataList[tabStore.currtTabId]
+    const base = tabStore.tabList[tabStore.currtTabId].label
+
+    // 只要不是有效名字，就直接用后缀；否则拼接
+    const hasValidBase = !!base && base !== DEFAULT_TEMPLATE_PROJECT_NAME
+    const newTitle = hasValidBase ? `${base}_${new_popup}` : new_popup
+
+    // formData.title = newTitle
+    // formData.outputName = newTitle
+    tabStore.tabList[tabStore.currtTabId].label = newTitle
     tipWrodsPopupVisible.value = false
 }
 </script>

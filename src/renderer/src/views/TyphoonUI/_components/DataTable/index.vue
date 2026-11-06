@@ -1,6 +1,6 @@
 <template>
   <t-card :title="tableTitle">
-    <t-base-table
+    <t-table
       :class="['rounded-md']"
       :pagination="pagination"
       size="small"
@@ -11,7 +11,7 @@
       :bordered="localStore.bordered"
       :hover="localStore.hover"
       :show-header="localStore.showHeader"
-    ></t-base-table>
+    ></t-table>
   </t-card>
 </template>
 

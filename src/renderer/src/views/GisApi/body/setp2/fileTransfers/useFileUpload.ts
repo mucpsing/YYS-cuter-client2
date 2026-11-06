@@ -2,20 +2,10 @@
 import { ref } from "vue"
 import { MessagePlugin } from "tdesign-vue-next"
 import { useFileStroe, useGisApiTabStore } from "@gisapi/store/index"
-import { UP_FILE_ACCEPT_TYPE } from "@gisapi/store/config"
 import { uploadFile } from "@gisapi/utils/server"
 import type { FileListKeyT } from "@gisapi/Types"
 
-async function addDfsuByAuto(file, md5) {
-    const tabStore = useGisApiTabStore()
 
-    if (file.name.indexOf("工程前") != -1) {
-        tabStore.addDfsu("beDfsuMd5List", md5)
-    }
-    if (file.name.indexOf("工程后") != -1) {
-        tabStore.addDfsu("afDfsuMd5List", md5)
-    }
-}
 
 export function useFileUpload() {
     const fileStore = useFileStroe()
@@ -36,6 +26,7 @@ export function useFileUpload() {
     ): Promise<string[]> => {
         const uploadedMd5s: string[] = []
 
+
         let fileIndex = 1
         let fileCount = files.length
         const allFileCount = tabStore.currtFileCount
@@ -43,6 +34,7 @@ export function useFileUpload() {
         for (const file of files) {
             // 添加文件到 store，获取 md5 等信息
             const fileInfo = await fileStore.addDfsuItem(file)
+            console.log('fileInfo: ', fileInfo)
             if (!fileInfo) {
                 MessagePlugin.warning({
                     content: "添加文件失败，请检查文件格式是否正确",
@@ -53,32 +45,8 @@ export function useFileUpload() {
             }
             const { md5 } = fileInfo
 
-            // 以下是针对性优化
-            // 当首次添加两个文件时，需要将第一个文件分配给工程前，第二个文件分配给工程后
-            // if (fileCount == 2 && allFileCount == 0) {
-            //     if (fileIndex == 1) {
-            //         if (file.name.indexOf("工程前") != -1) {
-            //             tabStore.addDfsu("beDfsuMd5List", md5)
-            //         }
-            //         if (file.name.indexOf("工程后") != -1) {
-            //             tabStore.addDfsu("afDfsuMd5List", md5)
-            //         }
-            //     }
+            tabStore.addDfsu(targetListKey, md5)
 
-            //     if (fileIndex == 2) {
-            //         if (file.name.indexOf("工程前") != -1) {
-            //             tabStore.addDfsu("beDfsuMd5List", md5)
-            //         }
-            //         if (file.name.indexOf("工程后") != -1) {
-            //             tabStore.addDfsu("afDfsuMd5List", md5)
-            //         }
-            //     }
-            // } else {
-            //     tabStore.addDfsu(targetListKey, md5)
-            // }
-
-            // tabStore.addDfsu(targetListKey, md5)
-            addDfsuByAuto(file, md5)
 
             // 开始上传
             try {

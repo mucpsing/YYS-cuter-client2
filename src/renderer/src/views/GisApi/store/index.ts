@@ -7,7 +7,7 @@
  * @Description: 目前使用pinia存放页面所有的状态，日后如果复杂，可以使用./modules/xxx.ts来进行分类管理，这里是唯一状态store入口
  */
 import { defineStore } from "pinia"
-import { createFormData, type FormDataItemT } from "./formDataState"
+import { createFormData, type FormDataItemT, DEFAULT_TEMPLATE_PROJECT_NAME } from "./formDataState"
 import config from "@gisapi/store/config"
 import { getTemplateList, serverCheckApi } from "@renderer/views/GisApi/utils/server"
 import { useFileStroe } from "./fileStore"
@@ -68,7 +68,7 @@ export const useGisApiTabStore = defineStore("tabStore", {
         tabList: [
             {
                 id: 0 as TabValue,
-                label: "未命名工况",
+                label: DEFAULT_TEMPLATE_PROJECT_NAME,
             },
         ],
 
@@ -96,7 +96,6 @@ export const useGisApiTabStore = defineStore("tabStore", {
     actions: {
         setCurrentAddTabPage(newPage: number) {
             if (newPage >= 1 && newPage <= this.formDataList.length / this.currentAddTabPageSize + 1) {
-                console.log(2)
                 this.currentAddTabPage = newPage
             }
         },
@@ -113,6 +112,7 @@ export const useGisApiTabStore = defineStore("tabStore", {
 
         addDfsu(key: FileListKeyT, md5: string) {
             const dfsuInfo = useFileStroe().getFile(md5)
+            console.log('dfsuInfo: ', dfsuInfo)
 
             if (!dfsuInfo) return
 
@@ -181,7 +181,7 @@ export const useGisApiTabStore = defineStore("tabStore", {
 
             const newTab = {
                 id: newTabId,
-                label: newFormData.title ? newFormData.title : `未命名${newTabId}`,
+                label: newFormData.title ? newFormData.title : `${DEFAULT_TEMPLATE_PROJECT_NAME}(${newTabId})`,
             }
 
             this.tabList.push(newTab)

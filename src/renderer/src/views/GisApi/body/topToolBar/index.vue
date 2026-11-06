@@ -14,15 +14,12 @@
     <TaskDialog></TaskDialog>
 
     <!-- 浮动菜单栏按钮 -->
-    <t-sticky-tool
-        :style="{ zIndex: 100 }"
-        :offset="[-50, 80]"
-        placement="right-bottom"
-        @click="handleClick"
-        @hover="handleHover"
-    >
-        <t-sticky-item label="历史任务">
-            <template #icon><HistoryIcon /></template>
+    <t-sticky-tool :style="{ zIndex: 100 }" :offset="[-50, 80]" placement="right-bottom" @click="handleClick"
+        @hover="handleHover">
+        <t-sticky-item label="批量任务">
+            <template #icon>
+                <HistoryIcon />
+            </template>
         </t-sticky-item>
     </t-sticky-tool>
 </template>
@@ -34,8 +31,9 @@ import AddTabDialog from "./addTabDialog.vue"
 import { StickyToolProps } from "tdesign-vue-next"
 import { HistoryIcon } from "tdesign-icons-vue-next"
 
-import { useTaskStore } from "@gisapi/store/index"
+import { useTaskStore, useGisApiTabStore } from "@gisapi/store/index"
 
+const tabStore = useGisApiTabStore()
 const taskStore = useTaskStore()
 
 const localStore = reactive({
@@ -45,20 +43,28 @@ const localStore = reactive({
     addNewTab: {
         title: "添加工况",
         action: () => {
+
             localStore.showAddTapDialog = true
         },
     },
 
     taskManager: {
-        title: "历史任务",
+        title: "批量任务",
         action: () => {
+            const hasBeFile = Boolean(tabStore.currtFormData['beDfsuMd5List'].length > 0)
+            const hasAfFile = Boolean(tabStore.currtFormData['afDfsuMd5List'].length > 0)
+
+            if (!hasBeFile || !hasAfFile) {
+                return console.log('当面没有指定文件，清先选择添加上传文件')
+            }
+
             taskStore.showDialog()
         },
     },
 })
 
 const handleClick: StickyToolProps["onClick"] = ({ item }) => {
-    console.log(item)
+    // console.log(item)
     switch (item.label) {
         case localStore.addNewTab.title:
             localStore.addNewTab.action()

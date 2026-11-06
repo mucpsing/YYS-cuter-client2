@@ -1,6 +1,7 @@
 <template>
     <div class="h-[0]">
         <t-card class="mx-1">
+            
             <template v-for="(item, index) in configItems" :key="item.key">
                 <div class="flex items-center justify-between mt-2">
                     <div class="flex flex-col items-start justify-between gap-1">
@@ -42,7 +43,32 @@
                                         <div class="max-w-2xl p-6 mx-auto">
                                             <h2 class="mb-4 font-semibold">常用等值线范围 (点击)</h2>
                                             <div class="grid grid-cols-9 gap-2">
-                                                <!-- 第一组 0.1 ~ 0.9 -->
+<!--                                                 <ContourTags
+                                                  :scales="[1, 10, 100, 1000]"
+                                                  :output-name-tag-list="outputNameTagList"
+                                                  @contour-tip-click="handleClick"
+                                                />
+ -->
+                                                
+                                                <!-- 第零组 1 ~ 9 -->
+                                                <template
+                                                    v-for="(val, idx) of Array.from(
+                                                        { length: 9 },
+                                                        (_, i) => (i + 1) / 1 + '',
+                                                    )"
+                                                    :key="`row1-${idx}`"
+                                                >
+                                                    <t-tag
+                                                        @click="() => onContourTipClick(val)"
+                                                        class="justify-center cursor-pointer"
+                                                        size="medium"
+                                                        :theme="(outputNameTagList[idx]?.theme as 'default' | 'primary' | 'danger' | 'warning' | 'success') || 'default'"
+                                                        :variant="(outputNameTagList[idx]?.variant as 'dark' | 'light' | 'outline' | 'light-outline') || 'outline'"
+                                                    >
+                                                        {{ val }}
+                                                    </t-tag>
+                                                </template>
+
                                                 <template
                                                     v-for="(val, idx) of Array.from(
                                                         { length: 9 },
@@ -60,7 +86,6 @@
                                                         {{ val }}
                                                     </t-tag>
                                                 </template>
-                                                <!-- 第二组 0.01 ~ 0.09 -->
                                                 <template
                                                     v-for="(val, idx) of Array.from(
                                                         { length: 9 },
@@ -78,6 +103,25 @@
                                                         {{ val }}
                                                     </t-tag>
                                                 </template>
+
+                                                <template
+                                                    v-for="(val, idx) of Array.from(
+                                                        { length: 9 },
+                                                        (_, i) => (i + 1) / 1000 + '',
+                                                    )"
+                                                    :key="`row2-${idx}`"
+                                                >
+                                                    <t-tag
+                                                        @click="() => onContourTipClick(val)"
+                                                        class="justify-center cursor-pointer"
+                                                        size="medium"
+                                                        :theme="(outputNameTagList[idx]?.theme as 'default' | 'primary' | 'danger' | 'warning' | 'success') || 'default'"
+                                                        :variant="(outputNameTagList[idx]?.variant as 'dark' | 'light' | 'outline' | 'light-outline') || 'outline'"
+                                                    >
+                                                        {{ val }}
+                                                    </t-tag>
+                                                </template>
+
                                             </div>
                                             <div class="flex gap-2 mt-2">
                                                 <t-button
@@ -133,6 +177,8 @@
 import { useGisApiTabStore } from "@gisapi/store/index"
 import { DEFAULT_CONTOUR_STEP } from "@gisapi/store/formDataState"
 import { crossCombineThemesAndVariants } from "@gisapi/utils/index"
+
+// import ContourTags from "./configPannelCounterSteps" 
 
 const tabStore = useGisApiTabStore()
 const outputNameTagList = crossCombineThemesAndVariants()

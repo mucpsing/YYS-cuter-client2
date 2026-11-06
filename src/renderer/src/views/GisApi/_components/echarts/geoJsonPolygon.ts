@@ -2,7 +2,7 @@
  * @Author: cpasion-office-win10 373704015@qq.com
  * @Date: 2024-08-06 10:57:10
  * @LastEditors: cpasion-office-win10 373704015@qq.com
- * @LastEditTime: 2026-07-06 11:29:35
+ * @LastEditTime: 2026-07-23 14:47:11
  * @FilePath: \yys-cuter-client2\src\renderer\src\views\GisApi\body\setp3\echartGeoJson.ts
  * @Description: 根据geojson创建多边形的echart图例，使用interactjs添加一个可以拖拽的矩形框用来裁剪输出范围
  * @example:
@@ -181,7 +181,7 @@ class ChartGeoJson {
                         const bounds = [x, y, event.rect.width, event.rect.height].map((item) => Math.trunc(item))
                         that.recordBounds(bounds)
                         that.emit("onRectResize")
-                        console.log("onresizable.move")
+                        // console.log("onresizable.move")
                     },
                 },
             })
@@ -204,7 +204,7 @@ class ChartGeoJson {
                         const bounds = [x, y, event.rect.width, event.rect.height].map((item) => Math.trunc(item))
                         that.recordBounds(bounds)
                         that.emit("onRectMove")
-                        console.log("ondraggable.move")
+                        // console.log("ondraggable.move")
                     },
                 },
                 inertia: true,

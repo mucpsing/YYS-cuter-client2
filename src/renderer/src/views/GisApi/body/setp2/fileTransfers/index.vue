@@ -1,16 +1,11 @@
 <!-- src/renderer/src/views/Home/index.vue -->
 <template>
     <div ref="dropContainerRef" class="flex justify-between w-full min-h-[160px] max-h-[240px] gap-2 relative px-1">
-        <FileListCard
-            v-for="card in cardList"
-            :key="card.id"
-            :list-id="card.id"
-            :title="card.title"
-            :files="tabStore.currtFormData[card.id]"
-            :is-uploading="card.loading"
-            @select="() => handleSelectFiles(card.id)"
-            @remove-checked="() => handleRemoveChecked(card.id)"
-        />
+        <FileListCard v-for="card in cardList" :key="card.id" :list-id="card.id" :title="card.title"
+            :files="tabStore.currtFormData[card.id]" :is-uploading="card.loading" @select="() => handleSelectFiles(card.id)"
+            @remove-checked="() => handleRemoveChecked(card.id)" />
+
+
     </div>
 </template>
 
