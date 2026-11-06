@@ -105,10 +105,15 @@ export function useFileUpload() {
         }
     }
 
+    const selectAllFilesByKey = (listKey: FileListKeyT) => {
+        tabStore.currtFormData[listKey].forEach((each) => each.checked = true)
+    }
+
     return {
         isUploading,
         addFiles,
         removeCheckedItems,
         autoCheckSingle,
+        selectAllFilesByKey
     }
 }

@@ -1,11 +1,9 @@
 <!-- src/renderer/src/views/Home/index.vue -->
 <template>
-    <div ref="dropContainerRef" class="flex justify-between w-full min-h-[160px] max-h-[240px] gap-2 relative px-1">
-        <FileListCard v-for="card in cardList" :key="card.id" :list-id="card.id" :title="card.title"
+    <div ref="dropContainerRef" class="flex flex-col justify-between w-full min-h-[320px] gap-2 relative px-1">
+        <FileListCard v-for="card in cardList" :key="card.id" :list-id="card.id" :title="card.title" class="min-h-[200px]"
             :files="tabStore.currtFormData[card.id]" :is-uploading="card.loading" @select="() => handleSelectFiles(card.id)"
             @remove-checked="() => handleRemoveChecked(card.id)" />
-
-
     </div>
 </template>
 
@@ -29,10 +27,14 @@ const cardList = reactive<{ id: FileListKeyT; title: string; loading: boolean }[
 const tabStore = useGisApiTabStore()
 
 // ============ 组合式函数 ============
-const { addFiles, removeCheckedItems, autoCheckSingle } = useFileUpload()
+const { addFiles, removeCheckedItems, autoCheckSingle, selectAllFilesByKey } = useFileUpload()
 
 // ============ 文件选择处理 ============
 const selectInput = ref<HTMLInputElement>()
+
+async function handleSelectAll(listId: FileListKeyT) {
+    selectAllFilesByKey(listId)
+}
 
 function handleSelectFiles(listId: FileListKeyT) {
     // 动态创建 input 元素，避免全局单例

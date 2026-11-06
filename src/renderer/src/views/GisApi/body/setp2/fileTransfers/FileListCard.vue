@@ -7,6 +7,9 @@
     <h3 class="flex flex-row items-center justify-between pb-2 mb-2 text-lg font-medium border-b">
       <strong>{{ title }}</strong>
       <div class="flex gap-2">
+        <t-button size="small" @click="$emit('selectAll')">
+            全选
+        </t-button>
         <t-button
           theme="success"
           size="small"
@@ -64,7 +67,9 @@
                 :disabled="item.disabled"
                 @click.stop
               />
+              <span class="mx-1"></span>
               <span>{{ truncateText(item.name, 16) }} ({{ item.size.toFixed(2) }}MB)</span>
+              <span class="mx-1"></span>
               <div class="flex flex-col items-center justify-center">
                 <div v-if="item.uploadProgress === 0">文件解析中...</div>
                 <div v-else class="min-w-[150px]">
